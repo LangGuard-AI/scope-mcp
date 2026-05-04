@@ -1,0 +1,50 @@
+schema_version: "1.0"
+platform: gamma
+display_name: Gamma
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Content Generation ----------
+  - id: gamma.generate
+    object: Gamma
+    action: generate
+    category: Content Generation
+    risk: medium
+    business_impact: "Generates a presentation, document, or webpage; output may be auto-published with sharing settings the agent controls."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: gamma.read_gamma
+    object: Gamma
+    action: read_gamma
+    category: Content Generation
+    risk: low
+    business_impact: "Retrieves the contents of an existing gamma by ID or URL."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: gamma.get_themes
+    object: Theme
+    action: get_themes
+    category: Content Generation
+    risk: low
+    business_impact: "Browses Gamma's theme library."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: gamma.get_folders
+    object: Folder
+    action: get_folders
+    category: Content Generation
+    risk: low
+    business_impact: "Lists workspace folders for organizing gammas."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

@@ -1,0 +1,420 @@
+schema_version: "1.0"
+platform: box
+display_name: Box
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Identity ----------
+  - id: box.who_am_i
+    object: User
+    action: who_am_i
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns the authenticated Box principal."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- File Operations ----------
+  - id: box.get_file_content
+    object: File
+    action: get_file_content
+    category: Data Access
+    risk: high
+    business_impact: "Downloads file contents; arbitrary documents may include PII, PHI, or financial records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.get_file_details
+    object: File
+    action: get_file_details
+    category: Data Access
+    risk: medium
+    business_impact: "Returns file metadata (owner, path, sharing state)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.update_file_properties
+    object: File
+    action: update_file_properties
+    category: Operations
+    risk: medium
+    business_impact: "Modifies file metadata; can rename, retag, or move regulated content."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.upload_file
+    object: File
+    action: upload_file
+    category: Operations
+    risk: medium
+    business_impact: "Uploads a new file into Box; can introduce regulated data into a managed repository."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.upload_file_version
+    object: File
+    action: upload_file_version
+    category: Operations
+    risk: medium
+    business_impact: "Replaces existing file content with a new version; alters records of record."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Folder Operations ----------
+  - id: box.create_folder
+    object: Folder
+    action: create_folder
+    category: Operations
+    risk: low
+    business_impact: "Creates a new folder; structural change only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.get_folder_details
+    object: Folder
+    action: get_folder_details
+    category: Data Access
+    risk: low
+    business_impact: "Returns folder metadata and sharing context."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.list_folder_content_by_folder_id
+    object: Folder
+    action: list_folder_content_by_folder_id
+    category: Data Access
+    risk: medium
+    business_impact: "Lists items within a folder; can enumerate sensitive document inventories."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.update_folder_properties
+    object: Folder
+    action: update_folder_properties
+    category: Operations
+    risk: medium
+    business_impact: "Modifies folder metadata; can affect inherited sharing or retention."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Search ----------
+  - id: box.search_files_keyword
+    object: File
+    action: search_files_keyword
+    category: Data Access
+    risk: high
+    business_impact: "Full-text search across Box; can surface regulated content the caller has access to."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.search_files_metadata
+    object: File
+    action: search_files_metadata
+    category: Data Access
+    risk: medium
+    business_impact: "Searches files by metadata template fields."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.search_folders_by_name
+    object: Folder
+    action: search_folders_by_name
+    category: Data Access
+    risk: low
+    business_impact: "Locates folders by name."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Box AI ----------
+  - id: box.ai_qa_hub
+    object: Hub
+    action: ai_qa_hub
+    category: Data Access
+    risk: high
+    business_impact: "Runs Box AI Q&A across an entire content hub; can summarize regulated content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.ai_qa_single_file
+    object: File
+    action: ai_qa_single_file
+    category: Data Access
+    risk: medium
+    business_impact: "Runs Box AI Q&A against one file; output may contain extracted PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.ai_qa_multi_file
+    object: File
+    action: ai_qa_multi_file
+    category: Data Access
+    risk: high
+    business_impact: "Runs Box AI Q&A across several files; can synthesize sensitive content cross-document."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.ai_extract_freeform
+    object: File
+    action: ai_extract_freeform
+    category: Data Access
+    risk: high
+    business_impact: "Free-form extraction from a document; can pull arbitrary structured PII out of files."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.ai_extract_structured
+    object: File
+    action: ai_extract_structured
+    category: Data Access
+    risk: high
+    business_impact: "Structured extraction from a document according to a schema; commonly used to pull PII fields."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.ai_extract_structured_from_fields
+    object: File
+    action: ai_extract_structured_from_fields
+    category: Data Access
+    risk: high
+    business_impact: "Extracts values for a caller-defined field list from a document."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.ai_extract_structured_from_fields_enhanced
+    object: File
+    action: ai_extract_structured_from_fields_enhanced
+    category: Data Access
+    risk: high
+    business_impact: "Enhanced field-list extraction with reasoning; same data exposure as base extract."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.ai_extract_structured_from_metadata_template
+    object: File
+    action: ai_extract_structured_from_metadata_template
+    category: Data Access
+    risk: high
+    business_impact: "Extracts values matching a Box metadata template from a document."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.ai_extract_structured_from_metadata_template_enhanced
+    object: File
+    action: ai_extract_structured_from_metadata_template_enhanced
+    category: Data Access
+    risk: high
+    business_impact: "Enhanced metadata-template extraction with reasoning."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Collaboration ----------
+  - id: box.create_file_comment
+    object: Comment
+    action: create_file_comment
+    category: Operations
+    risk: low
+    business_impact: "Posts a comment on a file."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.list_item_collaborations
+    object: Collaboration
+    action: list_item_collaborations
+    category: Identity & Access
+    risk: medium
+    business_impact: "Reveals who has access to an item; useful for both audit and reconnaissance."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.list_file_comments
+    object: Comment
+    action: list_file_comments
+    category: Data Access
+    risk: low
+    business_impact: "Reads comments on a file."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.list_tasks
+    object: Task
+    action: list_tasks
+    category: Operations
+    risk: low
+    business_impact: "Lists Box tasks (review/approval) on items."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Hubs ----------
+  - id: box.add_items_to_hub
+    object: Hub
+    action: add_items_to_hub
+    category: Operations
+    risk: medium
+    business_impact: "Adds files/folders to a content hub; broadens audience for the items."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.copy_hub
+    object: Hub
+    action: copy_hub
+    category: Operations
+    risk: medium
+    business_impact: "Duplicates a content hub; creates new exposure surface for included items."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.create_hub
+    object: Hub
+    action: create_hub
+    category: Operations
+    risk: low
+    business_impact: "Creates a new (initially empty) content hub."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.get_hub_details
+    object: Hub
+    action: get_hub_details
+    category: Data Access
+    risk: low
+    business_impact: "Returns hub configuration."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.get_hub_items
+    object: Hub
+    action: get_hub_items
+    category: Data Access
+    risk: medium
+    business_impact: "Lists items within a hub; can enumerate regulated content sets."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.list_hubs
+    object: Hub
+    action: list_hubs
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates content hubs visible to the caller."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.update_hub
+    object: Hub
+    action: update_hub
+    category: Operations
+    risk: medium
+    business_impact: "Updates hub metadata or audience configuration."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Doc Gen ----------
+  - id: box.get_docgen_template_by_id
+    object: DocGenTemplate
+    action: get_docgen_template_by_id
+    category: Data Access
+    risk: low
+    business_impact: "Reads a document-generation template definition."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.list_docgen_templates
+    object: DocGenTemplate
+    action: list_docgen_templates
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates available document-generation templates."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.create_docgen_batch
+    object: DocGenBatch
+    action: create_docgen_batch
+    category: Operations
+    risk: medium
+    business_impact: "Generates a batch of documents from a template; outputs may contain merged PII or contract data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: box.create_docgen_template
+    object: DocGenTemplate
+    action: create_docgen_template
+    category: Operations
+    risk: low
+    business_impact: "Defines a new document-generation template."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

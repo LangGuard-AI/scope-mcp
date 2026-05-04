@@ -1,0 +1,410 @@
+schema_version: "1.0"
+platform: posthog
+display_name: PostHog
+source: langguard-editorial
+updated: "2026-05"
+# NOTE: PostHog's MCP exposes 80+ tools. This file curates the writes and
+# sensitive reads an agent is most likely to invoke. Read-only listing tools
+# (e.g. dashboards-get-all, action-get, alerts-list) are omitted as low-impact.
+actions:
+  # ---------- Feature Flags ----------
+  - id: posthog.create-feature-flag
+    object: FeatureFlag
+    action: create-feature-flag
+    category: Feature Flags
+    risk: medium
+    business_impact: "Creates a new feature flag that can gate production behavior on rollout."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.update-feature-flag
+    object: FeatureFlag
+    action: update-feature-flag
+    category: Feature Flags
+    risk: high
+    business_impact: "Changes who sees a feature in production; can ship or break experiences without code review."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.delete-feature-flag
+    object: FeatureFlag
+    action: delete-feature-flag
+    category: Feature Flags
+    risk: high
+    business_impact: "Removes a flag; dependent code may fail open or closed unexpectedly."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.scheduled-changes-create
+    object: ScheduledChange
+    action: scheduled-changes-create
+    category: Feature Flags
+    risk: medium
+    business_impact: "Schedules a future flag change without re-review at execution time."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.scheduled-changes-delete
+    object: ScheduledChange
+    action: scheduled-changes-delete
+    category: Feature Flags
+    risk: medium
+    business_impact: "Cancels a scheduled flag change; can leave intended rollout undone."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.feature-flags-copy-flags-create
+    object: FeatureFlag
+    action: feature-flags-copy-flags-create
+    category: Feature Flags
+    risk: medium
+    business_impact: "Copies flags between projects/environments; can replicate untested rollout state."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Experiments ----------
+  - id: posthog.experiment-create
+    object: Experiment
+    action: experiment-create
+    category: Experiments
+    risk: medium
+    business_impact: "Starts a new A/B experiment that splits production traffic."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.experiment-launch
+    object: Experiment
+    action: experiment-launch
+    category: Experiments
+    risk: high
+    business_impact: "Activates an experiment in production; immediately affects user experience."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.experiment-end
+    object: Experiment
+    action: experiment-end
+    category: Experiments
+    risk: medium
+    business_impact: "Concludes an experiment and locks the result of record."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.experiment-ship-variant
+    object: Experiment
+    action: experiment-ship-variant
+    category: Experiments
+    risk: high
+    business_impact: "Promotes a variant to all traffic without further review."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.experiment-delete
+    object: Experiment
+    action: experiment-delete
+    category: Experiments
+    risk: medium
+    business_impact: "Removes experiment configuration and historical results from the UI."
+    compliance: [SOC2]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.experiment-pause
+    object: Experiment
+    action: experiment-pause
+    category: Experiments
+    risk: medium
+    business_impact: "Halts an active experiment mid-run; can invalidate ongoing measurement."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.experiment-resume
+    object: Experiment
+    action: experiment-resume
+    category: Experiments
+    risk: medium
+    business_impact: "Restarts a paused experiment, reapplying traffic split."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.experiment-update
+    object: Experiment
+    action: experiment-update
+    category: Experiments
+    risk: medium
+    business_impact: "Modifies an experiment's targeting or variants while running."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Cohorts ----------
+  - id: posthog.cohorts-create
+    object: Cohort
+    action: cohorts-create
+    category: Cohorts
+    risk: medium
+    business_impact: "Defines a user cohort that may target campaigns or feature rollouts."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.cohorts-add-persons-to-static-cohort-partial-update
+    object: Cohort
+    action: cohorts-add-persons-to-static-cohort-partial-update
+    category: Cohorts
+    risk: medium
+    business_impact: "Adds identified persons to a static cohort used for targeting and analysis."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.cohorts-rm-person-from-static-cohort-partial-update
+    object: Cohort
+    action: cohorts-rm-person-from-static-cohort-partial-update
+    category: Cohorts
+    risk: low
+    business_impact: "Removes a person from a static cohort definition."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: posthog.execute-sql
+    object: Query
+    action: execute-sql
+    category: Data Access
+    risk: high
+    business_impact: "Runs arbitrary HogQL/SQL across event and person data; can return PII at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.query-run
+    object: Query
+    action: query-run
+    category: Data Access
+    risk: high
+    business_impact: "Executes saved or ad-hoc queries that may return identified user data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.query-llm-trace
+    object: LLMTrace
+    action: query-llm-trace
+    category: Data Access
+    risk: medium
+    business_impact: "Returns LLM trace details including prompts that may contain customer or PII content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: posthog.query-llm-traces-list
+    object: LLMTrace
+    action: query-llm-traces-list
+    category: Data Access
+    risk: medium
+    business_impact: "Bulk-lists LLM traces; potential PII exposure depending on prompt content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: posthog.query-logs
+    object: Logs
+    action: query-logs
+    category: Data Access
+    risk: medium
+    business_impact: "Searches application logs that can include user identifiers and request payloads."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: posthog.action-create
+    object: Action
+    action: action-create
+    category: Operations
+    risk: low
+    business_impact: "Defines a new tracked action for analytics; no production user impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.action-update
+    object: Action
+    action: action-update
+    category: Operations
+    risk: low
+    business_impact: "Updates the definition of an existing tracked action."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.action-delete
+    object: Action
+    action: action-delete
+    category: Operations
+    risk: medium
+    business_impact: "Removes a tracked action; downstream insights and dashboards may break silently."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.alert-create
+    object: Alert
+    action: alert-create
+    category: Operations
+    risk: low
+    business_impact: "Adds a metric alert; no immediate user impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.alert-delete
+    object: Alert
+    action: alert-delete
+    category: Operations
+    risk: medium
+    business_impact: "Removes a monitoring alert; can blind operators to incidents."
+    compliance: [SOC2, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.alert-update
+    object: Alert
+    action: alert-update
+    category: Operations
+    risk: medium
+    business_impact: "Modifies thresholds or recipients on a monitoring alert."
+    compliance: [SOC2, NIST_CSF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.annotation-create
+    object: Annotation
+    action: annotation-create
+    category: Operations
+    risk: low
+    business_impact: "Adds an annotation to time-series charts."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.annotation-delete
+    object: Annotation
+    action: annotation-delete
+    category: Operations
+    risk: low
+    business_impact: "Removes a chart annotation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.dashboard-create
+    object: Dashboard
+    action: dashboard-create
+    category: Operations
+    risk: low
+    business_impact: "Creates a new analytics dashboard."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.dashboard-update
+    object: Dashboard
+    action: dashboard-update
+    category: Operations
+    risk: low
+    business_impact: "Modifies dashboard layout or filters."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.dashboard-delete
+    object: Dashboard
+    action: dashboard-delete
+    category: Operations
+    risk: medium
+    business_impact: "Removes a shared dashboard; may disrupt downstream reporting."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Surveys ----------
+  - id: posthog.survey-create
+    object: Survey
+    action: survey-create
+    category: Operations
+    risk: medium
+    business_impact: "Publishes a survey targeted to identified users; collects new PII responses."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.survey-update
+    object: Survey
+    action: survey-update
+    category: Operations
+    risk: medium
+    business_impact: "Edits a live survey; can change consent text or targeting after launch."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: posthog.survey-delete
+    object: Survey
+    action: survey-delete
+    category: Operations
+    risk: medium
+    business_impact: "Deletes a survey and its responses; may destroy collected feedback."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]

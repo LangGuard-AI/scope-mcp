@@ -1,0 +1,171 @@
+# NOTE: Zapier MCP exposes a small set of static control-plane meta-tools
+# (curated below) plus per-app dynamic tools surfaced through
+# `execute_zapier_read_action` and `execute_zapier_write_action`. Each
+# enabled Zap action becomes its own dynamic tool whose effective risk
+# matches the underlying app (Slack, Gmail, HubSpot, etc.). Dynamic
+# per-action tool ids fall through to platform-level matching for zapier.*
+schema_version: "1.0"
+platform: zapier
+display_name: Zapier
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Action Discovery ----------
+  - id: zapier.list_enabled_zapier_actions
+    object: ZapAction
+    action: list_enabled_zapier_actions
+    category: Action Discovery
+    risk: low
+    business_impact: "Lists Zapier actions currently enabled for the agent."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: zapier.discover_zapier_actions
+    object: ZapAction
+    action: discover_zapier_actions
+    category: Action Discovery
+    risk: low
+    business_impact: "Searches across Zapier's catalog of available actions and apps."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Action Management ----------
+  - id: zapier.enable_zapier_action
+    object: ZapAction
+    action: enable_zapier_action
+    category: Action Management
+    risk: high
+    business_impact: "Adds a new external action (e.g. 'Send Gmail', 'Post to Slack') to the agent's surface; expands blast radius to that app."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: zapier.disable_zapier_action
+    object: ZapAction
+    action: disable_zapier_action
+    category: Action Management
+    risk: low
+    business_impact: "Removes an action from the agent's surface."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: zapier.auto_provision_mcp
+    object: ZapAction
+    action: auto_provision_mcp
+    category: Action Management
+    risk: high
+    business_impact: "Auto-enables relevant Zapier actions on demand; expands tool surface without explicit per-action review."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Action Execution ----------
+  - id: zapier.execute_zapier_read_action
+    object: "*"
+    action: execute_zapier_read_action
+    category: Action Execution
+    risk: high
+    business_impact: "Generic dispatcher that runs any enabled read action across 8,000+ apps; aggregate read surface across every connected service."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: zapier.execute_zapier_write_action
+    object: "*"
+    action: execute_zapier_write_action
+    category: Action Execution
+    risk: critical
+    business_impact: "Generic dispatcher that runs any enabled write action across 8,000+ apps: send messages, create records, move money where the underlying app supports it."
+    compliance: [SOX, COSO, PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Configuration ----------
+  - id: zapier.get_configuration_url
+    object: Configuration
+    action: get_configuration_url
+    category: Configuration
+    risk: low
+    business_impact: "Returns the Zapier MCP configuration URL for the user."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Skills ----------
+  - id: zapier.list_zapier_skills
+    object: Skill
+    action: list_zapier_skills
+    category: Skills
+    risk: low
+    business_impact: "Lists Zapier skills available to the agent."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: zapier.get_zapier_skill
+    object: Skill
+    action: get_zapier_skill
+    category: Skills
+    risk: low
+    business_impact: "Retrieves the definition of a single Zapier skill."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: zapier.create_zapier_skill
+    object: Skill
+    action: create_zapier_skill
+    category: Skills
+    risk: medium
+    business_impact: "Defines a new Zapier skill (multi-step automation) usable by agents."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: zapier.update_zapier_skill
+    object: Skill
+    action: update_zapier_skill
+    category: Skills
+    risk: medium
+    business_impact: "Modifies an existing Zapier skill; changes propagate to every agent that uses it."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: zapier.delete_zapier_skill
+    object: Skill
+    action: delete_zapier_skill
+    category: Skills
+    risk: medium
+    business_impact: "Permanently removes a Zapier skill."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Feedback ----------
+  - id: zapier.send_feedback
+    object: Feedback
+    action: send_feedback
+    category: Feedback
+    risk: low
+    business_impact: "Sends user feedback to Zapier."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

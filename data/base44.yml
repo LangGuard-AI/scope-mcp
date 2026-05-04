@@ -1,0 +1,85 @@
+schema_version: "1.0"
+platform: base44
+display_name: Base44
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Project Lifecycle ----------
+  - id: base44.create_base44_app
+    object: Project
+    action: create_base44_app
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Spins up a new Base44 project from a text prompt; new application surface area."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: base44.edit_base44_app
+    object: Project
+    action: edit_base44_app
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Modifies an existing project's code or configuration; can change live application behavior."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: base44.list_user_apps
+    object: Project
+    action: list_user_apps
+    category: Data Access
+    risk: low
+    business_impact: "Lists projects owned by the authenticated user."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: base44.list_entity_schemas
+    object: EntitySchema
+    action: list_entity_schemas
+    category: Data Access
+    risk: low
+    business_impact: "Returns the entity (table) schemas defined in a project."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: base44.query_entities
+    object: Entity
+    action: query_entities
+    category: Data Access
+    risk: high
+    business_impact: "Reads records from project entities; result set may include customer PII stored in the app."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Build Status ----------
+  - id: base44.get_app_status
+    object: Build
+    action: get_app_status
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Reads build/deploy status for a project."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: base44.get_app_preview_url
+    object: Build
+    action: get_app_preview_url
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns the live preview URL for a built project."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

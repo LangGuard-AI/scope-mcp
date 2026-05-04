@@ -1,0 +1,208 @@
+schema_version: "1.0"
+platform: notion
+display_name: Notion
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Data Access ----------
+  - id: notion.notion-search
+    object: "*"
+    action: notion-search
+    category: Data Access
+    risk: medium
+    business_impact: "Searches across pages, databases, and other workspace content; can surface confidential material."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: notion.notion-fetch
+    object: "*"
+    action: notion-fetch
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves the full content of a page, database, or block by URL or id."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Pages ----------
+  - id: notion.notion-create-pages
+    object: Page
+    action: notion-create-pages
+    category: Data Access
+    risk: low
+    business_impact: "Creates one or more pages in the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: notion.notion-update-page
+    object: Page
+    action: notion-update-page
+    category: Data Access
+    risk: medium
+    business_impact: "Edits page properties or content; can overwrite knowledge-base material."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: notion.notion-move-pages
+    object: Page
+    action: notion-move-pages
+    category: Data Access
+    risk: medium
+    business_impact: "Relocates pages within the workspace tree; can change visibility/inheritance."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: notion.notion-duplicate-page
+    object: Page
+    action: notion-duplicate-page
+    category: Data Access
+    risk: low
+    business_impact: "Creates a copy of an existing page; may duplicate sensitive content into a new location."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Databases ----------
+  - id: notion.notion-create-database
+    object: Database
+    action: notion-create-database
+    category: Data Access
+    risk: low
+    business_impact: "Creates a new database with a defined schema."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: notion.notion-update-data-source
+    object: DataSource
+    action: notion-update-data-source
+    category: Data Access
+    risk: medium
+    business_impact: "Modifies database/data-source schema; can break dependent views and integrations."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: notion.notion-create-view
+    object: View
+    action: notion-create-view
+    category: Data Access
+    risk: low
+    business_impact: "Adds a new view to a database; presentation-layer change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: notion.notion-update-view
+    object: View
+    action: notion-update-view
+    category: Data Access
+    risk: low
+    business_impact: "Edits an existing database view's filters or columns."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: notion.notion-query-data-sources
+    object: DataSource
+    action: notion-query-data-sources
+    category: Data Access
+    risk: medium
+    business_impact: "Runs filtered queries against database content; can return rows containing PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: notion.notion-query-database-view
+    object: View
+    action: notion-query-database-view
+    category: Data Access
+    risk: medium
+    business_impact: "Returns rows visible through a specific database view."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Comments ----------
+  - id: notion.notion-create-comment
+    object: Comment
+    action: notion-create-comment
+    category: Data Access
+    risk: low
+    business_impact: "Posts a comment on a page or block under the authenticated user's identity."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: notion.notion-get-comments
+    object: Comment
+    action: notion-get-comments
+    category: Data Access
+    risk: low
+    business_impact: "Reads comments on pages or blocks; may contain user-generated PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: notion.notion-get-teams
+    object: Team
+    action: notion-get-teams
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads team / teamspace membership in the workspace."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: notion.notion-get-users
+    object: User
+    action: notion-get-users
+    category: Identity & Access
+    risk: medium
+    business_impact: "Reads workspace user list including names and emails."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: notion.notion-get-user
+    object: User
+    action: notion-get-user
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads a single user record including name and email."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: notion.notion-get-self
+    object: User
+    action: notion-get-self
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads the authenticated bot/user's own profile."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

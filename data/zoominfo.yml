@@ -1,0 +1,173 @@
+schema_version: "1.0"
+platform: zoominfo
+display_name: ZoomInfo
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Data Access ----------
+  - id: zoominfo.lookup
+    object: "*"
+    action: lookup
+    category: Data Access
+    risk: medium
+    business_impact: "Generic ZoomInfo lookup that resolves a query against multiple data domains; may return contact PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoominfo.search_companies
+    object: Company
+    action: search_companies
+    category: Data Access
+    risk: low
+    business_impact: "Searches ZoomInfo's company graph; firmographic data only, no individual PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: zoominfo.search_contacts
+    object: Contact
+    action: search_contacts
+    category: Data Access
+    risk: high
+    business_impact: "Searches ZoomInfo's contact database; returns identifiable individuals' work email, phone, and title at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: zoominfo.find_similar_companies
+    object: Company
+    action: find_similar_companies
+    category: Data Access
+    risk: low
+    business_impact: "Returns companies similar to a seed company; firmographic enrichment only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: zoominfo.find_similar_contacts
+    object: Contact
+    action: find_similar_contacts
+    category: Data Access
+    risk: high
+    business_impact: "Returns individuals matching a seed contact's profile; identifiable PII expansion."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: zoominfo.find_recommended_contacts
+    object: Contact
+    action: find_recommended_contacts
+    category: Data Access
+    risk: high
+    business_impact: "AI-ranked contact recommendations; profiles individuals to suggest outreach targets."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoominfo.search_intent
+    object: IntentSignal
+    action: search_intent
+    category: Data Access
+    risk: medium
+    business_impact: "Returns buyer-intent signals tied to companies and topics; may include trackable individual research signals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoominfo.search_scoops
+    object: Scoop
+    action: search_scoops
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces ZoomInfo Scoops (org change signals); largely public business event data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Enrichment ----------
+  - id: zoominfo.enrich_companies
+    object: Company
+    action: enrich_companies
+    category: Enrichment
+    risk: low
+    business_impact: "Appends firmographic fields to provided company records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: zoominfo.enrich_contacts
+    object: Contact
+    action: enrich_contacts
+    category: Enrichment
+    risk: high
+    business_impact: "Bulk appends PII (work email, phone, title) to caller-provided contact records; data-broker enrichment of identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: zoominfo.enrich_intent
+    object: IntentSignal
+    action: enrich_intent
+    category: Enrichment
+    risk: medium
+    business_impact: "Adds intent-signal context to provided records; can profile prospect research behavior."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoominfo.enrich_scoops
+    object: Scoop
+    action: enrich_scoops
+    category: Enrichment
+    risk: low
+    business_impact: "Adds ZoomInfo Scoops context to provided records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: zoominfo.enrich_news
+    object: NewsItem
+    action: enrich_news
+    category: Enrichment
+    risk: low
+    business_impact: "Attaches news-mention context to provided company records; public news content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Research ----------
+  - id: zoominfo.account_research
+    object: Company
+    action: account_research
+    category: Research
+    risk: medium
+    business_impact: "Context-agent that compiles a deep account profile; aggregates many signals into a single dossier."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoominfo.contact_research
+    object: Contact
+    action: contact_research
+    category: Research
+    risk: high
+    business_impact: "Context-agent that compiles a deep individual profile (work history, signals, contact details); creates a comprehensive PII dossier."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

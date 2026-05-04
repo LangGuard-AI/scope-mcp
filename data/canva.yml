@@ -1,0 +1,364 @@
+schema_version: "1.0"
+platform: canva
+display_name: Canva
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Designs ----------
+  - id: canva.search-designs
+    object: Design
+    action: search-designs
+    category: Designs
+    risk: low
+    business_impact: "Searches user designs; metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: canva.get-design
+    object: Design
+    action: get-design
+    category: Designs
+    risk: low
+    business_impact: "Reads a single design's metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: canva.get-design-pages
+    object: Design
+    action: get-design-pages
+    category: Designs
+    risk: low
+    business_impact: "Lists pages in a design."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: canva.get-design-content
+    object: Design
+    action: get-design-content
+    category: Designs
+    risk: medium
+    business_impact: "Reads design content; designs may contain confidential text, branded assets, or PII embedded in mocks."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: canva.get-presenter-notes
+    object: Design
+    action: get-presenter-notes
+    category: Designs
+    risk: low
+    business_impact: "Reads presenter notes from a design."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: canva.get-design-export-formats
+    object: Design
+    action: get-design-export-formats
+    category: Designs
+    risk: low
+    business_impact: "Lists allowed export formats for a design."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: canva.generate-design
+    object: Design
+    action: generate-design
+    category: Designs
+    risk: low
+    business_impact: "Generates a new design from prompt input."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: canva.generate-design-structured
+    object: Design
+    action: generate-design-structured
+    category: Designs
+    risk: low
+    business_impact: "Generates a design from structured input."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: canva.create-design-from-candidate
+    object: Design
+    action: create-design-from-candidate
+    category: Designs
+    risk: low
+    business_impact: "Materializes a design candidate as a real design."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: canva.request-outline-review
+    object: Design
+    action: request-outline-review
+    category: Designs
+    risk: low
+    business_impact: "Submits an outline for review prior to generation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: canva.get-design-thumbnail
+    object: Design
+    action: get-design-thumbnail
+    category: Designs
+    risk: low
+    business_impact: "Returns a thumbnail image of a design."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Editing Transactions ----------
+  - id: canva.start-editing-transaction
+    object: EditingTransaction
+    action: start-editing-transaction
+    category: Editing Transactions
+    risk: low
+    business_impact: "Begins an editing session against a design."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: canva.perform-editing-operations
+    object: EditingTransaction
+    action: perform-editing-operations
+    category: Editing Transactions
+    risk: medium
+    business_impact: "Applies content edits to a design within an open transaction."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: canva.commit-editing-transaction
+    object: EditingTransaction
+    action: commit-editing-transaction
+    category: Editing Transactions
+    risk: medium
+    business_impact: "Persists batched edits to a design; reversible only via version history."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: canva.cancel-editing-transaction
+    object: EditingTransaction
+    action: cancel-editing-transaction
+    category: Editing Transactions
+    risk: low
+    business_impact: "Discards in-flight edits."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Imports & Exports ----------
+  - id: canva.import-design-from-url
+    object: DesignImport
+    action: import-design-from-url
+    category: Imports & Exports
+    risk: medium
+    business_impact: "Imports external design content; can pull arbitrary remote files into the workspace."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: canva.export-design
+    object: Design
+    action: export-design
+    category: Imports & Exports
+    risk: medium
+    business_impact: "Exports a design as a file; moves potentially confidential creative outside the platform."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: canva.resize-design
+    object: Design
+    action: resize-design
+    category: Imports & Exports
+    risk: low
+    business_impact: "Produces a resized variant of a design."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Assets ----------
+  - id: canva.upload-asset-from-url
+    object: Asset
+    action: upload-asset-from-url
+    category: Assets
+    risk: medium
+    business_impact: "Pulls a remote asset into the workspace; remote content not pre-vetted."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: canva.get-assets
+    object: Asset
+    action: get-assets
+    category: Assets
+    risk: low
+    business_impact: "Lists assets in the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Folders ----------
+  - id: canva.create-folder
+    object: Folder
+    action: create-folder
+    category: Folders
+    risk: low
+    business_impact: "Creates a folder for organizing assets and designs."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: canva.list-folder-items
+    object: Folder
+    action: list-folder-items
+    category: Folders
+    risk: low
+    business_impact: "Lists contents of a folder."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: canva.search-folders
+    object: Folder
+    action: search-folders
+    category: Folders
+    risk: low
+    business_impact: "Searches folders by name."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: canva.move-item-to-folder
+    object: Folder
+    action: move-item-to-folder
+    category: Folders
+    risk: low
+    business_impact: "Relocates a design or asset between folders."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Brand Templates & Autofill ----------
+  - id: canva.search-brand-templates
+    object: BrandTemplate
+    action: search-brand-templates
+    category: Brand Templates & Autofill
+    risk: low
+    business_impact: "Searches brand-approved templates."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: canva.list-brand-kits
+    object: BrandKit
+    action: list-brand-kits
+    category: Brand Templates & Autofill
+    risk: low
+    business_impact: "Lists brand kits available to the user."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: canva.autofill-design
+    object: Design
+    action: autofill-design
+    category: Brand Templates & Autofill
+    risk: medium
+    business_impact: "Autofills a brand template with provided data; user-supplied data may include PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: canva.get-brand-template-dataset
+    object: BrandTemplate
+    action: get-brand-template-dataset
+    category: Brand Templates & Autofill
+    risk: low
+    business_impact: "Reads the variable schema of a brand template."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Comments ----------
+  - id: canva.comment-on-design
+    object: Comment
+    action: comment-on-design
+    category: Comments
+    risk: low
+    business_impact: "Posts a comment on a design."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: canva.reply-to-comment
+    object: Comment
+    action: reply-to-comment
+    category: Comments
+    risk: low
+    business_impact: "Replies to an existing comment thread."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: canva.list-comments
+    object: Comment
+    action: list-comments
+    category: Comments
+    risk: low
+    business_impact: "Lists comments on a design."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: canva.list-replies
+    object: Comment
+    action: list-replies
+    category: Comments
+    risk: low
+    business_impact: "Lists replies in a comment thread."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

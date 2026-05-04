@@ -1,0 +1,442 @@
+schema_version: "1.0"
+platform: aiera
+display_name: Aiera
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Equities & Market Data ----------
+  - id: aiera.find_equities
+    object: Equity
+    action: find_equities
+    category: Data Access
+    risk: low
+    business_impact: "Searches the universe of covered equities."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_equity_summaries
+    object: Equity
+    action: get_equity_summaries
+    category: Data Access
+    risk: low
+    business_impact: "Returns summary metrics for a list of tickers."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_financials
+    object: Financials
+    action: get_financials
+    category: Data Access
+    risk: low
+    business_impact: "Returns reported financial-statement line items for a company."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_ratios
+    object: Financials
+    action: get_ratios
+    category: Data Access
+    risk: low
+    business_impact: "Returns calculated financial ratios."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_kpis_and_segments
+    object: Financials
+    action: get_kpis_and_segments
+    category: Data Access
+    risk: low
+    business_impact: "Returns segment-level KPIs reported by the issuer."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_sectors_and_subsectors
+    object: Sector
+    action: get_sectors_and_subsectors
+    category: Data Access
+    risk: low
+    business_impact: "Returns the Aiera sector taxonomy."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Indexes & Watchlists ----------
+  - id: aiera.get_available_indexes
+    object: Index
+    action: get_available_indexes
+    category: Data Access
+    risk: low
+    business_impact: "Lists indexes available to the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_index_constituents
+    object: Index
+    action: get_index_constituents
+    category: Data Access
+    risk: low
+    business_impact: "Returns the constituents of an index."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_available_watchlists
+    object: Watchlist
+    action: get_available_watchlists
+    category: Data Access
+    risk: low
+    business_impact: "Lists the user's watchlists."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_watchlist_constituents
+    object: Watchlist
+    action: get_watchlist_constituents
+    category: Data Access
+    risk: low
+    business_impact: "Returns the tickers in a watchlist."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Events ----------
+  - id: aiera.find_events
+    object: Event
+    action: find_events
+    category: Data Access
+    risk: low
+    business_impact: "Searches corporate events (earnings, conferences, capital-markets days)."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_event
+    object: Event
+    action: get_event
+    category: Data Access
+    risk: low
+    business_impact: "Reads a single event with full transcript and metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_upcoming_events
+    object: Event
+    action: get_upcoming_events
+    category: Data Access
+    risk: low
+    business_impact: "Lists future scheduled corporate events."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.find_conferences
+    object: Conference
+    action: find_conferences
+    category: Data Access
+    risk: low
+    business_impact: "Searches investor conferences in Aiera's coverage."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.search_transcripts
+    object: Transcript
+    action: search_transcripts
+    category: Data Access
+    risk: low
+    business_impact: "Full-text search across event transcripts."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- SEC Filings ----------
+  - id: aiera.find_filings
+    object: Filing
+    action: find_filings
+    category: Data Access
+    risk: low
+    business_impact: "Searches SEC filings."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_filing
+    object: Filing
+    action: get_filing
+    category: Data Access
+    risk: low
+    business_impact: "Reads a single SEC filing's content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.search_filings
+    object: Filing
+    action: search_filings
+    category: Data Access
+    risk: low
+    business_impact: "Full-text search across SEC filings."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Company Documents ----------
+  - id: aiera.find_company_docs
+    object: CompanyDoc
+    action: find_company_docs
+    category: Data Access
+    risk: low
+    business_impact: "Searches issuer-published documents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_company_doc
+    object: CompanyDoc
+    action: get_company_doc
+    category: Data Access
+    risk: low
+    business_impact: "Reads a single company document."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_company_doc_categories
+    object: CompanyDoc
+    action: get_company_doc_categories
+    category: Data Access
+    risk: low
+    business_impact: "Lists the company-document taxonomy."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_company_doc_keywords
+    object: CompanyDoc
+    action: get_company_doc_keywords
+    category: Data Access
+    risk: low
+    business_impact: "Returns the keywords extracted from a document."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.search_company_docs
+    object: CompanyDoc
+    action: search_company_docs
+    category: Data Access
+    risk: low
+    business_impact: "Full-text search across company documents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Third Bridge ----------
+  - id: aiera.find_third_bridge_events
+    object: ThirdBridgeEvent
+    action: find_third_bridge_events
+    category: Data Access
+    risk: low
+    business_impact: "Searches Third Bridge expert-network events."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_third_bridge_event
+    object: ThirdBridgeEvent
+    action: get_third_bridge_event
+    category: Data Access
+    risk: low
+    business_impact: "Reads a single Third Bridge transcript."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.search_thirdbridge
+    object: ThirdBridgeEvent
+    action: search_thirdbridge
+    category: Data Access
+    risk: low
+    business_impact: "Full-text search across Third Bridge content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Research ----------
+  - id: aiera.find_research
+    object: Research
+    action: find_research
+    category: Data Access
+    risk: low
+    business_impact: "Searches sell-side research available to the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_research
+    object: Research
+    action: get_research
+    category: Data Access
+    risk: low
+    business_impact: "Reads a research report."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.search_research
+    object: Research
+    action: search_research
+    category: Data Access
+    risk: low
+    business_impact: "Full-text search across research."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_research_providers
+    object: Research
+    action: get_research_providers
+    category: Data Access
+    risk: low
+    business_impact: "Lists research providers."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_research_authors
+    object: Research
+    action: get_research_authors
+    category: Data Access
+    risk: low
+    business_impact: "Lists research authors."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_research_asset_classes
+    object: Research
+    action: get_research_asset_classes
+    category: Data Access
+    risk: low
+    business_impact: "Lists asset classes covered by available research."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_research_asset_types
+    object: Research
+    action: get_research_asset_types
+    category: Data Access
+    risk: low
+    business_impact: "Lists asset types covered by available research."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_research_subjects
+    object: Research
+    action: get_research_subjects
+    category: Data Access
+    risk: low
+    business_impact: "Lists research subject taxonomy."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_research_product_focuses
+    object: Research
+    action: get_research_product_focuses
+    category: Data Access
+    risk: low
+    business_impact: "Lists product-focus taxonomy."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_research_discipline_types
+    object: Research
+    action: get_research_discipline_types
+    category: Data Access
+    risk: low
+    business_impact: "Lists research discipline taxonomy."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_research_region_types
+    object: Research
+    action: get_research_region_types
+    category: Data Access
+    risk: low
+    business_impact: "Lists research region taxonomy."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiera.get_research_country_codes
+    object: Research
+    action: get_research_country_codes
+    category: Data Access
+    risk: low
+    business_impact: "Lists country codes used in research metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Web Search ----------
+  - id: aiera.trusted_web_search
+    object: WebSearch
+    action: trusted_web_search
+    category: Data Access
+    risk: low
+    business_impact: "Performs a curated web search returning trusted-source results."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

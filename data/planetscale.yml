@@ -1,0 +1,185 @@
+schema_version: "1.0"
+platform: planetscale
+display_name: PlanetScale
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Data Access ----------
+  - id: planetscale.planetscale_execute_read_query
+    object: Query
+    action: planetscale_execute_read_query
+    category: Data Access
+    risk: high
+    business_impact: "Runs arbitrary SELECT against production data; can return regulated columns."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: planetscale.planetscale_execute_write_query
+    object: Query
+    action: planetscale_execute_write_query
+    category: Data Access
+    risk: critical
+    business_impact: "Runs arbitrary INSERT/UPDATE/DELETE on a production database branch; can corrupt data of record."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: planetscale.planetscale_get_branch_schema
+    object: Schema
+    action: planetscale_get_branch_schema
+    category: Data Access
+    risk: low
+    business_impact: "Returns table and column definitions for a database branch."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: planetscale.planetscale_get_insights
+    object: Insights
+    action: planetscale_get_insights
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces query performance and slow-query telemetry."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: planetscale.planetscale_list_schema_recommendations
+    object: SchemaRecommendation
+    action: planetscale_list_schema_recommendations
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces automated index/schema improvement suggestions."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Platform & DevOps ----------
+  - id: planetscale.planetscale_list_organizations
+    object: Organization
+    action: planetscale_list_organizations
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Lists organizations the caller has access to."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: planetscale.planetscale_get_organization
+    object: Organization
+    action: planetscale_get_organization
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns organization-level metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: planetscale.planetscale_list_databases
+    object: Database
+    action: planetscale_list_databases
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns the database directory for an organization."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: planetscale.planetscale_get_database
+    object: Database
+    action: planetscale_get_database
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns database configuration and resource sizing."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: planetscale.planetscale_list_branches
+    object: Branch
+    action: planetscale_list_branches
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Lists database branches for an environment."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: planetscale.planetscale_get_branch
+    object: Branch
+    action: planetscale_get_branch
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns branch-level metadata such as state and parent."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: planetscale.planetscale_list_regions_for_organization
+    object: Region
+    action: planetscale_list_regions_for_organization
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Lists regions available to the organization."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: planetscale.planetscale_list_cluster_size_skus
+    object: ClusterSku
+    action: planetscale_list_cluster_size_skus
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns the catalog of available cluster sizes."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Financial ----------
+  - id: planetscale.planetscale_list_invoices
+    object: Invoice
+    action: planetscale_list_invoices
+    category: Financial
+    risk: low
+    business_impact: "Lists billing invoices for the PlanetScale organization."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: planetscale.planetscale_get_invoice_line_items
+    object: Invoice
+    action: planetscale_get_invoice_line_items
+    category: Financial
+    risk: low
+    business_impact: "Returns the per-line breakdown of a billing invoice."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: planetscale.planetscale_search_documentation
+    object: Documentation
+    action: planetscale_search_documentation
+    category: Operations
+    risk: low
+    business_impact: "Searches PlanetScale public documentation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

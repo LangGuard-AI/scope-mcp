@@ -1,0 +1,477 @@
+schema_version: "1.0"
+platform: smartsheet
+display_name: Smartsheet
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Discovery & Navigation ----------
+  - id: smartsheet.search
+    object: "*"
+    action: search
+    category: Discovery & Navigation
+    risk: low
+    business_impact: "Searches accessible Smartsheet assets by name or content; read surface."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.browse_workspace
+    object: Workspace
+    action: browse_workspace
+    category: Discovery & Navigation
+    risk: low
+    business_impact: "Lists top-level contents of a workspace; metadata read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.browse_folder
+    object: Folder
+    action: browse_folder
+    category: Discovery & Navigation
+    risk: low
+    business_impact: "Navigates folder contents hierarchically; metadata read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.list_workspaces
+    object: Workspace
+    action: list_workspaces
+    category: Discovery & Navigation
+    risk: low
+    business_impact: "Enumerates accessible workspaces; surface mapping for the agent."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Sheets ----------
+  - id: smartsheet.get_sheet_summary
+    object: Sheet
+    action: get_sheet_summary
+    category: Sheets
+    risk: medium
+    business_impact: "Reads sheet rows and columns; can include PII or financial planning data depending on the sheet."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.create_sheet_in_workspace
+    object: Sheet
+    action: create_sheet_in_workspace
+    category: Sheets
+    risk: low
+    business_impact: "Creates a new blank sheet in a workspace; benign on its own."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.create_sheet_in_folder
+    object: Sheet
+    action: create_sheet_in_folder
+    category: Sheets
+    risk: low
+    business_impact: "Creates a new blank sheet in a folder; benign on its own."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.get_sheet_version
+    object: Sheet
+    action: get_sheet_version
+    category: Sheets
+    risk: low
+    business_impact: "Reads current sheet version number for change detection."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Sheet Templates ----------
+  - id: smartsheet.create_sheet_in_workspace_from_template
+    object: Sheet
+    action: create_sheet_in_workspace_from_template
+    category: Sheet Templates
+    risk: low
+    business_impact: "Clones a template into a new sheet within a workspace."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.create_sheet_in_folder_from_template
+    object: Sheet
+    action: create_sheet_in_folder_from_template
+    category: Sheet Templates
+    risk: low
+    business_impact: "Clones a template into a new sheet within a folder."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Columns ----------
+  - id: smartsheet.get_columns
+    object: Column
+    action: get_columns
+    category: Columns
+    risk: low
+    business_impact: "Reads column metadata for a sheet."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.add_columns
+    object: Column
+    action: add_columns
+    category: Columns
+    risk: medium
+    business_impact: "Alters sheet schema; downstream formulas, reports, and integrations can break."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.update_column
+    object: Column
+    action: update_column
+    category: Columns
+    risk: medium
+    business_impact: "Changes column properties; can silently alter data validation or formulas."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.delete_column
+    object: Column
+    action: delete_column
+    category: Columns
+    risk: high
+    business_impact: "Permanently removes a column and all its cell data; irreversible loss."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Rows ----------
+  - id: smartsheet.add_rows
+    object: Row
+    action: add_rows
+    category: Rows
+    risk: medium
+    business_impact: "Writes new business records into a tracked sheet."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.update_rows
+    object: Row
+    action: update_rows
+    category: Rows
+    risk: medium
+    business_impact: "Modifies tracked row data; can alter project status, financial figures, or PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.delete_rows
+    object: Row
+    action: delete_rows
+    category: Rows
+    risk: high
+    business_impact: "Permanently removes rows; destroys business records and any associated history."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.get_cell_history
+    object: Cell
+    action: get_cell_history
+    category: Rows
+    risk: low
+    business_impact: "Reads modification history of a single cell."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Attachments ----------
+  - id: smartsheet.list_attachments
+    object: Attachment
+    action: list_attachments
+    category: Attachments
+    risk: low
+    business_impact: "Lists all sheet attachments; metadata read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.list_row_attachments
+    object: Attachment
+    action: list_row_attachments
+    category: Attachments
+    risk: low
+    business_impact: "Lists attachments on a specific row."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.list_discussion_attachments
+    object: Attachment
+    action: list_discussion_attachments
+    category: Attachments
+    risk: low
+    business_impact: "Lists attachments on a specific discussion."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.get_attachment
+    object: Attachment
+    action: get_attachment
+    category: Attachments
+    risk: medium
+    business_impact: "Retrieves attachment metadata; downstream content fetch may expose regulated documents."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.attach_url_to_sheet
+    object: Attachment
+    action: attach_url_to_sheet
+    category: Attachments
+    risk: low
+    business_impact: "Adds a URL attachment to a sheet."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.attach_url_to_row
+    object: Attachment
+    action: attach_url_to_row
+    category: Attachments
+    risk: low
+    business_impact: "Adds a URL attachment to a specific row."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.attach_url_to_comment
+    object: Attachment
+    action: attach_url_to_comment
+    category: Attachments
+    risk: low
+    business_impact: "Adds a URL attachment to a comment."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.delete_attachment
+    object: Attachment
+    action: delete_attachment
+    category: Attachments
+    risk: medium
+    business_impact: "Removes an attachment; may destroy supporting documentation for project decisions."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Discussions & Comments ----------
+  - id: smartsheet.list_sheet_discussions
+    object: Discussion
+    action: list_sheet_discussions
+    category: Discussions & Comments
+    risk: low
+    business_impact: "Reads all discussions on a sheet."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.list_row_discussions
+    object: Discussion
+    action: list_row_discussions
+    category: Discussions & Comments
+    risk: low
+    business_impact: "Reads discussions on a specific row."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.get_discussion
+    object: Discussion
+    action: get_discussion
+    category: Discussions & Comments
+    risk: low
+    business_impact: "Retrieves a single discussion with all its comments."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.create_discussion_on_row
+    object: Discussion
+    action: create_discussion_on_row
+    category: Discussions & Comments
+    risk: low
+    business_impact: "Starts a conversation focused on a specific row."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.create_discussion_on_sheet
+    object: Discussion
+    action: create_discussion_on_sheet
+    category: Discussions & Comments
+    risk: low
+    business_impact: "Starts a sheet-level conversation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.delete_discussion
+    object: Discussion
+    action: delete_discussion
+    category: Discussions & Comments
+    risk: medium
+    business_impact: "Removes an entire discussion thread; can erase decision context relied on for audit."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.add_comment
+    object: Comment
+    action: add_comment
+    category: Discussions & Comments
+    risk: low
+    business_impact: "Adds a reply to an existing discussion."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.update_comment
+    object: Comment
+    action: update_comment
+    category: Discussions & Comments
+    risk: low
+    business_impact: "Modifies the text of an existing comment."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.delete_comment
+    object: Comment
+    action: delete_comment
+    category: Discussions & Comments
+    risk: low
+    business_impact: "Removes a single comment from a discussion."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Reports ----------
+  - id: smartsheet.list_reports
+    object: Report
+    action: list_reports
+    category: Reports
+    risk: low
+    business_impact: "Lists accessible reports; metadata read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.get_report
+    object: Report
+    action: get_report
+    category: Reports
+    risk: medium
+    business_impact: "Returns report data which can aggregate PII or financial figures across many sheets."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Dashboards ----------
+  - id: smartsheet.list_dashboards
+    object: Dashboard
+    action: list_dashboards
+    category: Dashboards
+    risk: low
+    business_impact: "Lists accessible dashboards."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.get_dashboard
+    object: Dashboard
+    action: get_dashboard
+    category: Dashboards
+    risk: low
+    business_impact: "Reads dashboard configuration and contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Workspaces & Folders ----------
+  - id: smartsheet.create_workspace
+    object: Workspace
+    action: create_workspace
+    category: Workspaces & Folders
+    risk: low
+    business_impact: "Creates a new workspace container."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.create_folder_in_workspace
+    object: Folder
+    action: create_folder_in_workspace
+    category: Workspaces & Folders
+    risk: low
+    business_impact: "Creates a top-level folder in a workspace."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: smartsheet.create_folder_in_folder
+    object: Folder
+    action: create_folder_in_folder
+    category: Workspaces & Folders
+    risk: low
+    business_impact: "Creates a nested folder."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

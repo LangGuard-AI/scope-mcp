@@ -1,0 +1,82 @@
+# NOTE: Snowflake Cortex Agents MCP exposes user-defined tools created via
+# CREATE MCP SERVER. The static control-plane tool TYPES that the platform
+# always supports are SYSTEM_EXECUTE_SQL, CORTEX_SEARCH_SERVICE_QUERY,
+# CORTEX_ANALYST_MESSAGE, CORTEX_AGENT_RUN, and GENERIC (per-UDF). Concrete
+# tool names are user-defined per server (e.g. `sql_exec_tool`,
+# `product-search`, `multiply_by_ten`); we curate the canonical example names
+# from Snowflake docs here. Per-asset / per-UDF tool names that don't match
+# fall through to platform-level matching.
+schema_version: "1.0"
+platform: snowflake
+display_name: Snowflake
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Data Access ----------
+  - id: snowflake.SYSTEM_EXECUTE_SQL
+    object: Query
+    action: SYSTEM_EXECUTE_SQL
+    category: Data Access
+    risk: critical
+    business_impact: "Runs arbitrary SQL with the connected role's full privileges; can read or modify any table the role can reach."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: snowflake.sql_exec_tool
+    object: Query
+    action: sql_exec_tool
+    category: Data Access
+    risk: critical
+    business_impact: "Canonical Snowflake-published name for the SQL execution tool; same blast radius as SYSTEM_EXECUTE_SQL."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Cortex Search & Analyst ----------
+  - id: snowflake.CORTEX_SEARCH_SERVICE_QUERY
+    object: SearchService
+    action: CORTEX_SEARCH_SERVICE_QUERY
+    category: Cortex Search & Analyst
+    risk: high
+    business_impact: "Queries indexed unstructured content (documents, support cases, contracts) via Cortex Search; can surface PII or proprietary text."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: snowflake.CORTEX_ANALYST_MESSAGE
+    object: SemanticView
+    action: CORTEX_ANALYST_MESSAGE
+    category: Cortex Search & Analyst
+    risk: high
+    business_impact: "Natural-language query over a semantic view; returns structured business metrics that can include revenue or PII."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: snowflake.CORTEX_AGENT_RUN
+    object: Agent
+    action: CORTEX_AGENT_RUN
+    category: Cortex Search & Analyst
+    risk: high
+    business_impact: "Invokes a managed Cortex Agent which can in turn call SQL, search, and custom tools; effective privileges are the agent's."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Generic / User-Defined ----------
+  - id: snowflake.GENERIC
+    object: UDF
+    action: GENERIC
+    category: Generic / User-Defined
+    risk: medium
+    business_impact: "Catch-all type for user-defined functions and stored procedures exposed as MCP tools; risk depends on the UDF body."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]

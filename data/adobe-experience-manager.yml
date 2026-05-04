@@ -1,0 +1,84 @@
+schema_version: "1.0"
+platform: adobe-experience-manager
+display_name: Adobe Experience Manager
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Content Operations ----------
+  - id: adobe-experience-manager.get-aem-page-content
+    object: Page
+    action: get-aem-page-content
+    category: Data Access
+    risk: low
+    business_impact: "Reads the rendered content of an AEM page; may include unpublished customer-facing copy."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-experience-manager.resolve_fragment_path
+    object: ContentFragment
+    action: resolve_fragment_path
+    category: Data Access
+    risk: low
+    business_impact: "Resolves a content-fragment reference path used by other AEM tools."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-experience-manager.get_fragment
+    object: ContentFragment
+    action: get_fragment
+    category: Data Access
+    risk: low
+    business_impact: "Reads a specific content fragment's structured fields."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-experience-manager.create_fragment
+    object: ContentFragment
+    action: create_fragment
+    category: Operations
+    risk: medium
+    business_impact: "Authors a new content fragment; affects downstream rendered pages on publish."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-experience-manager.patch_fragment
+    object: ContentFragment
+    action: patch_fragment
+    category: Operations
+    risk: medium
+    business_impact: "Modifies an existing content fragment; can change live customer-facing copy on next publish."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Models ----------
+  - id: adobe-experience-manager.list_models
+    object: ContentFragmentModel
+    action: list_models
+    category: Data Access
+    risk: low
+    business_impact: "Lists content-fragment model definitions."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-experience-manager.get_model
+    object: ContentFragmentModel
+    action: get_model
+    category: Data Access
+    risk: low
+    business_impact: "Reads a single content-fragment model schema."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

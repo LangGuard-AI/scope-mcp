@@ -1,0 +1,76 @@
+schema_version: "1.0"
+platform: shopify
+display_name: Shopify
+source: langguard-editorial
+updated: "2026-05"
+# NOTE: Shopify's storefront-facing MCP exposes a small UCP catalog/cart surface.
+# Merchant Admin API actions are NOT exposed by this MCP server.
+actions:
+  # ---------- Catalog ----------
+  - id: shopify.search_catalog
+    object: Product
+    action: search_catalog
+    category: Customer
+    risk: low
+    business_impact: "Searches the storefront product catalog by keyword."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: shopify.lookup_catalog
+    object: Product
+    action: lookup_catalog
+    category: Customer
+    risk: low
+    business_impact: "Fetches a specific catalog entry by identifier."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: shopify.get_product
+    object: Product
+    action: get_product
+    category: Customer
+    risk: low
+    business_impact: "Returns full product detail (price, variants, descriptions)."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Cart ----------
+  - id: shopify.get_cart
+    object: Cart
+    action: get_cart
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reads the buyer's current cart contents and totals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: shopify.update_cart
+    object: Cart
+    action: update_cart
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Modifies the buyer's cart contents on their behalf; pre-purchase commercial state."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Service ----------
+  - id: shopify.search_shop_policies_and_faqs
+    object: ShopPolicy
+    action: search_shop_policies_and_faqs
+    category: Service
+    risk: low
+    business_impact: "Searches the merchant's published store policies and FAQs."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

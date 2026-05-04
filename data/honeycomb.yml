@@ -1,0 +1,117 @@
+schema_version: "1.0"
+platform: honeycomb
+display_name: Honeycomb
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Data Access ----------
+  - id: honeycomb.list_datasets
+    object: Dataset
+    action: list_datasets
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates available observability datasets; metadata-only read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: honeycomb.get_columns
+    object: Column
+    action: get_columns
+    category: Data Access
+    risk: low
+    business_impact: "Returns the schema of a dataset; reveals what fields are tracked but not their values."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: honeycomb.run_query
+    object: Query
+    action: run_query
+    category: Data Access
+    risk: medium
+    business_impact: "Executes an analytics query over telemetry; results may include user identifiers, IPs, or request payloads embedded in events."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: honeycomb.analyze_columns
+    object: Column
+    action: analyze_columns
+    category: Data Access
+    risk: low
+    business_impact: "Computes statistical summaries over a column; aggregate-level read."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: honeycomb.get_trace_link
+    object: Trace
+    action: get_trace_link
+    category: Data Access
+    risk: low
+    business_impact: "Returns a deep link to a specific distributed trace; trace contents may include request data."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: honeycomb.list_slos
+    object: SLO
+    action: list_slos
+    category: Operations
+    risk: low
+    business_impact: "Lists service level objectives; reveals reliability posture."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: honeycomb.get_slo
+    object: SLO
+    action: get_slo
+    category: Operations
+    risk: low
+    business_impact: "Returns SLO definition and current burn; reliability metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: honeycomb.list_triggers
+    object: Trigger
+    action: list_triggers
+    category: Operations
+    risk: low
+    business_impact: "Lists alerting triggers; metadata-only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: honeycomb.get_trigger
+    object: Trigger
+    action: get_trigger
+    category: Operations
+    risk: low
+    business_impact: "Returns the configuration of a single alert trigger."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: honeycomb.get_instrumentation_help
+    object: Documentation
+    action: get_instrumentation_help
+    category: Operations
+    risk: low
+    business_impact: "Returns guidance on instrumenting code with Honeycomb; static help content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

@@ -1,0 +1,28 @@
+schema_version: "1.0"
+platform: benevity
+display_name: Benevity
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Nonprofit Discovery ----------
+  - id: benevity.benevity_nonprofit_search
+    object: Nonprofit
+    action: benevity_nonprofit_search
+    category: Data Access
+    risk: low
+    business_impact: "Searches Benevity's public directory of validated nonprofits by location and cause."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: benevity.benevity_nonprofit_details
+    object: Nonprofit
+    action: benevity_nonprofit_details
+    category: Data Access
+    risk: low
+    business_impact: "Returns mission, programs, and impact details for a specific nonprofit."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

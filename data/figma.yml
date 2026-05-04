@@ -1,0 +1,185 @@
+schema_version: "1.0"
+platform: figma
+display_name: Figma
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Design Authoring ----------
+  - id: figma.use_figma
+    object: "*"
+    action: use_figma
+    category: Design Authoring
+    risk: medium
+    business_impact: "General-purpose write tool that can create, edit, or delete Figma objects; effects depend on parameters."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: figma.create_new_file
+    object: File
+    action: create_new_file
+    category: Design Authoring
+    risk: low
+    business_impact: "Creates a blank Figma Design or FigJam file."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: figma.generate_figma_design
+    object: File
+    action: generate_figma_design
+    category: Design Authoring
+    risk: low
+    business_impact: "Imports or converts a web page into a Figma design file."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: figma.generate_diagram
+    object: FigJamFile
+    action: generate_diagram
+    category: Design Authoring
+    risk: low
+    business_impact: "Generates a FigJam diagram from Mermaid syntax."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Design Inspection ----------
+  - id: figma.get_design_context
+    object: Selection
+    action: get_design_context
+    category: Design Inspection
+    risk: low
+    business_impact: "Reads the current Figma selection as code-ready context."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: figma.get_metadata
+    object: Node
+    action: get_metadata
+    category: Design Inspection
+    risk: low
+    business_impact: "Returns layer metadata (IDs, names, positions) for a design."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: figma.get_variable_defs
+    object: Variable
+    action: get_variable_defs
+    category: Design Inspection
+    risk: low
+    business_impact: "Reads design tokens (colors, spacing, typography) from a selection."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: figma.get_screenshot
+    object: Selection
+    action: get_screenshot
+    category: Design Inspection
+    risk: low
+    business_impact: "Captures a screenshot of the current selection."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: figma.get_figjam
+    object: FigJamFile
+    action: get_figjam
+    category: Design Inspection
+    risk: low
+    business_impact: "Reads a FigJam diagram's metadata and screenshots."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: figma.search_design_system
+    object: Component
+    action: search_design_system
+    category: Design Inspection
+    risk: low
+    business_impact: "Searches connected design libraries for components, variables, and styles."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Code Connect ----------
+  - id: figma.get_code_connect_map
+    object: CodeConnectMap
+    action: get_code_connect_map
+    category: Code Connect
+    risk: low
+    business_impact: "Reads existing mappings between Figma nodes and code components."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: figma.add_code_connect_map
+    object: CodeConnectMap
+    action: add_code_connect_map
+    category: Code Connect
+    risk: low
+    business_impact: "Adds a mapping between a Figma node and a code component."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: figma.get_code_connect_suggestions
+    object: CodeConnectMap
+    action: get_code_connect_suggestions
+    category: Code Connect
+    risk: low
+    business_impact: "Suggests possible Code Connect mappings."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: figma.send_code_connect_mappings
+    object: CodeConnectMap
+    action: send_code_connect_mappings
+    category: Code Connect
+    risk: low
+    business_impact: "Persists Code Connect mappings into the design system."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: figma.create_design_system_rules
+    object: DesignSystemRule
+    action: create_design_system_rules
+    category: Code Connect
+    risk: low
+    business_impact: "Authors rule files that constrain agent-generated code."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Identity ----------
+  - id: figma.whoami
+    object: User
+    action: whoami
+    category: Identity
+    risk: low
+    business_impact: "Returns the authenticated user identity and plan."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

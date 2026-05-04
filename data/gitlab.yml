@@ -1,0 +1,175 @@
+schema_version: "1.0"
+platform: gitlab
+display_name: GitLab
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Issues ----------
+  - id: gitlab.create_issue
+    object: Issue
+    action: create_issue
+    category: Issues
+    risk: low
+    business_impact: "Opens a new issue in a project."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: gitlab.get_issue
+    object: Issue
+    action: get_issue
+    category: Issues
+    risk: low
+    business_impact: "Reads a single issue's contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: gitlab.create_workitem_note
+    object: Note
+    action: create_workitem_note
+    category: Issues
+    risk: low
+    business_impact: "Adds a comment to a work item."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: gitlab.get_workitem_notes
+    object: Note
+    action: get_workitem_notes
+    category: Issues
+    risk: low
+    business_impact: "Reads comments on a work item."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Code & Release ----------
+  - id: gitlab.create_merge_request
+    object: MergeRequest
+    action: create_merge_request
+    category: Code & Release
+    risk: medium
+    business_impact: "Opens a merge request; entry point to production code change."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: gitlab.get_merge_request
+    object: MergeRequest
+    action: get_merge_request
+    category: Code & Release
+    risk: low
+    business_impact: "Reads merge request metadata and description."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: gitlab.get_merge_request_commits
+    object: MergeRequest
+    action: get_merge_request_commits
+    category: Code & Release
+    risk: low
+    business_impact: "Lists commits attached to a merge request."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: gitlab.get_merge_request_diffs
+    object: MergeRequest
+    action: get_merge_request_diffs
+    category: Code & Release
+    risk: medium
+    business_impact: "Reads code diffs; can surface secrets, customer data, or proprietary logic embedded in source."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Pipelines ----------
+  - id: gitlab.get_merge_request_pipelines
+    object: Pipeline
+    action: get_merge_request_pipelines
+    category: Pipelines
+    risk: low
+    business_impact: "Lists CI pipelines associated with a merge request."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: gitlab.get_pipeline_jobs
+    object: Job
+    action: get_pipeline_jobs
+    category: Pipelines
+    risk: low
+    business_impact: "Reads CI job metadata and status."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: gitlab.manage_pipeline
+    object: Pipeline
+    action: manage_pipeline
+    category: Pipelines
+    risk: high
+    business_impact: "Creates, retries, or cancels CI/CD pipelines; can trigger or block production deployments."
+    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Search ----------
+  - id: gitlab.search
+    object: "*"
+    action: search
+    category: Search
+    risk: medium
+    business_impact: "Search across the GitLab instance; can surface code, issues, and merge requests beyond the agent's intended scope."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: gitlab.search_labels
+    object: Label
+    action: search_labels
+    category: Search
+    risk: low
+    business_impact: "Looks up labels in a project or group."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: gitlab.semantic_code_search
+    object: Code
+    action: semantic_code_search
+    category: Search
+    risk: medium
+    business_impact: "Semantic search across source; aggregates code context across repos and may expose secrets-in-code or IP."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Platform ----------
+  - id: gitlab.get_mcp_server_version
+    object: Server
+    action: get_mcp_server_version
+    category: Platform
+    risk: low
+    business_impact: "Returns the MCP server version string."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

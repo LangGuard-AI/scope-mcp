@@ -1,0 +1,263 @@
+schema_version: "1.0"
+platform: mixpanel
+display_name: Mixpanel
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Analytics ----------
+  - id: mixpanel.Run-Query
+    object: Query
+    action: Run-Query
+    category: Analytics
+    risk: medium
+    business_impact: "Executes a JQL/insights query over event data; results may include identified-user behavioral data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: mixpanel.Get-Query-Schema
+    object: Query
+    action: Get-Query-Schema
+    category: Analytics
+    risk: low
+    business_impact: "Returns the schema available to a query; metadata-only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mixpanel.Get-Report
+    object: Report
+    action: Get-Report
+    category: Analytics
+    risk: medium
+    business_impact: "Returns a saved report's contents; aggregate or user-level depending on report definition."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Dashboards ----------
+  - id: mixpanel.Create-Dashboard
+    object: Dashboard
+    action: Create-Dashboard
+    category: Dashboards
+    risk: low
+    business_impact: "Creates a new analytics dashboard; no external effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mixpanel.List-Dashboards
+    object: Dashboard
+    action: List-Dashboards
+    category: Dashboards
+    risk: low
+    business_impact: "Lists dashboards in the project."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mixpanel.Get-Dashboard
+    object: Dashboard
+    action: Get-Dashboard
+    category: Dashboards
+    risk: low
+    business_impact: "Returns a single dashboard configuration and rendered tiles."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mixpanel.Update-Dashboard
+    object: Dashboard
+    action: Update-Dashboard
+    category: Dashboards
+    risk: low
+    business_impact: "Modifies a dashboard's definition or tiles."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mixpanel.Duplicate-Dashboard
+    object: Dashboard
+    action: Duplicate-Dashboard
+    category: Dashboards
+    risk: low
+    business_impact: "Clones an existing dashboard."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mixpanel.Delete-Dashboard
+    object: Dashboard
+    action: Delete-Dashboard
+    category: Dashboards
+    risk: medium
+    business_impact: "Removes a dashboard; reporting context is lost if used by stakeholders."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Discovery ----------
+  - id: mixpanel.Get-Projects
+    object: Project
+    action: Get-Projects
+    category: Data Discovery
+    risk: low
+    business_impact: "Lists Mixpanel projects accessible to the caller."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mixpanel.Get-Events
+    object: Event
+    action: Get-Events
+    category: Data Discovery
+    risk: low
+    business_impact: "Returns the catalog of tracked event types in the project."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mixpanel.Get-Property-Names
+    object: Property
+    action: Get-Property-Names
+    category: Data Discovery
+    risk: low
+    business_impact: "Lists event/user property names; schema metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mixpanel.Get-Property-Values
+    object: Property
+    action: Get-Property-Values
+    category: Data Discovery
+    risk: medium
+    business_impact: "Enumerates observed values for a property; can disclose user identifiers or PII fragments."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: mixpanel.Get-Event-Details
+    object: Event
+    action: Get-Event-Details
+    category: Data Discovery
+    risk: low
+    business_impact: "Returns metadata for one event type."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mixpanel.Get-Issues
+    object: Issue
+    action: Get-Issues
+    category: Data Discovery
+    risk: low
+    business_impact: "Lists data quality issues detected in the project."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mixpanel.Get-Lexicon-URL
+    object: Lexicon
+    action: Get-Lexicon-URL
+    category: Data Discovery
+    risk: low
+    business_impact: "Returns a deep link to the Lexicon entry for an event or property."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Management ----------
+  - id: mixpanel.Edit-Event
+    object: Event
+    action: Edit-Event
+    category: Data Management
+    risk: medium
+    business_impact: "Renames, hides, or annotates an event in Lexicon; downstream queries depend on this taxonomy."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mixpanel.Edit-Property
+    object: Property
+    action: Edit-Property
+    category: Data Management
+    risk: medium
+    business_impact: "Renames, hides, or annotates a property; affects analytic accuracy."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mixpanel.Create-Tag
+    object: Tag
+    action: Create-Tag
+    category: Data Management
+    risk: low
+    business_impact: "Creates a Lexicon tag for organizing events."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mixpanel.Rename-Tag
+    object: Tag
+    action: Rename-Tag
+    category: Data Management
+    risk: low
+    business_impact: "Renames a Lexicon tag."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mixpanel.Delete-Tag
+    object: Tag
+    action: Delete-Tag
+    category: Data Management
+    risk: low
+    business_impact: "Removes a Lexicon tag; tagged items become untagged."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mixpanel.Dismiss-Issues
+    object: Issue
+    action: Dismiss-Issues
+    category: Data Management
+    risk: low
+    business_impact: "Marks data quality issues as dismissed; suppresses warnings."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Session Replays ----------
+  - id: mixpanel.Get-User-Replays-Data
+    object: SessionReplay
+    action: Get-User-Replays-Data
+    category: Session Replays
+    risk: high
+    business_impact: "Returns session replays for a user; replays often capture form inputs, page contents, and identifiable interactions."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

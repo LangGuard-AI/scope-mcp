@@ -1,0 +1,199 @@
+schema_version: "1.0"
+platform: ramp
+display_name: Ramp
+source: langguard-editorial
+updated: "2026-05"
+# NOTE: tool ids are sourced from the open-source ramp_mcp project (an ETL-style
+# server: load_* tools fetch into an ephemeral SQLite DB; execute_query analyzes).
+# The hosted mcp.ramp.com endpoint may add additional approval/write tools.
+actions:
+  # ---------- Financial ----------
+  - id: ramp.load_transactions
+    object: Transaction
+    action: load_transactions
+    category: Financial
+    risk: high
+    business_impact: "Pulls corporate card transaction records into the analysis sandbox; financial PII at scale."
+    compliance: [SOX, COSO, GLBA, PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ramp.load_reimbursements
+    object: Reimbursement
+    action: load_reimbursements
+    category: Financial
+    risk: high
+    business_impact: "Pulls employee reimbursement records, including amounts and supporting metadata."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ramp.load_bills
+    object: Bill
+    action: load_bills
+    category: Financial
+    risk: medium
+    business_impact: "Imports vendor bills due for payment."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ramp.load_bank_accounts
+    object: BankAccount
+    action: load_bank_accounts
+    category: Financial
+    risk: high
+    business_impact: "Loads bank-account configuration including routing/account references."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001, NY_DFS_500]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ramp.load_vendor_bank_accounts
+    object: VendorBankAccount
+    action: load_vendor_bank_accounts
+    category: Financial
+    risk: high
+    business_impact: "Loads vendor payout banking details; tampering enables payment redirection fraud."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ramp.load_spend_limits
+    object: SpendLimit
+    action: load_spend_limits
+    category: Financial
+    risk: medium
+    business_impact: "Imports per-card or per-program spend limits."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ramp.load_spend_programs
+    object: SpendProgram
+    action: load_spend_programs
+    category: Financial
+    risk: medium
+    business_impact: "Imports spend program definitions used to govern card-issuance policy."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ramp.load_vendors
+    object: Vendor
+    action: load_vendors
+    category: Financial
+    risk: medium
+    business_impact: "Imports the vendor master file."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: ramp.load_locations
+    object: Location
+    action: load_locations
+    category: Operations
+    risk: low
+    business_impact: "Imports configured business locations."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ramp.load_departments
+    object: Department
+    action: load_departments
+    category: Operations
+    risk: low
+    business_impact: "Imports the department list used for cost-center attribution."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ramp.load_entities
+    object: Entity
+    action: load_entities
+    category: Operations
+    risk: low
+    business_impact: "Imports legal-entity definitions used for accounting consolidation."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: ramp.load_users
+    object: User
+    action: load_users
+    category: Identity & Access
+    risk: medium
+    business_impact: "Imports the user roster including employee identifiers and roles."
+    compliance: [SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: ramp.process_data
+    object: AnalysisJob
+    action: process_data
+    category: Data Access
+    risk: low
+    business_impact: "Stages loaded data into the analysis SQLite database."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ramp.execute_query
+    object: Query
+    action: execute_query
+    category: Data Access
+    risk: high
+    business_impact: "Runs arbitrary SQL over loaded financial records inside the sandbox."
+    compliance: [SOX, COSO, GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ramp.clear_table
+    object: AnalysisTable
+    action: clear_table
+    category: Data Access
+    risk: low
+    business_impact: "Empties the ephemeral analysis SQLite table; no impact on Ramp data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ramp.get_ramp_categories
+    object: Category
+    action: get_ramp_categories
+    category: Data Access
+    risk: low
+    business_impact: "Returns the canonical Ramp expense-category taxonomy."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ramp.get_currencies
+    object: Currency
+    action: get_currencies
+    category: Data Access
+    risk: low
+    business_impact: "Returns supported currencies and ISO codes."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

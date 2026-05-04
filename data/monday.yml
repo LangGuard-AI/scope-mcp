@@ -1,0 +1,197 @@
+schema_version: "1.0"
+platform: monday
+display_name: monday.com
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Items ----------
+  - id: monday.create_item
+    object: Item
+    action: create_item
+    category: Items
+    risk: low
+    business_impact: "Adds a new row to a board; routine work-tracking write."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: monday.delete_item
+    object: Item
+    action: delete_item
+    category: Items
+    risk: medium
+    business_impact: "Removes a row; downstream automations and reporting lose the record."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: monday.get_board_items_by_name
+    object: Item
+    action: get_board_items_by_name
+    category: Items
+    risk: low
+    business_impact: "Searches items on a board by name."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: monday.create_update
+    object: Update
+    action: create_update
+    category: Items
+    risk: low
+    business_impact: "Posts a comment/update on an item; visible to board collaborators."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: monday.change_item_column_values
+    object: Item
+    action: change_item_column_values
+    category: Items
+    risk: medium
+    business_impact: "Modifies status, dates, owners, or other column values; advances workflows that may have downstream effects."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: monday.move_item_to_group
+    object: Item
+    action: move_item_to_group
+    category: Items
+    risk: low
+    business_impact: "Moves an item between groups; reorganization within a board."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Boards ----------
+  - id: monday.create_board
+    object: Board
+    action: create_board
+    category: Boards
+    risk: low
+    business_impact: "Creates a new board for tracking work."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: monday.get_board_schema
+    object: Board
+    action: get_board_schema
+    category: Boards
+    risk: low
+    business_impact: "Returns a board's column and group structure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: monday.create_group
+    object: Group
+    action: create_group
+    category: Boards
+    risk: low
+    business_impact: "Adds a group (section) to a board."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: monday.create_column
+    object: Column
+    action: create_column
+    category: Boards
+    risk: low
+    business_impact: "Adds a new column to a board's schema."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: monday.delete_column
+    object: Column
+    action: delete_column
+    category: Boards
+    risk: medium
+    business_impact: "Removes a column; data stored in that column on every item is lost."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Forms ----------
+  - id: monday.create_form
+    object: Form
+    action: create_form
+    category: Forms
+    risk: low
+    business_impact: "Creates a WorkForm tied to a board for collecting submissions."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: monday.get_form
+    object: Form
+    action: get_form
+    category: Forms
+    risk: low
+    business_impact: "Returns a form's configuration."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Org & Access ----------
+  - id: monday.list_users_and_teams
+    object: User
+    action: list_users_and_teams
+    category: Org & Access
+    risk: medium
+    business_impact: "Enumerates workspace members and team membership; full directory disclosure."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Platform & DevOps ----------
+  - id: monday.all_monday_api
+    object: "*"
+    action: all_monday_api
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Generic GraphQL passthrough to monday.com's API; can perform any operation the token authorizes."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: monday.get_graphql_schema
+    object: Schema
+    action: get_graphql_schema
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns the GraphQL schema available to the token."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: monday.get_type_details
+    object: Schema
+    action: get_type_details
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns details for one GraphQL type."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

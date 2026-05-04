@@ -1,0 +1,52 @@
+schema_version: "1.0"
+platform: apollo
+display_name: Apollo
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Prospecting & Enrichment ----------
+  - id: apollo.enrich-lead
+    object: Contact
+    action: enrich-lead
+    category: Customer
+    risk: medium
+    business_impact: "Looks up a person and returns enriched contact PII (email, phone, role, employer)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: apollo.prospect
+    object: Contact
+    action: prospect
+    category: Customer
+    risk: high
+    business_impact: "Returns a ranked list of decision-maker contacts including PII; bulk PII pull from B2B database."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Outreach ----------
+  - id: apollo.sequence-load
+    object: Sequence
+    action: sequence-load
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Bulk-enrolls contacts into an outbound email sequence; triggers automated outreach to individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Analytics ----------
+  - id: apollo.analytics
+    object: Report
+    action: analytics
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reads sales performance analytics (emails, calls, meetings, sequence stats)."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

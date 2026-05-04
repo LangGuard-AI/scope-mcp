@@ -1,0 +1,342 @@
+schema_version: "1.0"
+platform: salesforce
+display_name: Salesforce
+source: langguard-editorial
+updated: "2026-04"
+actions:
+  # ---------- Revenue & Pipeline ----------
+  - id: salesforce.update_opportunity_stage
+    object: Opportunity
+    action: update_opportunity_stage
+    category: Revenue & Pipeline
+    risk: critical
+    business_impact: "Changes revenue forecast and triggers commission calculation. Direct line to financial reporting."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: salesforce.create_quote
+    object: Quote
+    action: create_quote
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Commits pricing to customer; basis for future invoice and revenue recognition."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: salesforce.update_contract_terms
+    object: Contract
+    action: update_contract_terms
+    category: Revenue & Pipeline
+    risk: critical
+    business_impact: "Alters binding commercial obligations; affects revenue recognition schedule."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: salesforce.apply_discount_override
+    object: OpportunityLineItem
+    action: apply_discount_override
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Bypasses standard pricing approval; can erode margin without traceability."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: salesforce.create_order
+    object: Order
+    action: create_order
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Creates a commitment that flows to fulfillment and invoicing."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Customer ----------
+  - id: salesforce.create_account
+    object: Account
+    action: create_account
+    category: Customer
+    risk: low
+    business_impact: "Adds a new customer record; low-risk on its own."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: salesforce.merge_accounts
+    object: Account
+    action: merge_accounts
+    category: Customer
+    risk: high
+    business_impact: "Irreversible combination of customer records; can obscure audit trail and consent history."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: salesforce.export_contact_list
+    object: Contact
+    action: export_contact_list
+    category: Customer
+    risk: high
+    business_impact: "Bulk export of PII outside the system of record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: salesforce.delete_lead
+    object: Lead
+    action: delete_lead
+    category: Customer
+    risk: medium
+    business_impact: "Removes prospect PII; may need to honor right-to-erasure but also breaks lead-source attribution."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: salesforce.update_contact_pii
+    object: Contact
+    action: update_contact_pii
+    category: Customer
+    risk: medium
+    business_impact: "Modifies personal data (email, phone, address) on contact records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Service ----------
+  - id: salesforce.create_case
+    object: Case
+    action: create_case
+    category: Service
+    risk: low
+    business_impact: "Opens a support ticket; no customer-visible impact until worked."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: salesforce.close_case
+    object: Case
+    action: close_case
+    category: Service
+    risk: low
+    business_impact: "Marks ticket resolved; affects service SLAs and reporting."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: salesforce.issue_refund
+    object: Case
+    action: issue_refund
+    category: Service
+    risk: critical
+    business_impact: "Moves money back to the customer; touches payment rails and general ledger."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001, PSD2]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Financial ----------
+  - id: salesforce.create_invoice
+    object: Invoice
+    action: create_invoice
+    category: Financial
+    risk: critical
+    business_impact: "Creates a billable obligation and revenue recognition event."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: salesforce.void_invoice
+    object: Invoice
+    action: void_invoice
+    category: Financial
+    risk: critical
+    business_impact: "Reverses a recognized obligation; direct GL impact."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: salesforce.record_payment
+    object: Payment
+    action: record_payment
+    category: Financial
+    risk: critical
+    business_impact: "Posts cash receipt; touches payment processor data and GL."
+    compliance: [SOX, COSO, PCI, GLBA, SOC2, ISO_27001, PSD2]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: salesforce.approve_commission_payout
+    object: Commission
+    action: approve_commission_payout
+    category: Financial
+    risk: critical
+    business_impact: "Authorizes payroll-bound expense; self-approval is a classic SoD violation."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: salesforce.update_forecast
+    object: Forecast
+    action: update_forecast
+    category: Financial
+    risk: high
+    business_impact: "Changes numbers reported to leadership and (for public cos.) to the street."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: salesforce.create_task
+    object: Task
+    action: create_task
+    category: Operations
+    risk: low
+    business_impact: "Adds an internal to-do; no external effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: salesforce.approve_workflow
+    object: ProcessInstance
+    action: approve_workflow
+    category: Operations
+    risk: medium
+    business_impact: "Advances a business process; effect depends on downstream actions."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: salesforce.run_flow
+    object: Flow
+    action: run_flow
+    category: Operations
+    risk: medium
+    business_impact: "Executes a declarative automation; effects depend on the flow's contents."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: salesforce.create_user
+    object: User
+    action: create_user
+    category: Identity & Access
+    risk: high
+    business_impact: "Grants new system access; expands attack surface."
+    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: salesforce.update_user_role
+    object: User
+    action: update_user_role
+    category: Identity & Access
+    risk: critical
+    business_impact: "Changes what actions a user is authorized to take; privilege escalation vector."
+    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: salesforce.reset_password
+    object: User
+    action: reset_password
+    category: Identity & Access
+    risk: medium
+    business_impact: "Invalidates current credentials; account takeover risk if targeted."
+    compliance: [SOX, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: salesforce.update_sharing_rule
+    object: SharingRule
+    action: update_sharing_rule
+    category: Identity & Access
+    risk: high
+    business_impact: "Broadens or narrows record visibility; can inadvertently expose regulated data."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Platform & DevOps ----------
+  - id: salesforce.execute_anonymous_apex
+    object: ApexClass
+    action: execute_anonymous_apex
+    category: Platform & DevOps
+    risk: critical
+    business_impact: "Runs arbitrary server-side code with org-wide privileges; unconstrained blast radius."
+    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: salesforce.deploy_metadata
+    object: Metadata
+    action: deploy_metadata
+    category: Platform & DevOps
+    risk: critical
+    business_impact: "Changes production configuration; bypasses staged release discipline."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: salesforce.run_bulk_query
+    object: BulkQuery
+    action: run_bulk_query
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Extracts large volumes of data, potentially including PII and regulated fields."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: salesforce.export_report
+    object: Report
+    action: export_report
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Moves structured business data out of the system in a shareable form."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: salesforce.delete_metadata
+    object: Metadata
+    action: delete_metadata
+    category: Platform & DevOps
+    risk: critical
+    business_impact: "Removes org configuration (fields, objects, rules); may destroy data and audit context."
+    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP, CLI]

@@ -1,0 +1,461 @@
+schema_version: "1.0"
+platform: braze
+display_name: Braze
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Discovery ----------
+  - id: braze.list_functions
+    object: "*"
+    action: list_functions
+    category: Discovery
+    risk: low
+    business_impact: "Enumerates available MCP functions; pure metadata read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: braze.call_function
+    object: "*"
+    action: call_function
+    category: Discovery
+    risk: medium
+    business_impact: "Generic dispatcher to invoke any other Braze MCP function; effective risk depends on the wrapped call."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Campaigns ----------
+  - id: braze.get_campaign_list
+    object: Campaign
+    action: get_campaign_list
+    category: Campaigns
+    risk: low
+    business_impact: "Lists marketing campaign metadata; no PII subject identifiers exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: braze.get_campaign_details
+    object: Campaign
+    action: get_campaign_details
+    category: Campaigns
+    risk: low
+    business_impact: "Reads campaign configuration and copy; reveals targeting logic."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: braze.get_campaign_dataseries
+    object: Campaign
+    action: get_campaign_dataseries
+    category: Campaigns
+    risk: low
+    business_impact: "Returns time-series performance metrics for a campaign; aggregate only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Canvases ----------
+  - id: braze.get_canvas_list
+    object: Canvas
+    action: get_canvas_list
+    category: Canvases
+    risk: low
+    business_impact: "Lists Canvas (multi-step journey) metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: braze.get_canvas_details
+    object: Canvas
+    action: get_canvas_details
+    category: Canvases
+    risk: low
+    business_impact: "Reveals journey steps, branching, and audience definitions."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: braze.get_canvas_data_summary
+    object: Canvas
+    action: get_canvas_data_summary
+    category: Canvases
+    risk: low
+    business_impact: "Summary performance for a Canvas; aggregate metrics."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: braze.get_canvas_data_series
+    object: Canvas
+    action: get_canvas_data_series
+    category: Canvases
+    risk: low
+    business_impact: "Time-series performance for a Canvas; aggregate metrics."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Catalogs ----------
+  - id: braze.get_catalogs
+    object: Catalog
+    action: get_catalogs
+    category: Catalogs
+    risk: low
+    business_impact: "Lists product or content catalogs."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: braze.get_catalog_items
+    object: CatalogItem
+    action: get_catalog_items
+    category: Catalogs
+    risk: low
+    business_impact: "Lists items within a catalog."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: braze.get_catalog_item
+    object: CatalogItem
+    action: get_catalog_item
+    category: Catalogs
+    risk: low
+    business_impact: "Returns a single catalog item record."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Cloud Data Ingestion ----------
+  - id: braze.list_integrations
+    object: Integration
+    action: list_integrations
+    category: Cloud Data Ingestion
+    risk: low
+    business_impact: "Lists configured cloud-data ingestion integrations."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: braze.get_integration_job_sync_status
+    object: Integration
+    action: get_integration_job_sync_status
+    category: Cloud Data Ingestion
+    risk: low
+    business_impact: "Returns sync job status for a data ingestion integration."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Content Blocks & Templates ----------
+  - id: braze.get_content_blocks_list
+    object: ContentBlock
+    action: get_content_blocks_list
+    category: Content Blocks & Templates
+    risk: low
+    business_impact: "Lists reusable content blocks."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: braze.get_content_blocks_info
+    object: ContentBlock
+    action: get_content_blocks_info
+    category: Content Blocks & Templates
+    risk: low
+    business_impact: "Returns content block bodies; may include marketing copy."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: braze.get_email_templates_list
+    object: EmailTemplate
+    action: get_email_templates_list
+    category: Content Blocks & Templates
+    risk: low
+    business_impact: "Lists email templates."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: braze.get_email_template_info
+    object: EmailTemplate
+    action: get_email_template_info
+    category: Content Blocks & Templates
+    risk: low
+    business_impact: "Returns email template body and metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Custom Attributes ----------
+  - id: braze.get_custom_attributes
+    object: CustomAttribute
+    action: get_custom_attributes
+    category: Custom Attributes
+    risk: medium
+    business_impact: "Reveals custom user-attribute schema; can include sensitive trait names referencing PII fields."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Events ----------
+  - id: braze.get_events_list
+    object: Event
+    action: get_events_list
+    category: Events
+    risk: low
+    business_impact: "Lists tracked event names."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: braze.get_events_data_series
+    object: Event
+    action: get_events_data_series
+    category: Events
+    risk: low
+    business_impact: "Time-series counts for a tracked event; aggregate only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: braze.get_events
+    object: Event
+    action: get_events
+    category: Events
+    risk: low
+    business_impact: "Returns event metadata; aggregate."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- KPIs ----------
+  - id: braze.get_new_users_data_series
+    object: KPI
+    action: get_new_users_data_series
+    category: KPIs
+    risk: low
+    business_impact: "Time-series of new user counts; aggregate metric."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: braze.get_dau_data_series
+    object: KPI
+    action: get_dau_data_series
+    category: KPIs
+    risk: low
+    business_impact: "Daily active users metric."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: braze.get_mau_data_series
+    object: KPI
+    action: get_mau_data_series
+    category: KPIs
+    risk: low
+    business_impact: "Monthly active users metric."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: braze.get_uninstalls_data_series
+    object: KPI
+    action: get_uninstalls_data_series
+    category: KPIs
+    risk: low
+    business_impact: "Uninstall counts over time."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Messages & Sends ----------
+  - id: braze.get_scheduled_broadcasts
+    object: Broadcast
+    action: get_scheduled_broadcasts
+    category: Messages & Sends
+    risk: low
+    business_impact: "Lists upcoming scheduled broadcasts."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: braze.get_send_data_series
+    object: Send
+    action: get_send_data_series
+    category: Messages & Sends
+    risk: low
+    business_impact: "Send-level performance metrics over time."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Sessions ----------
+  - id: braze.get_session_data_series
+    object: Session
+    action: get_session_data_series
+    category: Sessions
+    risk: low
+    business_impact: "Session counts over time; aggregate."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Preference Centers ----------
+  - id: braze.get_preference_centers
+    object: PreferenceCenter
+    action: get_preference_centers
+    category: Preference Centers
+    risk: low
+    business_impact: "Lists subscription preference centers."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: braze.get_preference_center_details
+    object: PreferenceCenter
+    action: get_preference_center_details
+    category: Preference Centers
+    risk: low
+    business_impact: "Returns preference-center configuration that drives consent UX."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Purchases ----------
+  - id: braze.get_product_list
+    object: Product
+    action: get_product_list
+    category: Purchases
+    risk: low
+    business_impact: "Lists tracked products."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: braze.get_revenue_series
+    object: Revenue
+    action: get_revenue_series
+    category: Purchases
+    risk: low
+    business_impact: "Aggregate revenue time series; informs commercial dashboards."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: braze.get_quantity_series
+    object: Revenue
+    action: get_quantity_series
+    category: Purchases
+    risk: low
+    business_impact: "Aggregate purchase quantity time series."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Segments ----------
+  - id: braze.get_segment_list
+    object: Segment
+    action: get_segment_list
+    category: Segments
+    risk: low
+    business_impact: "Lists user segments."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: braze.get_segment_data_series
+    object: Segment
+    action: get_segment_data_series
+    category: Segments
+    risk: low
+    business_impact: "Segment size over time; aggregate."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: braze.get_segment_details
+    object: Segment
+    action: get_segment_details
+    category: Segments
+    risk: medium
+    business_impact: "Reveals segment definition criteria, which can encode targeting on protected characteristics."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Subscription ----------
+  - id: braze.get_user_subscription_groups
+    object: SubscriptionGroup
+    action: get_user_subscription_groups
+    category: Subscription
+    risk: medium
+    business_impact: "Reads a user's subscription-group memberships; tied to consent state."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: braze.get_subscription_group_status
+    object: SubscriptionGroup
+    action: get_subscription_group_status
+    category: Subscription
+    risk: medium
+    business_impact: "Returns opt-in/opt-out state for a subscription group."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Platform & Auth ----------
+  - id: braze.get_sdk_authentication_keys
+    object: AuthKey
+    action: get_sdk_authentication_keys
+    category: Platform & Auth
+    risk: high
+    business_impact: "Returns SDK authentication key metadata; key material can authorize device-level identity claims."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]

@@ -1,0 +1,218 @@
+schema_version: "1.0"
+platform: airtable
+display_name: Airtable
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Workspace & Bases ----------
+  - id: airtable.ping
+    object: Server
+    action: ping
+    category: Operations
+    risk: low
+    business_impact: "Verifies MCP server connectivity."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airtable.list_workspaces
+    object: Workspace
+    action: list_workspaces
+    category: Data Access
+    risk: low
+    business_impact: "Lists Airtable workspaces accessible to the token."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airtable.list_bases
+    object: Base
+    action: list_bases
+    category: Data Access
+    risk: low
+    business_impact: "Lists bases the user has access to."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airtable.search_bases
+    object: Base
+    action: search_bases
+    category: Data Access
+    risk: low
+    business_impact: "Searches bases by name across the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airtable.create_base
+    object: Base
+    action: create_base
+    category: Operations
+    risk: medium
+    business_impact: "Creates a new Airtable base; data store proliferation can complicate inventory and DLP."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Schema ----------
+  - id: airtable.list_tables_for_base
+    object: Table
+    action: list_tables_for_base
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates tables in a base."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airtable.get_table_schema
+    object: Table
+    action: get_table_schema
+    category: Data Access
+    risk: low
+    business_impact: "Reads field definitions for a table."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airtable.create_table
+    object: Table
+    action: create_table
+    category: Operations
+    risk: medium
+    business_impact: "Adds a new table to a base; expands the data surface."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airtable.update_table
+    object: Table
+    action: update_table
+    category: Operations
+    risk: medium
+    business_impact: "Modifies table-level settings; can rename/reshape persisted data."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airtable.create_field
+    object: Field
+    action: create_field
+    category: Operations
+    risk: medium
+    business_impact: "Adds a column to an existing table; impacts downstream views and integrations."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airtable.update_field
+    object: Field
+    action: update_field
+    category: Operations
+    risk: medium
+    business_impact: "Modifies a column definition; type changes can corrupt downstream consumers."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Records ----------
+  - id: airtable.list_records_for_table
+    object: Record
+    action: list_records_for_table
+    category: Data Access
+    risk: medium
+    business_impact: "Returns potentially large slices of base data, which often includes contact PII or business-sensitive records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: airtable.search_records
+    object: Record
+    action: search_records
+    category: Data Access
+    risk: medium
+    business_impact: "Filters records by query; can surface sensitive rows from PII tables."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: airtable.display_records_for_table
+    object: Record
+    action: display_records_for_table
+    category: Data Access
+    risk: medium
+    business_impact: "Renders records for display; equivalent privacy exposure to a list call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: airtable.create_records_for_table
+    object: Record
+    action: create_records_for_table
+    category: Operations
+    risk: medium
+    business_impact: "Inserts records; if the table holds PII, write requires lawful basis."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airtable.update_records_for_table
+    object: Record
+    action: update_records_for_table
+    category: Operations
+    risk: medium
+    business_impact: "Modifies records in bulk; can rewrite PII or operational data without per-row review."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Pages (Interfaces) ----------
+  - id: airtable.list_pages_for_base
+    object: Page
+    action: list_pages_for_base
+    category: Data Access
+    risk: low
+    business_impact: "Lists interface pages built on a base."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airtable.list_records_for_page
+    object: Record
+    action: list_records_for_page
+    category: Data Access
+    risk: medium
+    business_impact: "Reads records as scoped by an interface page; PII exposure mirrors the underlying table."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: airtable.get_record_for_page
+    object: Record
+    action: get_record_for_page
+    category: Data Access
+    risk: low
+    business_impact: "Reads a single record via an interface page."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

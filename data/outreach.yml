@@ -1,0 +1,197 @@
+schema_version: "1.0"
+platform: outreach
+display_name: Outreach
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Prospects ----------
+  - id: outreach.prospect_get_by_id
+    object: Prospect
+    action: prospect_get_by_id
+    category: Prospects
+    risk: medium
+    business_impact: "Returns a single prospect's PII (name, email, phone, employer)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: outreach.prospect_search_by_name
+    object: Prospect
+    action: prospect_search_by_name
+    category: Prospects
+    risk: medium
+    business_impact: "Searches the prospect database by name; can enumerate sales contacts."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: outreach.prospect_search_by_ext_id
+    object: Prospect
+    action: prospect_search_by_ext_id
+    category: Prospects
+    risk: medium
+    business_impact: "Looks up a prospect by external (CRM) id; PII read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Accounts ----------
+  - id: outreach.account_get_by_id
+    object: Account
+    action: account_get_by_id
+    category: Accounts
+    risk: low
+    business_impact: "Returns details on one target account."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: outreach.account_search_by_name
+    object: Account
+    action: account_search_by_name
+    category: Accounts
+    risk: low
+    business_impact: "Searches accounts by name."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: outreach.account_search_by_ext_id
+    object: Account
+    action: account_search_by_ext_id
+    category: Accounts
+    risk: low
+    business_impact: "Looks up an account by external id."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: outreach.account_answer_question
+    object: Account
+    action: account_answer_question
+    category: Accounts
+    risk: medium
+    business_impact: "Returns Outreach-AI generated answers about an account; can synthesize across activity records."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Deals ----------
+  - id: outreach.opportunity_get_by_id
+    object: Opportunity
+    action: opportunity_get_by_id
+    category: Deals
+    risk: medium
+    business_impact: "Returns a single opportunity's amount, stage, and contacts; pipeline-sensitive."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: outreach.opportunity_search_by_name
+    object: Opportunity
+    action: opportunity_search_by_name
+    category: Deals
+    risk: low
+    business_impact: "Searches opportunities by name."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: outreach.opportunity_search_by_ext_id
+    object: Opportunity
+    action: opportunity_search_by_ext_id
+    category: Deals
+    risk: low
+    business_impact: "Looks up an opportunity by external id."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: outreach.opportunity_answer_question
+    object: Opportunity
+    action: opportunity_answer_question
+    category: Deals
+    risk: medium
+    business_impact: "Returns Outreach-AI answers about an opportunity; synthesizes pipeline-sensitive data."
+    compliance: [SOX, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Engagement ----------
+  - id: outreach.fetch_kaia_meetings
+    object: Meeting
+    action: fetch_kaia_meetings
+    category: Engagement
+    risk: high
+    business_impact: "Returns transcripts and recordings from Kaia-captured sales calls; verbatim customer voice and identifiers."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: outreach.emails_search
+    object: Email
+    action: emails_search
+    category: Engagement
+    risk: high
+    business_impact: "Searches outbound and inbound sales email; full message bodies including any PII shared with prospects."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: outreach.sequence_search_by_name
+    object: Sequence
+    action: sequence_search_by_name
+    category: Engagement
+    risk: low
+    business_impact: "Searches outbound sequence templates by name."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: outreach.user_get_by_id
+    object: User
+    action: user_get_by_id
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns one Outreach user record."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: outreach.user_search_by_name
+    object: User
+    action: user_search_by_name
+    category: Identity & Access
+    risk: low
+    business_impact: "Searches Outreach users by name."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: outreach.user_search_by_ext_id
+    object: User
+    action: user_search_by_ext_id
+    category: Identity & Access
+    risk: low
+    business_impact: "Looks up an Outreach user by external id."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

@@ -1,0 +1,486 @@
+schema_version: "1.0"
+platform: amplitude
+display_name: Amplitude
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Discovery & Context ----------
+  - id: amplitude.search
+    object: "*"
+    action: search
+    category: Data Access
+    risk: low
+    business_impact: "Searches Amplitude assets (charts, dashboards, cohorts) by keyword."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.get_from_url
+    object: "*"
+    action: get_from_url
+    category: Data Access
+    risk: low
+    business_impact: "Resolves an Amplitude resource URL into structured context."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.get_context
+    object: Workspace
+    action: get_context
+    category: Data Access
+    risk: low
+    business_impact: "Returns workspace-level metadata for grounding queries."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.get_project_context
+    object: Project
+    action: get_project_context
+    category: Data Access
+    risk: low
+    business_impact: "Returns project schema, taxonomy, and active assets."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Content Retrieval ----------
+  - id: amplitude.get_charts
+    object: Chart
+    action: get_charts
+    category: Data Access
+    risk: low
+    business_impact: "Reads existing Amplitude chart definitions."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.get_dashboard
+    object: Dashboard
+    action: get_dashboard
+    category: Data Access
+    risk: low
+    business_impact: "Reads dashboard layout and embedded charts."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.get_cohorts
+    object: Cohort
+    action: get_cohorts
+    category: Data Access
+    risk: medium
+    business_impact: "Returns user cohort definitions; cohorts may segment users by PII attributes."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.get_experiments
+    object: Experiment
+    action: get_experiments
+    category: Data Access
+    risk: low
+    business_impact: "Reads experiment configuration and exposure rules."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.get_event_properties
+    object: EventProperty
+    action: get_event_properties
+    category: Data Access
+    risk: low
+    business_impact: "Reads tracked event property taxonomy."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.get_users
+    object: User
+    action: get_users
+    category: Data Access
+    risk: high
+    business_impact: "Returns end-user records and behavioral PII held by Amplitude."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.get_flags
+    object: FeatureFlag
+    action: get_flags
+    category: Data Access
+    risk: low
+    business_impact: "Reads feature flag definitions and targeting rules."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.get_deployments
+    object: Deployment
+    action: get_deployments
+    category: Data Access
+    risk: low
+    business_impact: "Reads experiment deployment configuration."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.get_agent_results
+    object: AgentRun
+    action: get_agent_results
+    category: Data Access
+    risk: low
+    business_impact: "Returns prior agentic analysis output stored in Amplitude."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Session Replay ----------
+  - id: amplitude.get_session_replays
+    object: SessionReplay
+    action: get_session_replays
+    category: Data Access
+    risk: high
+    business_impact: "Returns recorded user sessions which can capture screen content and PII entered into forms."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.list_session_replays
+    object: SessionReplay
+    action: list_session_replays
+    category: Data Access
+    risk: medium
+    business_impact: "Lists session replay records; metadata can reveal user identity."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.get_session_replay_events
+    object: SessionReplay
+    action: get_session_replay_events
+    category: Data Access
+    risk: high
+    business_impact: "Returns event timeline within a recorded session, including user interactions."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Query & Analysis ----------
+  - id: amplitude.query_chart
+    object: Chart
+    action: query_chart
+    category: Data Access
+    risk: medium
+    business_impact: "Executes a single chart query; result set may include PII or behavioral data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.query_charts
+    object: Chart
+    action: query_charts
+    category: Data Access
+    risk: medium
+    business_impact: "Executes multiple chart queries in batch; can pull large result sets."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.query_amplitude_data
+    object: "*"
+    action: query_amplitude_data
+    category: Data Access
+    risk: high
+    business_impact: "Free-form analytics query against the project; arbitrary PII can be returned."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.query_experiment
+    object: Experiment
+    action: query_experiment
+    category: Data Access
+    risk: medium
+    business_impact: "Reads experiment exposure and outcome metrics."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: amplitude.render_chart
+    object: Chart
+    action: render_chart
+    category: Data Access
+    risk: low
+    business_impact: "Returns a rendered visualization of an existing chart."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Creation ----------
+  - id: amplitude.save_chart_edits
+    object: Chart
+    action: save_chart_edits
+    category: Operations
+    risk: low
+    business_impact: "Persists modifications to a chart definition."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.create_dashboard
+    object: Dashboard
+    action: create_dashboard
+    category: Operations
+    risk: low
+    business_impact: "Creates a new dashboard; no external impact until shared."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.create_notebook
+    object: Notebook
+    action: create_notebook
+    category: Operations
+    risk: low
+    business_impact: "Creates a new analysis notebook."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.create_experiment
+    object: Experiment
+    action: create_experiment
+    category: Operations
+    risk: medium
+    business_impact: "Defines a new live experiment that will assign real users to variants."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.create_cohort
+    object: Cohort
+    action: create_cohort
+    category: Operations
+    risk: medium
+    business_impact: "Defines a user segment that may be used to target campaigns or experiments."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.create_flags
+    object: FeatureFlag
+    action: create_flags
+    category: Operations
+    risk: medium
+    business_impact: "Creates feature flags that can gate production behavior for end users."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.create_metric
+    object: Metric
+    action: create_metric
+    category: Operations
+    risk: low
+    business_impact: "Defines a derived metric used in reporting."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Editing & Updates ----------
+  - id: amplitude.edit_dashboard
+    object: Dashboard
+    action: edit_dashboard
+    category: Operations
+    risk: low
+    business_impact: "Modifies dashboard layout or contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.edit_notebook
+    object: Notebook
+    action: edit_notebook
+    category: Operations
+    risk: low
+    business_impact: "Modifies an analysis notebook."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.update_experiment
+    object: Experiment
+    action: update_experiment
+    category: Operations
+    risk: medium
+    business_impact: "Changes targeting or variant config of a live experiment affecting real users."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.update_flag
+    object: FeatureFlag
+    action: update_flag
+    category: Operations
+    risk: medium
+    business_impact: "Changes feature-flag rollout state in production."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Feedback ----------
+  - id: amplitude.get_feedback_insights
+    object: Feedback
+    action: get_feedback_insights
+    category: Data Access
+    risk: medium
+    business_impact: "Returns aggregated user feedback insights; may include verbatim user text."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.get_feedback_comments
+    object: Feedback
+    action: get_feedback_comments
+    category: Data Access
+    risk: medium
+    business_impact: "Returns raw user feedback comments which can contain PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.get_feedback_mentions
+    object: Feedback
+    action: get_feedback_mentions
+    category: Data Access
+    risk: medium
+    business_impact: "Returns mentions of products or topics within user feedback."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.get_feedback_sources
+    object: Feedback
+    action: get_feedback_sources
+    category: Data Access
+    risk: low
+    business_impact: "Returns the channels feedback was collected from."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.get_feedback_trends
+    object: Feedback
+    action: get_feedback_trends
+    category: Data Access
+    risk: low
+    business_impact: "Returns time-series trends of feedback themes."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Agent Analytics ----------
+  - id: amplitude.query_agent_analytics_metrics
+    object: AgentAnalytics
+    action: query_agent_analytics_metrics
+    category: Data Access
+    risk: medium
+    business_impact: "Reads aggregated AI agent performance metrics."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: amplitude.query_agent_analytics_sessions
+    object: AgentAnalytics
+    action: query_agent_analytics_sessions
+    category: Data Access
+    risk: high
+    business_impact: "Returns AI agent session detail including end-user prompts."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.query_agent_analytics_spans
+    object: AgentAnalytics
+    action: query_agent_analytics_spans
+    category: Data Access
+    risk: medium
+    business_impact: "Returns trace spans for AI agent runs."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: amplitude.get_agent_analytics_conversation
+    object: AgentAnalytics
+    action: get_agent_analytics_conversation
+    category: Data Access
+    risk: high
+    business_impact: "Returns full transcript of an AI agent conversation with end users."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.search_agent_analytics_conversations
+    object: AgentAnalytics
+    action: search_agent_analytics_conversations
+    category: Data Access
+    risk: medium
+    business_impact: "Searches stored AI agent conversations; results can surface user PII in transcripts."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: amplitude.get_agent_analytics_schema
+    object: AgentAnalytics
+    action: get_agent_analytics_schema
+    category: Data Access
+    risk: low
+    business_impact: "Returns schema definition for agent analytics events."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

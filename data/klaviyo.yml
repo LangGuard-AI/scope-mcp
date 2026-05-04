@@ -1,0 +1,333 @@
+schema_version: "1.0"
+platform: klaviyo
+display_name: Klaviyo
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Customer ----------
+  - id: klaviyo.get_profiles
+    object: Profile
+    action: get_profiles
+    category: Customer
+    risk: high
+    business_impact: "Bulk read of subscriber profiles including email, phone, and behavioral attributes."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: klaviyo.get_profile
+    object: Profile
+    action: get_profile
+    category: Customer
+    risk: medium
+    business_impact: "Returns a single subscriber's PII and engagement history."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: klaviyo.create_profile
+    object: Profile
+    action: create_profile
+    category: Customer
+    risk: medium
+    business_impact: "Adds a subscriber record; consent provenance must be tracked separately to lawfully send."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: klaviyo.update_profile
+    object: Profile
+    action: update_profile
+    category: Customer
+    risk: medium
+    business_impact: "Modifies subscriber PII or custom attributes used for segmentation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: klaviyo.subscribe_profile_to_marketing
+    object: Profile
+    action: subscribe_profile_to_marketing
+    category: Customer
+    risk: high
+    business_impact: "Opts a profile into marketing email or SMS; invalid consent exposes the brand to messaging-consent enforcement."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: klaviyo.unsubscribe_profile_from_marketing
+    object: Profile
+    action: unsubscribe_profile_from_marketing
+    category: Customer
+    risk: low
+    business_impact: "Suppresses a profile from marketing sends; honors opt-out requests."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Audience ----------
+  - id: klaviyo.get_lists
+    object: List
+    action: get_lists
+    category: Audience
+    risk: low
+    business_impact: "Enumerates subscription lists; metadata-only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: klaviyo.get_list
+    object: List
+    action: get_list
+    category: Audience
+    risk: low
+    business_impact: "Returns a single list definition."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: klaviyo.get_segments
+    object: Segment
+    action: get_segments
+    category: Audience
+    risk: low
+    business_impact: "Enumerates dynamic segments."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: klaviyo.get_segment
+    object: Segment
+    action: get_segment
+    category: Audience
+    risk: low
+    business_impact: "Returns a single segment definition."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Campaigns ----------
+  - id: klaviyo.get_campaigns
+    object: Campaign
+    action: get_campaigns
+    category: Campaigns
+    risk: low
+    business_impact: "Lists email or SMS campaigns; metadata-only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: klaviyo.get_campaign
+    object: Campaign
+    action: get_campaign
+    category: Campaigns
+    risk: low
+    business_impact: "Returns a single campaign's configuration."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: klaviyo.create_campaign
+    object: Campaign
+    action: create_campaign
+    category: Campaigns
+    risk: medium
+    business_impact: "Drafts a marketing campaign that may send to thousands; brand and messaging-consent risk if mistargeted."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: klaviyo.assign_template_to_campaign_message
+    object: Campaign
+    action: assign_template_to_campaign_message
+    category: Campaigns
+    risk: medium
+    business_impact: "Swaps the rendered template for a campaign message; changes the customer-visible content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Content ----------
+  - id: klaviyo.create_email_template
+    object: Template
+    action: create_email_template
+    category: Content
+    risk: low
+    business_impact: "Creates a reusable email template; not yet attached to a campaign."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: klaviyo.get_email_template
+    object: Template
+    action: get_email_template
+    category: Content
+    risk: low
+    business_impact: "Returns an email template's HTML content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: klaviyo.upload_image_from_file
+    object: Image
+    action: upload_image_from_file
+    category: Content
+    risk: low
+    business_impact: "Uploads a creative asset to the content library."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: klaviyo.upload_image_from_url
+    object: Image
+    action: upload_image_from_url
+    category: Content
+    risk: low
+    business_impact: "Imports an image from a URL into the content library."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Flows ----------
+  - id: klaviyo.get_flows
+    object: Flow
+    action: get_flows
+    category: Flows
+    risk: low
+    business_impact: "Enumerates automated marketing flows."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: klaviyo.get_flow
+    object: Flow
+    action: get_flow
+    category: Flows
+    risk: low
+    business_impact: "Returns the definition of one automated flow."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Events & Metrics ----------
+  - id: klaviyo.get_events
+    object: Event
+    action: get_events
+    category: Events & Metrics
+    risk: medium
+    business_impact: "Reads behavioral event stream; events typically include identified-user actions."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: klaviyo.create_event
+    object: Event
+    action: create_event
+    category: Events & Metrics
+    risk: medium
+    business_impact: "Records a new behavioral event tied to a profile; affects downstream segmentation and triggered sends."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: klaviyo.get_metrics
+    object: Metric
+    action: get_metrics
+    category: Events & Metrics
+    risk: low
+    business_impact: "Lists tracked event types; metadata-only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: klaviyo.get_metric
+    object: Metric
+    action: get_metric
+    category: Events & Metrics
+    risk: low
+    business_impact: "Returns a single metric definition."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: klaviyo.query_metric_aggregates
+    object: Metric
+    action: query_metric_aggregates
+    category: Events & Metrics
+    risk: low
+    business_impact: "Returns aggregated counts for an event type over time."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Reporting ----------
+  - id: klaviyo.get_campaign_report
+    object: Report
+    action: get_campaign_report
+    category: Reporting
+    risk: low
+    business_impact: "Returns aggregate campaign performance metrics."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: klaviyo.get_flow_report
+    object: Report
+    action: get_flow_report
+    category: Reporting
+    risk: low
+    business_impact: "Returns aggregate flow performance metrics."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Catalog ----------
+  - id: klaviyo.get_catalog_items
+    object: CatalogItem
+    action: get_catalog_items
+    category: Catalog
+    risk: low
+    business_impact: "Lists product catalog entries used in commerce campaigns."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Account ----------
+  - id: klaviyo.get_account_details
+    object: Account
+    action: get_account_details
+    category: Account
+    risk: low
+    business_impact: "Returns Klaviyo account configuration."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

@@ -1,0 +1,129 @@
+schema_version: "1.0"
+platform: aws-marketplace
+display_name: AWS Marketplace
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Discovery (Single-turn) ----------
+  - id: aws-marketplace.get_aws_marketplace_solution
+    object: Solution
+    action: get_aws_marketplace_solution
+    category: Data Access
+    risk: low
+    business_impact: "Returns metadata for an AWS Marketplace listing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aws-marketplace.get_aws_marketplace_related_solutions
+    object: Solution
+    action: get_aws_marketplace_related_solutions
+    category: Data Access
+    risk: low
+    business_impact: "Returns adjacent or comparable Marketplace listings."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aws-marketplace.search_aws_marketplace_solutions
+    object: Solution
+    action: search_aws_marketplace_solutions
+    category: Data Access
+    risk: low
+    business_impact: "Searches the AWS Marketplace catalog by keyword or filter."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Agentic Research (Multi-turn) ----------
+  - id: aws-marketplace.ask_aws_marketplace
+    object: Conversation
+    action: ask_aws_marketplace
+    category: Data Access
+    risk: low
+    business_impact: "Posts a free-form question to the Marketplace assistant."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aws-marketplace.get_aws_marketplace_recommendations_report
+    object: Report
+    action: get_aws_marketplace_recommendations_report
+    category: Data Access
+    risk: low
+    business_impact: "Generates a recommendation report for a stated procurement need."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aws-marketplace.get_aws_marketplace_comparisons_report
+    object: Report
+    action: get_aws_marketplace_comparisons_report
+    category: Data Access
+    risk: low
+    business_impact: "Generates a side-by-side comparison report across Marketplace listings."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aws-marketplace.get_aws_marketplace_evaluation_report
+    object: Report
+    action: get_aws_marketplace_evaluation_report
+    category: Data Access
+    risk: low
+    business_impact: "Generates a structured evaluation of a Marketplace solution."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- File Workspace ----------
+  - id: aws-marketplace.generate_aws_marketplace_file_upload_url
+    object: File
+    action: generate_aws_marketplace_file_upload_url
+    category: Operations
+    risk: low
+    business_impact: "Issues a presigned URL for uploading a context file (e.g., RFP, requirements)."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aws-marketplace.get_aws_marketplace_uploaded_files
+    object: File
+    action: get_aws_marketplace_uploaded_files
+    category: Data Access
+    risk: low
+    business_impact: "Lists files previously uploaded to the assistant context."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aws-marketplace.delete_aws_marketplace_uploaded_file
+    object: File
+    action: delete_aws_marketplace_uploaded_file
+    category: Operations
+    risk: low
+    business_impact: "Removes a previously uploaded context file."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: aws-marketplace.delete_aws_marketplace_conversation
+    object: Conversation
+    action: delete_aws_marketplace_conversation
+    category: Operations
+    risk: low
+    business_impact: "Deletes a stored Marketplace assistant conversation."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

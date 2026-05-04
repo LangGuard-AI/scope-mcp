@@ -1,0 +1,117 @@
+schema_version: "1.0"
+platform: gmail
+display_name: Gmail
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Messaging ----------
+  - id: gmail.search_threads
+    object: Thread
+    action: search_threads
+    category: Messaging
+    risk: high
+    business_impact: "Searches the user's mailbox; can surface PII, credentials, contracts, and material non-public information across all correspondence."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: gmail.get_thread
+    object: Thread
+    action: get_thread
+    category: Messaging
+    risk: high
+    business_impact: "Reads an entire email thread; full message body and attachments enter agent context."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: gmail.create_draft
+    object: Draft
+    action: create_draft
+    category: Messaging
+    risk: medium
+    business_impact: "Composes an email draft on the user's behalf; not auto-sent but visible to the user as their outgoing communication."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: gmail.list_drafts
+    object: Draft
+    action: list_drafts
+    category: Messaging
+    risk: low
+    business_impact: "Enumerates the user's saved drafts."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Labels ----------
+  - id: gmail.create_label
+    object: Label
+    action: create_label
+    category: Labels
+    risk: low
+    business_impact: "Creates a new mailbox label."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: gmail.list_labels
+    object: Label
+    action: list_labels
+    category: Labels
+    risk: low
+    business_impact: "Lists existing mailbox labels."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: gmail.label_message
+    object: Message
+    action: label_message
+    category: Labels
+    risk: low
+    business_impact: "Applies a label to a message; minor mailbox organization change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: gmail.unlabel_message
+    object: Message
+    action: unlabel_message
+    category: Labels
+    risk: low
+    business_impact: "Removes a label from a message."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: gmail.label_thread
+    object: Thread
+    action: label_thread
+    category: Labels
+    risk: low
+    business_impact: "Applies a label to all messages in a thread."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: gmail.unlabel_thread
+    object: Thread
+    action: unlabel_thread
+    category: Labels
+    risk: low
+    business_impact: "Removes a label from all messages in a thread."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

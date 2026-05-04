@@ -1,0 +1,39 @@
+schema_version: "1.0"
+platform: fireflies
+display_name: Fireflies
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Meeting Intelligence ----------
+  - id: fireflies.get_user
+    object: User
+    action: get_user
+    category: Meeting Intelligence
+    risk: low
+    business_impact: "Returns the authenticated user's profile."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: fireflies.get_transcript
+    object: Transcript
+    action: get_transcript
+    category: Meeting Intelligence
+    risk: high
+    business_impact: "Pulls a full meeting transcript; verbatim recording of private business conversations may contain PII, PHI, or material non-public information."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: fireflies.get_transcripts
+    object: Transcript
+    action: get_transcripts
+    category: Meeting Intelligence
+    risk: high
+    business_impact: "Bulk transcript search across meeting history; aggregated personal-data exposure."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

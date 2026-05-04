@@ -1,0 +1,272 @@
+# NOTE: Webflow's MCP server (github.com/webflow/mcp-server) groups its API
+# behind a small set of generic dispatcher tools rather than one tool per
+# action. Each Data API tool (e.g. data_cms_tool, data_sites_tool) takes an
+# `action` parameter that maps to many CRUD verbs, and Designer tools
+# (element_tool, style_tool, etc.) similarly multiplex many designer-canvas
+# operations. We curate the registered tool ids here; downstream verb
+# selection happens at call time.
+schema_version: "1.0"
+platform: webflow
+display_name: Webflow
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Data API ----------
+  - id: webflow.data_sites_tool
+    object: Site
+    action: data_sites_tool
+    category: Data API
+    risk: critical
+    business_impact: "Lists sites, reads details, and publishes sites to production; publish action ships content live with no review gate."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: webflow.data_cms_tool
+    object: CmsItem
+    action: data_cms_tool
+    category: Data API
+    risk: high
+    business_impact: "Generic dispatcher for CMS collections, fields, and items; can create or delete published content and any PII stored in CMS items."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: webflow.data_pages_tool
+    object: Page
+    action: data_pages_tool
+    category: Data API
+    risk: high
+    business_impact: "Manages pages and SEO metadata; can alter live URLs and indexing."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: webflow.data_components_tool
+    object: Component
+    action: data_components_tool
+    category: Data API
+    risk: medium
+    business_impact: "Reads and modifies reusable components used across the site."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: webflow.data_scripts_tool
+    object: CustomScript
+    action: data_scripts_tool
+    category: Data API
+    risk: critical
+    business_impact: "Adds or removes custom scripts on site or page level; arbitrary client-side code execution path for every visitor."
+    compliance: [SOC2, ISO_27001, NIST_CSF, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: webflow.data_comments_tool
+    object: Comment
+    action: data_comments_tool
+    category: Data API
+    risk: low
+    business_impact: "Manages designer-surface comments on a site."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: webflow.data_enterprise_tool
+    object: SiteConfig
+    action: data_enterprise_tool
+    category: Data API
+    risk: high
+    business_impact: "Manages 301 redirects, robots.txt, well-known files, and activity log; misuse can break SEO or hide audit context."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: webflow.data_webhook_tool
+    object: Webhook
+    action: data_webhook_tool
+    category: Data API
+    risk: high
+    business_impact: "Creates and modifies outbound webhooks that exfiltrate site events to arbitrary URLs."
+    compliance: [SOC2, ISO_27001, NIST_CSF, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: webflow.data_workflows_tool
+    object: Workflow
+    action: data_workflows_tool
+    category: Data API
+    risk: medium
+    business_impact: "Lists and executes Webflow AI workflows; effects depend on the underlying workflow definition."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- AI & Guidance ----------
+  - id: webflow.ask_webflow_ai
+    object: Documentation
+    action: ask_webflow_ai
+    category: AI & Guidance
+    risk: low
+    business_impact: "Asks Webflow's AI assistant; documentation-style read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: webflow.webflow_guide_tool
+    object: Documentation
+    action: webflow_guide_tool
+    category: AI & Guidance
+    risk: low
+    business_impact: "Returns guidelines for using Webflow tools."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Designer (Asset) ----------
+  - id: webflow.asset_tool
+    object: Asset
+    action: asset_tool
+    category: Designer (Asset)
+    risk: medium
+    business_impact: "Manages site assets in the Designer canvas; can replace live media."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: webflow.get_image_preview
+    object: Asset
+    action: get_image_preview
+    category: Designer (Asset)
+    risk: low
+    business_impact: "Returns a preview of an image asset."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Designer (Components) ----------
+  - id: webflow.de_component_tool
+    object: Component
+    action: de_component_tool
+    category: Designer (Components)
+    risk: medium
+    business_impact: "Creates and edits Designer components on the canvas."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: webflow.component_builder
+    object: Component
+    action: component_builder
+    category: Designer (Components)
+    risk: medium
+    business_impact: "Builds reusable components programmatically."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Designer (Elements) ----------
+  - id: webflow.element_builder
+    object: Element
+    action: element_builder
+    category: Designer (Elements)
+    risk: medium
+    business_impact: "Constructs canvas elements (containers, blocks, layouts)."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: webflow.element_tool
+    object: Element
+    action: element_tool
+    category: Designer (Elements)
+    risk: medium
+    business_impact: "Manipulates existing canvas elements; can move or delete published structure."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: webflow.whtml_builder
+    object: Element
+    action: whtml_builder
+    category: Designer (Elements)
+    risk: medium
+    business_impact: "Generates Webflow HTML markup for canvas insertion."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: webflow.element_snapshot_tool
+    object: Element
+    action: element_snapshot_tool
+    category: Designer (Elements)
+    risk: low
+    business_impact: "Returns a snapshot of canvas element state for diffing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Designer (Pages, Style, Variables) ----------
+  - id: webflow.de_page_tool
+    object: Page
+    action: de_page_tool
+    category: Designer (Pages, Style, Variables)
+    risk: high
+    business_impact: "Creates, deletes, and modifies designer pages on the live site."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: webflow.style_tool
+    object: Style
+    action: style_tool
+    category: Designer (Pages, Style, Variables)
+    risk: medium
+    business_impact: "Manages CSS classes and applied styles."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: webflow.variable_tool
+    object: Variable
+    action: variable_tool
+    category: Designer (Pages, Style, Variables)
+    risk: medium
+    business_impact: "Manages design variables (tokens) consumed across the site."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Connection ----------
+  - id: webflow.get_designer_app_connection_info
+    object: Connection
+    action: get_designer_app_connection_info
+    category: Connection
+    risk: low
+    business_impact: "Returns local Designer app connection info for the current session."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

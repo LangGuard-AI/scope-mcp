@@ -1,0 +1,651 @@
+schema_version: "1.0"
+platform: activecampaign
+display_name: ActiveCampaign
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Customer ----------
+  - id: activecampaign.list_contacts
+    object: Contact
+    action: list_contacts
+    category: Customer
+    risk: medium
+    business_impact: "Returns paginated contact records including names, emails, and custom field values."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.get_contact
+    object: Contact
+    action: get_contact
+    category: Customer
+    risk: medium
+    business_impact: "Reads a single contact's PII and engagement profile."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.create_or_update_contact
+    object: Contact
+    action: create_or_update_contact
+    category: Customer
+    risk: medium
+    business_impact: "Upserts contact PII; can introduce non-consented contacts if used carelessly."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.update_contact
+    object: Contact
+    action: update_contact
+    category: Customer
+    risk: medium
+    business_impact: "Modifies existing contact PII (email, phone, address, identifiers)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.get_contact_tags
+    object: Contact
+    action: get_contact_tags
+    category: Customer
+    risk: low
+    business_impact: "Reads tags assigned to a contact for segmentation context."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.get_contact_field_values
+    object: Contact
+    action: get_contact_field_values
+    category: Customer
+    risk: medium
+    business_impact: "Reads custom field values which often contain sensitive contact attributes."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.get_contact_score_values
+    object: Contact
+    action: get_contact_score_values
+    category: Customer
+    risk: low
+    business_impact: "Reads engagement / lead-scoring values per contact."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.list_contact_activities
+    object: ContactActivity
+    action: list_contact_activities
+    category: Customer
+    risk: medium
+    business_impact: "Reads engagement event history per contact (opens, clicks, page visits)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.bulk_import_contacts
+    object: Contact
+    action: bulk_import_contacts
+    category: Customer
+    risk: high
+    business_impact: "Mass-imports contacts; consent and source-of-record obligations apply at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.bulk_import_status_list
+    object: BulkImport
+    action: bulk_import_status_list
+    category: Customer
+    risk: low
+    business_impact: "Reads the status of recent bulk-import jobs."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Tags ----------
+  - id: activecampaign.list_tags
+    object: Tag
+    action: list_tags
+    category: Customer
+    risk: low
+    business_impact: "Lists tag definitions in the account."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.get_tag
+    object: Tag
+    action: get_tag
+    category: Customer
+    risk: low
+    business_impact: "Reads a tag definition."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.create_contact_tag
+    object: Tag
+    action: create_contact_tag
+    category: Customer
+    risk: low
+    business_impact: "Creates a new tag for use in segmentation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.add_tag_to_contact
+    object: Contact
+    action: add_tag_to_contact
+    category: Customer
+    risk: low
+    business_impact: "Applies a tag to a contact, affecting downstream segmentation and automations."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Lists ----------
+  - id: activecampaign.list_lists
+    object: List
+    action: list_lists
+    category: Customer
+    risk: low
+    business_impact: "Enumerates marketing lists in the account."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.get_list
+    object: List
+    action: get_list
+    category: Customer
+    risk: low
+    business_impact: "Reads metadata for a marketing list."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.create_list
+    object: List
+    action: create_list
+    category: Customer
+    risk: low
+    business_impact: "Creates a new marketing list."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.update_list
+    object: List
+    action: update_list
+    category: Customer
+    risk: low
+    business_impact: "Modifies marketing-list configuration."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.add_contact_to_list
+    object: Contact
+    action: add_contact_to_list
+    category: Customer
+    risk: medium
+    business_impact: "Subscribes a contact to a list; consent and unsubscribe obligations apply."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.get_contact_list_memberships
+    object: Contact
+    action: get_contact_list_memberships
+    category: Customer
+    risk: low
+    business_impact: "Reads which lists a contact belongs to."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Custom Fields ----------
+  - id: activecampaign.list_contact_custom_fields
+    object: CustomField
+    action: list_contact_custom_fields
+    category: Customer
+    risk: low
+    business_impact: "Lists custom-field definitions on the contact object."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.get_contact_custom_field
+    object: CustomField
+    action: get_contact_custom_field
+    category: Customer
+    risk: low
+    business_impact: "Reads a custom-field definition."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.create_contact_custom_field
+    object: CustomField
+    action: create_contact_custom_field
+    category: Customer
+    risk: low
+    business_impact: "Adds a new custom field to the contact schema."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.create_field_options
+    object: CustomField
+    action: create_field_options
+    category: Customer
+    risk: low
+    business_impact: "Defines option values for a select-style custom field."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.create_contact_field_relationship
+    object: CustomField
+    action: create_contact_field_relationship
+    category: Customer
+    risk: low
+    business_impact: "Associates a custom field with a list scope."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.list_contact_field_values
+    object: CustomFieldValue
+    action: list_contact_field_values
+    category: Customer
+    risk: medium
+    business_impact: "Bulk-reads custom-field values across contacts."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.get_contact_field_value
+    object: CustomFieldValue
+    action: get_contact_field_value
+    category: Customer
+    risk: low
+    business_impact: "Reads a single custom-field value for a contact."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.create_contact_field_value
+    object: CustomFieldValue
+    action: create_contact_field_value
+    category: Customer
+    risk: low
+    business_impact: "Sets a custom-field value on a contact."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.update_contact_field_value
+    object: CustomFieldValue
+    action: update_contact_field_value
+    category: Customer
+    risk: low
+    business_impact: "Updates a custom-field value on a contact."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Campaigns & Activities ----------
+  - id: activecampaign.list_email_activities
+    object: EmailActivity
+    action: list_email_activities
+    category: Operations
+    risk: low
+    business_impact: "Reads email-send activity records."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.list_campaigns
+    object: Campaign
+    action: list_campaigns
+    category: Operations
+    risk: low
+    business_impact: "Lists email campaigns and their status."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.get_campaign
+    object: Campaign
+    action: get_campaign
+    category: Operations
+    risk: low
+    business_impact: "Reads campaign configuration and performance metrics."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.get_campaign_links
+    object: Campaign
+    action: get_campaign_links
+    category: Operations
+    risk: low
+    business_impact: "Reads the trackable links embedded in a campaign."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Automations ----------
+  - id: activecampaign.list_automations
+    object: Automation
+    action: list_automations
+    category: Operations
+    risk: low
+    business_impact: "Lists configured marketing automations."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.list_contact_automations
+    object: Automation
+    action: list_contact_automations
+    category: Operations
+    risk: low
+    business_impact: "Lists automations a contact is currently enrolled in."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.get_contact_automation
+    object: Automation
+    action: get_contact_automation
+    category: Operations
+    risk: low
+    business_impact: "Reads enrollment details for a contact-automation pair."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.add_contact_to_automation
+    object: Automation
+    action: add_contact_to_automation
+    category: Operations
+    risk: medium
+    business_impact: "Enrolls a contact in an automation; can trigger outbound messaging at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.remove_contact_from_automation
+    object: Automation
+    action: remove_contact_from_automation
+    category: Operations
+    risk: low
+    business_impact: "Removes a contact from an automation enrollment."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: activecampaign.list_groups
+    object: Group
+    action: list_groups
+    category: Identity & Access
+    risk: low
+    business_impact: "Lists user groups configured on the account."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.create_list_group_permission
+    object: Group
+    action: create_list_group_permission
+    category: Identity & Access
+    risk: medium
+    business_impact: "Grants a group access to a marketing list; broadens who can view contact data."
+    compliance: [GDPR, UK_GDPR, CCPA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.is_phone_only_contacts_enabled
+    object: AccountSetting
+    action: is_phone_only_contacts_enabled
+    category: Operations
+    risk: low
+    business_impact: "Reads an account-level toggle controlling phone-only contact handling."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Revenue & Pipeline ----------
+  - id: activecampaign.get_deal
+    object: Deal
+    action: get_deal
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reads a single CRM deal."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.list_deals
+    object: Deal
+    action: list_deals
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Lists CRM deals; reflects pipeline state."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.create_deal
+    object: Deal
+    action: create_deal
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Creates a deal in the pipeline; affects forecast totals."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.update_deal
+    object: Deal
+    action: update_deal
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Modifies deal value, stage, or owner; direct effect on revenue forecast."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.create_deal_note
+    object: Deal
+    action: create_deal_note
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Adds a note to a deal record."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.update_deal_note
+    object: Deal
+    action: update_deal_note
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Edits a note on a deal record."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.deal_owner_bulk_update
+    object: Deal
+    action: deal_owner_bulk_update
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Reassigns ownership of many deals at once; reshapes commission attribution and access."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.list_deal_pipelines
+    object: Pipeline
+    action: list_deal_pipelines
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Lists pipeline configurations."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.create_deal_pipeline
+    object: Pipeline
+    action: create_deal_pipeline
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Adds a new sales pipeline; changes how forecast is grouped."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.get_deal_pipeline
+    object: Pipeline
+    action: get_deal_pipeline
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reads a pipeline configuration."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.update_deal_pipeline
+    object: Pipeline
+    action: update_deal_pipeline
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Modifies pipeline configuration; alters forecasting structure."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.list_deal_stages
+    object: Stage
+    action: list_deal_stages
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Lists stage definitions for a pipeline."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.create_deal_stage
+    object: Stage
+    action: create_deal_stage
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Adds a stage; affects probability-weighted forecast math."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.get_deal_stage
+    object: Stage
+    action: get_deal_stage
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reads a stage configuration."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.update_deal_stage
+    object: Stage
+    action: update_deal_stage
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Edits a stage definition; shifts forecast weighting."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.move_deals_to_stage
+    object: Deal
+    action: move_deals_to_stage
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Bulk-changes the pipeline stage of multiple deals; can materially shift recognized forecast."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: activecampaign.list_deal_activities
+    object: DealActivity
+    action: list_deal_activities
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reads activity history on deals."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

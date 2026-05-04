@@ -1,0 +1,152 @@
+schema_version: "1.0"
+platform: mercury
+display_name: Mercury
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Banking ----------
+  - id: mercury.getAccount
+    object: Account
+    action: getAccount
+    category: Banking
+    risk: medium
+    business_impact: "Returns details for a specific business bank account including balance and routing data."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001, NY_DFS_500]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mercury.getAccounts
+    object: Account
+    action: getAccounts
+    category: Banking
+    risk: medium
+    business_impact: "Lists all bank accounts on the organization; reveals total banking footprint."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001, NY_DFS_500]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mercury.getAccountStatements
+    object: Statement
+    action: getAccountStatements
+    category: Banking
+    risk: high
+    business_impact: "Retrieves bank statements; full transaction history is regulated financial data."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001, NY_DFS_500]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mercury.getAccountCards
+    object: Card
+    action: getAccountCards
+    category: Banking
+    risk: medium
+    business_impact: "Lists cards issued on an account."
+    compliance: [PCI, GLBA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mercury.getOrganization
+    object: Organization
+    action: getOrganization
+    category: Banking
+    risk: low
+    business_impact: "Returns organization-level metadata for the Mercury customer."
+    compliance: [GLBA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Transactions ----------
+  - id: mercury.listTransactions
+    object: Transaction
+    action: listTransactions
+    category: Transactions
+    risk: high
+    business_impact: "Bulk read of bank transactions; direct exposure of regulated financial activity."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001, NY_DFS_500]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mercury.getTransaction
+    object: Transaction
+    action: getTransaction
+    category: Transactions
+    risk: medium
+    business_impact: "Returns a single bank transaction including counterparty data."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mercury.listCategories
+    object: Category
+    action: listCategories
+    category: Transactions
+    risk: low
+    business_impact: "Returns the categorization taxonomy used to label transactions."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Counterparties ----------
+  - id: mercury.getRecipient
+    object: Recipient
+    action: getRecipient
+    category: Counterparties
+    risk: medium
+    business_impact: "Returns a single payment recipient including bank routing details."
+    compliance: [GLBA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mercury.getRecipients
+    object: Recipient
+    action: getRecipients
+    category: Counterparties
+    risk: medium
+    business_impact: "Lists payment recipients; full counterparty banking directory."
+    compliance: [GLBA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Credit & Treasury ----------
+  - id: mercury.listCredit
+    object: Credit
+    action: listCredit
+    category: Credit & Treasury
+    risk: medium
+    business_impact: "Lists credit products and balances on the account."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mercury.getTreasury
+    object: Treasury
+    action: getTreasury
+    category: Credit & Treasury
+    risk: medium
+    business_impact: "Returns treasury account configuration and balance."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mercury.getTreasuryTransactions
+    object: Transaction
+    action: getTreasuryTransactions
+    category: Credit & Treasury
+    risk: high
+    business_impact: "Returns the transaction history of a treasury (yield) account; regulated investment activity."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001, NY_DFS_500]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

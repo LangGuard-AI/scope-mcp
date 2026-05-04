@@ -1,0 +1,297 @@
+schema_version: "1.0"
+platform: stripe
+display_name: Stripe
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Financial ----------
+  - id: stripe.create_invoice
+    object: Invoice
+    action: create_invoice
+    category: Financial
+    risk: critical
+    business_impact: "Creates a billable invoice in Stripe; revenue recognition event tied to the GL."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: stripe.create_invoice_item
+    object: InvoiceItem
+    action: create_invoice_item
+    category: Financial
+    risk: high
+    business_impact: "Adds line items to a draft invoice; affects amount billed to the customer."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: stripe.finalize_invoice
+    object: Invoice
+    action: finalize_invoice
+    category: Financial
+    risk: critical
+    business_impact: "Locks the invoice and triggers payment collection; commits revenue."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001, PSD2]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: stripe.list_invoices
+    object: Invoice
+    action: list_invoices
+    category: Financial
+    risk: medium
+    business_impact: "Reads invoice history including amounts and customer references."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: stripe.create_refund
+    object: Refund
+    action: create_refund
+    category: Financial
+    risk: critical
+    business_impact: "Moves money back to the customer; direct GL impact and chargeback exposure."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001, PSD2]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: stripe.list_payment_intents
+    object: PaymentIntent
+    action: list_payment_intents
+    category: Financial
+    risk: medium
+    business_impact: "Reads payment attempts including amounts, status, and last-four card data."
+    compliance: [PCI, SOX, COSO, SOC2, ISO_27001, PSD2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: stripe.create_payment_link
+    object: PaymentLink
+    action: create_payment_link
+    category: Financial
+    risk: high
+    business_impact: "Generates a publicly shareable URL that initiates a payment flow against your account."
+    compliance: [PCI, SOX, COSO, SOC2, ISO_27001, PSD2]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: stripe.retrieve_balance
+    object: Balance
+    action: retrieve_balance
+    category: Financial
+    risk: low
+    business_impact: "Reads current available and pending Stripe balance."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: stripe.execute_analytics
+    object: "*"
+    action: execute_analytics
+    category: Financial
+    risk: medium
+    business_impact: "Runs aggregate analytics queries across Stripe data; can return broad financial signals."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Disputes ----------
+  - id: stripe.list_disputes
+    object: Dispute
+    action: list_disputes
+    category: Financial
+    risk: medium
+    business_impact: "Reads chargeback / dispute records including amounts and reason codes."
+    compliance: [PCI, SOX, COSO, SOC2, ISO_27001, PSD2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: stripe.update_dispute
+    object: Dispute
+    action: update_dispute
+    category: Financial
+    risk: high
+    business_impact: "Submits or modifies dispute evidence; affects chargeback outcome and revenue."
+    compliance: [PCI, SOX, COSO, SOC2, ISO_27001, PSD2]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Subscriptions ----------
+  - id: stripe.list_subscriptions
+    object: Subscription
+    action: list_subscriptions
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Reads recurring billing arrangements including customer, plan, and amount."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: stripe.update_subscription
+    object: Subscription
+    action: update_subscription
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Changes plan, quantity, or trial state of a recurring billing relationship."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: stripe.cancel_subscription
+    object: Subscription
+    action: cancel_subscription
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Ends a recurring revenue stream; reverses future-period revenue recognition."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Catalog ----------
+  - id: stripe.create_product
+    object: Product
+    action: create_product
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Defines a new sellable item in the Stripe catalog."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: stripe.list_products
+    object: Product
+    action: list_products
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reads catalog products; metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: stripe.create_price
+    object: Price
+    action: create_price
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Defines pricing applied to subsequent invoices; revenue-recognition relevant."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: stripe.list_prices
+    object: Price
+    action: list_prices
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reads pricing definitions; catalog metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: stripe.create_coupon
+    object: Coupon
+    action: create_coupon
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Creates a discount instrument; can be applied to reduce future invoice amounts."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: stripe.list_coupons
+    object: Coupon
+    action: list_coupons
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reads available discount instruments."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Customer ----------
+  - id: stripe.create_customer
+    object: Customer
+    action: create_customer
+    category: Customer
+    risk: medium
+    business_impact: "Creates a customer record holding billing PII (name, email, address)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, PCI]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: stripe.list_customers
+    object: Customer
+    action: list_customers
+    category: Customer
+    risk: high
+    business_impact: "Bulk read of customer records including billing PII; export risk at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, PCI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Platform & DevOps ----------
+  - id: stripe.get_stripe_account_info
+    object: Account
+    action: get_stripe_account_info
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Reads metadata about the connected Stripe account."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: stripe.search_stripe_resources
+    object: "*"
+    action: search_stripe_resources
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Generic search across Stripe resources; can return PII and financial data."
+    compliance: [PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: stripe.fetch_stripe_resources
+    object: "*"
+    action: fetch_stripe_resources
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Generic fetch of arbitrary Stripe resources by id; PII and financial exposure depends on target."
+    compliance: [PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: stripe.search_stripe_documentation
+    object: Documentation
+    action: search_stripe_documentation
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Searches Stripe public documentation; no account data accessed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

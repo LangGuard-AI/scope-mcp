@@ -1,0 +1,420 @@
+schema_version: "1.0"
+platform: attio
+display_name: Attio
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Records & Objects ----------
+  - id: attio.search-records
+    object: Record
+    action: search-records
+    category: Customer
+    risk: medium
+    business_impact: "Searches CRM records; results can include contact PII across the workspace."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.list-records
+    object: Record
+    action: list-records
+    category: Customer
+    risk: medium
+    business_impact: "Lists records of a CRM object; can return bulk PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.get-records-by-ids
+    object: Record
+    action: get-records-by-ids
+    category: Customer
+    risk: medium
+    business_impact: "Fetches specific records by ID; returns PII fields."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.create-record
+    object: Record
+    action: create-record
+    category: Customer
+    risk: medium
+    business_impact: "Creates a CRM record; introduces new personal data into the system."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.upsert-record
+    object: Record
+    action: upsert-record
+    category: Customer
+    risk: medium
+    business_impact: "Creates or updates a record by matching attributes; can silently overwrite existing PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.update-record
+    object: Record
+    action: update-record
+    category: Customer
+    risk: medium
+    business_impact: "Modifies an existing CRM record's fields including personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.list-attribute-definitions
+    object: Attribute
+    action: list-attribute-definitions
+    category: Operations
+    risk: low
+    business_impact: "Reads schema definitions for an Attio object."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Lists ----------
+  - id: attio.list-lists
+    object: List
+    action: list-lists
+    category: Operations
+    risk: low
+    business_impact: "Enumerates lists in the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.list-list-attribute-definitions
+    object: List
+    action: list-list-attribute-definitions
+    category: Operations
+    risk: low
+    business_impact: "Reads attribute schema for a list."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.list-records-in-list
+    object: List
+    action: list-records-in-list
+    category: Customer
+    risk: medium
+    business_impact: "Returns records on a list; can expose curated PII segments."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.add-record-to-list
+    object: List
+    action: add-record-to-list
+    category: Customer
+    risk: low
+    business_impact: "Adds an existing record to a list."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.update-list
+    object: List
+    action: update-list
+    category: Operations
+    risk: low
+    business_impact: "Updates list configuration."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.update-list-entry-by-id
+    object: ListEntry
+    action: update-list-entry-by-id
+    category: Operations
+    risk: low
+    business_impact: "Modifies a list entry's per-list attributes."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.update-list-entry-by-record-id
+    object: ListEntry
+    action: update-list-entry-by-record-id
+    category: Operations
+    risk: low
+    business_impact: "Modifies a list entry identified by its record."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Comments & Notes ----------
+  - id: attio.create-comment
+    object: Comment
+    action: create-comment
+    category: Operations
+    risk: low
+    business_impact: "Posts a comment thread; visible to workspace members."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.list-comments
+    object: Comment
+    action: list-comments
+    category: Operations
+    risk: low
+    business_impact: "Reads existing comments."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.list-comment-replies
+    object: Comment
+    action: list-comment-replies
+    category: Operations
+    risk: low
+    business_impact: "Reads replies on a comment thread."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.delete-comment
+    object: Comment
+    action: delete-comment
+    category: Operations
+    risk: medium
+    business_impact: "Removes a comment; collaboration history is altered."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.create-note
+    object: Note
+    action: create-note
+    category: Operations
+    risk: low
+    business_impact: "Adds a note to a record; may capture sensitive customer context."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.search-notes-by-metadata
+    object: Note
+    action: search-notes-by-metadata
+    category: Data Access
+    risk: low
+    business_impact: "Searches notes by author/date/record metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.semantic-search-notes
+    object: Note
+    action: semantic-search-notes
+    category: Data Access
+    risk: medium
+    business_impact: "Free-form semantic search over note bodies; can surface sensitive customer context."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.get-note-body
+    object: Note
+    action: get-note-body
+    category: Data Access
+    risk: medium
+    business_impact: "Returns full note text which may contain customer PII or contract detail."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.update-note
+    object: Note
+    action: update-note
+    category: Operations
+    risk: low
+    business_impact: "Modifies an existing note."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Tasks ----------
+  - id: attio.list-tasks
+    object: Task
+    action: list-tasks
+    category: Operations
+    risk: low
+    business_impact: "Lists tasks across the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.create-task
+    object: Task
+    action: create-task
+    category: Operations
+    risk: low
+    business_impact: "Creates an internal to-do; no external effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.update-task
+    object: Task
+    action: update-task
+    category: Operations
+    risk: low
+    business_impact: "Modifies task status, assignee, or content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Meetings & Calls ----------
+  - id: attio.search-meetings
+    object: Meeting
+    action: search-meetings
+    category: Data Access
+    risk: low
+    business_impact: "Searches captured meeting metadata."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.search-call-recordings-by-metadata
+    object: CallRecording
+    action: search-call-recordings-by-metadata
+    category: Data Access
+    risk: medium
+    business_impact: "Searches call recordings by metadata; can surface sales/customer call records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.semantic-search-call-recordings
+    object: CallRecording
+    action: semantic-search-call-recordings
+    category: Data Access
+    risk: high
+    business_impact: "Semantic search over call transcripts can expose sensitive customer conversations."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.get-call-recording
+    object: CallRecording
+    action: get-call-recording
+    category: Data Access
+    risk: high
+    business_impact: "Returns a specific call recording or transcript with verbatim conversation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Emails ----------
+  - id: attio.search-emails-by-metadata
+    object: Email
+    action: search-emails-by-metadata
+    category: Data Access
+    risk: medium
+    business_impact: "Searches captured emails by sender/date/subject metadata."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.semantic-search-emails
+    object: Email
+    action: semantic-search-emails
+    category: Data Access
+    risk: high
+    business_impact: "Semantic search over email bodies; can surface confidential correspondence."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.get-email-content
+    object: Email
+    action: get-email-content
+    category: Data Access
+    risk: high
+    business_impact: "Returns full body of a captured email; verbatim correspondence."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Workspace ----------
+  - id: attio.list-workspace-members
+    object: User
+    action: list-workspace-members
+    category: Identity & Access
+    risk: medium
+    business_impact: "Returns workspace member identities and roles."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.list-workspace-teams
+    object: Team
+    action: list-workspace-teams
+    category: Identity & Access
+    risk: low
+    business_impact: "Lists configured teams and their members."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: attio.whoami
+    object: User
+    action: whoami
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns current authenticated principal."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Reporting ----------
+  - id: attio.run-basic-report
+    object: Report
+    action: run-basic-report
+    category: Data Access
+    risk: medium
+    business_impact: "Runs a built-in report; aggregates customer pipeline data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

@@ -1,0 +1,47 @@
+# NOTE: Square's MCP server (github.com/square/square-mcp-server) exposes
+# only three generic dispatcher tools. Concrete Square API behavior (creating
+# customers, refunds, payments, etc.) flows through `make_api_request`, so
+# the agent's blast radius is the entire Square API platform. Customers
+# auditing this connector should treat `make_api_request` as the high-water
+# mark for risk and tag downstream effects (PCI, payment movement) at the
+# agent-design level.
+schema_version: "1.0"
+platform: square
+display_name: Square
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Discovery ----------
+  - id: square.get_service_info
+    object: Service
+    action: get_service_info
+    category: Discovery
+    risk: low
+    business_impact: "Lists methods available for a Square API service; documentation read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: square.get_type_info
+    object: TypeSchema
+    action: get_type_info
+    category: Discovery
+    risk: low
+    business_impact: "Returns parameter requirements for a Square API type; documentation read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- API Execution ----------
+  - id: square.make_api_request
+    object: "*"
+    action: make_api_request
+    category: API Execution
+    risk: critical
+    business_impact: "Generic dispatcher that executes any Square API call: payments, refunds, customer PII, orders, catalog, payouts. Effective scope equals the connected merchant's full Square access."
+    compliance: [SOX, COSO, PCI, GLBA, PSD2, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]

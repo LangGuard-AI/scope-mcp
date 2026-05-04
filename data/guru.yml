@@ -1,0 +1,61 @@
+schema_version: "1.0"
+platform: guru
+display_name: Guru
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Knowledge ----------
+  - id: guru.list_knowledge_agents
+    object: KnowledgeAgent
+    action: list_knowledge_agents
+    category: Knowledge
+    risk: low
+    business_impact: "Enumerates Knowledge Agents available in the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: guru.ask_question
+    object: KnowledgeAgent
+    action: ask_question
+    category: Knowledge
+    risk: medium
+    business_impact: "Generates an answer grounded in Guru cards and connected sources (Slack, Drive, Confluence); answers may include policy data, customer info, or other regulated content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: guru.search_content
+    object: Card
+    action: search_content
+    category: Knowledge
+    risk: medium
+    business_impact: "Searches Guru content; can surface internal documentation including HR, security, and customer data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: guru.create_card_draft
+    object: Card
+    action: create_card_draft
+    category: Knowledge
+    risk: low
+    business_impact: "Drafts a new Guru card; visible to authors as a draft, not auto-published."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: guru.update_card
+    object: Card
+    action: update_card
+    category: Knowledge
+    risk: medium
+    business_impact: "Modifies an existing Guru card; changes the source of truth employees rely on for policy and procedure."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]

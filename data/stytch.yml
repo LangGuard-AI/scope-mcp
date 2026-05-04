@@ -1,0 +1,93 @@
+# NOTE: Stytch's MCP server reports "21 tools enabled" but Stytch's published
+# docs (stytch.com/docs/workspace-management/stytch-mcp,
+# stytch.com/docs/resources/workspace-management/stytch-mcp-server, and the
+# launch blog) only enumerate the seven canonical workspace-management tools
+# below. The remaining ~14 are surfaced only at runtime in MCP clients. We
+# curate the verified seven here; unmatched tool names from the same MCP
+# server fall through to platform-level matching for stytch.*
+schema_version: "1.0"
+platform: stytch
+display_name: Stytch
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Project Management ----------
+  - id: stytch.listProjects
+    object: Project
+    action: listProjects
+    category: Project Management
+    risk: low
+    business_impact: "Lists Stytch projects in the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: stytch.createProject
+    object: Project
+    action: createProject
+    category: Project Management
+    risk: medium
+    business_impact: "Creates a new Stytch project; expands the workspace's authentication footprint."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- SDK & Auth Configuration ----------
+  - id: stytch.updateConsumerSDKConfig
+    object: SDKConfig
+    action: updateConsumerSDKConfig
+    category: SDK & Auth Configuration
+    risk: critical
+    business_impact: "Reconfigures consumer SDK settings, enabled auth products, and permissions; misconfiguration can disable MFA or lock users out at scale."
+    compliance: [SOC2, ISO_27001, NIST_CSF, NY_DFS_500, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Redirect URLs ----------
+  - id: stytch.getAllRedirectURLs
+    object: RedirectURL
+    action: getAllRedirectURLs
+    category: Redirect URLs
+    risk: low
+    business_impact: "Reads registered redirect URLs for the project."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: stytch.createRedirectURLs
+    object: RedirectURL
+    action: createRedirectURLs
+    category: Redirect URLs
+    risk: high
+    business_impact: "Registers new authentication callback URLs; an attacker-controlled URL here enables credential interception."
+    compliance: [SOC2, ISO_27001, NIST_CSF, GDPR, UK_GDPR, CCPA]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Public Tokens ----------
+  - id: stytch.getAllPublicTokens
+    object: PublicToken
+    action: getAllPublicTokens
+    category: Public Tokens
+    risk: medium
+    business_impact: "Reads public tokens used by client applications; intended public credentials but still a credential."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: stytch.createPublicToken
+    object: PublicToken
+    action: createPublicToken
+    category: Public Tokens
+    risk: high
+    business_impact: "Issues a new public token for a project; expands the set of identifiers that can initiate auth flows."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]

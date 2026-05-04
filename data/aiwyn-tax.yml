@@ -1,0 +1,119 @@
+schema_version: "1.0"
+platform: aiwyn-tax
+display_name: Aiwyn Tax
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Reference Data ----------
+  - id: aiwyn-tax.tax_years
+    object: TaxYear
+    action: tax_years
+    category: Data Access
+    risk: low
+    business_impact: "Returns supported tax years."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiwyn-tax.tax_jurisdictions
+    object: TaxJurisdiction
+    action: tax_jurisdictions
+    category: Data Access
+    risk: low
+    business_impact: "Returns supported federal and state tax jurisdictions."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiwyn-tax.tax_namespaces
+    object: TaxNamespace
+    action: tax_namespaces
+    category: Data Access
+    risk: low
+    business_impact: "Returns the namespace taxonomy used to scope tax inputs."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aiwyn-tax.tax_namespace_schema
+    object: TaxNamespace
+    action: tax_namespace_schema
+    category: Data Access
+    risk: low
+    business_impact: "Returns the JSON schema for a given tax namespace."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Tax Computation ----------
+  - id: aiwyn-tax.tax_simple_return
+    object: TaxReturn
+    action: tax_simple_return
+    category: Financial
+    risk: high
+    business_impact: "Computes a simplified tax return from supplied taxpayer data; touches taxpayer PII and financial details."
+    compliance: [SOX, COSO, GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: aiwyn-tax.check_tax
+    object: TaxReturn
+    action: check_tax
+    category: Financial
+    risk: medium
+    business_impact: "Validates a tax-return payload against jurisdiction rules; may surface preparer-sensitive data."
+    compliance: [SOX, COSO, GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: aiwyn-tax.calculate_tax
+    object: TaxReturn
+    action: calculate_tax
+    category: Financial
+    risk: high
+    business_impact: "Computes federal/state tax liability from taxpayer inputs; financial-statement and filing impact."
+    compliance: [SOX, COSO, GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- PDF Generation ----------
+  - id: aiwyn-tax.generate_tax_pdf_tool
+    object: TaxPDF
+    action: generate_tax_pdf_tool
+    category: Financial
+    risk: high
+    business_impact: "Produces a filing-ready PDF containing taxpayer SSN, income, and deductions."
+    compliance: [SOX, COSO, GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: aiwyn-tax.get_tax_pdf_tool
+    object: TaxPDF
+    action: get_tax_pdf_tool
+    category: Financial
+    risk: high
+    business_impact: "Retrieves a previously generated tax PDF; data exfiltration risk for taxpayer records."
+    compliance: [SOX, COSO, GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Utilities ----------
+  - id: aiwyn-tax.generate_uuid_v5
+    object: Utility
+    action: generate_uuid_v5
+    category: Operations
+    risk: low
+    business_impact: "Generates a deterministic UUID v5 for client-side use."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

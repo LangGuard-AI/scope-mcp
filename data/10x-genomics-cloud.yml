@@ -1,0 +1,307 @@
+schema_version: "1.0"
+platform: 10x-genomics-cloud
+display_name: 10x Genomics Cloud
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Projects ----------
+  - id: 10x-genomics-cloud.list_projects
+    object: Project
+    action: list_projects
+    category: Data Access
+    risk: low
+    business_impact: "Lists genomics projects accessible to the authenticated user."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: 10x-genomics-cloud.create_project
+    object: Project
+    action: create_project
+    category: Operations
+    risk: low
+    business_impact: "Creates a new container for genomics analyses and files."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: 10x-genomics-cloud.update_project
+    object: Project
+    action: update_project
+    category: Operations
+    risk: low
+    business_impact: "Modifies project metadata; non-destructive to underlying data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Analyses ----------
+  - id: 10x-genomics-cloud.create_cellranger_count_analysis
+    object: Analysis
+    action: create_cellranger_count_analysis
+    category: Operations
+    risk: medium
+    business_impact: "Launches a Cell Ranger count pipeline that consumes compute credits and processes potentially sensitive sequencing data."
+    compliance: [HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: 10x-genomics-cloud.create_cellranger_multi_analysis
+    object: Analysis
+    action: create_cellranger_multi_analysis
+    category: Operations
+    risk: medium
+    business_impact: "Launches a multi-library Cell Ranger pipeline; consumes compute and may process PHI-adjacent sequencing data."
+    compliance: [HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: 10x-genomics-cloud.create_cellranger_aggr_analysis
+    object: Analysis
+    action: create_cellranger_aggr_analysis
+    category: Operations
+    risk: medium
+    business_impact: "Aggregates multiple Cell Ranger runs; consumes compute and may combine regulated datasets."
+    compliance: [HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: 10x-genomics-cloud.list_analyses
+    object: Analysis
+    action: list_analyses
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates analyses across the user's projects."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: 10x-genomics-cloud.get_analysis_details
+    object: Analysis
+    action: get_analysis_details
+    category: Data Access
+    risk: low
+    business_impact: "Reads run configuration and status for a specific analysis."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: 10x-genomics-cloud.list_analysis_files
+    object: AnalysisFile
+    action: list_analysis_files
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates output files for a completed analysis."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: 10x-genomics-cloud.download_analysis_files
+    object: AnalysisFile
+    action: download_analysis_files
+    category: Data Access
+    risk: high
+    business_impact: "Exfiltrates analysis output files which can include identifiable single-cell sequencing data."
+    compliance: [HIPAA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Files & Inputs ----------
+  - id: 10x-genomics-cloud.list_fastqs
+    object: Fastq
+    action: list_fastqs
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates FASTQ inputs uploaded to the project."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: 10x-genomics-cloud.upload_fastqs
+    object: Fastq
+    action: upload_fastqs
+    category: Operations
+    risk: medium
+    business_impact: "Uploads raw sequencing reads which may contain identifiable genetic information."
+    compliance: [HIPAA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: 10x-genomics-cloud.list_libraries
+    object: Library
+    action: list_libraries
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates sequencing libraries registered in the project."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: 10x-genomics-cloud.set_library
+    object: Library
+    action: set_library
+    category: Operations
+    risk: low
+    business_impact: "Associates FASTQs with a library definition for downstream pipelines."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: 10x-genomics-cloud.list_project_files
+    object: ProjectFile
+    action: list_project_files
+    category: Data Access
+    risk: low
+    business_impact: "Lists ancillary files attached to the project."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: 10x-genomics-cloud.upload_project_file
+    object: ProjectFile
+    action: upload_project_file
+    category: Operations
+    risk: low
+    business_impact: "Stores a project-level file (config, metadata, supporting docs)."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: 10x-genomics-cloud.download_project_file
+    object: ProjectFile
+    action: download_project_file
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves a project-level file; may include sample manifests with subject identifiers."
+    compliance: [HIPAA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- References & Models ----------
+  - id: 10x-genomics-cloud.list_annotation_models
+    object: AnnotationModel
+    action: list_annotation_models
+    category: Data Access
+    risk: low
+    business_impact: "Lists cell-type annotation models available for analysis."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: 10x-genomics-cloud.list_custom_references
+    object: Reference
+    action: list_custom_references
+    category: Data Access
+    risk: low
+    business_impact: "Lists user-uploaded reference genomes."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: 10x-genomics-cloud.list_prebuilt_references
+    object: Reference
+    action: list_prebuilt_references
+    category: Data Access
+    risk: low
+    business_impact: "Lists vendor-curated reference genomes."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: 10x-genomics-cloud.get_reference
+    object: Reference
+    action: get_reference
+    category: Data Access
+    risk: low
+    business_impact: "Reads reference genome metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: 10x-genomics-cloud.update_reference
+    object: Reference
+    action: update_reference
+    category: Operations
+    risk: low
+    business_impact: "Updates metadata on a custom reference."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: 10x-genomics-cloud.upload_reference
+    object: Reference
+    action: upload_reference
+    category: Operations
+    risk: low
+    business_impact: "Uploads a custom reference genome to the project."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Configuration & Auth ----------
+  - id: 10x-genomics-cloud.get_tool_version
+    object: Server
+    action: get_tool_version
+    category: Data Access
+    risk: low
+    business_impact: "Reports MCP server version; non-sensitive metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: 10x-genomics-cloud.verify_auth
+    object: Auth
+    action: verify_auth
+    category: Identity & Access
+    risk: low
+    business_impact: "Confirms the supplied API token is valid for the cloud account."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: 10x-genomics-cloud.get_multi_csv_config_spec
+    object: ConfigSpec
+    action: get_multi_csv_config_spec
+    category: Data Access
+    risk: low
+    business_impact: "Returns the schema for multi-library CSV configs."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: 10x-genomics-cloud.get_aggr_csv_config_spec
+    object: ConfigSpec
+    action: get_aggr_csv_config_spec
+    category: Data Access
+    risk: low
+    business_impact: "Returns the schema for aggregation CSV configs."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

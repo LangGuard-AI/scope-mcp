@@ -1,0 +1,718 @@
+schema_version: "1.0"
+platform: close
+display_name: Close
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Search & Discovery ----------
+  - id: close.search
+    object: "*"
+    action: search
+    category: Search & Discovery
+    risk: medium
+    business_impact: "Generic search across CRM data; can surface PII for any indexed object."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: close.fetch
+    object: "*"
+    action: fetch
+    category: Search & Discovery
+    risk: medium
+    business_impact: "Generic record fetch by id; effective risk depends on object type."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: close.paginate_search
+    object: "*"
+    action: paginate_search
+    category: Search & Discovery
+    risk: medium
+    business_impact: "Pagination wrapper for search; bulk traversal can amount to PII export."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: close.aggregation
+    object: "*"
+    action: aggregation
+    category: Search & Discovery
+    risk: low
+    business_impact: "Returns aggregated metrics across CRM data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.activity_search
+    object: Activity
+    action: activity_search
+    category: Search & Discovery
+    risk: medium
+    business_impact: "Searches activity logs (calls, emails, SMS); reveals customer interaction history."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.lead_search
+    object: Lead
+    action: lead_search
+    category: Search & Discovery
+    risk: medium
+    business_impact: "Searches lead records; returns PII fields like name, email, phone."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.close_product_knowledge_search
+    object: KnowledgeArticle
+    action: close_product_knowledge_search
+    category: Search & Discovery
+    risk: low
+    business_impact: "Searches Close product help content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Leads ----------
+  - id: close.fetch_lead
+    object: Lead
+    action: fetch_lead
+    category: Leads
+    risk: medium
+    business_impact: "Reads a single lead record with attached PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.create_lead
+    object: Lead
+    action: create_lead
+    category: Leads
+    risk: medium
+    business_impact: "Creates a new lead, persisting prospect PII in the CRM."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.update_lead
+    object: Lead
+    action: update_lead
+    category: Leads
+    risk: medium
+    business_impact: "Modifies lead fields; can change contact details or routing assignment."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.delete_lead
+    object: Lead
+    action: delete_lead
+    category: Leads
+    risk: high
+    business_impact: "Removes a lead record and its history; can be used for right-to-erasure or to obscure pipeline."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Lead Smart Views & Statuses ----------
+  - id: close.fetch_lead_smart_view
+    object: SmartView
+    action: fetch_lead_smart_view
+    category: Lead Smart Views & Statuses
+    risk: low
+    business_impact: "Reads a saved lead filter view."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.find_lead_smart_views
+    object: SmartView
+    action: find_lead_smart_views
+    category: Lead Smart Views & Statuses
+    risk: low
+    business_impact: "Lists smart views available to the user."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.update_lead_smart_view
+    object: SmartView
+    action: update_lead_smart_view
+    category: Lead Smart Views & Statuses
+    risk: low
+    business_impact: "Modifies a saved smart view's filters."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.delete_lead_smart_view
+    object: SmartView
+    action: delete_lead_smart_view
+    category: Lead Smart Views & Statuses
+    risk: low
+    business_impact: "Deletes a smart view definition."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.fetch_lead_status
+    object: LeadStatus
+    action: fetch_lead_status
+    category: Lead Smart Views & Statuses
+    risk: low
+    business_impact: "Reads a lead-status definition."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.find_lead_statuses
+    object: LeadStatus
+    action: find_lead_statuses
+    category: Lead Smart Views & Statuses
+    risk: low
+    business_impact: "Lists configured lead statuses."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.create_lead_status
+    object: LeadStatus
+    action: create_lead_status
+    category: Lead Smart Views & Statuses
+    risk: low
+    business_impact: "Adds a new lead status to the pipeline configuration."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.update_lead_status
+    object: LeadStatus
+    action: update_lead_status
+    category: Lead Smart Views & Statuses
+    risk: low
+    business_impact: "Modifies a lead-status definition."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.delete_lead_status
+    object: LeadStatus
+    action: delete_lead_status
+    category: Lead Smart Views & Statuses
+    risk: medium
+    business_impact: "Removes a lead status; affects all leads currently in that status."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Contacts ----------
+  - id: close.fetch_contact
+    object: Contact
+    action: fetch_contact
+    category: Contacts
+    risk: medium
+    business_impact: "Reads a contact record with PII fields."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.create_contact
+    object: Contact
+    action: create_contact
+    category: Contacts
+    risk: medium
+    business_impact: "Creates a new contact, persisting PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.update_contact
+    object: Contact
+    action: update_contact
+    category: Contacts
+    risk: medium
+    business_impact: "Modifies contact PII (name, email, phone, address)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.delete_contact
+    object: Contact
+    action: delete_contact
+    category: Contacts
+    risk: high
+    business_impact: "Removes a contact and its activity history; relevant to right-to-erasure but breaks attribution."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.create_address
+    object: Address
+    action: create_address
+    category: Contacts
+    risk: medium
+    business_impact: "Adds an address (PII) to a record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.delete_address
+    object: Address
+    action: delete_address
+    category: Contacts
+    risk: medium
+    business_impact: "Removes an address from a record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Opportunities & Pipelines ----------
+  - id: close.fetch_opportunity
+    object: Opportunity
+    action: fetch_opportunity
+    category: Opportunities & Pipelines
+    risk: low
+    business_impact: "Reads an opportunity record."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.find_opportunities
+    object: Opportunity
+    action: find_opportunities
+    category: Opportunities & Pipelines
+    risk: low
+    business_impact: "Lists opportunities matching criteria."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.create_opportunity
+    object: Opportunity
+    action: create_opportunity
+    category: Opportunities & Pipelines
+    risk: medium
+    business_impact: "Creates a sales opportunity that contributes to forecast."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.update_opportunity
+    object: Opportunity
+    action: update_opportunity
+    category: Opportunities & Pipelines
+    risk: high
+    business_impact: "Modifies opportunity value, stage, or close date; directly impacts forecast and revenue recognition timing."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.delete_opportunity
+    object: Opportunity
+    action: delete_opportunity
+    category: Opportunities & Pipelines
+    risk: high
+    business_impact: "Removes an opportunity record; can mask pipeline visibility from finance."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.fetch_opportunity_status
+    object: OpportunityStatus
+    action: fetch_opportunity_status
+    category: Opportunities & Pipelines
+    risk: low
+    business_impact: "Reads an opportunity-status definition."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.create_opportunity_status_tool
+    object: OpportunityStatus
+    action: create_opportunity_status_tool
+    category: Opportunities & Pipelines
+    risk: medium
+    business_impact: "Adds a new opportunity stage; changes pipeline reporting structure."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.update_opportunity_status_tool
+    object: OpportunityStatus
+    action: update_opportunity_status_tool
+    category: Opportunities & Pipelines
+    risk: medium
+    business_impact: "Modifies an opportunity stage; can shift forecast bucketing."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.delete_opportunity_status_tool
+    object: OpportunityStatus
+    action: delete_opportunity_status_tool
+    category: Opportunities & Pipelines
+    risk: medium
+    business_impact: "Removes an opportunity stage; impacts historical reporting consistency."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: close.fetch_pipeline_and_opportunity_statuses
+    object: Pipeline
+    action: fetch_pipeline_and_opportunity_statuses
+    category: Opportunities & Pipelines
+    risk: low
+    business_impact: "Reads pipeline configuration and its statuses."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.find_pipelines_and_opportunity_statuses
+    object: Pipeline
+    action: find_pipelines_and_opportunity_statuses
+    category: Opportunities & Pipelines
+    risk: low
+    business_impact: "Lists pipelines and their statuses."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.create_pipeline
+    object: Pipeline
+    action: create_pipeline
+    category: Opportunities & Pipelines
+    risk: medium
+    business_impact: "Creates a new sales pipeline; influences how revenue is reported."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.update_pipeline
+    object: Pipeline
+    action: update_pipeline
+    category: Opportunities & Pipelines
+    risk: medium
+    business_impact: "Modifies a pipeline's structure or stages."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.delete_pipeline
+    object: Pipeline
+    action: delete_pipeline
+    category: Opportunities & Pipelines
+    risk: high
+    business_impact: "Removes a pipeline and disrupts forecast continuity."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Tasks & Workflows ----------
+  - id: close.create_task
+    object: Task
+    action: create_task
+    category: Tasks & Workflows
+    risk: low
+    business_impact: "Creates a follow-up task assigned to a user."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.find_workflows
+    object: Workflow
+    action: find_workflows
+    category: Tasks & Workflows
+    risk: low
+    business_impact: "Lists configured automation workflows."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.create_workflow
+    object: Workflow
+    action: create_workflow
+    category: Tasks & Workflows
+    risk: medium
+    business_impact: "Adds an automated workflow that may send outbound communications."
+    compliance: [GDPR, UK_GDPR, CCPA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Templates ----------
+  - id: close.fetch_email_template
+    object: EmailTemplate
+    action: fetch_email_template
+    category: Templates
+    risk: low
+    business_impact: "Reads an email template body."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.find_email_templates
+    object: EmailTemplate
+    action: find_email_templates
+    category: Templates
+    risk: low
+    business_impact: "Lists email templates."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.create_email_template
+    object: EmailTemplate
+    action: create_email_template
+    category: Templates
+    risk: low
+    business_impact: "Creates a reusable email template."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.update_email_template
+    object: EmailTemplate
+    action: update_email_template
+    category: Templates
+    risk: low
+    business_impact: "Modifies an email template body."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.delete_email_template
+    object: EmailTemplate
+    action: delete_email_template
+    category: Templates
+    risk: low
+    business_impact: "Deletes an email template."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.fetch_sms_template
+    object: SMSTemplate
+    action: fetch_sms_template
+    category: Templates
+    risk: low
+    business_impact: "Reads an SMS template body."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.find_sms_templates
+    object: SMSTemplate
+    action: find_sms_templates
+    category: Templates
+    risk: low
+    business_impact: "Lists SMS templates."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.create_sms_template
+    object: SMSTemplate
+    action: create_sms_template
+    category: Templates
+    risk: low
+    business_impact: "Creates a reusable SMS template."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.update_sms_template
+    object: SMSTemplate
+    action: update_sms_template
+    category: Templates
+    risk: low
+    business_impact: "Modifies an SMS template body."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.delete_sms_template
+    object: SMSTemplate
+    action: delete_sms_template
+    category: Templates
+    risk: low
+    business_impact: "Deletes an SMS template."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Schema & Configuration ----------
+  - id: close.find_lead_custom_fields
+    object: CustomField
+    action: find_lead_custom_fields
+    category: Schema & Configuration
+    risk: low
+    business_impact: "Lists custom fields defined on the lead schema."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.get_fields
+    object: CustomField
+    action: get_fields
+    category: Schema & Configuration
+    risk: low
+    business_impact: "Returns object schema field metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.find_custom_activities
+    object: CustomActivity
+    action: find_custom_activities
+    category: Schema & Configuration
+    risk: low
+    business_impact: "Lists custom activity types."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.find_groups
+    object: Group
+    action: find_groups
+    category: Schema & Configuration
+    risk: low
+    business_impact: "Lists user groups configured on the org."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.find_call_outcomes
+    object: CallOutcome
+    action: find_call_outcomes
+    category: Schema & Configuration
+    risk: low
+    business_impact: "Lists configured call outcomes."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.find_meeting_outcomes
+    object: MeetingOutcome
+    action: find_meeting_outcomes
+    category: Schema & Configuration
+    risk: low
+    business_impact: "Lists configured meeting outcomes."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.find_scheduling_links
+    object: SchedulingLink
+    action: find_scheduling_links
+    category: Schema & Configuration
+    risk: low
+    business_impact: "Lists scheduling links available to the org."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.find_forms
+    object: Form
+    action: find_forms
+    category: Schema & Configuration
+    risk: low
+    business_impact: "Lists embedded lead-capture forms."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.find_agent_configs
+    object: AgentConfig
+    action: find_agent_configs
+    category: Schema & Configuration
+    risk: low
+    business_impact: "Lists configured agent integrations."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Org & Identity ----------
+  - id: close.org_info
+    object: Organization
+    action: org_info
+    category: Org & Identity
+    risk: low
+    business_impact: "Reads tenant-level organization info."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: close.org_users
+    object: User
+    action: org_users
+    category: Org & Identity
+    risk: medium
+    business_impact: "Lists users in the org with role information."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

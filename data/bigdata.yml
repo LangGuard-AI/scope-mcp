@@ -1,0 +1,94 @@
+schema_version: "1.0"
+platform: bigdata
+display_name: Bigdata.com
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Financial Research ----------
+  - id: bigdata.bigdata_search
+    object: Document
+    action: bigdata_search
+    category: Data Access
+    risk: low
+    business_impact: "Searches Bigdata.com's financial document corpus."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bigdata.find_companies
+    object: Company
+    action: find_companies
+    category: Data Access
+    risk: low
+    business_impact: "Resolves company identifiers across the Bigdata.com universe."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bigdata.bigdata_events_calendar
+    object: Event
+    action: bigdata_events_calendar
+    category: Data Access
+    risk: low
+    business_impact: "Returns upcoming financial events (earnings, filings, calls)."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bigdata.bigdata_company_tearsheet
+    object: Company
+    action: bigdata_company_tearsheet
+    category: Data Access
+    risk: low
+    business_impact: "Returns a structured company profile and key metrics."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bigdata.bigdata_country_tearsheet
+    object: Country
+    action: bigdata_country_tearsheet
+    category: Data Access
+    risk: low
+    business_impact: "Returns a country-level macro indicator summary."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bigdata.bigdata_market_tearsheet
+    object: Market
+    action: bigdata_market_tearsheet
+    category: Data Access
+    risk: low
+    business_impact: "Returns a market-level summary across asset classes."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bigdata.bigdata_sentiment_tearsheet
+    object: Sentiment
+    action: bigdata_sentiment_tearsheet
+    category: Data Access
+    risk: low
+    business_impact: "Returns sentiment signals derived from news and filings."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bigdata.bigdata_etf_tearsheet
+    object: ETF
+    action: bigdata_etf_tearsheet
+    category: Data Access
+    risk: low
+    business_impact: "Returns ETF profile, holdings, and performance summary."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

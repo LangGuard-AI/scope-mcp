@@ -1,0 +1,50 @@
+schema_version: "1.0"
+platform: hex
+display_name: Hex
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Data Analytics ----------
+  - id: hex.search_projects
+    object: Project
+    action: search_projects
+    category: Data Analytics
+    risk: low
+    business_impact: "Finds Hex projects in the workspace by name or content."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: hex.create_thread
+    object: Thread
+    action: create_thread
+    category: Data Analytics
+    risk: medium
+    business_impact: "Starts a Hex agent conversation that may execute SQL and analytic code over connected warehouses; results may include PII or financial data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: hex.get_thread
+    object: Thread
+    action: get_thread
+    category: Data Analytics
+    risk: medium
+    business_impact: "Reads thread messages and query results; exposes prior analytic outputs over warehouse data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: hex.continue_thread
+    object: Thread
+    action: continue_thread
+    category: Data Analytics
+    risk: medium
+    business_impact: "Adds a follow-up question to a Hex thread, potentially executing additional warehouse queries."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

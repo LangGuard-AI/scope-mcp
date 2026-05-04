@@ -1,0 +1,606 @@
+schema_version: "1.0"
+platform: atlassian
+display_name: Atlassian Rovo
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Jira: Issues ----------
+  - id: atlassian.getJiraIssue
+    object: Issue
+    action: getJiraIssue
+    category: Issues
+    risk: low
+    business_impact: "Reads a single Jira issue's fields, comments, and attachments."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.getJiraIssueRemoteIssueLinks
+    object: Issue
+    action: getJiraIssueRemoteIssueLinks
+    category: Issues
+    risk: low
+    business_impact: "Reads remote links attached to a Jira issue."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.getJiraIssueTypeMetaWithFields
+    object: IssueType
+    action: getJiraIssueTypeMetaWithFields
+    category: Issues
+    risk: low
+    business_impact: "Reads issue-type schema metadata; configuration introspection."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.getJiraProjectIssueTypesMetadata
+    object: Project
+    action: getJiraProjectIssueTypesMetadata
+    category: Issues
+    risk: low
+    business_impact: "Reads available issue types for a Jira project."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.getIssueLinkTypes
+    object: IssueLinkType
+    action: getIssueLinkTypes
+    category: Issues
+    risk: low
+    business_impact: "Reads configured issue-link types in the instance."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.getTransitionsForJiraIssue
+    object: Issue
+    action: getTransitionsForJiraIssue
+    category: Issues
+    risk: low
+    business_impact: "Reads workflow transitions available for a specific issue."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.getVisibleJiraProjects
+    object: Project
+    action: getVisibleJiraProjects
+    category: Issues
+    risk: low
+    business_impact: "Lists Jira projects visible to the authenticated user."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.lookupJiraAccountId
+    object: User
+    action: lookupJiraAccountId
+    category: Identity & Access
+    risk: low
+    business_impact: "Resolves a username or email to a Jira accountId."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.addCommentToJiraIssue
+    object: Comment
+    action: addCommentToJiraIssue
+    category: Issues
+    risk: low
+    business_impact: "Posts a comment on a Jira issue under the authenticated user's identity."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.addWorklogToJiraIssue
+    object: Worklog
+    action: addWorklogToJiraIssue
+    category: Issues
+    risk: low
+    business_impact: "Logs time against a Jira issue; affects time-tracking reports."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.createJiraIssue
+    object: Issue
+    action: createJiraIssue
+    category: Issues
+    risk: low
+    business_impact: "Creates a new Jira issue."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.editJiraIssue
+    object: Issue
+    action: editJiraIssue
+    category: Issues
+    risk: medium
+    business_impact: "Modifies fields on a Jira issue including assignee, priority, or custom fields."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.transitionJiraIssue
+    object: Issue
+    action: transitionJiraIssue
+    category: Issues
+    risk: medium
+    business_impact: "Moves an issue through workflow states; can close tickets or bypass review gates."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.searchJiraIssuesUsingJql
+    object: Issue
+    action: searchJiraIssuesUsingJql
+    category: Issues
+    risk: medium
+    business_impact: "Runs arbitrary JQL queries; can return large volumes of issue data."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Confluence ----------
+  - id: atlassian.getConfluencePage
+    object: Page
+    action: getConfluencePage
+    category: Data Access
+    risk: low
+    business_impact: "Reads a single Confluence page's content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.getConfluencePageDescendants
+    object: Page
+    action: getConfluencePageDescendants
+    category: Data Access
+    risk: medium
+    business_impact: "Reads all descendant pages under a parent; can pull a whole subtree of documentation."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.getConfluencePageFooterComments
+    object: Comment
+    action: getConfluencePageFooterComments
+    category: Data Access
+    risk: low
+    business_impact: "Reads footer comments on a Confluence page."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.getConfluencePageInlineComments
+    object: Comment
+    action: getConfluencePageInlineComments
+    category: Data Access
+    risk: low
+    business_impact: "Reads inline comments on a Confluence page."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.getConfluenceCommentChildren
+    object: Comment
+    action: getConfluenceCommentChildren
+    category: Data Access
+    risk: low
+    business_impact: "Reads replies to a Confluence comment."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.getConfluenceSpaces
+    object: Space
+    action: getConfluenceSpaces
+    category: Data Access
+    risk: low
+    business_impact: "Lists Confluence spaces accessible to the user."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.getPagesInConfluenceSpace
+    object: Space
+    action: getPagesInConfluenceSpace
+    category: Data Access
+    risk: medium
+    business_impact: "Lists all pages in a space; enables bulk traversal of internal docs."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.createConfluencePage
+    object: Page
+    action: createConfluencePage
+    category: Data Access
+    risk: low
+    business_impact: "Creates a new Confluence page in a space."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.updateConfluencePage
+    object: Page
+    action: updateConfluencePage
+    category: Data Access
+    risk: medium
+    business_impact: "Edits an existing Confluence page; can overwrite knowledge-base content."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.createConfluenceFooterComment
+    object: Comment
+    action: createConfluenceFooterComment
+    category: Data Access
+    risk: low
+    business_impact: "Posts a footer comment on a Confluence page."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.createConfluenceInlineComment
+    object: Comment
+    action: createConfluenceInlineComment
+    category: Data Access
+    risk: low
+    business_impact: "Posts an inline comment anchored to page content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.searchConfluenceUsingCql
+    object: Page
+    action: searchConfluenceUsingCql
+    category: Data Access
+    risk: medium
+    business_impact: "Runs arbitrary CQL searches; can return large volumes of internal documentation."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Jira Service Management ----------
+  - id: atlassian.getJsmOpsAlerts
+    object: Alert
+    action: getJsmOpsAlerts
+    category: Operations
+    risk: low
+    business_impact: "Reads JSM Ops on-call alerts."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.getJsmOpsScheduleInfo
+    object: Schedule
+    action: getJsmOpsScheduleInfo
+    category: Operations
+    risk: low
+    business_impact: "Reads on-call schedule configuration."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.getJsmOpsTeamInfo
+    object: Team
+    action: getJsmOpsTeamInfo
+    category: Operations
+    risk: low
+    business_impact: "Reads JSM Ops team metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.updateJsmOpsAlert
+    object: Alert
+    action: updateJsmOpsAlert
+    category: Operations
+    risk: medium
+    business_impact: "Acknowledges, closes, or modifies an on-call alert; affects incident response state."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Bitbucket ----------
+  - id: atlassian.bitbucketWorkspace
+    object: Workspace
+    action: bitbucketWorkspace
+    category: Repository
+    risk: low
+    business_impact: "Reads Bitbucket workspace metadata."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: atlassian.bitbucketRepository
+    object: Repository
+    action: bitbucketRepository
+    category: Repository
+    risk: low
+    business_impact: "Reads Bitbucket repository metadata."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: atlassian.bitbucketUser
+    object: User
+    action: bitbucketUser
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads a Bitbucket user record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: atlassian.bitbucketDeployment
+    object: Deployment
+    action: bitbucketDeployment
+    category: Code & Release
+    risk: low
+    business_impact: "Reads deployment information from Bitbucket Pipelines."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: atlassian.bitbucketPullRequest
+    object: PullRequest
+    action: bitbucketPullRequest
+    category: Repository
+    risk: low
+    business_impact: "Reads pull request metadata, comments, and review state."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: atlassian.bitbucketRepoContent
+    object: Repository
+    action: bitbucketRepoContent
+    category: Repository
+    risk: medium
+    business_impact: "Reads repository file content; source code may contain secrets or proprietary IP."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: atlassian.bitbucketPipeline
+    object: Pipeline
+    action: bitbucketPipeline
+    category: Code & Release
+    risk: low
+    business_impact: "Reads pipeline run metadata and status."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: atlassian.bitbucketEnvironment
+    object: Environment
+    action: bitbucketEnvironment
+    category: Code & Release
+    risk: low
+    business_impact: "Reads deployment environment configuration."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Atlassian Platform ----------
+  - id: atlassian.getTeamworkGraphContext
+    object: "*"
+    action: getTeamworkGraphContext
+    category: Data Access
+    risk: medium
+    business_impact: "Reads contextual graph relationships across Atlassian work objects."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: atlassian.getTeamworkGraphObject
+    object: "*"
+    action: getTeamworkGraphObject
+    category: Data Access
+    risk: low
+    business_impact: "Reads a single object from the Atlassian Teamwork Graph."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: atlassian.searchAtlassian
+    object: "*"
+    action: searchAtlassian
+    category: Data Access
+    risk: medium
+    business_impact: "Cross-product search across Jira, Confluence, and Bitbucket; can surface confidential content."
+    compliance: [SOC2, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.fetchAtlassian
+    object: "*"
+    action: fetchAtlassian
+    category: Data Access
+    risk: medium
+    business_impact: "Generic fetch of an Atlassian resource by URL or id; PII exposure depends on target."
+    compliance: [SOC2, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Compass ----------
+  - id: atlassian.getCompassComponent
+    object: Component
+    action: getCompassComponent
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Reads a Compass software component record."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: atlassian.getCompassComponents
+    object: Component
+    action: getCompassComponents
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Lists Compass components."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: atlassian.getCompassComponentActivityEvents
+    object: Component
+    action: getCompassComponentActivityEvents
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Reads activity event stream for a Compass component."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: atlassian.getCompassComponentLabels
+    object: Component
+    action: getCompassComponentLabels
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Reads labels attached to a Compass component."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: atlassian.getCompassComponentTypes
+    object: ComponentType
+    action: getCompassComponentTypes
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Reads available Compass component types."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: atlassian.getCompassCustomFieldDefinitions
+    object: CustomField
+    action: getCompassCustomFieldDefinitions
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Reads Compass custom field schema."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: atlassian.getCompassComponentsOwnedByMyTeams
+    object: Component
+    action: getCompassComponentsOwnedByMyTeams
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Lists Compass components owned by the user's teams."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: atlassian.createCompassComponent
+    object: Component
+    action: createCompassComponent
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Registers a new component in the Compass catalog."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: atlassian.createCompassComponentRelationship
+    object: Component
+    action: createCompassComponentRelationship
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Creates a dependency or other relationship between Compass components."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: atlassian.createCompassCustomFieldDefinition
+    object: CustomField
+    action: createCompassCustomFieldDefinition
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Defines a new custom field in Compass; schema change applied workspace-wide."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: atlassian.atlassianUserInfo
+    object: User
+    action: atlassianUserInfo
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads the authenticated Atlassian user's profile."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: atlassian.getAccessibleAtlassianResources
+    object: Resource
+    action: getAccessibleAtlassianResources
+    category: Identity & Access
+    risk: low
+    business_impact: "Lists Atlassian sites/resources the authenticated user can access."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

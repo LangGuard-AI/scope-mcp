@@ -1,0 +1,173 @@
+schema_version: "1.0"
+platform: pendo
+display_name: Pendo
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Data Access ----------
+  - id: pendo.search_pages
+    object: Page
+    action: search_pages
+    category: Data Access
+    risk: low
+    business_impact: "Lists tracked product pages and metadata; no end-user impact."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pendo.search_features
+    object: Feature
+    action: search_features
+    category: Data Access
+    risk: low
+    business_impact: "Returns feature definitions and tagging metadata for product analytics."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pendo.search_track_events
+    object: TrackEvent
+    action: search_track_events
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces custom track-event definitions used for product instrumentation."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Customer ----------
+  - id: pendo.get_visitor_details
+    object: Visitor
+    action: get_visitor_details
+    category: Customer
+    risk: medium
+    business_impact: "Returns identifiable visitor profile including custom metadata fields."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pendo.search_visitors
+    object: Visitor
+    action: search_visitors
+    category: Customer
+    risk: medium
+    business_impact: "Queries visitor records; can return PII at scale depending on filters."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pendo.get_account_details
+    object: Account
+    action: get_account_details
+    category: Customer
+    risk: low
+    business_impact: "Retrieves account-level metadata for a single customer organization."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pendo.search_accounts
+    object: Account
+    action: search_accounts
+    category: Customer
+    risk: low
+    business_impact: "Returns account directory for product-analytics segmentation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pendo.analyze_segments
+    object: Segment
+    action: analyze_segments
+    category: Customer
+    risk: medium
+    business_impact: "Aggregates engagement across visitor segments; can re-identify small cohorts."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: pendo.analyze_usage
+    object: Usage
+    action: analyze_usage
+    category: Operations
+    risk: low
+    business_impact: "Aggregates page and feature usage trends over time."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pendo.analyze_feature_adoption
+    object: Feature
+    action: analyze_feature_adoption
+    category: Operations
+    risk: low
+    business_impact: "Reports feature adoption rates across the user base."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pendo.analyze_retention
+    object: Retention
+    action: analyze_retention
+    category: Operations
+    risk: low
+    business_impact: "Computes cohort retention curves over a date range."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pendo.analyze_funnels
+    object: Funnel
+    action: analyze_funnels
+    category: Operations
+    risk: low
+    business_impact: "Calculates conversion through a defined step sequence."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pendo.analyze_user_paths
+    object: Path
+    action: analyze_user_paths
+    category: Operations
+    risk: medium
+    business_impact: "Surfaces individual navigation sequences; can expose visitor-level behavior patterns."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pendo.calculate_product_engagement
+    object: EngagementScore
+    action: calculate_product_engagement
+    category: Operations
+    risk: low
+    business_impact: "Returns the product engagement score (PES) summary."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pendo.analyze_nps_feedback
+    object: NPS
+    action: analyze_nps_feedback
+    category: Operations
+    risk: medium
+    business_impact: "Surfaces qualitative feedback that may contain identifying free-text."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

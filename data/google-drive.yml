@@ -1,0 +1,84 @@
+schema_version: "1.0"
+platform: google-drive
+display_name: Google Drive
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Data Access ----------
+  - id: google-drive.search_files
+    object: File
+    action: search_files
+    category: Data Access
+    risk: medium
+    business_impact: "Searches across the user's Drive; can surface regulated documents the agent wasn't intended to see."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: google-drive.list_recent_files
+    object: File
+    action: list_recent_files
+    category: Data Access
+    risk: low
+    business_impact: "Lists files recently touched by the user."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: google-drive.get_file_metadata
+    object: File
+    action: get_file_metadata
+    category: Data Access
+    risk: low
+    business_impact: "Reads metadata (name, owner, mtime) for a single file."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: google-drive.read_file_content
+    object: File
+    action: read_file_content
+    category: Data Access
+    risk: high
+    business_impact: "Pulls a Drive file's contents into the agent context; high exposure if the file contains PII, financial, or regulated data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: google-drive.download_file_content
+    object: File
+    action: download_file_content
+    category: Data Access
+    risk: high
+    business_impact: "Downloads a binary file from Drive; same exfiltration profile as content read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: google-drive.get_file_permissions
+    object: Permission
+    action: get_file_permissions
+    category: Data Access
+    risk: low
+    business_impact: "Reads who has access to a file."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Content Management ----------
+  - id: google-drive.create_file
+    object: File
+    action: create_file
+    category: Content Management
+    risk: medium
+    business_impact: "Writes new content into the user's Drive; can introduce malicious or noncompliant material."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

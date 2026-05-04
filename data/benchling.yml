@@ -1,0 +1,50 @@
+schema_version: "1.0"
+platform: benchling
+display_name: Benchling
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Data Access ----------
+  - id: benchling.get_entity
+    object: Entity
+    action: get_entity
+    category: Data Access
+    risk: medium
+    business_impact: "Returns a Benchling entity (sequence, plasmid, result); may include regulated R&D data."
+    compliance: [SOC2, ISO_27001, FDA_PART_11]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: benchling.query_benchling
+    object: "*"
+    action: query_benchling
+    category: Data Access
+    risk: high
+    business_impact: "Free-form natural-language query over Benchling data; can surface regulated experimental records."
+    compliance: [SOC2, ISO_27001, FDA_PART_11]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: benchling.retrieve_data
+    object: "*"
+    action: retrieve_data
+    category: Data Access
+    risk: high
+    business_impact: "Pulls structured data (results, notebook entries, inventory) via the Benchling agentic API."
+    compliance: [SOC2, ISO_27001, FDA_PART_11]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: benchling.search_experiments
+    object: Experiment
+    action: search_experiments
+    category: Data Access
+    risk: medium
+    business_impact: "Searches and filters experiment and study records."
+    compliance: [SOC2, ISO_27001, FDA_PART_11]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

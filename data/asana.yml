@@ -1,0 +1,286 @@
+schema_version: "1.0"
+platform: asana
+display_name: Asana
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Tasks ----------
+  - id: asana.search_objects
+    object: "*"
+    action: search_objects
+    category: Issues
+    risk: medium
+    business_impact: "Generic typeahead-style search across Asana objects; can surface confidential project content."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: asana.get_task
+    object: Task
+    action: get_task
+    category: Issues
+    risk: low
+    business_impact: "Reads a single task with description, assignee, and custom fields."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: asana.get_tasks
+    object: Task
+    action: get_tasks
+    category: Issues
+    risk: low
+    business_impact: "Reads tasks within a project, section, or assignee scope."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: asana.get_my_tasks
+    object: Task
+    action: get_my_tasks
+    category: Issues
+    risk: low
+    business_impact: "Reads tasks assigned to the authenticated user."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: asana.search_tasks
+    object: Task
+    action: search_tasks
+    category: Issues
+    risk: low
+    business_impact: "Filtered task search across the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: asana.create_tasks
+    object: Task
+    action: create_tasks
+    category: Issues
+    risk: low
+    business_impact: "Creates one or more tasks in a project."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: asana.update_tasks
+    object: Task
+    action: update_tasks
+    category: Issues
+    risk: medium
+    business_impact: "Modifies task fields including assignee, due date, completion; can mark work done."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: asana.delete_task
+    object: Task
+    action: delete_task
+    category: Issues
+    risk: medium
+    business_impact: "Removes a task and its history; reversible only via Asana trash for a limited window."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: asana.add_comment
+    object: Comment
+    action: add_comment
+    category: Issues
+    risk: low
+    business_impact: "Posts a comment on a task under the authenticated user's identity."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Projects ----------
+  - id: asana.get_project
+    object: Project
+    action: get_project
+    category: Issues
+    risk: low
+    business_impact: "Reads a single project's metadata and settings."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: asana.get_projects
+    object: Project
+    action: get_projects
+    category: Issues
+    risk: low
+    business_impact: "Lists projects in the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: asana.create_project
+    object: Project
+    action: create_project
+    category: Issues
+    risk: low
+    business_impact: "Creates a new project container."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: asana.create_project_status_update
+    object: ProjectStatusUpdate
+    action: create_project_status_update
+    category: Issues
+    risk: low
+    business_impact: "Posts a status update to a project; visible to project members."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: asana.get_status_overview
+    object: ProjectStatusUpdate
+    action: get_status_overview
+    category: Issues
+    risk: low
+    business_impact: "Reads aggregated status updates across a project."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Portfolios ----------
+  - id: asana.get_portfolio
+    object: Portfolio
+    action: get_portfolio
+    category: Issues
+    risk: low
+    business_impact: "Reads a single portfolio's metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: asana.get_portfolios
+    object: Portfolio
+    action: get_portfolios
+    category: Issues
+    risk: low
+    business_impact: "Lists portfolios visible to the user."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: asana.get_items_for_portfolio
+    object: Portfolio
+    action: get_items_for_portfolio
+    category: Issues
+    risk: low
+    business_impact: "Reads projects rolled up under a portfolio."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Attachments ----------
+  - id: asana.get_attachments
+    object: Attachment
+    action: get_attachments
+    category: Data Access
+    risk: medium
+    business_impact: "Reads attachment metadata on tasks; attachments may include PII or confidential files."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: asana.get_user
+    object: User
+    action: get_user
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads a single user record including name and email."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: asana.get_me
+    object: User
+    action: get_me
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads the authenticated user's own profile."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: asana.get_users
+    object: User
+    action: get_users
+    category: Identity & Access
+    risk: medium
+    business_impact: "Reads workspace user roster including names and emails."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: asana.get_teams
+    object: Team
+    action: get_teams
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads workspace teams the user belongs to."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Interactive ----------
+  - id: asana.create_task_preview
+    object: Task
+    action: create_task_preview
+    category: Issues
+    risk: low
+    business_impact: "Renders a preview card for a task creation; no write side-effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: asana.create_project_preview
+    object: Project
+    action: create_project_preview
+    category: Issues
+    risk: low
+    business_impact: "Renders a preview card for a project creation; no write side-effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: asana.search_tasks_preview
+    object: Task
+    action: search_tasks_preview
+    category: Issues
+    risk: low
+    business_impact: "Renders a preview card for a task search; no write side-effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

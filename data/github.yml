@@ -1,0 +1,175 @@
+schema_version: "1.0"
+platform: github
+display_name: GitHub
+source: langguard-editorial
+updated: "2026-04"
+actions:
+  # ---------- Repository ----------
+  - id: github.create_repo
+    object: Repository
+    action: create_repo
+    category: Repository
+    risk: low
+    business_impact: "Creates a new empty repository under the org."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.delete_repo
+    object: Repository
+    action: delete_repo
+    category: Repository
+    risk: critical
+    business_impact: "Destroys source code, history, and associated CI artifacts. Often irrecoverable."
+    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.transfer_repo
+    object: Repository
+    action: transfer_repo
+    category: Repository
+    risk: critical
+    business_impact: "Moves a repo out of organizational control; can exfiltrate proprietary code."
+    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: github.fork_repo
+    object: Repository
+    action: fork_repo
+    category: Repository
+    risk: low
+    business_impact: "Copies a repo; benign for public but can surface internal code if misconfigured."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Code & Release ----------
+  - id: github.push_to_protected_branch
+    object: Branch
+    action: push_to_protected_branch
+    category: Code & Release
+    risk: critical
+    business_impact: "Bypasses review gates; introduces unreviewed code into production lineage."
+    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.merge_pull_request
+    object: PullRequest
+    action: merge_pull_request
+    category: Code & Release
+    risk: medium
+    business_impact: "Integrates changes into a mainline branch; change-management record."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.create_release
+    object: Release
+    action: create_release
+    category: Code & Release
+    risk: medium
+    business_impact: "Publishes a versioned artifact; downstream consumers treat this as a change event."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.update_branch_protection
+    object: BranchProtection
+    action: update_branch_protection
+    category: Code & Release
+    risk: critical
+    business_impact: "Changes the rules that enforce review and CI gates; can silently remove SoD controls."
+    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF, NY_DFS_500]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Secrets & Workflows ----------
+  - id: github.write_secret
+    object: Secret
+    action: write_secret
+    category: Secrets & Workflows
+    risk: critical
+    business_impact: "Injects credentials accessible to CI workers; lateral-movement vector."
+    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: github.read_secret
+    object: Secret
+    action: read_secret
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Exposes credentials to the caller; at minimum an auditable secret-access event."
+    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: github.trigger_workflow_run
+    object: Workflow
+    action: trigger_workflow_run
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Runs CI/CD jobs with their configured secrets and permissions."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Org & Access ----------
+  - id: github.add_org_member
+    object: OrgMember
+    action: add_org_member
+    category: Org & Access
+    risk: high
+    business_impact: "Grants access to private repos and org resources."
+    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: github.remove_org_member
+    object: OrgMember
+    action: remove_org_member
+    category: Org & Access
+    risk: high
+    business_impact: "Revokes access; can also be used retaliatorily or to cover tracks."
+    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Issues ----------
+  - id: github.create_issue
+    object: Issue
+    action: create_issue
+    category: Issues
+    risk: low
+    business_impact: "Opens a tracking item; no code or access effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.close_issue
+    object: Issue
+    action: close_issue
+    category: Issues
+    risk: low
+    business_impact: "Marks an issue resolved; can suppress visibility of known problems if misused."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]

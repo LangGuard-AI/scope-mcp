@@ -1,0 +1,61 @@
+schema_version: "1.0"
+platform: plaid
+display_name: Plaid
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Operations ----------
+  - id: plaid.plaid_debug_item
+    object: Item
+    action: plaid_debug_item
+    category: Operations
+    risk: medium
+    business_impact: "Returns metadata and connection diagnostics for a financial-account Plaid item."
+    compliance: [GLBA, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: plaid.plaid_get_link_analytics
+    object: LinkAnalytics
+    action: plaid_get_link_analytics
+    category: Operations
+    risk: low
+    business_impact: "Retrieves aggregate Plaid Link conversion and error metrics."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: plaid.plaid_get_usages
+    object: Usage
+    action: plaid_get_usages
+    category: Operations
+    risk: low
+    business_impact: "Returns API request volume and product usage metrics for the Plaid account."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: plaid.plaid_list_teams
+    object: Team
+    action: plaid_list_teams
+    category: Identity & Access
+    risk: low
+    business_impact: "Lists teams associated with the OAuth token; no privilege change."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: plaid.plaid_get_tools_introduction
+    object: Documentation
+    action: plaid_get_tools_introduction
+    category: Operations
+    risk: low
+    business_impact: "Returns onboarding text describing available MCP tools."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

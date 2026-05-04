@@ -1,0 +1,63 @@
+schema_version: "1.0"
+platform: sigma
+display_name: Sigma
+source: langguard-editorial
+updated: "2026-05"
+# NOTE: Sigma's MCP server, per Sigma docs, is documentation-oriented and exposes
+# search/fetch primitives plus API-reference helpers. It is read-only.
+actions:
+  # ---------- Operations ----------
+  - id: sigma.search
+    object: Documentation
+    action: search
+    category: Operations
+    risk: low
+    business_impact: "Searches Sigma's public help documentation by term."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: sigma.fetch
+    object: Documentation
+    action: fetch
+    category: Operations
+    risk: low
+    business_impact: "Retrieves a documentation page by ID."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: sigma.search-endpoints
+    object: APIEndpoint
+    action: search-endpoints
+    category: Operations
+    risk: low
+    business_impact: "Searches the Sigma API reference for matching endpoints."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: sigma.list-endpoints
+    object: APIEndpoint
+    action: list-endpoints
+    category: Operations
+    risk: low
+    business_impact: "Lists all API paths and methods exposed by Sigma."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: sigma.get-endpoint
+    object: APIEndpoint
+    action: get-endpoint
+    category: Operations
+    risk: low
+    business_impact: "Returns full API-reference details for one endpoint."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

@@ -1,0 +1,305 @@
+schema_version: "1.0"
+platform: cloudflare
+display_name: Cloudflare
+source: langguard-editorial
+updated: "2026-05"
+# Note: Cloudflare distributes 13+ MCP servers (Documentation, Workers Bindings,
+# Workers Builds, Observability, Radar, Container, Browser Rendering, Logpush,
+# AI Gateway, AI Search, Audit Logs, DNS Analytics, DEX, Cloudflare One CASB,
+# GraphQL). Only the Workers Bindings server's tool list and the Cloudflare API
+# MCP server's two tools (search, execute) were verifiable from authoritative
+# vendor docs. Other Cloudflare servers' individual tool names are not yet
+# enumerated in vendor-published documentation and are intentionally omitted.
+actions:
+  # ---------- Cloudflare API (universal) ----------
+  - id: cloudflare.search
+    object: "*"
+    action: search
+    category: Cloudflare API
+    risk: low
+    business_impact: "Searches the 2,500+ Cloudflare API endpoints for relevant operations; metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudflare.execute
+    object: "*"
+    action: execute
+    category: Cloudflare API
+    risk: critical
+    business_impact: "Generic dispatcher executing arbitrary Cloudflare API calls; can deploy code, change DNS, rotate keys, modify zero-trust policy."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Account ----------
+  - id: cloudflare.accounts_list
+    object: Account
+    action: accounts_list
+    category: Account
+    risk: low
+    business_impact: "Lists Cloudflare accounts available to the principal."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudflare.set_active_account
+    object: Account
+    action: set_active_account
+    category: Account
+    risk: low
+    business_impact: "Switches the active account context for subsequent calls."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- KV Namespaces ----------
+  - id: cloudflare.kv_namespaces_list
+    object: KVNamespace
+    action: kv_namespaces_list
+    category: KV Namespaces
+    risk: low
+    business_impact: "Lists Workers KV namespaces in the account."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudflare.kv_namespace_get
+    object: KVNamespace
+    action: kv_namespace_get
+    category: KV Namespaces
+    risk: low
+    business_impact: "Reads metadata for a single KV namespace."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudflare.kv_namespace_create
+    object: KVNamespace
+    action: kv_namespace_create
+    category: KV Namespaces
+    risk: medium
+    business_impact: "Provisions a new KV namespace; storage cost and config sprawl impact."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudflare.kv_namespace_update
+    object: KVNamespace
+    action: kv_namespace_update
+    category: KV Namespaces
+    risk: medium
+    business_impact: "Modifies a KV namespace's configuration."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudflare.kv_namespace_delete
+    object: KVNamespace
+    action: kv_namespace_delete
+    category: KV Namespaces
+    risk: high
+    business_impact: "Destroys a KV namespace and all keys; data loss is irreversible."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Workers ----------
+  - id: cloudflare.workers_list
+    object: Worker
+    action: workers_list
+    category: Workers
+    risk: low
+    business_impact: "Lists deployed Workers."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudflare.workers_get_worker
+    object: Worker
+    action: workers_get_worker
+    category: Workers
+    risk: low
+    business_impact: "Reads metadata for a single Worker."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudflare.workers_get_worker_code
+    object: Worker
+    action: workers_get_worker_code
+    category: Workers
+    risk: medium
+    business_impact: "Returns the deployed Worker source code; reveals proprietary edge logic."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- R2 Buckets ----------
+  - id: cloudflare.r2_buckets_list
+    object: R2Bucket
+    action: r2_buckets_list
+    category: R2 Buckets
+    risk: low
+    business_impact: "Lists R2 object-storage buckets."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudflare.r2_bucket_get
+    object: R2Bucket
+    action: r2_bucket_get
+    category: R2 Buckets
+    risk: low
+    business_impact: "Reads metadata for an R2 bucket."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudflare.r2_bucket_create
+    object: R2Bucket
+    action: r2_bucket_create
+    category: R2 Buckets
+    risk: medium
+    business_impact: "Provisions a new object-storage bucket."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudflare.r2_bucket_delete
+    object: R2Bucket
+    action: r2_bucket_delete
+    category: R2 Buckets
+    risk: critical
+    business_impact: "Destroys an R2 bucket and all stored objects; mass data loss."
+    compliance: [SOC2, ISO_27001, NIST_CSF, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- D1 Databases ----------
+  - id: cloudflare.d1_databases_list
+    object: D1Database
+    action: d1_databases_list
+    category: D1 Databases
+    risk: low
+    business_impact: "Lists D1 databases in the account."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudflare.d1_database_get
+    object: D1Database
+    action: d1_database_get
+    category: D1 Databases
+    risk: low
+    business_impact: "Reads metadata for a single D1 database."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudflare.d1_database_create
+    object: D1Database
+    action: d1_database_create
+    category: D1 Databases
+    risk: medium
+    business_impact: "Provisions a new D1 database."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudflare.d1_database_delete
+    object: D1Database
+    action: d1_database_delete
+    category: D1 Databases
+    risk: critical
+    business_impact: "Destroys a D1 database and all rows; data loss is irreversible."
+    compliance: [SOC2, ISO_27001, NIST_CSF, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudflare.d1_database_query
+    object: D1Database
+    action: d1_database_query
+    category: D1 Databases
+    risk: high
+    business_impact: "Executes arbitrary SQL against a D1 database; can read or mutate any row including PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Hyperdrive ----------
+  - id: cloudflare.hyperdrive_configs_list
+    object: HyperdriveConfig
+    action: hyperdrive_configs_list
+    category: Hyperdrive
+    risk: low
+    business_impact: "Lists Hyperdrive database connection configs."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudflare.hyperdrive_config_get
+    object: HyperdriveConfig
+    action: hyperdrive_config_get
+    category: Hyperdrive
+    risk: low
+    business_impact: "Reads a single Hyperdrive config (excluding secrets)."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudflare.hyperdrive_config_create
+    object: HyperdriveConfig
+    action: hyperdrive_config_create
+    category: Hyperdrive
+    risk: high
+    business_impact: "Stores upstream-database credentials enabling Workers to reach origin databases."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudflare.hyperdrive_config_edit
+    object: HyperdriveConfig
+    action: hyperdrive_config_edit
+    category: Hyperdrive
+    risk: high
+    business_impact: "Modifies stored connection or credential metadata for an origin database."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudflare.hyperdrive_config_delete
+    object: HyperdriveConfig
+    action: hyperdrive_config_delete
+    category: Hyperdrive
+    risk: medium
+    business_impact: "Removes a Hyperdrive config; breaks any Workers binding that used it."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

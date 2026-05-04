@@ -1,0 +1,62 @@
+schema_version: "1.0"
+platform: bigquery
+display_name: Google BigQuery
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Catalog Discovery ----------
+  - id: bigquery.list_dataset_ids
+    object: Dataset
+    action: list_dataset_ids
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates BigQuery dataset IDs in a project."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: bigquery.get_dataset_info
+    object: Dataset
+    action: get_dataset_info
+    category: Data Access
+    risk: low
+    business_impact: "Returns dataset-level metadata (location, labels, ACL summary)."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: bigquery.list_table_ids
+    object: Table
+    action: list_table_ids
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates tables within a BigQuery dataset."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: bigquery.get_table_info
+    object: Table
+    action: get_table_info
+    category: Data Access
+    risk: low
+    business_impact: "Returns table schema, partitioning, and row-count metadata."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Query Execution ----------
+  - id: bigquery.execute_sql
+    object: Query
+    action: execute_sql
+    category: Data Access
+    risk: high
+    business_impact: "Runs a SQL query against BigQuery; can read any data the principal is authorized for, including warehouse-scale PII and financial records."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]

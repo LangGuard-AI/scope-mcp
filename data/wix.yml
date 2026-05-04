@@ -1,0 +1,189 @@
+# NOTE: The Wix MCP server uses one generic dispatcher tool, CallWixSiteAPI,
+# that calls any Wix REST/SDK method on a site. Effective blast radius for
+# that tool is the union of the connected business solutions (Stores,
+# Bookings, Forms, CRM, etc.). Per-API methods invoked via CallWixSiteAPI
+# fall through to platform-level matching.
+schema_version: "1.0"
+platform: wix
+display_name: Wix
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Documentation ----------
+  - id: wix.SearchWixWDSDocumentation
+    object: Documentation
+    action: SearchWixWDSDocumentation
+    category: Documentation
+    risk: low
+    business_impact: "Searches Wix Design System documentation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: wix.SearchWixRESTDocumentation
+    object: Documentation
+    action: SearchWixRESTDocumentation
+    category: Documentation
+    risk: low
+    business_impact: "Searches Wix REST API documentation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: wix.SearchWixSDKDocumentation
+    object: Documentation
+    action: SearchWixSDKDocumentation
+    category: Documentation
+    risk: low
+    business_impact: "Searches Wix SDK documentation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: wix.SearchBuildAppsDocumentation
+    object: Documentation
+    action: SearchBuildAppsDocumentation
+    category: Documentation
+    risk: low
+    business_impact: "Searches the 'Build Apps' developer documentation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: wix.SearchWixHeadlessDocumentation
+    object: Documentation
+    action: SearchWixHeadlessDocumentation
+    category: Documentation
+    risk: low
+    business_impact: "Searches Wix Headless documentation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: wix.WixBusinessFlowsDocumentation
+    object: Documentation
+    action: WixBusinessFlowsDocumentation
+    category: Documentation
+    risk: low
+    business_impact: "Returns documentation on Wix business solution flows."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: wix.SearchSiteApiDocs
+    object: Documentation
+    action: SearchSiteApiDocs
+    category: Documentation
+    risk: low
+    business_impact: "Returns API documentation for the business solutions installed on a specific site."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: wix.ReadFullDocsArticle
+    object: Documentation
+    action: ReadFullDocsArticle
+    category: Documentation
+    risk: low
+    business_impact: "Fetches a complete article from the Wix developer documentation portal."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: wix.ReadFullDocsMethodSchema
+    object: Documentation
+    action: ReadFullDocsMethodSchema
+    category: Documentation
+    risk: low
+    business_impact: "Fetches the full schema for a Wix API method before calling it."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Site Management ----------
+  - id: wix.ListWixSites
+    object: Site
+    action: ListWixSites
+    category: Site Management
+    risk: low
+    business_impact: "Lists Wix sites in the connected account."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: wix.ManageWixSite
+    object: Site
+    action: ManageWixSite
+    category: Site Management
+    risk: high
+    business_impact: "Performs site-level lifecycle actions including creating sites; account-wide configuration write."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: wix.CallWixSiteAPI
+    object: "*"
+    action: CallWixSiteAPI
+    category: Site Management
+    risk: critical
+    business_impact: "Generic dispatcher that calls any Wix Site API on the visitor's behalf: Stores orders, Bookings appointments, CRM contacts, Forms submissions. Effective scope equals the connected site's full API surface."
+    compliance: [SOX, COSO, PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: wix.GenerateVisitorToken
+    object: VisitorToken
+    action: GenerateVisitorToken
+    category: Site Management
+    risk: medium
+    business_impact: "Mints a new visitor session token for the site; impersonation surface for visitor-scoped APIs."
+    compliance: [SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: wix.GetBusinessDetails
+    object: BusinessProfile
+    action: GetBusinessDetails
+    category: Site Management
+    risk: low
+    business_impact: "Reads business and site details (timezone, email, phone, address)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: wix.SearchInSite
+    object: SiteContent
+    action: SearchInSite
+    category: Site Management
+    risk: low
+    business_impact: "Searches public site content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Support ----------
+  - id: wix.SupportAndFeedback
+    object: Feedback
+    action: SupportAndFeedback
+    category: Support
+    risk: low
+    business_impact: "Submits support feedback to Wix."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

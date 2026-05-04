@@ -1,0 +1,150 @@
+schema_version: "1.0"
+platform: intercom
+display_name: Intercom
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Customer ----------
+  - id: intercom.search
+    object: "*"
+    action: search
+    category: Customer
+    risk: medium
+    business_impact: "Universal search across conversations and contacts; can surface PII at scale across the workspace."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: intercom.fetch
+    object: "*"
+    action: fetch
+    category: Customer
+    risk: medium
+    business_impact: "Retrieves the full record for a referenced resource; can return conversation contents and contact PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: intercom.search_conversations
+    object: Conversation
+    action: search_conversations
+    category: Customer
+    risk: medium
+    business_impact: "Searches customer support conversations; results contain message bodies and customer identifiers."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: intercom.get_conversation
+    object: Conversation
+    action: get_conversation
+    category: Customer
+    risk: medium
+    business_impact: "Returns the full transcript of a customer conversation; verbatim PII and possibly sensitive disclosures."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: intercom.search_contacts
+    object: Contact
+    action: search_contacts
+    category: Customer
+    risk: medium
+    business_impact: "Searches the contact directory; can enumerate users by attributes including email and custom traits."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: intercom.get_contact
+    object: Contact
+    action: get_contact
+    category: Customer
+    risk: medium
+    business_impact: "Retrieves a single contact's profile and attributes."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: intercom.list_companies
+    object: Company
+    action: list_companies
+    category: Customer
+    risk: low
+    business_impact: "Lists company accounts; firmographic metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: intercom.get_company
+    object: Company
+    action: get_company
+    category: Customer
+    risk: low
+    business_impact: "Returns details for a single company record."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Knowledge ----------
+  - id: intercom.list_articles
+    object: Article
+    action: list_articles
+    category: Knowledge
+    risk: low
+    business_impact: "Lists Help Center articles; public or internal documentation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: intercom.search_articles
+    object: Article
+    action: search_articles
+    category: Knowledge
+    risk: low
+    business_impact: "Full-text search across Help Center articles."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: intercom.get_article
+    object: Article
+    action: get_article
+    category: Knowledge
+    risk: low
+    business_impact: "Returns a single Help Center article body."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: intercom.create_article
+    object: Article
+    action: create_article
+    category: Knowledge
+    risk: medium
+    business_impact: "Publishes new Help Center content visible to customers; reputational and accuracy risk."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: intercom.update_article
+    object: Article
+    action: update_article
+    category: Knowledge
+    risk: medium
+    business_impact: "Modifies existing Help Center content visible to customers."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

@@ -1,0 +1,40 @@
+schema_version: "1.0"
+platform: adobe-journey-optimizer
+display_name: Adobe Journey Optimizer
+source: langguard-editorial
+updated: "2026-05"
+actions:
+  # ---------- Campaigns ----------
+  - id: adobe-journey-optimizer.List Campaigns
+    object: Campaign
+    action: List Campaigns
+    category: Operations
+    risk: low
+    business_impact: "Browses Adobe Journey Optimizer marketing campaigns; read-only in current beta."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-journey-optimizer.Get Campaign
+    object: Campaign
+    action: Get Campaign
+    category: Operations
+    risk: low
+    business_impact: "Reads full campaign configuration including audience targeting, schedule, and content."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Configuration ----------
+  - id: adobe-journey-optimizer.List Channel Configurations
+    object: ChannelConfiguration
+    action: List Channel Configurations
+    category: Operations
+    risk: low
+    business_impact: "Reads surface presets and branding for email, SMS, push, and WhatsApp channels."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
