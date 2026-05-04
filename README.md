@@ -4,15 +4,30 @@
 
 <p align="center"><b>SCOPE</b> — <b>S</b>ecurity, <b>C</b>ompliance &amp; <b>O</b>perational <b>P</b>olicy <b>E</b>valuation.</p>
 
-A Claude plugin that runs a **pre-flight compliance evaluation** on agentic workflows you're building. Tell SCOPE which MCP tools, connectors, or API actions your agent will be permitted to invoke and it produces a deterministic report:
+## Why this exists
+
+Agentic workflows have changed what "automation" means inside an organization. A single Claude agent today can be granted a dozen MCP tools across Salesforce, Stripe, GitHub, Slack, Gmail, a payroll system, an observability stack, a vector store — and every one of those tools is an action the agent can take on your behalf. The granularity that made integrations feel safe a decade ago (one narrowly-scoped credential per script, one trigger, one path through your data) is gone. Agents hold real authority over real systems, and they hold it across the same boundary lines that compliance frameworks were drawn around.
+
+Compliance review has not caught up. SOC 2, GDPR, HIPAA, PCI, SOX, the EU AI Act — these regimes were designed around human actors and traditional applications. Their controls land at the project level, in annual audits, in change-management reviews, in vendor questionnaires. There is no equivalent of a linter or static-analysis pass for the question that actually matters when you're building an agent: **"what compliance and risk exposure am I taking on by attaching these specific tools?"** The result is that exposure gets noticed late, in production, after the agent has been running for a while — typically when somebody finally maps the attack surface for an audit and discovers the agent has `slack.read_direct_messages` (PHI, attorney-client privilege, internal HR data) or `stripe.create_refund` (SOX-relevant, segregation-of-duties violation, PCI scope) on its toolbelt.
+
+Runtime guardrails help, but most agent harnesses don't enforce policy at runtime — and even when they do, runtime is too late. The shipping decision was already made; the agent is already deployed; the data has already moved.
+
+SCOPE runs at the design moment. As you describe an agent — *"an agent that watches Stripe for failed payments, looks up the customer in Salesforce, and posts to Slack"* — it produces a compliance posture report immediately. Risk levels per action, regulatory regimes triggered, segregation-of-duties red flags, concrete scoping recommendations. You see the exposure **before** the agent ships, while you still have cheap options: drop a tool, swap a write for a read, gate a critical action behind human approval, or document the regulatory exposure for a real compliance review.
+
+Two design choices make the report trustworthy enough to use in actual change-management workflows:
+
+- **Deterministic, not generated.** The risk levels and regime tags come from a curated database. The same input produces the same output, every time. That's auditable in a way LLM output isn't — there's no debate about hallucinations, no flickering classifications between runs.
+- **Open data.** The 80+ YAMLs in [`data/`](./data) are in this public repo. You can read every classification this plugin will ever emit. If you think `slack.read_direct_messages` is over-tagged with HIPAA for your context, or that a Stripe action's confidence should be `medium` rather than `high`, the data is right there to challenge — open an [issue or PR](./CONTRIBUTING.md).
+
+## What you get
+
+A Claude plugin that runs a **pre-flight evaluation** on agentic workflows you're building. Tell SCOPE which MCP tools, connectors, or API actions your agent will be permitted to invoke and it produces a deterministic report:
 
 - A **risk level** for every action (`low` / `medium` / `high` / `critical`)
 - The **business impact** in one sentence
 - Which **regulatory regimes** the action touches (25 codes — GDPR, HIPAA, PCI, SOX, SOC 2, EU AI Act, NY DFS 500, and more)
 - Whether the action raises a **segregation-of-duties** concern
 - A **recommendation**: `proceed`, `proceed_with_audit_trail`, `require_human_review`, `require_human_approval`, or `block_and_require_human_approval`
-
-The data is curated, deterministic, and lives openly in this repo's [`data/`](./data) directory — 80+ platforms with verbatim MCP tool ids sourced from each connector's published documentation. There's no model in the loop deciding what's risky; the lookup is exact.
 
 ## Quickstart
 
