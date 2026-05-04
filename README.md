@@ -2,22 +2,22 @@
   <img src="./logo.png" alt="SCOPE MCP" width="320">
 </p>
 
-<p align="center"><b>SCOPE</b> — <b>S</b>ecurity, <b>C</b>ompliance &amp; <b>O</b>perational <b>P</b>olicy <b>E</b>valuation.</p>
+<p align="center"><b>SCOPE</b> - <b>S</b>ecurity, <b>C</b>ompliance &amp; <b>O</b>perational <b>P</b>olicy <b>E</b>valuation.</p>
 
 ## Why this exists
 
-Agentic workflows have changed what "automation" means inside an organization. A single Claude agent today can be granted a dozen MCP tools across Salesforce, Stripe, GitHub, Slack, Gmail, a payroll system, an observability stack, a vector store — and every one of those tools is an action the agent can take on your behalf. The granularity that made integrations feel safe a decade ago (one narrowly-scoped credential per script, one trigger, one path through your data) is gone. Agents hold real authority over real systems, and they hold it across the same boundary lines that compliance frameworks were drawn around.
+Agentic workflows have changed what "automation" means inside an organization. A single Claude agent today can be granted a dozen MCP tools across Salesforce, Stripe, GitHub, Slack, Gmail, a payroll system, an observability stack, a vector store - and every one of those tools is an action the agent can take on your behalf. The granularity that made integrations feel safe a decade ago (one narrowly-scoped credential per script, one trigger, one path through your data) is gone. Agents hold real authority over real systems, and they hold it across the same boundary lines that compliance frameworks were drawn around.
 
-Compliance review has not caught up. SOC 2, GDPR, HIPAA, PCI, SOX, the EU AI Act — these regimes were designed around human actors and traditional applications. Their controls land at the project level, in annual audits, in change-management reviews, in vendor questionnaires. There is no equivalent of a linter or static-analysis pass for the question that actually matters when you're building an agent: **"what compliance and risk exposure am I taking on by attaching these specific tools?"** The result is that exposure gets noticed late, in production, after the agent has been running for a while — typically when somebody finally maps the attack surface for an audit and discovers the agent has `slack.read_direct_messages` (PHI, attorney-client privilege, internal HR data) or `stripe.create_refund` (SOX-relevant, segregation-of-duties violation, PCI scope) on its toolbelt.
+Compliance review has not caught up. SOC 2, GDPR, HIPAA, PCI, SOX, the EU AI Act - these regimes were designed around human actors and traditional applications. Their controls land at the project level, in annual audits, in change-management reviews, in vendor questionnaires. There is no equivalent of a linter or static-analysis pass for the question that actually matters when you're building an agent: **"what compliance and risk exposure am I taking on by attaching these specific tools?"** The result is that exposure gets noticed late, in production, after the agent has been running for a while - typically when somebody finally maps the attack surface for an audit and discovers the agent has `slack.read_direct_messages` (PHI, attorney-client privilege, internal HR data) or `stripe.create_refund` (SOX-relevant, segregation-of-duties violation, PCI scope) on its toolbelt.
 
-Runtime guardrails help, but most agent harnesses don't enforce policy at runtime — and even when they do, runtime is too late. The shipping decision was already made; the agent is already deployed; the data has already moved.
+Runtime guardrails help, but most agent harnesses don't enforce policy at runtime - and even when they do, runtime is too late. The shipping decision was already made; the agent is already deployed; the data has already moved.
 
-SCOPE runs at the design moment. As you describe an agent — *"an agent that watches Stripe for failed payments, looks up the customer in Salesforce, and posts to Slack"* — it produces a compliance posture report immediately. Risk levels per action, regulatory regimes triggered, segregation-of-duties red flags, concrete scoping recommendations. You see the exposure **before** the agent ships, while you still have cheap options: drop a tool, swap a write for a read, gate a critical action behind human approval, or document the regulatory exposure for a real compliance review.
+SCOPE runs at the design moment. As you describe an agent - *"an agent that watches Stripe for failed payments, looks up the customer in Salesforce, and posts to Slack"* - it produces a compliance posture report immediately. Risk levels per action, regulatory regimes triggered, segregation-of-duties red flags, concrete scoping recommendations. You see the exposure **before** the agent ships, while you still have cheap options: drop a tool, swap a write for a read, gate a critical action behind human approval, or document the regulatory exposure for a real compliance review.
 
 Two design choices make the report trustworthy enough to use in actual change-management workflows:
 
-- **Deterministic, not generated.** The risk levels and regime tags come from a curated database. The same input produces the same output, every time. That's auditable in a way LLM output isn't — there's no debate about hallucinations, no flickering classifications between runs.
-- **Open data.** The 80+ YAMLs in [`data/`](./data) are in this public repo. You can read every classification this plugin will ever emit. If you think `slack.read_direct_messages` is over-tagged with HIPAA for your context, or that a Stripe action's confidence should be `medium` rather than `high`, the data is right there to challenge — open an [issue or PR](./CONTRIBUTING.md).
+- **Deterministic, not generated.** The risk levels and regime tags come from a curated database. The same input produces the same output, every time. That's auditable in a way LLM output isn't - there's no debate about hallucinations, no flickering classifications between runs.
+- **Open data.** The 80+ YAMLs in [`data/`](./data) are in this public repo. You can read every classification this plugin will ever emit. If you think `slack.read_direct_messages` is over-tagged with HIPAA for your context, or that a Stripe action's confidence should be `medium` rather than `high`, the data is right there to challenge - open an [issue or PR](./CONTRIBUTING.md).
 
 ## What you get
 
@@ -25,7 +25,7 @@ A Claude plugin that runs a **pre-flight evaluation** on agentic workflows you'r
 
 - A **risk level** for every action (`low` / `medium` / `high` / `critical`)
 - The **business impact** in one sentence
-- Which **regulatory regimes** the action touches (25 codes — GDPR, HIPAA, PCI, SOX, SOC 2, EU AI Act, NY DFS 500, and more)
+- Which **regulatory regimes** the action touches (25 codes - GDPR, HIPAA, PCI, SOX, SOC 2, EU AI Act, NY DFS 500, and more)
 - Whether the action raises a **segregation-of-duties** concern
 - A **recommendation**: `proceed`, `proceed_with_audit_trail`, `require_human_review`, `require_human_approval`, or `block_and_require_human_approval`
 
@@ -35,7 +35,7 @@ A Claude plugin that runs a **pre-flight evaluation** on agentic workflows you'r
 
 1. **Add the plugin** in Cowork: Settings → Plugins → *Add plugin* → paste this repo's URL.
 2. When prompted, **authorize via OAuth**. You'll be redirected to enter a SCOPE access token (request one from [LangGuard](mailto:scope-mcp@langguard.ai)). Cowork stores the authorization; you don't see the token again.
-3. Start designing an agent — SCOPE's auto-trigger skill fires the moment you describe one.
+3. Start designing an agent - SCOPE's auto-trigger skill fires the moment you describe one.
 
 ### Claude Code CLI
 
@@ -69,7 +69,7 @@ Just describe the agent you're building:
 
 SCOPE's `compliance-check` skill triggers automatically, derives the implied tool surface (`stripe.*`, `salesforce.*`, `slack.post_message`), and produces a build advisory.
 
-### Explicit — `/scope-mcp:audit`
+### Explicit - `/scope-mcp:audit`
 
 Pass anything: tool ids, connector wildcards, bare platform names, or a prose description.
 
@@ -93,13 +93,13 @@ Segregation-of-duties red flags: 1.
 | Tool                          | Risk     | Compliance                          | SoD |
 |-------------------------------|----------|-------------------------------------|-----|
 | slack.read_direct_messages    | critical | GDPR, UK_GDPR, CCPA, HIPAA, SOC2…  | ⚠   |
-| slack.post_message            | low      | —                                   |     |
+| slack.post_message            | low      | -                                   |     |
 | github.merge_pull_request     | high     | SOX, COSO, SOC2, ISO_27001          |     |
 
 ### Why this matters
-- slack.read_direct_messages — Reads private 1:1 and small-group conversations;
+- slack.read_direct_messages - Reads private 1:1 and small-group conversations;
   may include regulated health or personnel data.
-- github.merge_pull_request — Bypasses code-review gating that audit logs depend on.
+- github.merge_pull_request - Bypasses code-review gating that audit logs depend on.
 
 ### Recommendations
 - Drop unless required: slack.read_direct_messages
@@ -121,7 +121,7 @@ flowchart TD
 
 The plugin in this repo distributes the *interface*: skills (`audit`, `compliance-check`), the `/scope-mcp:audit` slash command, and an `.mcp.json` manifest pointing at the hosted SCOPE MCP server. It also distributes the *data*: the 80+ per-platform YAML files in [`data/`](./data) that catalogue every MCP tool the server knows about and how each one is classified.
 
-When you run an audit, your Claude session calls the hosted MCP server over HTTPS. The server reads its data from the YAML files in this repository — that's the canonical source of truth, publicly auditable, and updated by pull request. You can read every classification this plugin will ever emit by browsing [`data/`](./data).
+When you run an audit, your Claude session calls the hosted MCP server over HTTPS. The server reads its data from the YAML files in this repository - that's the canonical source of truth, publicly auditable, and updated by pull request. You can read every classification this plugin will ever emit by browsing [`data/`](./data).
 
 ## Data and schema
 
@@ -157,7 +157,7 @@ actions:
     access_methods: [REST, MCP]
 ```
 
-Tool ids are **verbatim** from each connector's published MCP `tools/list` documentation — case, vendor prefixes, and plurals preserved. So `notion.notion-create-pages` (kebab-case + vendor prefix) and `atlassian.createJiraIssue` (camelCase) appear exactly as the upstream MCP server emits them. This is what makes lookup deterministic at audit time.
+Tool ids are **verbatim** from each connector's published MCP `tools/list` documentation - case, vendor prefixes, and plurals preserved. So `notion.notion-create-pages` (kebab-case + vendor prefix) and `atlassian.createJiraIssue` (camelCase) appear exactly as the upstream MCP server emits them. This is what makes lookup deterministic at audit time.
 
 ## Compliance regimes covered
 
@@ -190,11 +190,11 @@ scope-mcp/
 
 ## Contributing
 
-**The data is the project.** SCOPE is only as good as the YAMLs in [`data/`](./data), and we want community input on every part of them — risk levels, business-impact wording, regime tagging, missing tools, hallucinated tools, calibration of `confidence`. If you've used a connector in a regulated context and our classification feels off, we want to hear about it.
+**The data is the project.** SCOPE is only as good as the YAMLs in [`data/`](./data), and we want community input on every part of them - risk levels, business-impact wording, regime tagging, missing tools, hallucinated tools, calibration of `confidence`. If you've used a connector in a regulated context and our classification feels off, we want to hear about it.
 
 Two ways to contribute, both welcome:
 
-- **Open an issue** if you have feedback but don't want to write YAML. A one-paragraph "I think `stripe.create_refund` should also tag `NY_DFS_500` because…" is plenty — we'll do the rest.
+- **Open an issue** if you have feedback but don't want to write YAML. A one-paragraph "I think `stripe.create_refund` should also tag `NY_DFS_500` because…" is plenty - we'll do the rest.
 - **Open a PR** if you want to make the change directly. Edit or add files under [`data/`](./data) following the schema in `data/salesforce.yml`. Approved PRs reach production within 60 minutes of merge.
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for issue templates, the three hard rules for new data (verbatim tool ids, closed regime allowlist, calibrated confidence), and a PR checklist.
@@ -202,7 +202,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for issue templates, the three hard rul
 ## Limitations
 
 - **Coverage**: ~80 platforms today, expanding. If you audit a tool SCOPE doesn't recognize, it surfaces as `unmapped` and the audit recommends human review by default.
-- **Not a runtime gate**: SCOPE produces an advisory report. It does not enforce execution policy at runtime — that's a separate problem your agent harness solves.
+- **Not a runtime gate**: SCOPE produces an advisory report. It does not enforce execution policy at runtime - that's a separate problem your agent harness solves.
 - **Editorial judgment**: Risk and regime classifications reflect informed industry consensus, not legal advice. Sector-specific applicability (e.g. whether HIPAA applies to a given Slack workspace) depends on your deployment and is flagged in `business_impact` prose.
 
 ## Status
