@@ -31,13 +31,25 @@ A Claude plugin that runs a **pre-flight evaluation** on agentic workflows you'r
 
 ## Quickstart
 
-### Cowork (recommended)
+### 1. Get a SCOPE access token
+
+Self-service signup is at **[scope-mcp.langguard.ai/register-account](https://scope-mcp.langguard.ai/register-account)**. Enter your name, email, and (optional) opt-in for product updates, and we'll email your `cp_…` API token within seconds.
+
+Three things to know before you submit:
+
+- **One token per email.** If you lose it, email [support@langguard.ai](mailto:support@langguard.ai) — we don't have a way to recover it (we hash tokens at storage time), but we can invalidate the old one and issue a replacement.
+- **Save the token immediately.** It's shown only once, in the email; we cannot fetch it later.
+- **Token tier**: self-signup tokens default to a free rate limit (10 requests / minute). For higher volumes, contact [support@langguard.ai](mailto:support@langguard.ai).
+
+### 2. Install the plugin
+
+#### Cowork (recommended)
 
 1. **Add the plugin** in Cowork: Settings → Plugins → *Add plugin* → paste this repo's URL.
-2. When prompted, **authorize via OAuth**. You'll be redirected to enter a SCOPE access token (request one from [LangGuard](mailto:scope-mcp@langguard.ai)). Cowork stores the authorization; you don't see the token again.
-3. Start designing an agent - SCOPE's auto-trigger skill fires the moment you describe one.
+2. When prompted, **authorize via OAuth**. You'll be redirected to a consent page where you paste the `cp_…` token from your signup email. Cowork stores the authorization; you don't see the token again.
+3. Start designing an agent — SCOPE's auto-trigger skill fires the moment you describe one.
 
-### Claude Code CLI
+#### Claude Code CLI
 
 ```bash
 # Add this repo as a plugin marketplace
@@ -47,9 +59,9 @@ A Claude plugin that runs a **pre-flight evaluation** on agentic workflows you'r
 /plugin install scope-mcp@scope-mcp-local
 ```
 
-On first invocation, Claude Code will run the OAuth flow against the hosted SCOPE server (callback on `localhost:3118`) and cache the resulting access token. To request a SCOPE token, contact [LangGuard](mailto:scope-mcp@langguard.ai).
+On first invocation, Claude Code runs the OAuth flow against the hosted SCOPE server (callback on `localhost:3118`). Paste your `cp_…` token in the consent page that opens; the resulting access token is cached locally.
 
-### Verify the install
+### 3. Verify the install
 
 In any session, type:
 
@@ -211,5 +223,6 @@ Production POC. Data is curated against published MCP `tools/list` documentation
 
 ## Contact
 
-- Issues / data corrections: open a GitHub issue on this repo.
-- Access tokens, commercial inquiries: [scope-mcp@langguard.ai](mailto:scope-mcp@langguard.ai) (LangGuard).
+- **Get an access token**: self-service at [scope-mcp.langguard.ai/register-account](https://scope-mcp.langguard.ai/register-account).
+- **Lost your token, rate-limit increase, commercial inquiries**: [support@langguard.ai](mailto:support@langguard.ai).
+- **Issues / data corrections**: open a GitHub issue on this repo.
