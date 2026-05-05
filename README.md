@@ -53,7 +53,7 @@ Three things to know before you submit:
 
 ```bash
 # Add this repo as a plugin marketplace
-/plugin marketplace add <github-org>/scope-mcp
+/plugin marketplace add LangGuard-AI/scope-mcp
 
 # Install the plugin
 /plugin install scope-mcp@scope-mcp-local
