@@ -84,7 +84,19 @@ The end-to-end install (skills + MCP server in one shot) goes through the `/plug
 
 > Requires **Node 18+** on `PATH` (the bridge uses `npx` on first run; the package is then cached by npm).
 
-> If you tried adding the marketplace before [Nov 6, 2026](https://github.com/LangGuard-AI/scope-mcp/commits/main) and the `/plugins` chooser didn't list `scope-mcp`, the marketplace lived at the wrong path in the repo. Remove the cached entry and re-add: `codex plugin marketplace remove scope-mcp-local` (or whatever name shows under `[marketplaces.*]` in `~/.codex/config.toml`), then redo the `/plugins` flow above.
+> If `/plugins` Add Marketplace fails with "Failed to add marketplace from the provided source," or the chooser doesn't list `scope-mcp` after a successful add, you likely have a stale cached entry from an earlier broken state. Reset and retry from a shell:
+> ```bash
+> # Remove whichever name(s) show up under [marketplaces.*] in ~/.codex/config.toml.
+> codex plugin marketplace remove scope-mcp 2>/dev/null
+> codex plugin marketplace remove scope-mcp-local 2>/dev/null
+>
+> # Clear the resolved + staging caches.
+> rm -rf ~/.codex/.tmp/marketplaces/scope-mcp ~/.codex/.tmp/marketplaces/.staging
+>
+> # Re-add fresh.
+> codex plugin marketplace add LangGuard-AI/scope-mcp
+> ```
+> Then go back into `codex` and run `/plugins` to install the plugin.
 
 ##### MCP-only install (skills omitted)
 
@@ -223,17 +235,24 @@ A closed list of 25 canonical codes. The audit returns the subset triggered by y
 
 ```
 scope-mcp/
-├── .claude-plugin/
-│   ├── plugin.json              # plugin manifest
-│   └── marketplace.json         # marketplace catalog
-├── .mcp.json                    # points at the hosted MCP server URL
-├── skills/
-│   ├── compliance-check/SKILL.md   # auto-trigger (proactive design-time)
-│   └── audit/SKILL.md              # /scope-mcp:audit (explicit)
-├── data/                        # per-platform YAML compliance data (~80 files)
-├── CHANGELOG.md
-└── README.md
+├── README.md, LICENSE, CONTRIBUTING.md, logo.png
+├── .github/ISSUE_TEMPLATE/                    # data-revision form + config
+├── .agents/plugins/marketplace.json           # Codex marketplace catalog
+├── .claude-plugin/marketplace.json            # Claude marketplace catalog
+├── data/                                      # per-platform YAML compliance
+│                                              # data (~80 files, hot-synced to S3
+│                                              # by the hosted MCP server)
+└── plugins/
+    └── scope-mcp/                             # the plugin itself
+        ├── .codex-plugin/plugin.json          # Codex plugin manifest
+        ├── .claude-plugin/plugin.json         # Claude plugin manifest
+        ├── .mcp.json                          # universal stdio bridge (mcp-remote)
+        └── skills/
+            ├── audit/SKILL.md                 # /scope-mcp:audit (explicit)
+            └── compliance-check/SKILL.md      # auto-trigger (design-time)
 ```
+
+The marketplace catalogs at the repo root point both Claude and Codex at `./plugins/scope-mcp/`, where the actual plugin lives. `data/` stays at the repo root because the hosted MCP server reads it directly from S3, independent of plugin install — community PRs and issue-driven corrections land there.
 
 ## Contributing
 
