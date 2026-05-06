@@ -43,10 +43,10 @@ Three things to know before you submit:
 
 ### 2. Install the plugin
 
-#### Cowork (recommended)
+#### Claude Cowork
 
-1. **Add the plugin** in Cowork: Settings → Plugins → *Add plugin* → paste this repo's URL.
-2. When prompted, **authorize via OAuth**. You'll be redirected to a consent page where you paste the `cp_…` token from your signup email. Cowork stores the authorization; you don't see the token again.
+1. **Add the plugin** in Claude Cowork: Settings → Plugins → *Add plugin* → paste `https://github.com/LangGuard-AI/scope-mcp` as the repo URL.
+2. When prompted, **authorize via OAuth**. You'll be redirected to a consent page where you paste the `cp_…` token from your signup email. Claude Cowork stores the authorization; you don't see the token again.
 3. Start designing an agent — SCOPE's auto-trigger skill fires the moment you describe one.
 
 #### Claude Code CLI
@@ -136,7 +136,7 @@ Segregation-of-duties red flags: 1.
 
 ```mermaid
 flowchart TD
-    A["<b>Your Claude session</b><br/>Code CLI or Cowork"]
+    A["<b>Your Claude session</b><br/>Claude Code CLI or Claude Cowork"]
       -->|"tool call:<br/>audit_agent_design"| B
     B["<b>scope-mcp plugin</b> (this repo)<br/>skills + slash commands<br/>.mcp.json → hosted server"]
       -->|"MCP over HTTPS<br/>(OAuth 2.1 + PKCE)"| C
