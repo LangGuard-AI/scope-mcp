@@ -61,6 +61,20 @@ Three things to know before you submit:
 
 On first invocation, Claude Code runs the OAuth flow against the hosted SCOPE server (callback on `localhost:3118`). Paste your `cp_…` token in the consent page that opens; the resulting access token is cached locally.
 
+#### Codex
+
+```bash
+# Register the marketplace
+codex plugin marketplace add LangGuard-AI/scope-mcp
+
+# Install the plugin
+codex plugin install scope-mcp
+```
+
+Codex's MCP subsystem only speaks stdio, so the plugin's MCP config bridges to the hosted HTTPS server via [`mcp-remote`](https://github.com/geelen/mcp-remote) — invoked transparently as `npx -y mcp-remote@latest https://scope-mcp.langguard.ai/mcp` on first start. `mcp-remote` runs the OAuth flow in a browser tab, caches the resulting access token under `~/.mcp-auth/`, and proxies stdio↔HTTP for the Codex session. After the first authorization the plugin starts silently in subsequent Codex sessions.
+
+> Requires Node 18+ on `PATH` (for `npx`). The bridge package is downloaded on first run and cached by npm.
+
 ### 3. Verify the install
 
 In any session, type:
