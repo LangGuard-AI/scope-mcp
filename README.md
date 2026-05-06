@@ -82,6 +82,8 @@ The end-to-end install (skills + MCP server in one shot) goes through the `/plug
 
 > Requires **Node 18+** on `PATH` (the bridge uses `npx` on first run; the package is then cached by npm).
 
+> If you tried adding the marketplace before [Nov 6, 2026](https://github.com/LangGuard-AI/scope-mcp/commits/main) and the `/plugins` chooser didn't list `scope-mcp`, the marketplace lived at the wrong path in the repo. Remove the cached entry and re-add: `codex plugin marketplace remove scope-mcp-local` (or whatever name shows under `[marketplaces.*]` in `~/.codex/config.toml`), then redo the `/plugins` flow above.
+
 ##### MCP-only install (skills omitted)
 
 If you only need the `audit_agent_design` MCP tool — without the design-time auto-trigger skill or the `/scope-mcp:audit` workflow — you can register the MCP server directly from a shell:
@@ -91,8 +93,6 @@ codex mcp add scope-mcp -- npx -y mcp-remote@latest https://scope-mcp.langguard.
 ```
 
 This bypasses the plugin marketplace entirely. You get the audit tool but lose the skill prompts that fire automatically when Codex sees you describing an agent. Use this path for headless / CI scenarios where the interactive `/plugins` flow doesn't apply.
-
-> If you previously tried the broken `codex plugin install` instructions, clean up the half-registered marketplace entry with `codex plugin marketplace remove scope-mcp-local` before running the install above.
 
 ### 3. Verify the install
 
