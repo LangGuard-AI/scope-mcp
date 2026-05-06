@@ -1,13 +1,27 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: adobe-journey-optimizer
 display_name: Adobe Journey Optimizer
 source: langguard-editorial
 updated: "2026-05"
+# The Adobe Journey Optimizer MCP server is in beta and Adobe's docs
+# publish only plain-language capability labels ("List Campaigns",
+# "Get Campaign", "List Channel Configurations") — not verbatim tool
+# identifiers. Per CONTRIBUTING.md Rule 1's escape hatch, every entry
+# below uses `id_form: capability`. The earlier curation stored the
+# capability labels as verbatim ids, which produced ids containing
+# literal spaces (`adobe-journey-optimizer.List Campaigns`); this file
+# converts to slugged ids with the verbatim label in `description`.
+# When Adobe publishes a real `tools/list` (or open-sources the server),
+# refresh this file to `id_form: verbatim` with the actual identifier
+# strings.
+reference: https://experienceleague.adobe.com/en/docs/journey-optimizer/using/content-management/combine/ajo-mcp
 actions:
   # ---------- Campaigns ----------
-  - id: adobe-journey-optimizer.List Campaigns
+  - id: adobe-journey-optimizer.list_campaigns
     object: Campaign
-    action: List Campaigns
+    action: list_campaigns
+    id_form: capability
+    description: "List Campaigns"
     category: Operations
     risk: low
     business_impact: "Browses Adobe Journey Optimizer marketing campaigns; read-only in current beta."
@@ -16,9 +30,11 @@ actions:
     confidence: medium
     access_methods: [REST, MCP]
 
-  - id: adobe-journey-optimizer.Get Campaign
+  - id: adobe-journey-optimizer.get_campaign
     object: Campaign
-    action: Get Campaign
+    action: get_campaign
+    id_form: capability
+    description: "Get Campaign"
     category: Operations
     risk: low
     business_impact: "Reads full campaign configuration including audience targeting, schedule, and content."
@@ -28,9 +44,11 @@ actions:
     access_methods: [REST, MCP]
 
   # ---------- Configuration ----------
-  - id: adobe-journey-optimizer.List Channel Configurations
+  - id: adobe-journey-optimizer.list_channel_configurations
     object: ChannelConfiguration
-    action: List Channel Configurations
+    action: list_channel_configurations
+    id_form: capability
+    description: "List Channel Configurations"
     category: Operations
     risk: low
     business_impact: "Reads surface presets and branding for email, SMS, push, and WhatsApp channels."
