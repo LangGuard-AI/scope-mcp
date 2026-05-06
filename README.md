@@ -63,17 +63,25 @@ On first invocation, Claude Code runs the OAuth flow against the hosted SCOPE se
 
 #### Codex
 
-```bash
-# Register the marketplace
-codex plugin marketplace add LangGuard-AI/scope-mcp
+Codex's MCP subsystem only speaks stdio while our SCOPE MCP server is HTTP+OAuth at `https://scope-mcp.langguard.ai/mcp`, so the install routes through [`mcp-remote`](https://github.com/geelen/mcp-remote) — a small npm package that proxies stdio↔HTTP and handles the OAuth dance. The most reliable path on Codex 0.128+:
 
-# Install the plugin
-codex plugin install scope-mcp
+```bash
+codex mcp add scope-mcp -- npx -y mcp-remote@latest https://scope-mcp.langguard.ai/mcp
 ```
 
-Codex's MCP subsystem only speaks stdio, so the plugin's MCP config bridges to the hosted HTTPS server via [`mcp-remote`](https://github.com/geelen/mcp-remote) — invoked transparently as `npx -y mcp-remote@latest https://scope-mcp.langguard.ai/mcp` on first start. `mcp-remote` runs the OAuth flow in a browser tab, caches the resulting access token under `~/.mcp-auth/`, and proxies stdio↔HTTP for the Codex session. After the first authorization the plugin starts silently in subsequent Codex sessions.
+On first use, `mcp-remote` opens a browser to the SCOPE consent page — paste your `cp_…` token from the signup email; the resulting access token is cached under `~/.mcp-auth/` and reused silently across Codex sessions.
 
-> Requires Node 18+ on `PATH` (for `npx`). The bridge package is downloaded on first run and cached by npm.
+> Requires **Node 18+** on `PATH` for `npx` (used to fetch the bridge package on first run). After the first install, the package is cached by npm and starts in <1 s.
+
+##### Plugin marketplace (alternative)
+
+You can also register this repo as a Codex plugin marketplace, which makes the SCOPE skills (`audit`, `compliance-check`) discoverable alongside the MCP server config:
+
+```bash
+codex plugin marketplace add LangGuard-AI/scope-mcp
+```
+
+The Codex 0.128 CLI exposes `codex plugin marketplace { add | upgrade | remove }` but no separate `install` subcommand — registering the marketplace is sufficient to make the plugin available; activation happens when Codex picks up the marketplace's plugin entries on the next session start. If your Codex version doesn't yet wire up the plugin's MCP server automatically from this path, fall back to the direct `codex mcp add` above.
 
 ### 3. Verify the install
 
