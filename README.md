@@ -63,25 +63,36 @@ On first invocation, Claude Code runs the OAuth flow against the hosted SCOPE se
 
 #### Codex
 
-Codex's MCP subsystem only speaks stdio while our SCOPE MCP server is HTTP+OAuth at `https://scope-mcp.langguard.ai/mcp`, so the install routes through [`mcp-remote`](https://github.com/geelen/mcp-remote) — a small npm package that proxies stdio↔HTTP and handles the OAuth dance. The most reliable path on Codex 0.128+:
+The end-to-end install (skills + MCP server in one shot) goes through the `/plugins` slash command in the Codex TUI:
+
+1. Launch Codex interactively:
+   ```bash
+   codex
+   ```
+2. Inside Codex, type:
+   ```
+   /plugins
+   ```
+3. Choose **Add marketplace** and paste:
+   ```
+   LangGuard-AI/scope-mcp
+   ```
+4. From the resolved marketplace, select **scope-mcp** and confirm install. Codex copies the bundled skills (`audit`, `compliance-check`) into `~/.codex/skills/` and registers the plugin's MCP server config.
+5. On the first MCP call, [`mcp-remote`](https://github.com/geelen/mcp-remote) opens a browser to the SCOPE consent page — paste your `cp_…` token from the signup email. The resulting access token caches under `~/.mcp-auth/` and is reused silently across Codex sessions.
+
+> Requires **Node 18+** on `PATH` (the bridge uses `npx` on first run; the package is then cached by npm).
+
+##### MCP-only install (skills omitted)
+
+If you only need the `audit_agent_design` MCP tool — without the design-time auto-trigger skill or the `/scope-mcp:audit` workflow — you can register the MCP server directly from a shell:
 
 ```bash
 codex mcp add scope-mcp -- npx -y mcp-remote@latest https://scope-mcp.langguard.ai/mcp
 ```
 
-On first use, `mcp-remote` opens a browser to the SCOPE consent page — paste your `cp_…` token from the signup email; the resulting access token is cached under `~/.mcp-auth/` and reused silently across Codex sessions.
+This bypasses the plugin marketplace entirely. You get the audit tool but lose the skill prompts that fire automatically when Codex sees you describing an agent. Use this path for headless / CI scenarios where the interactive `/plugins` flow doesn't apply.
 
-> Requires **Node 18+** on `PATH` for `npx` (used to fetch the bridge package on first run). After the first install, the package is cached by npm and starts in <1 s.
-
-##### Plugin marketplace (alternative)
-
-You can also register this repo as a Codex plugin marketplace, which makes the SCOPE skills (`audit`, `compliance-check`) discoverable alongside the MCP server config:
-
-```bash
-codex plugin marketplace add LangGuard-AI/scope-mcp
-```
-
-The Codex 0.128 CLI exposes `codex plugin marketplace { add | upgrade | remove }` but no separate `install` subcommand — registering the marketplace is sufficient to make the plugin available; activation happens when Codex picks up the marketplace's plugin entries on the next session start. If your Codex version doesn't yet wire up the plugin's MCP server automatically from this path, fall back to the direct `codex mcp add` above.
+> If you previously tried the broken `codex plugin install` instructions, clean up the half-registered marketplace entry with `codex plugin marketplace remove scope-mcp-local` before running the install above.
 
 ### 3. Verify the install
 
