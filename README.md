@@ -231,9 +231,18 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for issue templates, the three hard rul
 - **Not a runtime gate**: SCOPE produces an advisory report. It does not enforce execution policy at runtime - that's a separate problem your agent harness solves.
 - **Editorial judgment**: Risk and regime classifications reflect informed industry consensus, not legal advice. Sector-specific applicability (e.g. whether HIPAA applies to a given Slack workspace) depends on your deployment and is flagged in `business_impact` prose.
 
-## Status
+## Privacy
 
-Production POC. Data is curated against published MCP `tools/list` documentation per connector; coverage is expanding. The report shape and tool contract are stable.
+**The hosted SCOPE MCP server does not log requests.** Specifically:
+
+- **No request body is ever persisted.** When your agent calls `audit_agent_design` with a tool list, the server reads it, computes the report from the curated YAML data, returns the response, and discards the input. The submitted tool list never lands in any log line, database row, or object store.
+- **No IP address is ever stored alongside submitted content.** The only place a client IP touches the system is a per-IP rate-limit counter for `/register-account` and `/browse`, and that's keyed on `sha256(ip)` with the row containing only a count + TTL. The IP-hash partition has no correlation key to any row that holds submitted data — they cannot be joined.
+- **Application logs (CloudWatch) capture HTTP method + path + the MCP method name** (e.g. `POST /mcp tools/call name=audit_agent_design`) — never the arguments, never the IP. Errors are scrubbed to `{name, message}` before logging so AWS SDK and transport errors cannot smuggle the original request body into the log group.
+- **API Gateway access logs are not enabled.** AWS HTTP APIs don't auto-log without explicit `AccessLogSettings`; the SAM template intentionally omits the block, with an inline comment documenting that adding one in the future MUST scrub `$context.identity.sourceIp` to preserve this invariant.
+- **No third-party telemetry, analytics, or APM agent runs in the Lambda.** No Datadog, Sentry, X-Ray, OpenTelemetry, or similar exporters are configured.
+- **Registration data minimization**: `/register-account` stores name + email + a SHA-256 hash of the issued token. The token itself is never stored. Nothing is correlated with the IP that submitted the form.
+
+If you have a use case that requires deeper privacy assurances (audit logs against the deployed infrastructure, verification of the exact code that handles your traffic, contractual data-handling commitments), email [scope-mcp@langguard.ai](mailto:scope-mcp@langguard.ai).
 
 ## Contact
 
