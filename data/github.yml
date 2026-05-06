@@ -909,6 +909,54 @@ actions:
     confidence: high
     access_methods: [REST, MCP, CLI]
 
+  - id: github.create_pull_request_with_copilot
+    object: PullRequest
+    action: create_pull_request_with_copilot
+    description: "Hands a coding task to GitHub's Copilot coding agent, which produces a pull request from the description."
+    category: Operations
+    risk: medium
+    business_impact: "Delegates code authorship to Copilot and opens a PR; the resulting PR still passes through normal branch-protection review, but the human-in-the-loop boundary moves from 'wrote the code' to 'approved the PR.'"
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: github.get_copilot_space
+    object: CopilotSpace
+    action: get_copilot_space
+    description: "Retrieves a single Copilot Space (a Copilot context grouping) by owner and name."
+    category: Operations
+    risk: low
+    business_impact: "Reads a Copilot Space configuration; returns the context the space exposes to Copilot."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: github.list_copilot_spaces
+    object: CopilotSpace
+    action: list_copilot_spaces
+    description: "Lists Copilot Spaces visible to the caller."
+    category: Operations
+    risk: low
+    business_impact: "Enumerates Copilot Spaces visible to the caller; metadata-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: github.github_support_docs_search
+    object: Documentation
+    action: github_support_docs_search
+    description: "Searches GitHub's public product and support documentation corpus and returns relevant passages."
+    category: Operations
+    risk: low
+    business_impact: "Searches GitHub's public product and support documentation; read-only over public material."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
   # ---------- Context (Identity) ----------
   - id: github.get_me
     object: User
