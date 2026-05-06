@@ -1,0 +1,110 @@
+name: Data revision
+description: Propose a fix or addition to the SCOPE compliance database — wrong risk level, missing regime tag, hallucinated tool, missing platform, or confidence calibration.
+title: "[data] "
+labels: ["data"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file this. The 80+ YAMLs under [`data/`](https://github.com/LangGuard-AI/scope-mcp/tree/main/data) are SCOPE's only source of truth — every audit reads them and emits exactly what they say. Fixes from practitioners, GRC reviewers, and vendor engineers are how the database stays accurate.
+
+        Before filing, glance at:
+        - [`CONTRIBUTING.md`](https://github.com/LangGuard-AI/scope-mcp/blob/main/CONTRIBUTING.md) — schema, the 25-code regime allowlist, risk gradient rules, the `id_form: capability` escape hatch.
+        - The current entry under [`data/<platform>.yml`](https://github.com/LangGuard-AI/scope-mcp/tree/main/data) (if one exists).
+
+        You don't need to be a regulatory expert. *"This feels off because…"* with a citation is a useful issue.
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of revision is this?
+      description: Pick the closest match. We use this to triage; we won't punish you for picking the wrong one.
+      options:
+        - Misclassification (wrong risk / wrong regime tag / wrong SoD)
+        - Hallucinated tool (action exists in our YAML but NOT on the real MCP server)
+        - Missing tool (real MCP server has tools SCOPE doesn't classify)
+        - Missing platform (SCOPE doesn't know about a connector we should cover)
+        - Confidence calibration (`confidence` is too high or too low for an existing entry)
+        - Description / business_impact wording (factual or tone fix)
+        - Schema / regime suggestion (propose adding a new compliance regime to the canonical 25-code allowlist)
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: platform
+    attributes:
+      label: Platform slug
+      description: 'Lowercase, hyphenless: `github`, `salesforce`, `slack`, `intuit-quickbooks`. Use `—` if proposing a new platform that doesn''t exist yet.'
+      placeholder: salesforce
+    validations:
+      required: true
+
+  - type: input
+    id: action_id
+    attributes:
+      label: Action id
+      description: 'The specific action this is about (e.g. `salesforce.update_opportunity_stage`). Leave blank for missing-platform or schema-suggestion reports.'
+      placeholder: salesforce.update_opportunity_stage
+
+  - type: textarea
+    id: current
+    attributes:
+      label: Current classification (optional)
+      description: 'Paste the current YAML entry, or describe the current state. We can look it up if you provide the action id, but pasting helps us see exactly what you''re seeing.'
+      render: yaml
+
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed change
+      description: |
+        What should it be instead? Be specific. Examples:
+
+        - `risk: medium → high`
+        - `compliance: add HIPAA, drop CCPA`
+        - `sod_concern: false → true`
+        - `confidence: high → medium`
+        - `business_impact:` "<your replacement sentence>"
+        - For new platforms: list the verbatim tool names from the vendor's MCP `tools/list` docs.
+      placeholder: |
+        risk: medium → high
+        compliance: add HIPAA (action handles attachments that may contain PHI in covered-entity contexts)
+    validations:
+      required: true
+
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Why?
+      description: 'Wrong tags are worse than missing tags, so we want to understand the basis. Cite vendor docs, regulator guidance, audit findings, customer experience — whatever supports the change.'
+      placeholder: 'Vendor docs at <link> describe this tool as accepting arbitrary file uploads. In healthcare-context workspaces those files routinely include patient records, so HIPAA applies under the same logic as `slack.upload_file`.'
+    validations:
+      required: true
+
+  - type: input
+    id: source_url
+    attributes:
+      label: Authoritative source (URL)
+      description: 'Vendor MCP tool docs, regulation text, MCP server source code, or other primary source backing the change. Optional but speeds up triage substantially.'
+      placeholder: https://docs.example.com/mcp/tools
+
+  - type: checkboxes
+    id: regime_allowlist
+    attributes:
+      label: Regime allowlist confirmation
+      description: 'If your proposal adds a `compliance:` tag, confirm you''re using a code from the canonical allowlist (or that you''re explicitly proposing a schema change).'
+      options:
+        - label: 'Any regime code I''m proposing is one of the 25 in the allowlist (`APPI, CCPA, COPPA, COSO, CO_AI_ACT, EU_AI_ACT, FDA_PART_11, FEDRAMP, FERPA, GDPR, GLBA, HIPAA, ISO_27001, LGPD, NIST_AI_RMF, NIST_CSF, NY_DFS_500, PCI, PIPEDA, PIPL, POPIA, PSD2, SOC2, SOX, UK_GDPR`), OR I selected "Schema / regime suggestion" above.'
+          required: false
+
+  - type: checkboxes
+    id: hard_rules
+    attributes:
+      label: Hard-rules sanity checks
+      description: A quick gut check against [CONTRIBUTING.md](https://github.com/LangGuard-AI/scope-mcp/blob/main/CONTRIBUTING.md) Rule 1.
+      options:
+        - label: 'If the action id should be verbatim, I confirmed the name matches what the vendor''s MCP `tools/list` actually returns (NOT a REST API endpoint name).'
+          required: false
+        - label: 'If verbatim ids aren''t available for this platform, I''m using the `id_form: capability` escape-hatch convention.'
+          required: false
