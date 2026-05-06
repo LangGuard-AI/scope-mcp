@@ -59,7 +59,9 @@ Three things to know before you submit:
 /plugin install scope-mcp@scope-mcp-local
 ```
 
-On first invocation, Claude Code runs the OAuth flow against the hosted SCOPE server (callback on `localhost:3118`). Paste your `cp_…` token in the consent page that opens; the resulting access token is cached locally.
+The plugin's `.mcp.json` configures Claude Code to launch [`mcp-remote`](https://github.com/geelen/mcp-remote) as a stdio subprocess; `mcp-remote` proxies stdio↔HTTP to `https://scope-mcp.langguard.ai/mcp` and handles the OAuth dance on first run. A browser tab opens — paste your `cp_…` token in the consent page; the resulting access token caches under `~/.mcp-auth/` and is reused silently across sessions.
+
+> Requires **Node 18+** on `PATH` (the bridge uses `npx` on first run; the package is then cached by npm).
 
 #### Codex
 
