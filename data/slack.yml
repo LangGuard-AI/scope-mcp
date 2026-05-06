@@ -1,141 +1,108 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: slack
 display_name: Slack
 source: langguard-editorial
-updated: "2026-04"
+updated: "2026-05"
+# The official Slack MCP server (https://mcp.slack.com/mcp) is closed-source
+# and gates `tools/list` behind OAuth. Slack's developer docs publish the tool
+# surface only as plain-language capability labels in a docs table — verbatim
+# tool identifiers are not publicly available. Per CONTRIBUTING.md Rule 1's
+# escape hatch, every entry below uses `id_form: capability`. When a real
+# `tools/list` capture becomes available, refresh this file to `id_form:
+# verbatim` with the actual identifier strings.
+reference: https://docs.slack.dev/ai/slack-mcp-server/developing
 actions:
   # ---------- Messaging ----------
-  - id: slack.post_message
+  - id: slack.send_message
     object: Message
-    action: post_message
+    action: send_message
+    id_form: capability
+    description: "Send a message"
     category: Messaging
     risk: low
-    business_impact: "Posts as the integration/bot identity; expected channel communication."
+    business_impact: "Posts a message to a channel, thread, or DM as the authorized user; agent speech in Slack."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
-  - id: slack.post_message_as_user
-    object: Message
-    action: post_message_as_user
-    category: Messaging
+  # ---------- Conversations ----------
+  - id: slack.read_channel_or_thread
+    object: Conversation
+    action: read_channel_or_thread
+    id_form: capability
+    description: "Read a channel/thread"
+    category: Conversations
     risk: medium
-    business_impact: "Impersonates a real user; downstream recipients cannot tell it is automated."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: slack.upload_file
-    object: File
-    action: upload_file
-    category: Messaging
-    risk: medium
-    business_impact: "Places content into a channel; depending on file, can leak regulated data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Channels ----------
-  - id: slack.create_channel
-    object: Channel
-    action: create_channel
-    category: Channels
-    risk: low
-    business_impact: "Adds a new conversation space; benign on its own."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: slack.archive_channel
-    object: Channel
-    action: archive_channel
-    category: Channels
-    risk: medium
-    business_impact: "Removes active visibility of a channel; can hide relevant discussions from audit."
-    compliance: [SOX, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: slack.invite_user_to_channel
-    object: Channel
-    action: invite_user_to_channel
-    category: Channels
-    risk: low
-    business_impact: "Expands channel audience; risk scales with channel sensitivity."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Data Access ----------
-  - id: slack.read_channel_history
-    object: Message
-    action: read_channel_history
-    category: Data Access
-    risk: high
-    business_impact: "Ingests historical conversations; often contains PII, customer data, and secrets."
+    business_impact: "Surfaces channel and thread history to the caller; private channel and DM history is personal communications data."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
-  - id: slack.read_direct_messages
+  - id: slack.search_messages
     object: Message
-    action: read_direct_messages
-    category: Data Access
-    risk: critical
-    business_impact: "Reads private 1:1 and small-group conversations; may include regulated health or personnel data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
+    action: search_messages
+    id_form: capability
+    description: "Search messages/channels"
+    category: Conversations
+    risk: high
+    business_impact: "Cross-workspace message search returns DMs, private-channel content, and posts at scale; data-exfiltration vector for personal communications."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
     confidence: medium
     access_methods: [REST, MCP]
 
-  - id: slack.export_workspace_data
-    object: Export
-    action: export_workspace_data
-    category: Data Access
-    risk: critical
-    business_impact: "Bulk extraction of all messages and files; moves regulated data out of the controlled system."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
+  - id: slack.search_files
+    object: File
+    action: search_files
+    id_form: capability
+    description: "Search files"
+    category: Conversations
+    risk: high
+    business_impact: "Surfaces files shared in any conversation the user can see; file content can include PII, credentials, or regulated data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
     confidence: medium
     access_methods: [REST, MCP]
 
-  # ---------- Identity & Admin ----------
-  - id: slack.invite_external_user_to_workspace
-    object: User
-    action: invite_external_user_to_workspace
-    category: Identity & Admin
-    risk: high
-    business_impact: "Grants an outsider access to internal channels and files."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
-    confidence: high
+  # ---------- Canvases ----------
+  - id: slack.write_canvas
+    object: Canvas
+    action: write_canvas
+    id_form: capability
+    description: "Create/update a canvas"
+    category: Canvases
+    risk: medium
+    business_impact: "Writes durable workspace documents; persists agent output beyond a single message and may be visible to many members."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
     access_methods: [REST, MCP]
 
-  - id: slack.remove_user
-    object: User
-    action: remove_user
-    category: Identity & Admin
-    risk: high
-    business_impact: "Revokes workspace access; can disrupt work or retaliate if misused."
-    compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
-    confidence: high
+  # ---------- Identity & Directory ----------
+  - id: slack.read_user_profile
+    object: UserProfile
+    action: read_user_profile
+    id_form: capability
+    description: "Read user profile/email"
+    category: Identity & Directory
+    risk: medium
+    business_impact: "Returns a user's profile and email; single-record PII read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
     access_methods: [REST, MCP]
 
-  - id: slack.update_workspace_admin
+  - id: slack.search_users
     object: User
-    action: update_workspace_admin
-    category: Identity & Admin
-    risk: critical
-    business_impact: "Grants or revokes top-level admin privileges; privilege-escalation vector."
-    compliance: [SOX, SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
-    confidence: high
+    action: search_users
+    id_form: capability
+    description: "Search users"
+    category: Identity & Directory
+    risk: medium
+    business_impact: "Enumerates workspace members with profile/email matches; bulk surface of directory PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
     access_methods: [REST, MCP]

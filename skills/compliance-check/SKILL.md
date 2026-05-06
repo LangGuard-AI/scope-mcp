@@ -67,8 +67,26 @@ Relevant fields in the JSON:
 - `summary.highest_risk` — `low` / `medium` / `high` / `critical` / `unmapped`.
 - `summary.compliance_regimes_triggered` — subset of the 25-code allowlist (privacy: `GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA`; industry: `HIPAA, PCI, GLBA, FERPA, COPPA`; financial: `SOX, COSO`; security: `SOC2, ISO_27001, NIST_CSF`; AI: `EU_AI_ACT, NIST_AI_RMF, CO_AI_ACT`; sector: `FEDRAMP, NY_DFS_500, PSD2, FDA_PART_11`).
 - `summary.sod_concerns` — count of segregation-of-duties red flags.
-- `actions[]` — per-tool detail (risk, business_impact, compliance, sod_concern, category).
+- `actions[]` — per-tool detail. Per-action fields you should surface in the rendered report:
+  - `id`, `action`, `platform`, `category`, `risk`, `business_impact`, `compliance`, `sod_concern`, `confidence` — the core classification.
+  - `description` *(optional)* — a one-sentence English summary of what the tool does. **Use this as the human-readable label in tables and prose** so the user doesn't have to decode raw ids like `github.pull_request_review_write`. If `description` is missing, fall back to the id.
+  - `reference` *(optional)* — a URL pointing at vendor documentation for the tool (or for the connector's MCP surface). When present, **link the tool name in your rendered table to this URL** so the user can click through to the upstream docs. The MCP server falls back the action-level reference to the platform-level reference automatically, so this field is set whenever a reference exists at either level.
+  - `id_form` — `verbatim` (default) or `capability`. **This affects how you present the entry — see "capability-form caveat" below.**
 - `unmapped[]` — tools with no compliance entry on file.
+
+#### Capability-form caveat
+
+Some platforms (Slack is the canonical case) operate closed-source MCP servers that gate `tools/list` behind OAuth and publish their tool surface only as plain-language capability labels rather than verbatim identifier strings. For those platforms, the YAML uses `id_form: capability` — the `id` is a slug derived from the vendor's capability label (the verbatim label sits in `description`), and the audit match is **intent-level, not identifier-level**. Concretely:
+
+- The risk / compliance / SoD classification is still authoritative — those judgments don't depend on the exact id.
+- The `id` will NOT exact-match what the MCP server actually returns from `tools/list` — the server's true tool name is unknown to SCOPE.
+- A live agent invoking the tool may therefore come back as `unmapped` even though the platform IS curated, simply because the actual tool name differs from our slug.
+
+When the report contains any `id_form: capability` actions, **add a short caveat under the risk-breakdown table**:
+
+> ⓘ Some entries above (`<comma-separated ids>`) are **intent-level matches**: their compliance posture is curated against a vendor capability label rather than the server's verbatim tool id, because the vendor doesn't publish identifier strings. Treat the classification as authoritative; treat the id as approximate. If a live audit reports `unmapped` for one of these tools, that's the id mismatch, not absence of curation.
+
+Do not soften the risk or compliance verdict on capability-form entries. The whole point of supporting them is that the policy posture is still useful even when the id is fuzzy.
 
 ### Step 4 — Present an advisory, not a gate
 
@@ -80,9 +98,13 @@ Render the result as a **build advisory** with this structure (markdown, in chat
 This agent's proposed action surface includes **<N>** distinct actions across **<P>** platforms. Highest observed risk: **<highest_risk>**. Regulatory regimes touched: **<regimes>**. Segregation-of-duties red flags: **<n>**.
 
 ### Risk breakdown
-| Tool | Platform | Risk | Compliance | SoD |
-|---|---|---|---|---|
-| ... | ... | ... | ... | ... |
+| Tool | What it does | Platform | Risk | Compliance | SoD |
+|---|---|---|---|---|---|
+| [`<id>`](<reference>) | <description, one short clause> | <platform> | <risk> | <regimes joined by `, `> | <✓ or blank> |
+| ... | ... | ... | ... | ... | ... |
+
+> ⓘ **Intent-level matches:** `<comma-separated ids with id_form=capability>` — compliance posture is curated against the vendor's capability label, not a verbatim tool id. Classification is authoritative; id is approximate.
+> *(Omit this admonition entirely when no `id_form: capability` actions are in the report.)*
 
 ### Why this matters
 - `<critical/high tool>` — <business_impact, one line>
@@ -98,6 +120,13 @@ This agent's proposed action surface includes **<N>** distinct actions across **
 ### Unmapped tools (no compliance data on file)
 - `<tool>` ← treat as unknown risk; flag for human review before shipping.
 ```
+
+Rendering rules for the table:
+
+- **Tool column** — render the action `id` as inline code. If the action has a `reference` URL, wrap the code in a markdown link to that URL (`[\`<id>\`](<reference>)`). Otherwise just the inline code.
+- **What it does column** — use the action's `description` field, trimmed to a short clause if longer than ~12 words. If `description` is absent (legacy v1.0 entries), fall back to the action's `category` plus a paraphrase of `business_impact` clipped to a clause.
+- **SoD column** — render `✓` when `sod_concern: true`, blank otherwise. Don't write `false` / `true`.
+- **Compliance column** — comma-separated regime codes; render `—` for empty arrays so the column reads cleanly.
 
 Ground every recommendation in the MCP tool's output. Do not invent risk judgments.
 
@@ -116,6 +145,8 @@ After presenting the report, proactively offer one or more of:
 - **Always surface unmapped tools.** The gap *is* part of the answer.
 - **Distinguish design-time from run-time.** This skill is for "should I attach this?" not "may I run this?"
 - **Don't run the audit silently.** Always show the user the table and the recommendations.
+- **Use `description` for human labels and `reference` for doc links.** Don't make the user decode raw ids — render the description column and link the id to the reference URL when available.
+- **Surface the capability-form caveat when present.** When any action in the report has `id_form: capability`, render the intent-level admonition under the table. Omit the admonition entirely when the report has no capability-form entries.
 
 ## Data provenance
 

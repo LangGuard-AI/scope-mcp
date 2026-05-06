@@ -50,15 +50,42 @@ Open an issue at [github.com/LangGuard-AI/scope-mcp/issues/new](https://github.c
 
 ### Path 2 — Open a PR (for direct changes)
 
-Fork the repo, branch off `main`, edit or add a file under [`data/`](./data), and open a PR. Use [`data/salesforce.yml`](./data/salesforce.yml) as the canonical schema reference.
+Fork the repo, branch off `main`, edit or add a file under [`data/`](./data), and open a PR.
+
+### Schema reference (v1.1)
+
+```yaml
+schema_version: "1.1"
+platform: <slug>
+display_name: <Title Case Name>
+source: langguard-editorial            # or community-<handle> for community PRs
+updated: "<YYYY-MM>"
+reference: https://...                 # OPTIONAL — canonical vendor MCP docs URL
+actions:
+  - id: <platform>.<action>            # required
+    object: <Object>                   # optional but recommended
+    action: <action>                   # required (verbatim tool name OR slug, see below)
+    id_form: verbatim                  # OPTIONAL — "verbatim" (default) or "capability"
+    description: "..."                 # OPTIONAL — human-readable English description of the tool
+    reference: https://...             # OPTIONAL — deep link to per-tool docs (falls back to top-level)
+    category: <Category>               # required
+    risk: <low|medium|high|critical>   # required
+    business_impact: "..."             # required
+    compliance: [<regimes>]            # required (may be [])
+    sod_concern: <bool>                # required
+    confidence: <high|medium|low>      # required
+    access_methods: [<methods>]        # required
+```
+
+Files curated before May 2026 use `schema_version: "1.0"` and omit the new fields — that's still valid. New PRs should use `"1.1"` and include `description` + `reference` where available.
 
 There are three hard rules for new YAML data. PRs that violate them will be sent back for revision.
 
-#### Rule 1 — Tool ids verbatim from the MCP server
+#### Rule 1 — Tool ids verbatim from the MCP server (with one documented escape hatch)
 
 The `id` and `action` fields MUST be the literal tool name the MCP server exposes — case, vendor prefixes, and plurals preserved.
 
-The right source is the connector's **published MCP `tools/list` documentation** (or the source code of the MCP server, if open-source). The right source is **NOT** the vendor's REST API documentation — MCP servers often use a different naming convention and a different granularity than REST.
+The right source is the connector's **published MCP `tools/list` documentation** (or the source code of the MCP server, if open-source, or a captured live `tools/list` response). The right source is **NOT** the vendor's REST API documentation — MCP servers often use a different naming convention and a different granularity than REST.
 
 Concrete examples of what verbatim looks like in practice:
 
@@ -73,7 +100,40 @@ Concrete examples of what verbatim looks like in practice:
 
 Don't normalize, don't simplify, don't fix the upstream's "weird" choices — even kebab-case-with-vendor-prefix. The plugin matches on exact tool ids when audits run; mismatches turn into `unmapped` results that aren't useful to anyone.
 
-If you can't find an authoritative tool list within a few minutes of searching, **open an issue instead of a PR** so we can decide together whether to skip the platform or wait for upstream docs.
+##### Escape hatch — `id_form: capability`
+
+A few connectors (Slack is the canonical example) operate a closed-source hosted MCP server, gate `tools/list` behind OAuth, and publish their tool surface in vendor docs only as **plain-language capability labels** ("Send a message", "Search messages/channels") rather than verbatim identifier strings. For these, exact-match audit is impossible until someone captures a real `tools/list`.
+
+Rather than skip these platforms entirely, the schema permits a labelled fallback:
+
+```yaml
+- id: slack.send_message
+  action: send_message                  # slug derived from the capability label
+  id_form: capability                   # signals: NOT a verbatim tools/list name
+  description: "Send a message"         # the verbatim capability label from vendor docs
+  reference: https://docs.slack.dev/ai/slack-mcp-server
+  ...
+  confidence: medium                    # capability-form entries cap at medium
+```
+
+Rules for `id_form: capability`:
+
+- Use only when the vendor publishes capability labels but not verbatim tool ids in any source you can reach (vendor docs, open-source server code, captured `tools/list`).
+- The `description` field MUST hold the verbatim capability label as the vendor wrote it.
+- The `id` and `action` SHOULD be the lower-snake-case slug of the capability label, prefixed with the platform slug — that's the convention the audit uses for fuzzy matching.
+- Cap `confidence` at `medium`. The classification is reliable, but the `id` won't exact-match what `tools/list` actually returns, so audit results for these entries are intent-level rather than identifier-level.
+- File a follow-up to refresh the entry to `id_form: verbatim` once the real tool surface becomes available (e.g. when the vendor publishes `tools/list` docs or someone captures it via OAuth).
+
+If neither verbatim ids nor capability labels are available — i.e. the vendor publishes nothing about the tool surface at all — **open an issue instead of a PR** so we can decide together whether to skip the platform or wait for upstream docs.
+
+#### `description` and `reference` (always optional, recommended for `verbatim` too)
+
+These two fields are useful regardless of `id_form`:
+
+- **`description`** — one-sentence human-readable summary of what the tool does. Helps reviewers and downstream UIs without forcing them to parse the id. For verbatim entries, copy or paraphrase the description from the vendor's `tools/list` schema. For capability entries, use the verbatim capability label.
+- **`reference`** — URL pointing at the canonical documentation for this tool (per-action) or for the connector's MCP surface as a whole (top-level). Use the top-level `reference` for the connector's MCP overview page; use action-level `reference` only when the vendor has stable per-tool deep links.
+
+Neither field affects audit logic today; both are surfaced in the audit response so consumers can show context and link out to vendor docs.
 
 #### Rule 2 — `compliance:` uses only the 25 canonical codes
 

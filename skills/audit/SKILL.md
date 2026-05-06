@@ -59,15 +59,16 @@ If the tool is not visible, ask the host to ensure the `scope-mcp` MCP server is
 Render the report using the **build-advisory format** described in `skills/compliance-check/SKILL.md` (Step 4: "Present an advisory, not a gate"). Required sections:
 
 1. One-line posture summary (highest risk, regimes, SoD count).
-2. Markdown table of every action with risk, compliance, SoD.
-3. Short list of "why this matters" for the critical/high entries (use `business_impact`).
-4. Recommendations — phrased per the framing chosen in Step 2:
+2. Markdown table of every action with **what it does** (from the action's `description`), platform, risk, compliance, SoD. Render the action `id` as the table's leftmost column; when the action has a `reference` URL, link the id to that URL so the user can click through to vendor docs. (See `compliance-check/SKILL.md` Step 4 "Rendering rules for the table" for the full column spec.)
+3. **Capability-form caveat (when applicable)** — if any action in the report has `id_form: capability`, render the intent-level admonition immediately under the table listing those ids. Omit the admonition entirely when no capability-form entries are present. The classification on capability-form entries is authoritative; the id is approximate.
+4. Short list of "why this matters" for the critical/high entries (use `business_impact`).
+5. Recommendations — phrased per the framing chosen in Step 2:
    - **Design-time**: scoping suggestions — "drop X", "demote Y to read-only", "gate Z behind human approval".
    - **Run-time pre-flight**: state the `summary.recommendation` explicitly:
      - `proceed` / `proceed_with_audit_trail` — go ahead.
      - `require_human_review` / `require_human_approval` — pause; surface the report to a human.
      - `block_and_require_human_approval` — do not run this workflow without explicit human sign-off.
-5. Unmapped tools surfaced explicitly. If any tool comes back as `unmapped` in pre-flight framing, recommend at minimum a human review.
+6. Unmapped tools surfaced explicitly. If any tool comes back as `unmapped` in pre-flight framing, recommend at minimum a human review. Note: a capability-form entry can produce `unmapped` for a live tool name even when the platform IS curated — flag this distinction in pre-flight framing if the unmapped id corresponds to a platform with `id_form: capability` entries.
 
 ## Step 5 — Offer follow-ups
 
@@ -83,3 +84,6 @@ End by offering at least one concrete next action, e.g.:
 - Never paraphrase risk levels (`medium` is `medium`, not "moderate").
 - Always surface `unmapped` tools — the gap is part of the value.
 - The recommendation in the JSON is authoritative — don't soften "block_and_require_human_approval" into "consider reviewing".
+- Use the action's `description` field to populate the "what it does" column. Don't paraphrase risk- or compliance-relevant claims from `description`; just use it as the user-facing label so the table doesn't read as a list of opaque ids.
+- When an action has a `reference` URL, link the id in the table to that URL. Don't print the bare URL elsewhere in the response.
+- Render the capability-form admonition (Step 4 #3) verbatim when applicable; never quietly omit it. Conversely, never render it when no capability-form entries exist in the report.

@@ -1,342 +1,397 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: salesforce
 display_name: Salesforce
 source: langguard-editorial
-updated: "2026-04"
+updated: "2026-05"
+reference: https://github.com/salesforcecli/mcp
 actions:
-  # ---------- Revenue & Pipeline ----------
-  - id: salesforce.update_opportunity_stage
-    object: Opportunity
-    action: update_opportunity_stage
-    category: Revenue & Pipeline
-    risk: critical
-    business_impact: "Changes revenue forecast and triggers commission calculation. Direct line to financial reporting."
-    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: true
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: salesforce.create_quote
-    object: Quote
-    action: create_quote
-    category: Revenue & Pipeline
-    risk: high
-    business_impact: "Commits pricing to customer; basis for future invoice and revenue recognition."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: salesforce.update_contract_terms
-    object: Contract
-    action: update_contract_terms
-    category: Revenue & Pipeline
-    risk: critical
-    business_impact: "Alters binding commercial obligations; affects revenue recognition schedule."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP, CLI]
-
-  - id: salesforce.apply_discount_override
-    object: OpportunityLineItem
-    action: apply_discount_override
-    category: Revenue & Pipeline
-    risk: high
-    business_impact: "Bypasses standard pricing approval; can erode margin without traceability."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: salesforce.create_order
-    object: Order
-    action: create_order
-    category: Revenue & Pipeline
-    risk: medium
-    business_impact: "Creates a commitment that flows to fulfillment and invoicing."
-    compliance: [SOX, COSO]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Customer ----------
-  - id: salesforce.create_account
-    object: Account
-    action: create_account
-    category: Customer
-    risk: low
-    business_impact: "Adds a new customer record; low-risk on its own."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: salesforce.merge_accounts
-    object: Account
-    action: merge_accounts
-    category: Customer
-    risk: high
-    business_impact: "Irreversible combination of customer records; can obscure audit trail and consent history."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: salesforce.export_contact_list
-    object: Contact
-    action: export_contact_list
-    category: Customer
-    risk: high
-    business_impact: "Bulk export of PII outside the system of record."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP, CLI]
-
-  - id: salesforce.delete_lead
-    object: Lead
-    action: delete_lead
-    category: Customer
-    risk: medium
-    business_impact: "Removes prospect PII; may need to honor right-to-erasure but also breaks lead-source attribution."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: salesforce.update_contact_pii
-    object: Contact
-    action: update_contact_pii
-    category: Customer
-    risk: medium
-    business_impact: "Modifies personal data (email, phone, address) on contact records."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Service ----------
-  - id: salesforce.create_case
-    object: Case
-    action: create_case
-    category: Service
-    risk: low
-    business_impact: "Opens a support ticket; no customer-visible impact until worked."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: salesforce.close_case
-    object: Case
-    action: close_case
-    category: Service
-    risk: low
-    business_impact: "Marks ticket resolved; affects service SLAs and reporting."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: salesforce.issue_refund
-    object: Case
-    action: issue_refund
-    category: Service
-    risk: critical
-    business_impact: "Moves money back to the customer; touches payment rails and general ledger."
-    compliance: [SOX, COSO, PCI, SOC2, ISO_27001, PSD2]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Financial ----------
-  - id: salesforce.create_invoice
-    object: Invoice
-    action: create_invoice
-    category: Financial
-    risk: critical
-    business_impact: "Creates a billable obligation and revenue recognition event."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: salesforce.void_invoice
-    object: Invoice
-    action: void_invoice
-    category: Financial
-    risk: critical
-    business_impact: "Reverses a recognized obligation; direct GL impact."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: salesforce.record_payment
-    object: Payment
-    action: record_payment
-    category: Financial
-    risk: critical
-    business_impact: "Posts cash receipt; touches payment processor data and GL."
-    compliance: [SOX, COSO, PCI, GLBA, SOC2, ISO_27001, PSD2]
-    sod_concern: true
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: salesforce.approve_commission_payout
-    object: Commission
-    action: approve_commission_payout
-    category: Financial
-    risk: critical
-    business_impact: "Authorizes payroll-bound expense; self-approval is a classic SoD violation."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: salesforce.update_forecast
-    object: Forecast
-    action: update_forecast
-    category: Financial
-    risk: high
-    business_impact: "Changes numbers reported to leadership and (for public cos.) to the street."
-    compliance: [SOX, COSO]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Operations ----------
-  - id: salesforce.create_task
-    object: Task
-    action: create_task
-    category: Operations
-    risk: low
-    business_impact: "Adds an internal to-do; no external effect."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: salesforce.approve_workflow
-    object: ProcessInstance
-    action: approve_workflow
-    category: Operations
-    risk: medium
-    business_impact: "Advances a business process; effect depends on downstream actions."
-    compliance: [SOX, COSO, SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: salesforce.run_flow
-    object: Flow
-    action: run_flow
-    category: Operations
-    risk: medium
-    business_impact: "Executes a declarative automation; effects depend on the flow's contents."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
   # ---------- Identity & Access ----------
-  - id: salesforce.create_user
-    object: User
-    action: create_user
-    category: Identity & Access
-    risk: high
-    business_impact: "Grants new system access; expands attack surface."
-    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: salesforce.update_user_role
-    object: User
-    action: update_user_role
+  - id: salesforce.assign_permission_set
+    object: PermissionSet
+    action: assign_permission_set
+    description: "Assigns a permission set to one or more users in a Salesforce org."
     category: Identity & Access
     risk: critical
-    business_impact: "Changes what actions a user is authorized to take; privilege escalation vector."
-    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: salesforce.reset_password
-    object: User
-    action: reset_password
-    category: Identity & Access
-    risk: medium
-    business_impact: "Invalidates current credentials; account takeover risk if targeted."
-    compliance: [SOX, SOC2, ISO_27001, NIST_CSF]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: salesforce.update_sharing_rule
-    object: SharingRule
-    action: update_sharing_rule
-    category: Identity & Access
-    risk: high
-    business_impact: "Broadens or narrows record visibility; can inadvertently expose regulated data."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Platform & DevOps ----------
-  - id: salesforce.execute_anonymous_apex
-    object: ApexClass
-    action: execute_anonymous_apex
-    category: Platform & DevOps
-    risk: critical
-    business_impact: "Runs arbitrary server-side code with org-wide privileges; unconstrained blast radius."
+    business_impact: "Grants a permission set to a user, expanding what the principal can read and write across every object the set covers — bypasses access-review controls."
     compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
     sod_concern: true
     confidence: high
     access_methods: [REST, MCP, CLI]
 
+  # ---------- Org & Configuration ----------
+  - id: salesforce.create_scratch_org
+    object: Org
+    action: create_scratch_org
+    description: "Creates a new scratch org from a Dev Hub for development and testing."
+    category: Org & Configuration
+    risk: medium
+    business_impact: "Provisions a new scratch org that consumes Dev Hub limits; isolated from production data but counts against entitlements."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: salesforce.create_org_snapshot
+    object: OrgSnapshot
+    action: create_org_snapshot
+    description: "Creates a snapshot of a scratch org's metadata and seed data for reuse."
+    category: Org & Configuration
+    risk: medium
+    business_impact: "Captures a scratch-org snapshot containing org metadata and seed data; snapshot may include test data that resembles PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  - id: salesforce.delete_org
+    object: Org
+    action: delete_org
+    description: "Permanently deletes a scratch org or sandbox."
+    category: Org & Configuration
+    risk: high
+    business_impact: "Permanently deletes a scratch org or sandbox; irreversible loss of any non-replicated test data and dev work in that org."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: salesforce.list_all_orgs
+    object: Org
+    action: list_all_orgs
+    description: "Lists every Salesforce org the local CLI is authenticated against."
+    category: Org & Configuration
+    risk: low
+    business_impact: "Lists locally-authorized orgs and their connection status; reveals which Salesforce environments the principal has credentials for."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: salesforce.open_org
+    object: Org
+    action: open_org
+    description: "Opens an authenticated browser session to a Salesforce org."
+    category: Org & Configuration
+    risk: low
+    business_impact: "Opens an authenticated browser session to the org for the operator; no data movement on its own."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP, CLI]
+
+  - id: salesforce.get_username
+    object: Org
+    action: get_username
+    description: "Returns the resolved username or alias of the default org or Dev Hub."
+    category: Org & Configuration
+    risk: low
+    business_impact: "Returns the resolved username or alias for the default org or Dev Hub; reads local CLI configuration only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP, CLI]
+
+  - id: salesforce.resume_tool_operation
+    object: Operation
+    action: resume_tool_operation
+    description: "Resumes a previously-started long-running CLI operation by job id."
+    category: Org & Configuration
+    risk: low
+    business_impact: "Resumes a previously-started long-running operation; risk inherits from the underlying tool that originally started it."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP, CLI]
+
+  # ---------- Metadata & Deploy ----------
   - id: salesforce.deploy_metadata
     object: Metadata
     action: deploy_metadata
-    category: Platform & DevOps
+    description: "Deploys local DX project metadata (Apex, flows, profiles, validation rules) to a Salesforce org."
+    category: Metadata & Deploy
     risk: critical
-    business_impact: "Changes production configuration; bypasses staged release discipline."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
+    business_impact: "Pushes metadata changes (Apex, validation rules, sharing settings, profiles, flows) to a Salesforce org — bypasses change-management gates and can reshape security or financial-reporting logic in production."
+    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
     sod_concern: true
     confidence: high
     access_methods: [REST, MCP, CLI]
 
-  - id: salesforce.run_bulk_query
-    object: BulkQuery
-    action: run_bulk_query
-    category: Platform & DevOps
+  - id: salesforce.retrieve_metadata
+    object: Metadata
+    action: retrieve_metadata
+    description: "Retrieves metadata from a Salesforce org into the local DX project."
+    category: Metadata & Deploy
+    risk: medium
+    business_impact: "Pulls org metadata (Apex source, page layouts, profiles) into the local DX project; exfiltrates configuration and source code."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: salesforce.enrich_metadata
+    object: Metadata
+    action: enrich_metadata
+    description: "Augments local DX project metadata with additional org context."
+    category: Metadata & Deploy
+    risk: low
+    business_impact: "Augments local DX project metadata with additional org context; modifies local files only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP, CLI]
+
+  # ---------- Data ----------
+  - id: salesforce.run_soql_query
+    object: Record
+    action: run_soql_query
+    description: "Executes a SOQL query against a Salesforce org and returns matching records."
+    category: Data
     risk: high
-    business_impact: "Extracts large volumes of data, potentially including PII and regulated fields."
+    business_impact: "Executes arbitrary SOQL against the org and returns matching records, including PII held on Contacts, Leads, Accounts, Cases, and custom objects."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP, CLI]
 
-  - id: salesforce.export_report
-    object: Report
-    action: export_report
-    category: Platform & DevOps
-    risk: medium
-    business_impact: "Moves structured business data out of the system in a shareable form."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: salesforce.delete_metadata
-    object: Metadata
-    action: delete_metadata
-    category: Platform & DevOps
+  # ---------- Testing & Apex Execution ----------
+  - id: salesforce.run_apex_test
+    object: ApexTest
+    action: run_apex_test
+    description: "Runs Apex unit tests in a Salesforce org and returns the results."
+    category: Testing & Apex Execution
     risk: critical
-    business_impact: "Removes org configuration (fields, objects, rules); may destroy data and audit context."
+    business_impact: "Executes Apex test classes in the org, which run arbitrary Apex code with the test runner's permissions and can mutate data inside testSetup or non-isolated tests."
     compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
     sod_concern: true
     confidence: high
     access_methods: [REST, MCP, CLI]
+
+  - id: salesforce.run_agent_test
+    object: AgentTest
+    action: run_agent_test
+    description: "Runs Agentforce agent tests against a Salesforce org."
+    category: Testing & Apex Execution
+    risk: medium
+    business_impact: "Runs Agentforce agent tests against the org; consumes agent execution quotas and exercises configured agent actions."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- DevOps Center ----------
+  - id: salesforce.create_devops_center_work_item
+    object: WorkItem
+    action: create_devops_center_work_item
+    description: "Creates a new work item in a DevOps Center project."
+    category: DevOps Center
+    risk: low
+    business_impact: "Creates a new DevOps Center work item in a project; entry point for tracking a change but no deploy or production effect on its own."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: salesforce.list_devops_center_projects
+    object: Project
+    action: list_devops_center_projects
+    description: "Lists DevOps Center projects in a Salesforce org."
+    category: DevOps Center
+    risk: low
+    business_impact: "Lists DevOps Center projects in the org; reveals release-pipeline structure but not contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: salesforce.list_devops_center_work_items
+    object: WorkItem
+    action: list_devops_center_work_items
+    description: "Lists work items for a given DevOps Center project."
+    category: DevOps Center
+    risk: low
+    business_impact: "Lists work items for a DevOps Center project; reveals in-flight changes."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: salesforce.checkout_devops_center_work_item
+    object: WorkItem
+    action: checkout_devops_center_work_item
+    description: "Switches the local repo to the feature branch tied to a DevOps Center work item."
+    category: DevOps Center
+    risk: low
+    business_impact: "Switches the local repo to the feature branch tied to a work item; does not change org state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP, CLI]
+
+  - id: salesforce.commit_devops_center_work_item
+    object: WorkItem
+    action: commit_devops_center_work_item
+    description: "Commits local DX project changes to the work item branch and registers the commit in DevOps Center."
+    category: DevOps Center
+    risk: medium
+    business_impact: "Commits local DX project changes to the work item branch and registers the commit SHA in DevOps Center; advances the change toward a controlled deploy."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: salesforce.create_devops_center_pull_request
+    object: WorkItem
+    action: create_devops_center_pull_request
+    description: "Opens a pull request from the work item's feature branch into the integration branch."
+    category: DevOps Center
+    risk: medium
+    business_impact: "Opens a pull request from the work item's feature branch into the integration branch; queues the change for review and downstream promotion."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: salesforce.update_devops_center_work_item_status
+    object: WorkItem
+    action: update_devops_center_work_item_status
+    description: "Moves a DevOps Center work item between states (e.g. In Progress to Ready to Promote)."
+    category: DevOps Center
+    risk: medium
+    business_impact: "Moves a work item between In Progress and Ready to Promote; controls when changes become eligible for promotion to higher environments."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: salesforce.promote_devops_center_work_item
+    object: WorkItem
+    action: promote_devops_center_work_item
+    description: "Promotes a DevOps Center work item to the next pipeline stage, deploying its metadata to that environment."
+    category: DevOps Center
+    risk: critical
+    business_impact: "Promotes a work item to the next pipeline stage, which deploys metadata to that environment — applies to UAT or production stages and bypasses additional review when invoked unilaterally."
+    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: salesforce.check_devops_center_commit_status
+    object: WorkItem
+    action: check_devops_center_commit_status
+    description: "Returns the registration status of a previously-committed DevOps Center work item."
+    category: DevOps Center
+    risk: low
+    business_impact: "Returns the registration status of a previously committed work item; read-only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: salesforce.detect_devops_center_merge_conflict
+    object: WorkItem
+    action: detect_devops_center_merge_conflict
+    description: "Inspects branches to identify merge conflicts on a DevOps Center work item."
+    category: DevOps Center
+    risk: low
+    business_impact: "Inspects branches to identify merge conflicts for a work item; read-only diagnostic."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP, CLI]
+
+  - id: salesforce.resolve_devops_center_merge_conflict
+    object: WorkItem
+    action: resolve_devops_center_merge_conflict
+    description: "Applies a chosen resolution strategy to merge conflicts on a work item branch."
+    category: DevOps Center
+    risk: medium
+    business_impact: "Applies a chosen resolution strategy to a merge conflict on the work item branch; rewrites version-controlled source feeding the deploy pipeline."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP, CLI]
+
+  - id: salesforce.resolve_devops_center_deployment_failure
+    object: WorkItem
+    action: resolve_devops_center_deployment_failure
+    description: "Diagnoses a failed DevOps Center deploy and applies remediation steps to retry it."
+    category: DevOps Center
+    risk: medium
+    business_impact: "Diagnoses a failed deploy and applies remediation steps; can re-trigger metadata deploys to resolve the failure."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Code Analysis ----------
+  - id: salesforce.run_code_analyzer
+    object: CodeAnalysis
+    action: run_code_analyzer
+    description: "Runs Salesforce Code Analyzer over local source and writes a results JSON file."
+    category: Code Analysis
+    risk: low
+    business_impact: "Runs Salesforce Code Analyzer over local source and writes a results JSON; static analysis with no org-side effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP, CLI]
+
+  - id: salesforce.list_code_analyzer_rules
+    object: CodeAnalysis
+    action: list_code_analyzer_rules
+    description: "Lists configured Code Analyzer rules across enabled engines."
+    category: Code Analysis
+    risk: low
+    business_impact: "Lists configured Code Analyzer rules; read-only configuration introspection."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP, CLI]
+
+  - id: salesforce.describe_code_analyzer_rule
+    object: CodeAnalysis
+    action: describe_code_analyzer_rule
+    description: "Returns the description and metadata of a single Code Analyzer rule."
+    category: Code Analysis
+    risk: low
+    business_impact: "Returns the description of a single Code Analyzer rule; read-only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP, CLI]
+
+  - id: salesforce.query_code_analyzer_results
+    object: CodeAnalysis
+    action: query_code_analyzer_results
+    description: "Filters and summarizes a Code Analyzer results JSON file."
+    category: Code Analysis
+    risk: low
+    business_impact: "Filters and summarizes a Code Analyzer results JSON file; reads local files only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP, CLI]
+
+  - id: salesforce.create_custom_rule
+    object: CodeAnalysis
+    action: create_custom_rule
+    description: "Creates a custom XPath-based PMD rule from sample Apex source."
+    category: Code Analysis
+    risk: low
+    business_impact: "Creates a custom XPath-based PMD rule from sample Apex; modifies local rule configuration only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP, CLI]
+
+  - id: salesforce.scan_apex_class_for_antipatterns
+    object: ApexClass
+    action: scan_apex_class_for_antipatterns
+    description: "Scans an Apex class for performance and design antipatterns."
+    category: Code Analysis
+    risk: low
+    business_impact: "Analyzes Apex source for performance antipatterns; static analysis with no org-side effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP, CLI]

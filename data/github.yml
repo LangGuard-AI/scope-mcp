@@ -1,175 +1,973 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: github
 display_name: GitHub
 source: langguard-editorial
-updated: "2026-04"
+updated: "2026-05"
+reference: https://github.com/github/github-mcp-server
 actions:
-  # ---------- Repository ----------
-  - id: github.create_repo
-    object: Repository
-    action: create_repo
+  # ---------- Repositories ----------
+  - id: github.create_or_update_file
+    object: File
+    action: create_or_update_file
+    description: "Creates a new file or replaces an existing file's contents in a repository on a chosen branch."
     category: Repository
-    risk: low
-    business_impact: "Creates a new empty repository under the org."
-    compliance: []
+    risk: medium
+    business_impact: "Writes file content directly to a branch; combined with merge_pull_request, this lets an agent ship code without going through PR review."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP, CLI]
 
-  - id: github.delete_repo
-    object: Repository
-    action: delete_repo
+  - id: github.delete_file
+    object: File
+    action: delete_file
+    description: "Deletes a single file from a repository branch via direct commit."
     category: Repository
-    risk: critical
-    business_impact: "Destroys source code, history, and associated CI artifacts. Often irrecoverable."
-    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP, CLI]
-
-  - id: github.transfer_repo
-    object: Repository
-    action: transfer_repo
-    category: Repository
-    risk: critical
-    business_impact: "Moves a repo out of organizational control; can exfiltrate proprietary code."
-    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: github.fork_repo
-    object: Repository
-    action: fork_repo
-    category: Repository
-    risk: low
-    business_impact: "Copies a repo; benign for public but can surface internal code if misconfigured."
-    compliance: []
+    risk: medium
+    business_impact: "Removes a file from a branch via direct commit; reversible from history but bypasses PR review when used outside a feature branch."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP, CLI]
 
-  # ---------- Code & Release ----------
-  - id: github.push_to_protected_branch
+  - id: github.push_files
+    object: File
+    action: push_files
+    description: "Pushes multiple file additions or updates to a branch in a single commit."
+    category: Repository
+    risk: medium
+    business_impact: "Commits a batch of file changes directly to a branch; combined with merge_pull_request, this enables ship-without-review."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.create_branch
     object: Branch
-    action: push_to_protected_branch
+    action: create_branch
+    description: "Creates a new branch in a repository from a given base ref."
+    category: Repository
+    risk: medium
+    business_impact: "Creates a new branch in the repository; pre-condition for direct-write workflows that bypass PR review."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.create_repository
+    object: Repository
+    action: create_repository
+    description: "Creates a new GitHub repository under the authenticated user or an organization."
+    category: Repository
+    risk: low
+    business_impact: "Creates a new repository in an org or user account; standard provisioning event."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.fork_repository
+    object: Repository
+    action: fork_repository
+    description: "Forks an existing repository into the caller's account or a target organization."
+    category: Repository
+    risk: low
+    business_impact: "Creates a fork of an existing repository under the caller's account or org."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.get_commit
+    object: Commit
+    action: get_commit
+    description: "Gets details for a single commit, including the diff and metadata."
+    category: Repository
+    risk: low
+    business_impact: "Reads metadata and diff for a single commit."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.get_file_contents
+    object: File
+    action: get_file_contents
+    description: "Reads the contents of a file or directory at a given ref in a repository."
+    category: Repository
+    risk: low
+    business_impact: "Reads the contents of a file at a given ref; private repo contents may include source code and configuration."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.get_latest_release
+    object: Release
+    action: get_latest_release
+    description: "Gets the latest published release for a repository."
+    category: Repository
+    risk: low
+    business_impact: "Reads the metadata of the most recent release for a repository."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.get_release_by_tag
+    object: Release
+    action: get_release_by_tag
+    description: "Gets a release by its tag name."
+    category: Repository
+    risk: low
+    business_impact: "Reads release metadata for a specific tag."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.get_tag
+    object: Tag
+    action: get_tag
+    description: "Gets details for a specific git tag in a repository."
+    category: Repository
+    risk: low
+    business_impact: "Reads tag metadata for a repository."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.list_branches
+    object: Branch
+    action: list_branches
+    description: "Lists branches in a repository."
+    category: Repository
+    risk: low
+    business_impact: "Lists branches in a repository."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.list_commits
+    object: Commit
+    action: list_commits
+    description: "Lists commits on a branch or path in a repository."
+    category: Repository
+    risk: low
+    business_impact: "Lists commits on a branch or path; surfaces author identity and timestamps."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.list_releases
+    object: Release
+    action: list_releases
+    description: "Lists releases for a repository."
+    category: Repository
+    risk: low
+    business_impact: "Lists releases for a repository."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.list_tags
+    object: Tag
+    action: list_tags
+    description: "Lists git tags in a repository."
+    category: Repository
+    risk: low
+    business_impact: "Lists tags for a repository."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.search_code
+    object: Code
+    action: search_code
+    description: "Searches for code across accessible repositories using GitHub code search."
+    category: Repository
+    risk: medium
+    business_impact: "Searches code across accessible repositories; can surface secrets, credentials, or PII at scale and constitutes a data-exfiltration vector."
+    compliance: [SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.search_repositories
+    object: Repository
+    action: search_repositories
+    description: "Searches GitHub repositories matching a query."
+    category: Repository
+    risk: low
+    business_impact: "Searches repositories by name, description, or topic."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Git ----------
+  - id: github.get_repository_tree
+    object: Tree
+    action: get_repository_tree
+    description: "Returns the git tree (file and directory listing) for a repository at a given ref."
+    category: Repository
+    risk: low
+    business_impact: "Reads the git tree (file listing) for a repository at a given ref."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Pull Requests ----------
+  - id: github.create_pull_request
+    object: PullRequest
+    action: create_pull_request
+    description: "Opens a new pull request from a head branch into a base branch."
     category: Code & Release
-    risk: critical
-    business_impact: "Bypasses review gates; introduces unreviewed code into production lineage."
-    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
+    risk: low
+    business_impact: "Opens a pull request proposing changes; review and merge gating remain in place."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.list_pull_requests
+    object: PullRequest
+    action: list_pull_requests
+    description: "Lists pull requests on a repository, optionally filtered by state."
+    category: Code & Release
+    risk: low
+    business_impact: "Lists pull requests on a repository."
+    compliance: []
+    sod_concern: false
     confidence: high
     access_methods: [REST, MCP, CLI]
 
   - id: github.merge_pull_request
     object: PullRequest
     action: merge_pull_request
+    description: "Merges a pull request into its base branch."
     category: Code & Release
     risk: medium
-    business_impact: "Integrates changes into a mainline branch; change-management record."
+    business_impact: "Integrates a pull request into the target branch; for financial-system repositories this is in scope for SOX ITGCs and change-management controls."
     compliance: [SOX, COSO, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP, CLI]
 
-  - id: github.create_release
-    object: Release
-    action: create_release
+  - id: github.pull_request_read
+    object: PullRequest
+    action: pull_request_read
+    description: "Reads pull request data — details, diffs, files, reviews, comments, status, or reviewers."
     category: Code & Release
-    risk: medium
-    business_impact: "Publishes a versioned artifact; downstream consumers treat this as a change event."
-    compliance: [SOX, COSO, SOC2]
+    risk: low
+    business_impact: "Reads pull request details, diffs, comments, and review state."
+    compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP, CLI]
 
-  - id: github.update_branch_protection
-    object: BranchProtection
-    action: update_branch_protection
+  - id: github.pull_request_review_write
+    object: PullRequestReview
+    action: pull_request_review_write
+    description: "Submits or edits a pull-request review (approve, request changes, comment)."
     category: Code & Release
-    risk: critical
-    business_impact: "Changes the rules that enforce review and CI gates; can silently remove SoD controls."
-    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF, NY_DFS_500]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Secrets & Workflows ----------
-  - id: github.write_secret
-    object: Secret
-    action: write_secret
-    category: Secrets & Workflows
-    risk: critical
-    business_impact: "Injects credentials accessible to CI workers; lateral-movement vector."
-    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: github.read_secret
-    object: Secret
-    action: read_secret
-    category: Secrets & Workflows
     risk: high
-    business_impact: "Exposes credentials to the caller; at minimum an auditable secret-access event."
+    business_impact: "Submits a pull request review (approve, request changes, comment); the same principal can author and approve a PR, the textbook segregation-of-duties violation."
     compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
     sod_concern: true
     confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [REST, MCP, CLI]
 
-  - id: github.trigger_workflow_run
-    object: Workflow
-    action: trigger_workflow_run
-    category: Secrets & Workflows
+  - id: github.update_pull_request
+    object: PullRequest
+    action: update_pull_request
+    description: "Updates a pull request's title, body, base branch, state, or assignees."
+    category: Code & Release
+    risk: low
+    business_impact: "Updates pull request metadata such as title, body, base branch, or assignees."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.update_pull_request_branch
+    object: PullRequest
+    action: update_pull_request_branch
+    description: "Updates the head branch of a pull request with the latest commits from the base branch."
+    category: Code & Release
     risk: medium
-    business_impact: "Runs CI/CD jobs with their configured secrets and permissions."
+    business_impact: "Updates a PR head branch with the latest from base; rewrites branch state and can mask in-flight review feedback in change-controlled repos."
     compliance: [SOX, COSO, SOC2, ISO_27001]
     sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.add_comment_to_pending_review
+    object: PullRequestReview
+    action: add_comment_to_pending_review
+    description: "Adds a draft review comment to an in-progress pull-request review."
+    category: Code & Release
+    risk: low
+    business_impact: "Adds a draft comment to an in-progress pull request review."
+    compliance: []
+    sod_concern: false
     confidence: high
     access_methods: [REST, MCP, CLI]
 
-  # ---------- Org & Access ----------
-  - id: github.add_org_member
-    object: OrgMember
-    action: add_org_member
-    category: Org & Access
-    risk: high
-    business_impact: "Grants access to private repos and org resources."
-    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
+  - id: github.add_reply_to_pull_request_comment
+    object: PullRequestComment
+    action: add_reply_to_pull_request_comment
+    description: "Replies to an existing pull-request review comment."
+    category: Code & Release
+    risk: low
+    business_impact: "Replies to an existing pull request review comment."
+    compliance: []
+    sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [REST, MCP, CLI]
 
-  - id: github.remove_org_member
-    object: OrgMember
-    action: remove_org_member
-    category: Org & Access
-    risk: high
-    business_impact: "Revokes access; can also be used retaliatorily or to cover tracks."
-    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
+  - id: github.search_pull_requests
+    object: PullRequest
+    action: search_pull_requests
+    description: "Searches pull requests across accessible repositories using a query string."
+    category: Code & Release
+    risk: low
+    business_impact: "Searches pull requests across accessible repositories."
+    compliance: []
+    sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Actions (CI/CD) ----------
+  - id: github.actions_get
+    object: WorkflowRun
+    action: actions_get
+    description: "Gets details for a workflow, workflow run, or job."
+    category: Secrets & Workflows
+    risk: low
+    business_impact: "Reads metadata for a workflow, workflow run, or job."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.actions_list
+    object: WorkflowRun
+    action: actions_list
+    description: "Lists workflows, workflow runs, jobs, or run artifacts for a repository."
+    category: Secrets & Workflows
+    risk: low
+    business_impact: "Lists workflows, workflow runs, or jobs in a repository."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.actions_run_trigger
+    object: WorkflowRun
+    action: actions_run_trigger
+    description: "Triggers a workflow_dispatch run, reruns a workflow run, or cancels an in-progress run."
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Triggers a workflow_dispatch or rerun event; executes CI with configured secrets and can affect deployment pipelines."
+    compliance: [SOX, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.get_job_logs
+    object: WorkflowJob
+    action: get_job_logs
+    description: "Reads logs for a workflow job or for failed jobs in a workflow run."
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Reads workflow job logs; logs frequently leak environment values, tokens, and connection strings."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Code Security ----------
+  - id: github.get_code_scanning_alert
+    object: CodeScanningAlert
+    action: get_code_scanning_alert
+    description: "Gets a single code-scanning alert, including the affected code location."
+    category: Code & Release
+    risk: medium
+    business_impact: "Reads details of a code scanning alert, including vulnerable code locations and exploit hints."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.list_code_scanning_alerts
+    object: CodeScanningAlert
+    action: list_code_scanning_alerts
+    description: "Lists code-scanning alerts on a repository."
+    category: Code & Release
+    risk: medium
+    business_impact: "Enumerates code scanning alerts across a repository; surfaces unpatched vulnerabilities to the caller."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Dependabot ----------
+  - id: github.get_dependabot_alert
+    object: DependabotAlert
+    action: get_dependabot_alert
+    description: "Gets details for a single Dependabot vulnerability alert in a repository."
+    category: Code & Release
+    risk: medium
+    business_impact: "Reads details of a Dependabot dependency vulnerability alert."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.list_dependabot_alerts
+    object: DependabotAlert
+    action: list_dependabot_alerts
+    description: "Lists Dependabot vulnerability alerts on a repository."
+    category: Code & Release
+    risk: medium
+    business_impact: "Enumerates open Dependabot alerts; surfaces the unpatched dependency surface to the caller."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Secret Protection ----------
+  - id: github.get_secret_scanning_alert
+    object: SecretScanningAlert
+    action: get_secret_scanning_alert
+    description: "Gets a single secret-scanning alert, including the leaked-secret context."
+    category: Code & Release
+    risk: medium
+    business_impact: "Reads a secret scanning alert; the alert payload may include the leaked secret value or a partial fingerprint."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.list_secret_scanning_alerts
+    object: SecretScanningAlert
+    action: list_secret_scanning_alerts
+    description: "Lists secret-scanning alerts on a repository."
+    category: Code & Release
+    risk: medium
+    business_impact: "Enumerates secret scanning alerts; an attacker reading this list can prioritize live credentials to harvest."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Security Advisories ----------
+  - id: github.get_global_security_advisory
+    object: SecurityAdvisory
+    action: get_global_security_advisory
+    description: "Gets a global security advisory by GHSA ID from the GitHub Advisory Database."
+    category: Code & Release
+    risk: low
+    business_impact: "Reads a public global security advisory from the GitHub Advisory Database."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.list_global_security_advisories
+    object: SecurityAdvisory
+    action: list_global_security_advisories
+    description: "Lists global security advisories from the GitHub Advisory Database."
+    category: Code & Release
+    risk: low
+    business_impact: "Lists public global security advisories."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.list_org_repository_security_advisories
+    object: SecurityAdvisory
+    action: list_org_repository_security_advisories
+    description: "Lists repository security advisories across an organization, including draft and private advisories."
+    category: Code & Release
+    risk: medium
+    business_impact: "Lists security advisories across an organization's repositories, including private/draft advisories."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.list_repository_security_advisories
+    object: SecurityAdvisory
+    action: list_repository_security_advisories
+    description: "Lists repository security advisories for a single repository, including draft and private advisories."
+    category: Code & Release
+    risk: medium
+    business_impact: "Lists security advisories on a single repository, including private/draft advisories."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
 
   # ---------- Issues ----------
-  - id: github.create_issue
-    object: Issue
-    action: create_issue
+  - id: github.add_issue_comment
+    object: IssueComment
+    action: add_issue_comment
+    description: "Adds a comment to an issue."
     category: Issues
     risk: low
-    business_impact: "Opens a tracking item; no code or access effect."
+    business_impact: "Posts a comment on an issue; visible to repository collaborators."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP, CLI]
 
-  - id: github.close_issue
+  - id: github.issue_read
     object: Issue
-    action: close_issue
+    action: issue_read
+    description: "Reads issue data — details, comments, labels, sub-issues, or assigned Copilot status."
     category: Issues
     risk: low
-    business_impact: "Marks an issue resolved; can suppress visibility of known problems if misused."
+    business_impact: "Reads issue details and comments; private repository issues may contain customer-reported PII or security details."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.issue_write
+    object: Issue
+    action: issue_write
+    description: "Creates or updates an issue (title, body, assignees, labels, state)."
+    category: Issues
+    risk: low
+    business_impact: "Creates or updates an issue (title, body, assignees, state)."
     compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.list_issue_types
+    object: IssueType
+    action: list_issue_types
+    description: "Lists configured issue types for an organization."
+    category: Issues
+    risk: low
+    business_impact: "Lists configured issue types for an organization."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.list_issues
+    object: Issue
+    action: list_issues
+    description: "Lists issues for a repository, optionally filtered by state, labels, or assignee."
+    category: Issues
+    risk: low
+    business_impact: "Lists issues on a repository or for the caller."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.search_issues
+    object: Issue
+    action: search_issues
+    description: "Searches issues across accessible repositories using a query string."
+    category: Issues
+    risk: low
+    business_impact: "Searches issues across accessible repositories; can surface PII reported in issue bodies at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.sub_issue_write
+    object: SubIssue
+    action: sub_issue_write
+    description: "Adds, removes, or reorders a sub-issue parent/child link."
+    category: Issues
+    risk: low
+    business_impact: "Creates, links, or removes a sub-issue parent/child relationship."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Labels ----------
+  - id: github.get_label
+    object: Label
+    action: get_label
+    description: "Gets a single repository label by name."
+    category: Issues
+    risk: low
+    business_impact: "Reads a single label definition."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.label_write
+    object: Label
+    action: label_write
+    description: "Creates, updates, or deletes a label on a repository."
+    category: Issues
+    risk: low
+    business_impact: "Creates, updates, or removes a label on a repository."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.list_label
+    object: Label
+    action: list_label
+    description: "Lists labels defined on a repository."
+    category: Issues
+    risk: low
+    business_impact: "Lists labels defined on a repository."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Discussions ----------
+  - id: github.get_discussion
+    object: Discussion
+    action: get_discussion
+    description: "Gets a single discussion thread by number."
+    category: Issues
+    risk: low
+    business_impact: "Reads a single discussion thread."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.get_discussion_comments
+    object: DiscussionComment
+    action: get_discussion_comments
+    description: "Lists comments on a discussion thread."
+    category: Issues
+    risk: low
+    business_impact: "Reads comments on a discussion thread."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.list_discussion_categories
+    object: DiscussionCategory
+    action: list_discussion_categories
+    description: "Lists discussion categories configured on a repository."
+    category: Issues
+    risk: low
+    business_impact: "Lists discussion categories configured on a repository."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.list_discussions
+    object: Discussion
+    action: list_discussions
+    description: "Lists discussions on a repository, optionally filtered by category."
+    category: Issues
+    risk: low
+    business_impact: "Lists discussion threads on a repository."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Projects ----------
+  - id: github.projects_get
+    object: Project
+    action: projects_get
+    description: "Gets a Projects v2 board, item, or field by id."
+    category: Issues
+    risk: low
+    business_impact: "Reads metadata for a Projects v2 board, item, or field."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.projects_list
+    object: Project
+    action: projects_list
+    description: "Lists Projects v2 boards, items, or fields accessible to the caller."
+    category: Issues
+    risk: low
+    business_impact: "Lists Projects v2 boards or items accessible to the caller."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.projects_write
+    object: Project
+    action: projects_write
+    description: "Creates, updates, archives, or deletes Projects v2 boards, items, or field values."
+    category: Issues
+    risk: low
+    business_impact: "Creates, updates, or removes Projects v2 items, fields, or status; standard planning-board write."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Gists ----------
+  - id: github.create_gist
+    object: Gist
+    action: create_gist
+    description: "Creates a new gist with one or more files."
+    category: Repository
+    risk: medium
+    business_impact: "Creates a gist; gists are public by default and have repeatedly been a leak vector for secrets and customer data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.get_gist
+    object: Gist
+    action: get_gist
+    description: "Gets the contents and metadata of a single gist by id."
+    category: Repository
+    risk: low
+    business_impact: "Reads a single gist by id."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.list_gists
+    object: Gist
+    action: list_gists
+    description: "Lists gists for the authenticated user."
+    category: Repository
+    risk: low
+    business_impact: "Lists gists for the authenticated user."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.update_gist
+    object: Gist
+    action: update_gist
+    description: "Updates an existing gist's files or description."
+    category: Repository
+    risk: medium
+    business_impact: "Updates an existing gist; public gists remain a leak surface for secrets and customer data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Notifications ----------
+  - id: github.dismiss_notification
+    object: Notification
+    action: dismiss_notification
+    description: "Marks a single notification thread as read or done."
+    category: Operations
+    risk: low
+    business_impact: "Marks a single notification as read or done for the caller."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.get_notification_details
+    object: Notification
+    action: get_notification_details
+    description: "Gets details for a single notification thread."
+    category: Operations
+    risk: low
+    business_impact: "Reads details of a single notification thread."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.list_notifications
+    object: Notification
+    action: list_notifications
+    description: "Lists notifications for the authenticated user."
+    category: Operations
+    risk: low
+    business_impact: "Lists the caller's GitHub notifications."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.manage_notification_subscription
+    object: Notification
+    action: manage_notification_subscription
+    description: "Updates the caller's subscription state (ignored, watching, deleted) for a single notification thread."
+    category: Operations
+    risk: low
+    business_impact: "Updates the caller's subscription state for a single notification thread."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.manage_repository_notification_subscription
+    object: Notification
+    action: manage_repository_notification_subscription
+    description: "Updates the caller's notification subscription state for an entire repository."
+    category: Operations
+    risk: low
+    business_impact: "Updates the caller's subscription state for an entire repository."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.mark_all_notifications_read
+    object: Notification
+    action: mark_all_notifications_read
+    description: "Marks every notification for the authenticated user as read."
+    category: Operations
+    risk: low
+    business_impact: "Marks all of the caller's notifications as read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Stargazers ----------
+  - id: github.list_starred_repositories
+    object: Repository
+    action: list_starred_repositories
+    description: "Lists repositories starred by the authenticated user or another user."
+    category: Operations
+    risk: low
+    business_impact: "Lists repositories the caller or another user has starred."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.star_repository
+    object: Repository
+    action: star_repository
+    description: "Stars a repository as the authenticated user."
+    category: Operations
+    risk: low
+    business_impact: "Adds a star on a repository as the authenticated user."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.unstar_repository
+    object: Repository
+    action: unstar_repository
+    description: "Unstars a repository as the authenticated user."
+    category: Operations
+    risk: low
+    business_impact: "Removes a star on a repository as the authenticated user."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Copilot ----------
+  - id: github.assign_copilot_to_issue
+    object: Issue
+    action: assign_copilot_to_issue
+    description: "Assigns the GitHub Copilot coding agent to work on an issue."
+    category: Operations
+    risk: low
+    business_impact: "Assigns the GitHub Copilot coding agent to an issue."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.request_copilot_review
+    object: PullRequest
+    action: request_copilot_review
+    description: "Requests a Copilot AI code review on a pull request."
+    category: Operations
+    risk: low
+    business_impact: "Requests an AI Copilot code review on a pull request; review verdict is advisory and does not satisfy required-reviewer rules."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Context (Identity) ----------
+  - id: github.get_me
+    object: User
+    action: get_me
+    description: "Returns the profile of the authenticated GitHub user."
+    category: Identity & Admin
+    risk: low
+    business_impact: "Reads the authenticated user's profile."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.get_team_members
+    object: TeamMember
+    action: get_team_members
+    description: "Lists members of an organization team."
+    category: Identity & Admin
+    risk: low
+    business_impact: "Lists members of an organization team; returns identifiable user data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: github.get_teams
+    object: Team
+    action: get_teams
+    description: "Lists teams in an organization, or teams the authenticated user belongs to."
+    category: Identity & Admin
+    risk: low
+    business_impact: "Lists teams in an organization; returns team membership and slug data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Organizations ----------
+  - id: github.search_orgs
+    object: Organization
+    action: search_orgs
+    description: "Searches GitHub organizations matching a query."
+    category: Identity & Admin
+    risk: low
+    business_impact: "Searches GitHub organizations by name or attribute."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Users ----------
+  - id: github.search_users
+    object: User
+    action: search_users
+    description: "Searches GitHub users by login, name, or email."
+    category: Identity & Admin
+    risk: low
+    business_impact: "Searches GitHub users by login, name, or email; returns identifiable PII at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP, CLI]
