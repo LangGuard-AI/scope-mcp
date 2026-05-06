@@ -13,40 +13,29 @@ You don't need to be a regulatory expert. "This feels off because…" is a usefu
 
 ## Two paths
 
-### Path 1 — Open an issue (recommended for feedback)
+### Path 1 — File a Data revision (recommended for feedback)
 
 Use this when you've spotted something but don't want to author the YAML change yourself. We'll triage and either fix it or ask follow-up questions.
 
-Open an issue at [github.com/LangGuard-AI/scope-mcp/issues/new](https://github.com/LangGuard-AI/scope-mcp/issues/new). Some templates that work well:
+The repo ships a structured issue form at [**Data revision → New issue**](https://github.com/LangGuard-AI/scope-mcp/issues/new?template=data-revision.yml). The form has a single revision-kind dropdown that covers every type of correction we accept:
 
-**Misclassification** — "This action is wrong"
+| Revision kind | Use this when… |
+|---|---|
+| **Misclassification** | An entry's risk level, regime tags, or `sod_concern` are wrong |
+| **Hallucinated tool** | An action exists in our YAML but NOT on the real MCP server |
+| **Missing tool** | The real MCP server has tools SCOPE doesn't classify |
+| **Missing platform** | SCOPE doesn't know about a connector we should cover |
+| **Confidence calibration** | Existing `confidence` is too high or too low |
+| **Description / business_impact wording** | Factual or tone fix on the prose fields |
+| **Schema / regime suggestion** | Propose adding a regime to the canonical 25-code allowlist |
+| **Other** | Anything else; describe it in the rationale field |
 
-> **Tool**: `slack.read_direct_messages`
-> **Current classification**: `risk: critical`, `compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001, NIST_CSF]`
-> **Suggested change**: HIPAA shouldn't be a default tag — only a fraction of Slack workspaces are HIPAA-covered.
-> **Reasoning**: …
+The form's required fields are platform slug, proposed change, and rationale. Optional but very helpful: action id, the current YAML entry pasted as YAML, and an authoritative source URL (vendor MCP docs, regulator guidance, MCP server source code) backing the change. The form pre-fills the issue title with `[data]` and the `data` label so the triage queue stays clean.
 
-**Missing platform** — "SCOPE doesn't know about X"
+[The Data revision form](https://github.com/LangGuard-AI/scope-mcp/issues/new?template=data-revision.yml) is the canonical entry point — bookmark it. Blank issues are disabled, but two contact links handle the cases that don't fit the form:
 
-> **Platform**: `customer-io`
-> **Authoritative MCP tool list**: <link to vendor MCP docs page>
-> **Why it matters**: agents using Customer.io can send marketing emails at scale; should be classified for CAN-SPAM-adjacent and PII concerns.
-
-**Hallucinated tool** — "This action doesn't exist on the real connector"
-
-> **Tool**: `linear.delete_issue`
-> **Issue**: Linear's MCP server doesn't expose a delete tool. The action should be removed from `data/linear.yml`.
-> **Source**: <link to Linear's MCP docs>
-
-**Confidence too high / too low**
-
-> **Tool**: `stripe.execute_analytics`
-> **Current**: `confidence: high`
-> **Suggestion**: downgrade to `medium` — the tool's behavior depends on what the analytics query touches, which the metadata can't capture.
-
-**General feedback / discussion**
-
-> Just open an issue. Ideas about new compliance regimes to support, schema improvements, audit-report shape, etc. all welcome.
+- **Question, general feedback, or operational discussion** → [scope-mcp@langguard.ai](mailto:scope-mcp@langguard.ai)
+- **Sensitive disclosure (security, regulatory, customer-confidential)** → [scope-mcp@langguard.ai](mailto:scope-mcp@langguard.ai)
 
 ### Path 2 — Open a PR (for direct changes)
 
@@ -124,7 +113,7 @@ Rules for `id_form: capability`:
 - Cap `confidence` at `medium`. The classification is reliable, but the `id` won't exact-match what `tools/list` actually returns, so audit results for these entries are intent-level rather than identifier-level.
 - File a follow-up to refresh the entry to `id_form: verbatim` once the real tool surface becomes available (e.g. when the vendor publishes `tools/list` docs or someone captures it via OAuth).
 
-If neither verbatim ids nor capability labels are available — i.e. the vendor publishes nothing about the tool surface at all — **open an issue instead of a PR** so we can decide together whether to skip the platform or wait for upstream docs.
+If neither verbatim ids nor capability labels are available — i.e. the vendor publishes nothing about the tool surface at all — **[file a Data revision](https://github.com/LangGuard-AI/scope-mcp/issues/new?template=data-revision.yml) (kind = "Missing platform") instead of a PR** so we can decide together whether to skip the platform or wait for upstream docs.
 
 #### `description` and `reference` (always optional, recommended for `verbatim` too)
 
@@ -147,7 +136,7 @@ NY_DFS_500, PCI, PIPEDA, PIPL, POPIA, PSD2, SOC2, SOX, UK_GDPR
 
 If a real concern doesn't fit one of these (e.g. TCPA, CAN-SPAM, BIPA, AML, KYC, BSA, state data-broker laws), **describe it in the `business_impact` prose** — don't invent a new code. The closed list keeps audit summaries comparable across platforms.
 
-If you think a regime genuinely should be added to the canonical list, open an issue first. Adding a code is a project-level decision, not a per-PR change.
+If you think a regime genuinely should be added to the canonical list, [file a Data revision](https://github.com/LangGuard-AI/scope-mcp/issues/new?template=data-revision.yml) with kind = "Schema / regime suggestion" first. Adding a code is a project-level decision, not a per-PR change.
 
 ##### Quick decision rules
 
@@ -204,7 +193,7 @@ Before opening:
 
 ## What happens after you submit
 
-- **Issues**: triaged by LangGuard within a few business days. Data corrections we agree with usually land within a week.
+- **Data revision issues**: triaged by LangGuard within a few business days. Corrections we agree with usually land within a week. Track yours in the [`data` label](https://github.com/LangGuard-AI/scope-mcp/issues?q=is%3Aissue+label%3Adata).
 - **PRs**: reviewed by LangGuard. We may suggest revisions to align with the rules above. Approved merges are deployed to production audits within 60 minutes (server-side cache TTL).
 - All contributors are credited in the file's `source` field if the change is substantial. The default `source: langguard-editorial` is reserved for editorial maintenance; community-contributed entries should set `source: community-<your-handle>` or similar.
 
@@ -214,5 +203,6 @@ Be respectful and direct. Disagreements about classifications are welcome — br
 
 ## Contact
 
-- **Issues / data discussion**: open a GitHub issue.
-- **Sensitive disclosures, commercial inquiries**: [scope-mcp@langguard.ai](mailto:scope-mcp@langguard.ai).
+- **Data corrections / proposed YAML changes**: [file a Data revision](https://github.com/LangGuard-AI/scope-mcp/issues/new?template=data-revision.yml).
+- **Questions, general feedback, operational discussion**: [scope-mcp@langguard.ai](mailto:scope-mcp@langguard.ai).
+- **Sensitive disclosures (security, regulatory, customer-confidential), commercial inquiries**: [scope-mcp@langguard.ai](mailto:scope-mcp@langguard.ai).
