@@ -4,6 +4,14 @@
 
 <p align="center"><b>SCOPE</b> - <b>S</b>ecurity, <b>C</b>ompliance &amp; <b>O</b>perational <b>P</b>olicy <b>E</b>valuation.</p>
 
+<p align="center">
+  <a href="https://scope-mcp.langguard.ai/register-account"><b>Get an access token</b></a>
+  ·
+  <a href="https://discord.gg/TPmBYR6pV"><b>Join the Discord</b></a>
+  ·
+  <a href="https://github.com/LangGuard-AI/scope-mcp/issues/new?template=data-revision.yml"><b>File a data revision</b></a>
+</p>
+
 ## Why this exists
 
 Agentic workflows have changed what "automation" means inside an organization. A single Claude agent today can be granted a dozen MCP tools across Salesforce, Stripe, GitHub, Slack, Gmail, a payroll system, an observability stack, a vector store - and every one of those tools is an action the agent can take on your behalf. The granularity that made integrations feel safe a decade ago (one narrowly-scoped credential per script, one trigger, one path through your data) is gone. Agents hold real authority over real systems, and they hold it across the same boundary lines that compliance frameworks were drawn around.
@@ -306,6 +314,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for issue templates, the three hard rul
 
 ## Contact
 
+- **Discord (community support, fastest live help)**: [discord.gg/TPmBYR6pV](https://discord.gg/TPmBYR6pV)
 - **Get an access token**: self-service at [scope-mcp.langguard.ai/register-account](https://scope-mcp.langguard.ai/register-account).
 - **Lost your token, rate-limit increase, commercial inquiries**: [support@langguard.ai](mailto:support@langguard.ai).
-- **Issues / data corrections**: open a GitHub issue on this repo.
+- **Issues / data corrections**: [file a Data revision](https://github.com/LangGuard-AI/scope-mcp/issues/new?template=data-revision.yml) on this repo.
