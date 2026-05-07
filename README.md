@@ -108,6 +108,32 @@ codex mcp add scope-mcp -- npx -y mcp-remote@latest https://scope-mcp.langguard.
 
 This bypasses the plugin marketplace entirely. You get the audit tool but lose the skill prompts that fire automatically when Codex sees you describing an agent. Use this path for headless / CI scenarios where the interactive `/plugins` flow doesn't apply.
 
+#### OpenClaw
+
+[OpenClaw](https://openclaw.ai/) speaks streamable-HTTP MCP natively, so the install is a single CLI command after you have a `cp_…` token — no `npx` bridge needed (unlike Codex):
+
+```bash
+openclaw mcp set scope-mcp '{
+  "url": "https://scope-mcp.langguard.ai/mcp",
+  "transport": "streamable-http",
+  "headers": {"Authorization": "Bearer cp_…paste_token_here…"}
+}'
+```
+
+The `audit_agent_design` tool is now wired up to your OpenClaw agent. OpenClaw redacts the bearer token in its logs and status output, so the secret doesn't leak through OpenClaw's own logging.
+
+To also pick up the design-time auto-trigger and `/scope-mcp:audit` skills (the same `SKILL.md` files Claude Code and Codex use — OpenClaw uses the identical format), copy them into `~/.openclaw/skills/`:
+
+```bash
+mkdir -p ~/.openclaw/skills/audit ~/.openclaw/skills/compliance-check
+for s in audit compliance-check; do
+  curl -s "https://raw.githubusercontent.com/LangGuard-AI/scope-mcp/main/plugins/scope-mcp/skills/${s}/SKILL.md" \
+    > ~/.openclaw/skills/${s}/SKILL.md
+done
+```
+
+The skills route their tool calls to the `scope-mcp` server you registered above. Workspace-scoped install (per-project) is also supported — drop the same files into `<project>/skills/`; OpenClaw resolves Workspace > Local > Bundled.
+
 ### 3. Verify the install
 
 In any session, type:
