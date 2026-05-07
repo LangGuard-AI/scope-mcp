@@ -71,7 +71,7 @@ Three things to know before you submit:
 /plugin install scope-mcp@scope-mcp-local
 ```
 
-On first invocation, Claude Code's native HTTP+OAuth MCP transport runs the OAuth flow against the hosted SCOPE server (callback on `localhost:3118`). Paste your `cp_…` token in the consent page that opens; the resulting access token is cached locally by Claude Code and reused silently across sessions. No bridge subprocess, no extra dependencies.
+The plugin ships an `.mcp.json` that points Claude Code at the hosted SCOPE MCP server over HTTP. The first time you trigger an MCP call (for example, by running `/scope-mcp:audit …`), Claude Code starts an OAuth flow with the server — paste your `cp_…` token from your signup email when the consent page asks for it, and Claude Code reuses the resulting authorization across subsequent sessions.
 
 #### Codex
 
