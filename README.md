@@ -61,6 +61,13 @@ Three things to know before you submit:
 2. When prompted, **authorize via OAuth**. You'll be redirected to a consent page where you paste the `cp_…` token from your signup email. Claude Cowork stores the authorization; you don't see the token again.
 3. Start designing an agent — SCOPE's auto-trigger skill fires the moment you describe one.
 
+#### Claude Code (desktop app / GUI)
+
+1. **Open Claude Code's plugin manager.** In any chat, type `/plugin` to open the interactive plugin chooser, or open the **Plugins** panel from the app's settings/sidebar (the exact location depends on your Claude Code version — recent builds expose it both ways).
+2. **Add a marketplace.** Choose **Add marketplace** and paste `https://github.com/LangGuard-AI/scope-mcp` as the source.
+3. **Install the plugin.** From the resolved marketplace, select **scope-mcp** and confirm install. Claude Code wires up the bundled skills (`audit`, `compliance-check`) and the plugin's MCP server config in one step.
+4. **Authorize on first use.** The first time you trigger an MCP call from this plugin (e.g. `/scope-mcp:audit salesforce.*`), Claude Code starts an OAuth flow against the hosted SCOPE server. Paste your `cp_…` token from your signup email when the consent page asks for it; Claude Code reuses the resulting authorization across subsequent sessions.
+
 #### Claude Code CLI
 
 ```bash
