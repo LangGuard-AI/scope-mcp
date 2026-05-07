@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <img src="./intro_image.png" alt="SCOPE pre-flight compliance evaluation" width="900">
+  <img src="./intro_image.png" alt="SCOPE pre-flight compliance evaluation" width="675">
 </p>
 
 ## Why this exists
