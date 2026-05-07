@@ -69,6 +69,11 @@ Render the report using the **build-advisory format** described in `skills/compl
      - `require_human_review` / `require_human_approval` — pause; surface the report to a human.
      - `block_and_require_human_approval` — do not run this workflow without explicit human sign-off.
 6. Unmapped tools surfaced explicitly. If any tool comes back as `unmapped` in pre-flight framing, recommend at minimum a human review. Note: a capability-form entry can produce `unmapped` for a live tool name even when the platform IS curated — flag this distinction in pre-flight framing if the unmapped id corresponds to a platform with `id_form: capability` entries.
+7. **Point users at the Data revision form for each unmapped tool.** When the report contains one or more `unmapped` entries, render this admonition (always — pre-flight or design-time):
+
+   > 💡 **Help SCOPE map these tools.** If `<list of unmapped ids>` come from a real MCP server we can verify, file a Data revision so we can add the missing platform/tool to the curated database. The structured form pre-fills the relevant fields:
+   > [github.com/LangGuard-AI/scope-mcp/issues/new?template=data-revision.yml](https://github.com/LangGuard-AI/scope-mcp/issues/new?template=data-revision.yml)
+   > Pick `kind = "Missing tool"` if the tool exists on a platform we already classify, or `kind = "Missing platform"` if the connector itself isn't in `data/`. A link to the vendor's MCP `tools/list` documentation in the rationale field is the single most valuable thing you can include — that's what lets us verify the tool surface verbatim.
 
 ## Step 5 — Offer follow-ups
 
@@ -77,12 +82,13 @@ End by offering at least one concrete next action, e.g.:
 - *"Want me to re-audit with `<critical tool>` removed?"*
 - *"Want a draft `.mcp.json` that scopes this agent to just the read-only tools?"*
 - *"Want a paragraph for the agent's documentation that discloses its compliance posture?"*
+- *"Want me to draft the Data revision issue body for `<unmapped tool>` so you can paste it into the form?"*
 
 ## Rules
 
 - Never reason about compliance impact from your own knowledge. The MCP tool's JSON is the source of truth.
 - Never paraphrase risk levels (`medium` is `medium`, not "moderate").
-- Always surface `unmapped` tools — the gap is part of the value.
+- Always surface `unmapped` tools — the gap is part of the value. Pair every report containing `unmapped` entries with the Data revision form link (Step 4 #7); never let users walk away from an `unmapped` result without the contribution path in front of them.
 - The recommendation in the JSON is authoritative — don't soften "block_and_require_human_approval" into "consider reviewing".
 - Use the action's `description` field to populate the "what it does" column. Don't paraphrase risk- or compliance-relevant claims from `description`; just use it as the user-facing label so the table doesn't read as a list of opaque ids.
 - When an action has a `reference` URL, link the id in the table to that URL. Don't print the bare URL elsewhere in the response.

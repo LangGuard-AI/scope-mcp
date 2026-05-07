@@ -119,6 +119,13 @@ This agent's proposed action surface includes **<N>** distinct actions across **
 
 ### Unmapped tools (no compliance data on file)
 - `<tool>` ← treat as unknown risk; flag for human review before shipping.
+
+> 💡 **Help SCOPE classify these tools.** If the unmapped tool comes from
+> a real MCP server you can point us at, file a Data revision so we can
+> add it to the curated database. The structured form pre-fills the
+> relevant fields (kind = "Missing tool" or "Missing platform", platform
+> slug, action id, authoritative source URL):
+> [github.com/LangGuard-AI/scope-mcp/issues/new?template=data-revision.yml](https://github.com/LangGuard-AI/scope-mcp/issues/new?template=data-revision.yml)
 ```
 
 Rendering rules for the table:
@@ -137,12 +144,13 @@ After presenting the report, proactively offer one or more of:
 - *"Want me to re-audit if you drop `<critical tool>`?"* (re-run with a narrower list)
 - *"Want me to write a scoped `.mcp.json` that only includes the read-only tools?"*
 - *"Want a draft of the `description` field for this agent that documents its compliance posture?"*
+- *"Want me to draft the Data revision issue body for `<unmapped tool>` so you can paste it into the form?"* (only when the report had `unmapped` entries)
 
 ## Hard rules
 
 - **Never reason about compliance impact yourself.** All risk/regime claims must come from the MCP tool's JSON output.
 - **Never paraphrase risk levels.** If the data says `medium`, say `medium`, not "moderate" or "manageable."
-- **Always surface unmapped tools.** The gap *is* part of the answer.
+- **Always surface unmapped tools.** The gap *is* part of the answer. Whenever the report contains `unmapped` entries, render the Data revision admonition (Step 4 "Unmapped tools" sub-block) so users have the contribution path in front of them — pre-filled with `kind = "Missing tool"` or `"Missing platform"` and the specific id(s) they hit.
 - **Distinguish design-time from run-time.** This skill is for "should I attach this?" not "may I run this?"
 - **Don't run the audit silently.** Always show the user the table and the recommendations.
 - **Use `description` for human labels and `reference` for doc links.** Don't make the user decode raw ids — render the description column and link the id to the reference URL when available.
