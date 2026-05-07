@@ -58,15 +58,17 @@ Three things to know before you submit:
 #### Claude Cowork
 
 1. **Add the plugin** in Claude Cowork: Settings → Plugins → *Add plugin* → paste `https://github.com/LangGuard-AI/scope-mcp` as the repo URL.
-2. When prompted, **authorize via OAuth**. You'll be redirected to a consent page where you paste the `cp_…` token from your signup email. Claude Cowork stores the authorization; you don't see the token again.
-3. Start designing an agent — SCOPE's auto-trigger skill fires the moment you describe one.
+2. **Authorize via OAuth.** You'll be redirected to a consent page where you paste the `cp_…` token from your signup email. Claude Cowork stores the authorization; you don't see the token again.
+3. **Allow the plugin to run.** Claude Cowork prompts you to approve the plugin's tool access. Choose **Always allow** (or the equivalent in your build) so SCOPE's audit tool can fire without re-prompting on every call.
+4. Start designing an agent — SCOPE's auto-trigger skill fires the moment you describe one.
 
 #### Claude Code (desktop app / GUI)
 
 1. **Open Claude Code's plugin manager.** In any chat, type `/plugin` to open the interactive plugin chooser, or open the **Plugins** panel from the app's settings/sidebar (the exact location depends on your Claude Code version — recent builds expose it both ways).
 2. **Add a marketplace.** Choose **Add marketplace** and paste `https://github.com/LangGuard-AI/scope-mcp` as the source.
 3. **Install the plugin.** From the resolved marketplace, select **scope-mcp** and confirm install. Claude Code wires up the bundled skills (`audit`, `compliance-check`) and the plugin's MCP server config in one step.
-4. **Authorize on first use.** The first time you trigger an MCP call from this plugin (e.g. `/scope-mcp:audit salesforce.*`), Claude Code starts an OAuth flow against the hosted SCOPE server. Paste your `cp_…` token from your signup email when the consent page asks for it; Claude Code reuses the resulting authorization across subsequent sessions.
+4. **Allow the plugin to run.** Claude Code prompts you to approve the plugin's tool access on first use. Choose **Always allow** so subsequent MCP calls don't re-prompt — otherwise every `/scope-mcp:audit …` invocation will pause for confirmation.
+5. **Authorize on first MCP call.** Claude Code then starts an OAuth flow against the hosted SCOPE server. Paste your `cp_…` token from your signup email when the consent page asks for it; Claude Code reuses the resulting authorization across subsequent sessions.
 
 #### Claude Code CLI
 
@@ -78,7 +80,10 @@ Three things to know before you submit:
 /plugin install scope-mcp@scope-mcp-local
 ```
 
-The plugin ships an `.mcp.json` that points Claude Code at the hosted SCOPE MCP server over HTTP. The first time you trigger an MCP call (for example, by running `/scope-mcp:audit …`), Claude Code starts an OAuth flow with the server — paste your `cp_…` token from your signup email when the consent page asks for it, and Claude Code reuses the resulting authorization across subsequent sessions.
+The plugin ships an `.mcp.json` that points Claude Code at the hosted SCOPE MCP server over HTTP. The first time you trigger an MCP call (e.g. `/scope-mcp:audit …`), Claude Code prompts you twice:
+
+1. **Approve the plugin's tool access.** Choose **Always allow** so subsequent calls don't re-prompt.
+2. **Authorize via OAuth.** Paste your `cp_…` token from your signup email when the consent page opens. Claude Code reuses the resulting authorization across sessions.
 
 #### Codex
 
