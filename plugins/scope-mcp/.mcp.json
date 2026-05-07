@@ -1,13 +1,14 @@
 {
-  "_comment": "Universal stdio-bridge MCP config. Both Claude Code and Codex speak stdio natively, while our SCOPE MCP server is HTTP+OAuth at https://scope-mcp.langguard.ai/mcp. mcp-remote (https://github.com/geelen/mcp-remote) bridges stdio<->HTTP and handles the OAuth dance on first run; the resulting access token is cached under ~/.mcp-auth/ so subsequent sessions start silently. Requires Node 18+ on PATH for npx.",
+  "_comment": "Claude Code's native HTTP+OAuth MCP transport. Claude Code looks for `.mcp.json` at the plugin root by convention and reads this file directly — no bridge subprocess needed. The OAuth flow on first invocation opens a localhost:3118 callback, the user pastes their cp_… token in the consent page, and Claude Code caches the resulting access token in its own auth store. Codex (which only speaks stdio MCP) reads `./.codex-plugin/mcp-servers.json` instead — that file uses mcp-remote to bridge stdio↔HTTP to the same hosted server.",
   "mcpServers": {
     "scope-mcp": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote@latest",
-        "https://scope-mcp.langguard.ai/mcp"
-      ]
+      "type": "http",
+      "url": "https://scope-mcp.langguard.ai/mcp",
+      "oauth": {
+        "clientId": "scope-mcp",
+        "callbackPort": 3118,
+        "authServerMetadataUrl": "https://scope-mcp.langguard.ai/.well-known/oauth-authorization-server"
+      }
     }
   }
 }
