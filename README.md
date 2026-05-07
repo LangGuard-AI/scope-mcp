@@ -304,7 +304,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for issue templates, the three hard rul
 ## Limitations
 
 - **Coverage**: ~80 platforms today, expanding. If you audit a tool SCOPE doesn't recognize, it surfaces as `unmapped` and the audit recommends human review by default.
-- **Not a runtime gate**: SCOPE produces an advisory report. It does not enforce execution policy at runtime - that's a separate problem your agent harness solves.
+- **Not a runtime gate**: SCOPE produces an advisory report. It does not enforce execution policy at runtime - **that's a separate problem solved by LangGuard. Interested? Find out more at [our website](https://langguard.ai)**
 - **Editorial judgment**: Risk and regime classifications reflect informed industry consensus, not legal advice. Sector-specific applicability (e.g. whether HIPAA applies to a given Slack workspace) depends on your deployment and is flagged in `business_impact` prose.
 
 ## Privacy
