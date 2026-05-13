@@ -41,15 +41,18 @@ The form's required fields are platform slug, proposed change, and rationale. Op
 
 Fork the repo, branch off `main`, edit or add a file under [`data/`](./data), and open a PR.
 
-### Schema reference (v1.1)
+### Schema reference (v1.2)
 
 ```yaml
-schema_version: "1.1"
+schema_version: "1.2"
 platform: <slug>
 display_name: <Title Case Name>
 source: langguard-editorial            # or community-<handle> for community PRs
 updated: "<YYYY-MM>"
 reference: https://...                 # OPTIONAL — canonical vendor MCP docs URL
+server_version: "1.0.0"               # OPTIONAL — MCP server version or date last verified
+server_website: https://...            # OPTIONAL — MCP server project URL (distinct from reference)
+maintainer: user@example.com           # OPTIONAL — email or contact-form URL for the server maintainer
 actions:
   - id: <platform>.<action>            # required
     object: <Object>                   # optional but recommended
@@ -66,7 +69,7 @@ actions:
     access_methods: [<methods>]        # required
 ```
 
-Files curated before May 2026 use `schema_version: "1.0"` and omit the new fields — that's still valid. New PRs should use `"1.1"` and include `description` + `reference` where available.
+Files curated before May 2026 use `schema_version: "1.0"` or `"1.1"` and omit the newer fields — that's still valid. New PRs should use `"1.2"` and include `description` + `reference` where available. The v1.2 fields (`server_version`, `server_website`, `maintainer`) are optional — populate them only when you have a confirmed value.
 
 There are three hard rules for new YAML data. PRs that violate them will be sent back for revision.
 
