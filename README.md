@@ -232,6 +232,8 @@ When you run an audit, your Claude session calls the hosted MCP server over HTTP
 
 ## Data and schema
 
+Full field-by-field schema documentation is in [**SCHEMA.md**](./SCHEMA.md).
+
 ```
 data/
 ├── salesforce.yml          # canonical schema reference
