@@ -2,7 +2,7 @@
   <img src="./logo.png" alt="SCOPE MCP" width="320">
 </p>
 
-<p align="center"><b>SCOPE</b> - <b>S</b>ecurity, <b>C</b>ompliance &amp; <b>O</b>perational <b>P</b>olicy <b>E</b>valuation.</p>
+<p align="center"><b>LangGuard SCOPE</b> - <b>S</b>ecurity, <b>C</b>ompliance &amp; <b>O</b>perational <b>P</b>olicy <b>E</b>valuation.</p>
 
 <p align="center">
   <a href="https://scope-mcp.langguard.ai/register-account"><b>Get an access token</b></a>
