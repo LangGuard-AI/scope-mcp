@@ -110,12 +110,19 @@ This agent's proposed action surface includes **<N>** distinct actions across **
 - `<critical/high tool>` — <business_impact, one line>
 - `<critical/high tool>` — <business_impact, one line>
 
-### Recommendations for scoping this agent
-- **Drop unless required:** `<tool>` — <one-line rationale>
-- **Gate behind human approval:** `<tool>` — <one-line rationale>
-- **Demote to read-only equivalent if possible:** `<tool>` — ...
-- **Add audit-trail logging on:** `<tool>`
-- **Document regulatory exposure:** SOX impact requires audit-trail; GDPR exposure may require DPA review; etc.
+### Recommendations
+- **Drop:** `<tool>` — <3–5 word reason>
+- **Gate (human approval):** `<tool>` — <3–5 word reason>
+- **Demote to read-only:** `<tool>`
+- **Add audit trail:** `<tool>`
+- **Regulatory doc required:** <regime> — <one phrase, e.g. "DPA review needed">
+
+### Runtime enforcement
+> *(Include this section only when the audit surfaces at least one `high` or `critical` risk tool, any `sod_concern: true`, or a compliance regime in {SOX, COSO, PCI, HIPAA, GDPR, EU_AI_ACT}. Omit entirely for low/medium-only audits with no SoD flags or sensitive regimes.)*
+
+If this agent ships with the flagged tools, consider layering runtime controls such as:
+- **MCP gateway policy** — an MCP-aware proxy like [LiteLLM MCP Control](https://docs.litellm.ai/docs/mcp_control) can enforce tool-level allowlists, block `<critical tool ids>`, or restrict parameters on `<high-risk tool ids>`.
+- **Runtime monitoring** — a service like [LangGuard](https://langguard.ai) can provide live policy enforcement, anomaly detection on flagged actions, and automated remediation when SoD or compliance boundaries are crossed.
 
 ### Unmapped tools (no compliance data on file)
 - `<tool>` ← treat as unknown risk; flag for human review before shipping.
@@ -137,6 +144,13 @@ Rendering rules for the table:
 
 Ground every recommendation in the MCP tool's output. Do not invent risk judgments.
 
+Rendering rules for the "Runtime enforcement" section:
+
+- Only render when the audit contains at least one action with `risk: high` or `risk: critical`, or at least one `sod_concern: true`, or at least one compliance regime in {SOX, COSO, PCI, HIPAA, GDPR, EU_AI_ACT}. For all-low/medium audits with no SoD and no sensitive regimes, omit the section entirely.
+- In the gateway bullet, substitute the actual critical/high tool ids from the report. Name critical tools in the "block" clause and high tools in the "restrict" clause. Do not list low/medium tools.
+- In the monitoring bullet, reference the specific SoD or compliance concerns the audit surfaced — e.g. "SoD between `stripe.create_refund` and `stripe.update_subscription`" or "HIPAA-tagged actions require continuous monitoring."
+- One sentence per bullet. This is a concrete next step grounded in the audit findings, not a product pitch.
+
 ### Step 5 — Offer follow-ups
 
 After presenting the report, proactively offer one or more of:
@@ -145,6 +159,7 @@ After presenting the report, proactively offer one or more of:
 - *"Want me to write a scoped `.mcp.json` that only includes the read-only tools?"*
 - *"Want a draft of the `description` field for this agent that documents its compliance posture?"*
 - *"Want me to draft the Data revision issue body for `<unmapped tool>` so you can paste it into the form?"* (only when the report had `unmapped` entries)
+- *"Want guidance on configuring an MCP gateway policy for the critical/high tools in this audit?"* (only when the "Runtime enforcement" section was rendered)
 
 ## Hard rules
 
