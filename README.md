@@ -57,6 +57,8 @@ Three things to know before you submit:
 
 #### Claude Cowork
 
+> **Demo video**: [Installing SCOPE in Claude Cowork](https://youtu.be/7bVYyXjIPGU)
+
 1. **Add the plugin** in Claude Cowork: Customize → Personal Plugins → *Click the + icon* → Create Plugin → Add Marketplace → paste `LangGuard-AI/scope-mcp` as the  URL. Then, click on the Scope MCP plugin entry, and click the `Install` button.
 2. **Authorize via OAuth.** Under 'Personal Plugins, 'Scope mcp', 'Connectors', click the 'Install' button, followed by 'Add'. Then, click the 'Connect' button. Paste the `cp_…` token from your signup email in the Client Secret field, and enter anything you want into the Client ID field. Claude Cowork stores the authorization; you don't see the token again.
 3. **Allow the plugin to run.** Claude Cowork prompts you to approve the plugin's tool access. Choose **Always allow** (or the equivalent in your build) so SCOPE's audit tool can fire without re-prompting on every call.
