@@ -66,7 +66,7 @@ Three things to know before you submit:
 
 1. **Open Claude Code's plugin manager.** In any chat, type `/plugin` to open the interactive plugin chooser, or open the **Plugins** panel from the app's settings/sidebar (the exact location depends on your Claude Code version — recent builds expose it both ways).
 2. **Add a marketplace.** Choose **Add marketplace** and paste `https://github.com/LangGuard-AI/scope-mcp` as the source.
-3. **Install the plugin.** From the resolved marketplace, select **scope-mcp** and confirm install. Claude Code wires up the bundled skills (`audit`, `compliance-check`) and the plugin's MCP server config in one step.
+3. **Install the plugin.** From the resolved marketplace, select **scope-mcp** and confirm install. Claude Code wires up the bundled skills (`audit`, `compliance-check`, `curate`) and the plugin's MCP server config in one step.
 4. **Allow the plugin to run.** Claude Code prompts you to approve the plugin's tool access on first use. Choose **Always allow** so subsequent MCP calls don't re-prompt — otherwise every `/scope-mcp:audit …` invocation will pause for confirmation.
 5. **Authorize on first MCP call.** Claude Code then starts an OAuth flow against the hosted SCOPE server. Paste your `cp_…` token from your signup email when the consent page asks for it; Claude Code reuses the resulting authorization across subsequent sessions.
 
@@ -101,7 +101,7 @@ The end-to-end install (skills + MCP server in one shot) goes through the `/plug
    ```
    LangGuard-AI/scope-mcp
    ```
-4. From the resolved marketplace, select **scope-mcp** and confirm install. Codex copies the bundled skills (`audit`, `compliance-check`) into `~/.codex/skills/` and registers the plugin's MCP server config.
+4. From the resolved marketplace, select **scope-mcp** and confirm install. Codex copies the bundled skills (`audit`, `compliance-check`, `curate`) into `~/.codex/skills/` and registers the plugin's MCP server config.
 5. On the first MCP call, [`mcp-remote`](https://github.com/geelen/mcp-remote) opens a browser to the SCOPE consent page — paste your `cp_…` token from the signup email. The resulting access token caches under `~/.mcp-auth/` and is reused silently across Codex sessions.
 
 > Requires **Node 18+** on `PATH` (the bridge uses `npx` on first run; the package is then cached by npm).
@@ -147,8 +147,8 @@ The `audit_agent_design` tool is now wired up to your OpenClaw agent. OpenClaw r
 To also pick up the design-time auto-trigger and `/scope-mcp:audit` skills (the same `SKILL.md` files Claude Code and Codex use — OpenClaw uses the identical format), copy them into `~/.openclaw/skills/`:
 
 ```bash
-mkdir -p ~/.openclaw/skills/audit ~/.openclaw/skills/compliance-check
-for s in audit compliance-check; do
+mkdir -p ~/.openclaw/skills/audit ~/.openclaw/skills/compliance-check ~/.openclaw/skills/curate
+for s in audit compliance-check curate; do
   curl -s "https://raw.githubusercontent.com/LangGuard-AI/scope-mcp/main/plugins/scope-mcp/skills/${s}/SKILL.md" \
     > ~/.openclaw/skills/${s}/SKILL.md
 done
@@ -188,6 +188,18 @@ Pass anything: tool ids, connector wildcards, bare platform names, or a prose de
 
 The output adapts: design-time scoping advice when you're iterating on what to attach, run-time pre-flight gating when you're about to execute a fixed set of tools.
 
+### Curate - `/scope-mcp:curate`
+
+Create or refresh a YAML compliance data file for a single MCP server platform. Pass a GitHub repo URL, a vendor MCP docs page, a claude.com/connectors link, or a local file path to MCP server source code.
+
+```
+/scope-mcp:curate https://github.com/stripe/agent-toolkit
+/scope-mcp:curate https://docs.slack.dev/ai/slack-mcp-server
+/scope-mcp:curate ./path/to/local/mcp-server
+```
+
+The skill walks through an interactive 6-step workflow: resolve the source, confirm platform metadata, enumerate the tool surface (preserving verbatim tool names), classify each tool for risk/compliance/SoD, write the YAML to `data/`, and present a summary. It asks for confirmation at each step and flags low-confidence entries for review.
+
 ## Example output
 
 ```
@@ -226,7 +238,7 @@ flowchart TD
     D[("<b>YAML compliance data</b><br/>THIS REPO → data/*.yml<br/>80 platforms, fully auditable")]
 ```
 
-The plugin in this repo distributes the *interface*: skills (`audit`, `compliance-check`), the `/scope-mcp:audit` slash command, and an `.mcp.json` manifest pointing at the hosted SCOPE MCP server. It also distributes the *data*: the 80+ per-platform YAML files in [`data/`](./data) that catalogue every MCP tool the server knows about and how each one is classified.
+The plugin in this repo distributes the *interface*: skills (`audit`, `compliance-check`, `curate`), the `/scope-mcp:audit` and `/scope-mcp:curate` slash commands, and an `.mcp.json` manifest pointing at the hosted SCOPE MCP server. It also distributes the *data*: the 80+ per-platform YAML files in [`data/`](./data) that catalogue every MCP tool the server knows about and how each one is classified.
 
 When you run an audit, your Claude session calls the hosted MCP server over HTTPS. The server reads its data from the YAML files in this repository - that's the canonical source of truth, publicly auditable, and updated by pull request. You can read every classification this plugin will ever emit by browsing [`data/`](./data).
 
@@ -299,7 +311,8 @@ scope-mcp/
         ├── .mcp.json                          # universal stdio bridge (mcp-remote)
         └── skills/
             ├── audit/SKILL.md                 # /scope-mcp:audit (explicit)
-            └── compliance-check/SKILL.md      # auto-trigger (design-time)
+            ├── compliance-check/SKILL.md      # auto-trigger (design-time)
+            └── curate/SKILL.md                # /scope-mcp:curate (data file creator)
 ```
 
 The marketplace catalogs at the repo root point both Claude and Codex at `./plugins/scope-mcp/`, where the actual plugin lives. `data/` stays at the repo root because the hosted MCP server reads it directly from S3, independent of plugin install — community PRs and issue-driven corrections land there.
