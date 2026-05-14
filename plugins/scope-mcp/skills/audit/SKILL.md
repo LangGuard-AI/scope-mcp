@@ -1,5 +1,4 @@
 ---
-name: audit
 description: Use this skill ONLY when the user explicitly invokes `/scope-mcp:audit` (or asks for a "compliance audit"). Runs a compliance audit against the curated action-surface database. Accepts MCP tool ids, API actions, connector wildcards (`salesforce.*`), bare platform names, or a prose description of the agent. Returns a deterministic risk + regulatory exposure report (SOX, GDPR, PCI, HIPAA) with concrete recommendations. Handles both design-time scoping ("should I build this?") and run-time pre-flight ("about to execute these tools — any issues?") — choose the framing in Step 3 based on what the user is actually doing.
 ---
 
