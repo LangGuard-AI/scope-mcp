@@ -1,5 +1,7 @@
 # Contributing to scope-mcp
 
+This document is the source-of-truth contributor guide for human contributors and data reviewers. Some sections (particularly the Hard Rules and the 26-code regime allowlist) are also loaded by the `/scope-mcp:curate` skill at runtime to guide LLM-assisted data entry. Edits to these sections should preserve both human readability and the structured format the skill parses. When editing rule sections, be mindful that changes here affect LLM behavior.
+
 The data is the project. The 80+ YAMLs in [`data/`](./data) are SCOPE's only source of truth — when you run an audit, the hosted server reads exactly those files and emits exactly what they say. So every correction, addition, and challenge to a classification directly improves the tool for everyone.
 
 We especially want to hear from:
@@ -27,7 +29,7 @@ The repo ships a structured issue form at [**Data revision → New issue**](http
 | **Missing platform** | SCOPE doesn't know about a connector we should cover |
 | **Confidence calibration** | Existing `confidence` is too high or too low |
 | **Description / business_impact wording** | Factual or tone fix on the prose fields |
-| **Schema / regime suggestion** | Propose adding a regime to the canonical 25-code allowlist |
+| **Schema / regime suggestion** | Propose adding a regime to the canonical 26-code allowlist |
 | **Other** | Anything else; describe it in the rationale field |
 
 The form's required fields are platform slug, proposed change, and rationale. Optional but very helpful: action id, the current YAML entry pasted as YAML, and an authoritative source URL (vendor MCP docs, regulator guidance, MCP server source code) backing the change. The form pre-fills the issue title with `[data]` and the `data` label so the triage queue stays clean.
@@ -72,6 +74,8 @@ actions:
 Files curated before May 2026 use `schema_version: "1.0"` or `"1.1"` and omit the newer fields — that's still valid. New PRs should use `"1.2"` and include `description` + `reference` where available. The v1.2 fields (`server_version`, `server_website`, `maintainer`) are optional — populate them only when you have a confirmed value.
 
 There are three hard rules for new YAML data. PRs that violate them will be sent back for revision.
+
+> Loaded by /curate skill
 
 #### Rule 1 — Tool ids verbatim from the MCP server (with one documented escape hatch)
 
@@ -127,15 +131,19 @@ These two fields are useful regardless of `id_form`:
 
 Neither field affects audit logic today; both are surfaced in the audit response so consumers can show context and link out to vendor docs.
 
-#### Rule 2 — `compliance:` uses only the 25 canonical codes
+#### Rule 2 — `compliance:` uses only the 26 canonical codes
+
+> Loaded by /curate skill
 
 The closed allowlist:
 
 ```
 APPI, CCPA, COPPA, COSO, CO_AI_ACT, EU_AI_ACT, FDA_PART_11, FEDRAMP,
-FERPA, GDPR, GLBA, HIPAA, ISO_27001, LGPD, NIST_AI_RMF, NIST_CSF,
-NY_DFS_500, PCI, PIPEDA, PIPL, POPIA, PSD2, SOC2, SOX, UK_GDPR
+FERPA, GDPR, GLBA, HIPAA, ISO_27001, ISO_42001, LGPD, NIST_AI_RMF,
+NIST_CSF, NY_DFS_500, PCI, PIPEDA, PIPL, POPIA, PSD2, SOC2, SOX, UK_GDPR
 ```
+
+**Canonical machine-readable list:** [`_meta/regimes.yml`](_meta/regimes.yml)
 
 If a real concern doesn't fit one of these (e.g. TCPA, CAN-SPAM, BIPA, AML, KYC, BSA, state data-broker laws), **describe it in the `business_impact` prose** — don't invent a new code. The closed list keeps audit summaries comparable across platforms.
 
@@ -147,12 +155,15 @@ If you think a regime genuinely should be added to the canonical list, [file a D
 - **Industry regimes** (HIPAA, PCI, GLBA, FERPA, COPPA): only when the data type matches. HIPAA on healthcare-context platforms; PCI on payment-card data; GLBA on financial-services personal data; FERPA on student records; COPPA on children's data.
 - **Financial reporting** (SOX, COSO): on actions that affect financial reporting, revenue recognition, IT general controls on financial systems, or audit-log integrity for financial systems. Tag SOX and COSO together — COSO is the framework SOX is implemented against.
 - **Security frameworks** (SOC2, ISO_27001): on actions affecting security/availability/processing-integrity/confidentiality controls. Pair SOC2 with ISO_27001 for most security-relevant writes — the controls overlap heavily. Add NIST_CSF for high-impact security controls (privilege escalation, secret management, audit-log tampering).
-- **AI regulation** (EU_AI_ACT, NIST_AI_RMF, CO_AI_ACT): only when the action itself is part of automated decisioning that affects an individual's rights or interests (profiling, automated hiring/credit/insurance/healthcare decisions, biometric ID). Most CRM/repo/messaging actions don't qualify.
+- **AI regulation — automated decisioning** (EU_AI_ACT, NIST_AI_RMF, CO_AI_ACT): only when the action itself is part of automated decisioning that affects an individual's rights or interests (profiling, automated hiring/credit/insurance/healthcare decisions, biometric ID). Most CRM/repo/messaging actions don't qualify.
+- **AI regulation — AIMS controls** (ISO_42001): only on AIMS control-point actions — managing the AI model lifecycle (deploy/retire/rollback), AI access/permissions, training-data writes, AI configuration/guardrails, AI event logging, AI impact assessment, or onboarding third-party AI providers. Do **not** bundle `ISO_42001` with `ISO_27001` on every security write — Annex A is AI-specific, not generic infosec. A tool that merely runs inference is not an AIMS control point. An advisory-only action that a human approves before commit is not automated decisioning either.
 - **Sector-specific** (FEDRAMP, NY_DFS_500, PSD2, FDA_PART_11): only when the platform is inherently in scope. FedRAMP-deployed gov cloud, NY-licensed financial institutions, EU payment-service providers, FDA-regulated electronic records.
 
 When in doubt, omit. Wrong tags are worse than missing tags.
 
 #### Rule 3 — Calibrated `confidence`
+
+> Loaded by /curate skill
 
 Be honest about how solid the classification is. The `confidence` field tells reviewers which entries to scrutinize before relying on the audit.
 
@@ -188,7 +199,7 @@ One sentence, present tense, names the concrete consequence. Match the tone of `
 Before opening:
 
 - [ ] Tool ids are verbatim from authoritative MCP docs (not REST API names).
-- [ ] `compliance:` arrays use only the 25 canonical codes.
+- [ ] `compliance:` arrays use only the 26 canonical codes.
 - [ ] `confidence` is calibrated honestly; `low` entries are flagged in the PR description.
 - [ ] `risk` matches the gradient rules.
 - [ ] `business_impact` is one declarative sentence per action.

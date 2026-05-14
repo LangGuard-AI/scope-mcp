@@ -37,9 +37,19 @@ A Claude plugin that runs a **pre-flight evaluation** on agentic workflows you'r
 
 - A **risk level** for every action (`low` / `medium` / `high` / `critical`)
 - The **business impact** in one sentence
-- Which **regulatory regimes** the action touches (25 codes - GDPR, HIPAA, PCI, SOX, SOC 2, EU AI Act, NY DFS 500, and more)
+- Which **regulatory regimes** the action touches (26 codes - GDPR, HIPAA, PCI, SOX, SOC 2, EU AI Act, ISO 42001, NY DFS 500, and more)
 - Whether the action raises a **segregation-of-duties** concern
 - A **recommendation**: `proceed`, `proceed_with_audit_trail`, `require_human_review`, `require_human_approval`, or `block_and_require_human_approval`
+
+## Quick start for contributors
+
+New to contributing? Start here:
+
+1. **`/scope-mcp:curate <platform>`** — add or expand a platform's action coverage.
+2. **`/scope-mcp:audit <platform>`** — review existing entries for drift/errors.
+3. **`/scope-mcp:compliance-check <regime>`** — produce a cross-platform compliance report.
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed rules on tool ids, confidence calibration, and regime tagging.
 
 ## Quickstart
 
@@ -282,7 +292,7 @@ Tool ids are **verbatim** from each connector's published MCP `tools/list` docum
 
 ## Compliance regimes covered
 
-A closed list of 25 canonical codes. The audit returns the subset triggered by your tool selection.
+A closed list of 26 canonical codes. The audit returns the subset triggered by your tool selection.
 
 | Category | Codes |
 |---|---|
@@ -290,8 +300,10 @@ A closed list of 25 canonical codes. The audit returns the subset triggered by y
 | **Industry / sector data** | `HIPAA`, `PCI`, `GLBA`, `FERPA`, `COPPA` |
 | **Financial reporting** | `SOX`, `COSO` |
 | **Security frameworks** | `SOC2`, `ISO_27001`, `NIST_CSF` |
-| **AI regulation** | `EU_AI_ACT`, `NIST_AI_RMF`, `CO_AI_ACT` |
+| **AI regulation** | `EU_AI_ACT`, `NIST_AI_RMF`, `CO_AI_ACT`, `ISO_42001` |
 | **Sector-specific** | `FEDRAMP`, `NY_DFS_500`, `PSD2`, `FDA_PART_11` |
+
+**Canonical machine-readable list:** [`_meta/regimes.yml`](_meta/regimes.yml)
 
 ## Repository layout
 
