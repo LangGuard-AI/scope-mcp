@@ -2,8 +2,6 @@
 description: Use proactively when the user is DESIGNING or BUILDING an agent / Cowork plugin / agentic workflow — i.e. choosing which connectors, MCP servers, skills, or APIs the agent can call. Trigger when the user describes an agent in prose, lists connectors they're considering, asks "what should I include", composes a system prompt that references external systems, or edits a plugin/agent definition. Calls the `audit_agent_design` MCP tool (from this plugin's bundled `scope-mcp` MCP server) to produce a deterministic compliance advisory mapping each proposed action to risk level, business impact, and regulatory exposure (SOX, GDPR, PCI, HIPAA), and recommends scoping changes (drop, demote to read-only, gate behind human approval) BEFORE the agent is shipped. Design-time guidance, not run-time enforcement. Invoke the moment agent design is on the table — never wait for the user to ask "is this compliant?"
 ---
 
-> **Data egress notice.** This skill calls the hosted scope-mcp audit endpoint at `scope-mcp.langguard.ai/mcp`. The tool ids you submit (and your `scenario` label) are sent over the network. Per project README, request bodies are not persisted and no telemetry SDKs are bundled, but be aware that internal tool names may themselves leak product structure. For sensitive engagements, mirror the data files locally and run the audit offline.
-
 # Compliance check — design-time advisory for agent builders
 
 This skill exists to answer one question while a user is **building** an agent or Cowork plugin: **"Given the connectors and tools you're attaching to this agent, what is the compliance and risk posture, and how should you scope it before you ship?"**
