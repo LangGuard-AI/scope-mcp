@@ -236,21 +236,15 @@ actions:
 
 Include `id_form: capability` only on entries that need it; omit for verbatim (it defaults).
 
-After writing the file, run the validator script (regime allowlist check, MCP-only check, slug/path check all in one):
+After writing the file, validate it inline — read the file back and check each rule:
 
-```bash
-python3 plugins/scope-mcp/skills/curate/scripts/validate_yaml.py "data/<platform>.yml"
-```
+1. **`platform:` slug** matches `^[a-z0-9][a-z0-9-]{0,40}$`.
+2. **Filename** is `data/<slug>.yml` (basename equals `<slug>.yml`, immediate parent dir is `data`).
+3. **Every `compliance:` code** on every action is in this allowlist:
+   `APPI, CCPA, COPPA, COSO, CO_AI_ACT, EU_AI_ACT, FDA_PART_11, FEDRAMP, FERPA, GDPR, GLBA, HIPAA, ISO_27001, ISO_42001, LGPD, NIST_AI_RMF, NIST_CSF, NY_DFS_500, PCI, PIPEDA, PIPL, POPIA, PSD2, SOC2, SOX, UK_GDPR`.
+4. **Every action's `access_methods:`** is exactly `[MCP]` (non-empty, no other methods).
 
-The slug is read from the `platform:` field inside the file — do not interpolate the slug into the command line yourself. The path argument MUST be a literal `data/<slug>.yml` relative to the repo root (no `..`, no absolute paths). The script exits 0 on success and prints `OK — N actions, all regimes valid, MCP-only`.
-
-If the check fails (exit 1), fix the reported issues before proceeding. If it exits 2, there is a path or parse error — investigate before continuing.
-
-Also verify the YAML is well-formed with a second pass:
-
-```bash
-python3 -c "import yaml; yaml.safe_load(open('data/<platform>.yml', encoding='utf-8')); print('YAML OK')"
-```
+If any rule fails, fix the YAML and re-check before moving on. When all four pass, report `Validated — N actions, all regimes valid, MCP-only.`
 
 ## Step 6 — Present summary and offer next steps
 
@@ -385,4 +379,4 @@ actions:
 - **Group actions by category** with YAML comment headers. Order within categories: critical → high → medium → low, then alphabetical.
 - **Set `source: langguard-editorial`** for LangGuard-maintained files. For community contributions, the user should set `source: community-<handle>`.
 - **Use `"YYYY-MM"` format for `updated`** — the current month when the file is written.
-- **`access_methods` MUST be exactly `[MCP]`.** This plugin classifies MCP tool surfaces only. If a tool also has REST or CLI exposure, that is out of scope and must not appear in `access_methods`. The validator script (`scripts/validate_yaml.py`) rejects any non-MCP entries and will fail the post-write check.
+- **`access_methods` MUST be exactly `[MCP]`.** This plugin classifies MCP tool surfaces only. If a tool also has REST or CLI exposure, that is out of scope and must not appear in `access_methods`. The Step 5 validation will reject any non-MCP entries.
