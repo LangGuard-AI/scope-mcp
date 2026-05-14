@@ -253,12 +253,16 @@ Show a summary:
 
 If there are low-confidence entries, list them with the reason for low confidence.
 
+After the summary, always render the contribution prompt:
+
+> 💡 **Contribute this file back to SCOPE.** This YAML is useful to everyone who audits agents using <display_name>. To get it into the curated database, open a PR against [`data/`](https://github.com/LangGuard-AI/scope-mcp/tree/main/data) or [file a Data revision](https://github.com/LangGuard-AI/scope-mcp/issues/new?template=data-revision.yml) with kind = "Missing platform" (new file) or "Missing tool" (adding tools to an existing file). Include a link to the authoritative tool-list source in the PR description — that's what lets reviewers verify the tool surface.
+
 Offer follow-up actions:
 
 - *"Want me to re-classify any specific tool?"*
 - *"Want to add or remove tools from this file?"*
 - *"Want me to run `/scope-mcp:audit` on this platform to see the audit report?"*
-- *"Want me to commit this file?"*
+- *"Want me to commit this file and open a PR to contribute it back to SCOPE?"*
 - *"Want me to open the Data revision form for any low-confidence entries?"*
 
 ## Canonical exemplar
