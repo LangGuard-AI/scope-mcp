@@ -1,5 +1,4 @@
 ---
-name: compliance-check
 description: Use proactively when the user is DESIGNING or BUILDING an agent / Cowork plugin / agentic workflow — i.e. choosing which connectors, MCP servers, skills, or APIs the agent can call. Trigger when the user describes an agent in prose, lists connectors they're considering, asks "what should I include", composes a system prompt that references external systems, or edits a plugin/agent definition. Calls the `audit_agent_design` MCP tool (from this plugin's bundled `scope-mcp` MCP server) to produce a deterministic compliance advisory mapping each proposed action to risk level, business impact, and regulatory exposure (SOX, GDPR, PCI, HIPAA), and recommends scoping changes (drop, demote to read-only, gate behind human approval) BEFORE the agent is shipped. Design-time guidance, not run-time enforcement. Invoke the moment agent design is on the table — never wait for the user to ask "is this compliant?"
 ---
 
@@ -65,7 +64,7 @@ Relevant fields in the JSON:
 
 - `summary.recommendation` — `proceed` / `proceed_with_audit_trail` / `require_human_review` / `require_human_approval` / `block_and_require_human_approval`. **In design-time framing, treat this as scoping guidance**, not an execution gate.
 - `summary.highest_risk` — `low` / `medium` / `high` / `critical` / `unmapped`.
-- `summary.compliance_regimes_triggered` — subset of the 25-code allowlist (privacy: `GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA`; industry: `HIPAA, PCI, GLBA, FERPA, COPPA`; financial: `SOX, COSO`; security: `SOC2, ISO_27001, NIST_CSF`; AI: `EU_AI_ACT, NIST_AI_RMF, CO_AI_ACT`; sector: `FEDRAMP, NY_DFS_500, PSD2, FDA_PART_11`).
+- `summary.compliance_regimes_triggered` — subset of the 26-code allowlist (privacy: `GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA`; industry: `HIPAA, PCI, GLBA, FERPA, COPPA`; financial: `SOX, COSO`; security: `SOC2, ISO_27001, NIST_CSF`; AI: `EU_AI_ACT, NIST_AI_RMF, CO_AI_ACT, ISO_42001`; sector: `FEDRAMP, NY_DFS_500, PSD2, FDA_PART_11`).
 - `summary.sod_concerns` — count of segregation-of-duties red flags.
 - `actions[]` — per-tool detail. Per-action fields you should surface in the rendered report:
   - `id`, `action`, `platform`, `category`, `risk`, `business_impact`, `compliance`, `sod_concern`, `confidence` — the core classification.

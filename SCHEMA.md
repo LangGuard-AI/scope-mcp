@@ -44,7 +44,7 @@ Each entry in the `actions` list describes one tool the MCP server exposes.
 | `category` | string | yes | 1.0 | Functional grouping (e.g. `Financial`, `Identity & Access`, `Messaging`). Free-form but should be consistent within a platform file. |
 | `risk` | enum | yes | 1.0 | `low` \| `medium` \| `high` \| `critical` — see [Risk gradient](#risk-gradient). |
 | `business_impact` | string | yes | 1.0 | One sentence, present tense, naming the concrete consequence of the action. |
-| `compliance` | list | yes | 1.0 | Array of regime codes from the [25-code allowlist](#compliance-regimes). May be empty (`[]`). |
+| `compliance` | list | yes | 1.0 | Array of regime codes from the [26-code allowlist](#compliance-regimes). May be empty (`[]`). |
 | `sod_concern` | boolean | yes | 1.0 | `true` when a single principal performing this action bypasses a control that normally requires two — see [SoD](#segregation-of-duties). |
 | `confidence` | enum | yes | 1.0 | `high` \| `medium` \| `low` — see [Confidence](#confidence). |
 | `access_methods` | list | yes | 1.0 | How the action can be invoked: `REST`, `MCP`, `CLI`, etc. |
@@ -85,7 +85,7 @@ Use `capability` only when no verbatim source exists (vendor docs, open-source s
 
 ## Compliance regimes
 
-A closed allowlist of 25 canonical codes. The `compliance` array on each action must draw exclusively from this list.
+A closed allowlist of 26 canonical codes. The `compliance` array on each action must draw exclusively from this list.
 
 | Category | Codes |
 |---|---|
@@ -93,8 +93,10 @@ A closed allowlist of 25 canonical codes. The `compliance` array on each action 
 | **Industry / sector data** | `HIPAA`, `PCI`, `GLBA`, `FERPA`, `COPPA` |
 | **Financial reporting** | `SOX`, `COSO` |
 | **Security frameworks** | `SOC2`, `ISO_27001`, `NIST_CSF` |
-| **AI regulation** | `EU_AI_ACT`, `NIST_AI_RMF`, `CO_AI_ACT` |
+| **AI regulation** | `EU_AI_ACT`, `NIST_AI_RMF`, `CO_AI_ACT`, `ISO_42001` |
 | **Sector-specific** | `FEDRAMP`, `NY_DFS_500`, `PSD2`, `FDA_PART_11` |
+
+**Canonical machine-readable list:** [`_meta/regimes.yml`](_meta/regimes.yml)
 
 Concerns that don't map to one of these codes (e.g. TCPA, AML, BIPA) should be described in `business_impact` prose instead. To propose adding a new code, [file a Data revision](https://github.com/LangGuard-AI/scope-mcp/issues/new?template=data-revision.yml) with kind = "Schema / regime suggestion".
 
@@ -115,13 +117,19 @@ actions:
     object: Refund
     action: create_refund
     # id_form omitted → defaults to "verbatim"
-    description: "Moves money back to the customer; direct GL impact and chargeback exposure."
-    # reference omitted → falls back to top-level
+    description: "Issues a refund by moving money back to the customer's payment method."  # WHAT: factual, paraphrased from vendor docs
+    reference: https://stripe.com/docs/api/refunds/create  # optional; deep link to per-tool docs
     category: Financial
     risk: critical                               # irreversible financial action
-    business_impact: "Moves money back to the customer; direct GL impact and chargeback exposure."
+    business_impact: "Posts a refund to the cardholder; direct GL impact and PCI scope."  # WHY: concrete consequence if misused
     compliance: [SOX, COSO, PCI, SOC2, ISO_27001, PSD2]
     sod_concern: true                            # single actor can issue refund without approval
     confidence: high                             # well-documented, unambiguous effect
-    access_methods: [REST, MCP]
+    access_methods: [MCP]
 ```
+
+**Note on `description` vs `business_impact`:**
+- **`description`** (what) — One-sentence *factual* summary of what the tool does, paraphrased from the vendor's documentation or tool schema.
+- **`business_impact`** (why) — One-sentence statement of the *concrete consequence* if the tool is used inappropriately; what could go wrong.
+
+In the example above, `description` explains the mechanics (refund moves money); `business_impact` names the risk (GL impact, audit exposure, PCI implications). Keep them distinct so contributors understand the purpose of each field.
