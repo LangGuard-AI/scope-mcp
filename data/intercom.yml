@@ -1,164 +1,139 @@
-schema_version: "1.1"
+schema_version: "1.2"
 platform: intercom
 display_name: Intercom
 source: langguard-editorial
-updated: "2026-06"
-reference: https://developers.intercom.com/docs/guides/mcp
+updated: "2026-05"
+maintainer: https://www.intercom.com/help
 actions:
   # ---------- Customer ----------
   - id: intercom.search
     object: "*"
     action: search
-    description: "Universal search across Intercom conversations, contacts, and other records matching a query."
     category: Customer
-    risk: high
-    business_impact: "Bulk read spanning private customer conversations and the contact directory; surfaces PII and support-message contents at scale across the workspace."
+    risk: medium
+    business_impact: "Universal search across conversations and contacts; can surface PII at scale across the workspace."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: intercom.fetch
     object: "*"
     action: fetch
-    description: "Retrieves the full record for a referenced Intercom resource by id."
     category: Customer
     risk: medium
-    business_impact: "Returns the full record for a single referenced resource; can return a conversation transcript or a contact profile with verbatim PII."
+    business_impact: "Retrieves the full record for a referenced resource; can return conversation contents and contact PII."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: intercom.search_conversations
     object: Conversation
     action: search_conversations
-    description: "Searches customer support conversations matching a query."
-    category: Customer
-    risk: high
-    business_impact: "Bulk read of private customer support conversations; results contain verbatim message bodies and customer identifiers, and may include PHI in healthcare-vendor contexts."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intercom.get_conversation
-    object: Conversation
-    action: get_conversation
-    description: "Returns the full transcript and metadata for a single conversation."
     category: Customer
     risk: medium
-    business_impact: "Returns the full transcript of one customer conversation, including verbatim PII and possibly sensitive disclosures."
+    business_impact: "Searches customer support conversations; results contain message bodies and customer identifiers."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  - id: intercom.get_conversation
+    object: Conversation
+    action: get_conversation
+    category: Customer
+    risk: medium
+    business_impact: "Returns the full transcript of a customer conversation; verbatim PII and possibly sensitive disclosures."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
   - id: intercom.search_contacts
     object: Contact
     action: search_contacts
-    description: "Searches the contact directory by attributes such as email or custom traits."
     category: Customer
-    risk: high
-    business_impact: "Bulk read of the contact directory; enumerates identifiable users by email and custom traits at scale."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    risk: medium
+    business_impact: "Searches the contact directory; can enumerate users by attributes including email and custom traits."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: intercom.get_contact
     object: Contact
     action: get_contact
-    description: "Retrieves a single contact's profile and attributes."
     category: Customer
     risk: medium
-    business_impact: "Returns one contact's profile and attributes, including email and custom traits."
+    business_impact: "Retrieves a single contact's profile and attributes."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: intercom.list_companies
     object: Company
     action: list_companies
-    description: "Lists company accounts in the workspace."
     category: Customer
     risk: low
-    business_impact: "Lists company accounts; firmographic metadata with no data-subject PII."
+    business_impact: "Lists company accounts; firmographic metadata."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: intercom.get_company
     object: Company
     action: get_company
-    description: "Returns details for a single company record."
     category: Customer
     risk: low
-    business_impact: "Returns details for a single company account; firmographic metadata."
+    business_impact: "Returns details for a single company record."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   # ---------- Knowledge ----------
   - id: intercom.list_articles
     object: Article
     action: list_articles
-    description: "Lists Help Center articles."
     category: Knowledge
     risk: low
-    business_impact: "Lists Help Center articles; public or internal documentation content."
+    business_impact: "Lists Help Center articles; public or internal documentation."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: intercom.search_articles
     object: Article
     action: search_articles
-    description: "Full-text search across Help Center articles."
     category: Knowledge
     risk: low
-    business_impact: "Full-text search across Help Center articles; returns documentation content."
+    business_impact: "Full-text search across Help Center articles."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: intercom.get_article
     object: Article
     action: get_article
-    description: "Returns the body of a single Help Center article."
     category: Knowledge
     risk: low
-    business_impact: "Returns a single Help Center article body; documentation content."
+    business_impact: "Returns a single Help Center article body."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: intercom.create_article
     object: Article
     action: create_article
-    description: "Publishes a new Help Center article."
     category: Knowledge
     risk: medium
-    business_impact: "Publishes new Help Center content visible to customers; reversible but carries reputational and accuracy risk."
+    business_impact: "Publishes new Help Center content visible to customers; reputational and accuracy risk."
     compliance: [SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: intercom.update_article
     object: Article
     action: update_article
-    description: "Updates an existing Help Center article."
     category: Knowledge
     risk: medium
-    business_impact: "Modifies existing Help Center content visible to customers; reversible but carries reputational and accuracy risk."
+    business_impact: "Modifies existing Help Center content visible to customers."
     compliance: [SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [MCP]

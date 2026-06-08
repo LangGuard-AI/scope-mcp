@@ -1,105 +1,79 @@
-schema_version: "1.1"
+schema_version: "1.2"
 platform: google-drive
 display_name: Google Drive
 source: langguard-editorial
-updated: "2026-06"
-reference: https://developers.google.com/workspace/drive/api/guides/configure-mcp-server
+updated: "2026-05"
+maintainer: https://support.claude.com/en/articles/10166901-using-the-google-drive-integration
 actions:
   # ---------- Data Access ----------
   - id: google-drive.search_files
     object: File
     action: search_files
-    description: "Searches across the user's Google Drive and returns matching files and folders."
     category: Data Access
     risk: medium
-    business_impact: "Returns ranked file matches across the entire Drive; can surface confidential or PII-bearing documents from any folder in one call."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: google-drive.read_file_content
-    object: File
-    action: read_file_content
-    description: "Reads the extracted text content of a Drive file (Docs, Sheets, Slides, PDFs, images, MS Office files)."
-    category: Data Access
-    risk: high
-    business_impact: "Pulls a Drive file's full text content into agent context; high exposure if the file holds PII, credentials, financial, or regulated data."
+    business_impact: "Searches across the user's Drive; can surface regulated documents the agent wasn't intended to see."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: google-drive.download_file_content
-    object: File
-    action: download_file_content
-    description: "Downloads the raw byte content of a Drive file."
-    category: Data Access
-    risk: high
-    business_impact: "Pulls the raw bytes of a single file out of Drive; same exfiltration profile as a content read for confidential or PII-bearing material."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: google-drive.get_file_metadata
-    object: File
-    action: get_file_metadata
-    description: "Looks up a file's metadata and preview without retrieving its full content."
-    category: Data Access
-    risk: low
-    business_impact: "Reads a file's metadata and preview, including title, owner, and timestamps; may reveal document names and owner identity."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    confidence: high
+    access_methods: [MCP]
   - id: google-drive.list_recent_files
     object: File
     action: list_recent_files
-    description: "Lists recently changed files in the user's Drive."
     category: Data Access
-    risk: medium
-    business_impact: "Enumerates the user's recently active files; aggregates a partial inventory of Drive activity and document names in one call."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    risk: low
+    business_impact: "Lists files recently touched by the user."
+    compliance: [SOC2]
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Identity & Access ----------
+    confidence: high
+    access_methods: [MCP]
+  - id: google-drive.get_file_metadata
+    object: File
+    action: get_file_metadata
+    category: Data Access
+    risk: low
+    business_impact: "Reads metadata (name, owner, mtime) for a single file."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: google-drive.read_file_content
+    object: File
+    action: read_file_content
+    category: Data Access
+    risk: high
+    business_impact: "Pulls a Drive file's contents into the agent context; high exposure if the file contains PII, financial, or regulated data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: google-drive.download_file_content
+    object: File
+    action: download_file_content
+    category: Data Access
+    risk: high
+    business_impact: "Downloads a binary file from Drive; same exfiltration profile as content read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
   - id: google-drive.get_file_permissions
     object: Permission
     action: get_file_permissions
-    description: "Views the sharing permissions and access list for a Drive file."
-    category: Identity & Access
-    risk: medium
-    business_impact: "Reads the access-control list for a file, exposing who can view or edit it along with their email identities."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    category: Data Access
+    risk: low
+    business_impact: "Reads who has access to a file."
+    compliance: [SOC2]
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Content Authoring ----------
+    confidence: high
+    access_methods: [MCP]
+  # ---------- Content Management ----------
   - id: google-drive.create_file
     object: File
     action: create_file
-    description: "Uploads a file or creates a folder in Drive, including saving Claude-generated files with optional conversion to Google formats."
-    category: Content Authoring
-    risk: low
-    business_impact: "Adds a new file or folder to the user's Drive; reversible and individually attributed to the authenticated user."
-    compliance: []
+    category: Content Management
+    risk: medium
+    business_impact: "Writes new content into the user's Drive; can introduce malicious or noncompliant material."
+    compliance: [SOC2, ISO_27001]
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: google-drive.copy_file
-    object: File
-    action: copy_file
-    description: "Copies an existing Drive file, optionally with a new title and parent folder, returning the new file's metadata."
-    category: Content Authoring
-    risk: low
-    business_impact: "Duplicates an existing file into the user's Drive; additive and reversible, leaving the original untouched."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
+    confidence: high
+    access_methods: [MCP]

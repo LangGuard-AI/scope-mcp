@@ -1,105 +1,89 @@
-schema_version: "1.1"
+schema_version: "1.2"
 platform: google-calendar
 display_name: Google Calendar
 source: langguard-editorial
-updated: "2026-06"
-reference: https://developers.google.com/workspace/calendar/api/guides/configure-mcp-server
+updated: "2026-05"
+maintainer: https://support.claude.com/en/articles/11088742-using-the-gmail-and-google-calendar-integrations
 actions:
-  # ---------- Events ----------
-  - id: google-calendar.create_event
-    object: Event
-    action: create_event
-    description: "Creates a calendar event, optionally adding attendees, a Google Meet link, and sending email invitations on the user's behalf."
-    category: Events
-    risk: medium
-    business_impact: "Schedules a meeting on the user's calendar and sends invitations to attendees on the user's behalf; reversible by deleting the event."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: google-calendar.update_event
-    object: Event
-    action: update_event
-    description: "Updates an existing calendar event; can reschedule, change attendees, and trigger notification emails."
-    category: Events
-    risk: medium
-    business_impact: "Modifies an existing event and can reschedule meetings, alter the attendee list, and notify attendees; reversible by re-editing."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: google-calendar.delete_event
-    object: Event
-    action: delete_event
-    description: "Deletes a calendar event."
-    category: Events
-    risk: medium
-    business_impact: "Cancels an event and sends cancellation notices to attendees; the organizer can restore it from the cancelled state, so the deletion is recoverable."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: google-calendar.respond_to_event
-    object: Event
-    action: respond_to_event
-    description: "Responds to an event invitation (accept, decline, or tentative) on the user's behalf."
-    category: Events
-    risk: low
-    business_impact: "RSVPs to a meeting invitation on the user's behalf; reversible by responding again."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: google-calendar.list_events
-    object: Event
-    action: list_events
-    description: "Lists calendar events in a given calendar within a time range, optionally filtered by free-text query."
-    category: Events
-    risk: medium
-    business_impact: "Reads events including attendee emails, descriptions, and locations; bulk read of up to 250 events per page whose titles and attendee lists can reveal confidential meetings (M&A, layoffs, customer escalations)."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: google-calendar.get_event
-    object: Event
-    action: get_event
-    description: "Returns a single event from a given calendar, including attendees, description, location, and conferencing details."
-    category: Events
-    risk: medium
-    business_impact: "Reads a single event including attendee emails, description, location, and Google Meet link, exposing meeting participants and confidential context."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Scheduling ----------
-  - id: google-calendar.suggest_time
-    object: Event
-    action: suggest_time
-    description: "Suggests available time slots across one or more attendees' calendars based on their free/busy information."
-    category: Scheduling
-    risk: low
-    business_impact: "Reads free/busy availability across named attendees' calendars to propose meeting times; infers third-party availability from email addresses but returns no event content."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
   # ---------- Calendars ----------
   - id: google-calendar.list_calendars
     object: Calendar
     action: list_calendars
-    description: "Returns the calendars on the user's calendar list."
     category: Calendars
     risk: low
-    business_impact: "Enumerates the calendars the user has access to; each calendar ID is an email address, so shared calendars expose other people's email addresses, but no event content is returned."
+    business_impact: "Enumerates calendars the user has access to."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  # ---------- Events ----------
+  - id: google-calendar.list_events
+    object: Event
+    action: list_events
+    category: Events
+    risk: medium
+    business_impact: "Reads events across calendars; titles and attendees can reveal confidential meetings (M&A, layoffs, customer escalations)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: google-calendar.get_event
+    object: Event
+    action: get_event
+    category: Events
+    risk: medium
+    business_impact: "Reads a single event including attendees, description, and conferencing details."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: google-calendar.create_event
+    object: Event
+    action: create_event
+    category: Events
+    risk: medium
+    business_impact: "Schedules a meeting on the user's calendar; sends invites to attendees on the user's behalf."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
+    confidence: high
+    access_methods: [MCP]
+  - id: google-calendar.update_event
+    object: Event
+    action: update_event
+    category: Events
+    risk: medium
+    business_impact: "Modifies an existing event; can reschedule meetings and notify attendees."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: google-calendar.delete_event
+    object: Event
+    action: delete_event
+    category: Events
+    risk: medium
+    business_impact: "Cancels an event; sends cancellation notices to attendees and removes scheduling history."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: google-calendar.respond_to_event
+    object: Event
+    action: respond_to_event
+    category: Events
+    risk: low
+    business_impact: "Responds to a meeting invitation on the user's behalf."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: google-calendar.suggest_time
+    object: Event
+    action: suggest_time
+    category: Events
+    risk: low
+    business_impact: "Computes free/busy windows across attendees to suggest a meeting time."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]

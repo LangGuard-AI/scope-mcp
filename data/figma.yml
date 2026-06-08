@@ -1,226 +1,171 @@
-schema_version: "1.1"
+schema_version: "1.2"
 platform: figma
 display_name: Figma
 source: langguard-editorial
-updated: "2026-06"
-reference: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+updated: "2026-05"
+maintainer: https://help.figma.com/hc/en-us/requests/new
 actions:
   # ---------- Design Authoring ----------
   - id: figma.use_figma
     object: "*"
     action: use_figma
-    description: "General-purpose tool for creating and editing native Figma objects (frames, components, variables, auto layout) on the canvas."
     category: Design Authoring
     risk: medium
-    business_impact: "Creates, edits, or deletes canvas objects in a Figma file; effects depend on parameters but are reversible through version history."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "General-purpose write tool that can create, edit, or delete Figma objects; effects depend on parameters."
+    compliance: [SOC2]
     sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: figma.create_new_file
     object: File
     action: create_new_file
-    description: "Creates a blank Figma Design, FigJam, or Slides file."
     category: Design Authoring
     risk: low
-    business_impact: "Creates a new empty file in the workspace; reversible and non-sensitive."
+    business_impact: "Creates a blank Figma Design or FigJam file."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: figma.generate_figma_design
     object: File
     action: generate_figma_design
-    description: "Generates Figma design layers from a web interface or supplied description."
     category: Design Authoring
     risk: low
-    business_impact: "Adds generated design layers to a file; reversible through version history."
+    business_impact: "Imports or converts a web page into a Figma design file."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: figma.generate_diagram
     object: FigJamFile
     action: generate_diagram
-    description: "Converts Mermaid syntax or a description into a FigJam diagram."
     category: Design Authoring
     risk: low
-    business_impact: "Generates a FigJam diagram from supplied syntax; reversible and non-sensitive."
+    business_impact: "Generates a FigJam diagram from Mermaid syntax."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: figma.upload_assets
-    object: Asset
-    action: upload_assets
-    description: "Uploads PNG, JPG, GIF, and WebP assets into a Figma file."
-    category: Design Authoring
-    risk: low
-    business_impact: "Adds image assets to a file from caller-supplied content of unvetted provenance; reversible but may import confidential material."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   # ---------- Design Inspection ----------
   - id: figma.get_design_context
     object: Selection
     action: get_design_context
-    description: "Returns a structured representation of the current Figma selection as code-ready context."
     category: Design Inspection
     risk: low
-    business_impact: "Reads the current selection's design context; scoped to the caller's accessible layers."
+    business_impact: "Reads the current Figma selection as code-ready context."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: figma.get_metadata
     object: Node
     action: get_metadata
-    description: "Returns a sparse XML representation of a selection's layer properties (IDs, names, positions, sizes)."
     category: Design Inspection
     risk: low
-    business_impact: "Reads layer metadata for a design; scoped to the caller's accessible nodes."
+    business_impact: "Returns layer metadata (IDs, names, positions) for a design."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: figma.get_variable_defs
     object: Variable
     action: get_variable_defs
-    description: "Returns the variables and styles (color, spacing, typography) used in a selection."
     category: Design Inspection
     risk: low
-    business_impact: "Reads design tokens from a selection; non-sensitive design metadata."
+    business_impact: "Reads design tokens (colors, spacing, typography) from a selection."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: figma.get_screenshot
     object: Selection
     action: get_screenshot
-    description: "Captures a screenshot of the current selection."
     category: Design Inspection
     risk: low
-    business_impact: "Renders the current selection as an image; output reflects whatever is drawn on the canvas."
+    business_impact: "Captures a screenshot of the current selection."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: figma.get_figjam
     object: FigJamFile
     action: get_figjam
-    description: "Returns FigJam diagram metadata in XML format, including layer properties and screenshots."
     category: Design Inspection
     risk: low
-    business_impact: "Reads a FigJam diagram's metadata and screenshots; scoped to the caller's accessible boards."
+    business_impact: "Reads a FigJam diagram's metadata and screenshots."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: figma.get_libraries
-    object: Library
-    action: get_libraries
-    description: "Returns the design libraries subscribed to a file plus libraries available to add."
-    category: Design Inspection
-    risk: low
-    business_impact: "Lists the design libraries associated with a file; non-sensitive workspace metadata."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: figma.search_design_system
     object: Component
     action: search_design_system
-    description: "Searches connected design libraries for components, variables, and styles."
     category: Design Inspection
     risk: low
-    business_impact: "Searches connected libraries for design-system assets; read-only over non-sensitive metadata."
+    business_impact: "Searches connected design libraries for components, variables, and styles."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   # ---------- Code Connect ----------
   - id: figma.get_code_connect_map
     object: CodeConnectMap
     action: get_code_connect_map
-    description: "Retrieves existing mappings between Figma node IDs and code components."
     category: Code Connect
     risk: low
-    business_impact: "Reads Code Connect mappings between design nodes and code; non-sensitive metadata."
+    business_impact: "Reads existing mappings between Figma nodes and code components."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: figma.get_code_connect_suggestions
-    object: CodeConnectMap
-    action: get_code_connect_suggestions
-    description: "Detects and suggests possible Code Connect mappings between design and code components."
-    category: Code Connect
-    risk: low
-    business_impact: "Computes suggested Code Connect mappings; read-only and non-sensitive."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: figma.get_context_for_code_connect
-    object: CodeConnectMap
-    action: get_context_for_code_connect
-    description: "Retrieves component metadata used to generate Code Connect templates."
-    category: Code Connect
-    risk: low
-    business_impact: "Reads component metadata for Code Connect template generation; non-sensitive design metadata."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: figma.add_code_connect_map
     object: CodeConnectMap
     action: add_code_connect_map
-    description: "Maps a Figma node ID to its corresponding code component."
     category: Code Connect
     risk: low
-    business_impact: "Adds a mapping between a Figma node and a code component; reversible and non-sensitive."
+    business_impact: "Adds a mapping between a Figma node and a code component."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  - id: figma.get_code_connect_suggestions
+    object: CodeConnectMap
+    action: get_code_connect_suggestions
+    category: Code Connect
+    risk: low
+    business_impact: "Suggests possible Code Connect mappings."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
   - id: figma.send_code_connect_mappings
     object: CodeConnectMap
     action: send_code_connect_mappings
-    description: "Confirms and persists suggested Code Connect mappings into the design system."
     category: Code Connect
     risk: low
-    business_impact: "Persists Code Connect mappings into the design system; reversible and non-sensitive."
+    business_impact: "Persists Code Connect mappings into the design system."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  - id: figma.create_design_system_rules
+    object: DesignSystemRule
+    action: create_design_system_rules
+    category: Code Connect
+    risk: low
+    business_impact: "Authors rule files that constrain agent-generated code."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
   # ---------- Identity ----------
   - id: figma.whoami
     object: User
     action: whoami
-    description: "Returns the authenticated user's identity and plan information."
     category: Identity
     risk: low
-    business_impact: "Returns the calling user's own identity and plan; no access to other users' data."
+    business_impact: "Returns the authenticated user identity and plan."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [MCP]

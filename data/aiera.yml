@@ -1,520 +1,406 @@
-schema_version: "1.1"
+schema_version: "1.2"
 platform: aiera
 display_name: Aiera
 source: langguard-editorial
-updated: "2026-06"
-reference: https://github.com/aiera-inc/aiera-mcp
+updated: "2026-05"
+server_website: https://github.com/aiera-inc/aiera-mcp
+maintainer: https://support.aiera.com/
 actions:
   # ---------- Equities & Market Data ----------
   - id: aiera.find_equities
     object: Equity
     action: find_equities
-    description: "Searches for equities using identifiers or free-text search terms."
     category: Data Access
     risk: low
-    business_impact: "Reads published equity reference data; non-personal market data, fully reversible read."
+    business_impact: "Searches the universe of covered equities."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: aiera.get_equity_summaries
     object: Equity
     action: get_equity_summaries
-    description: "Retrieves detailed summary information about specific equities."
     category: Data Access
     risk: low
-    business_impact: "Reads published equity summary data; non-personal market data, fully reversible read."
+    business_impact: "Returns summary metrics for a list of tickers."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: aiera.get_financials
     object: Financials
     action: get_financials
-    description: "Retrieves financial data including income statements, balance sheets, and cash-flow statements."
     category: Data Access
     risk: low
-    business_impact: "Reads published company financial statements; non-personal market data sourced from public disclosures."
+    business_impact: "Returns reported financial-statement line items for a company."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: aiera.get_ratios
     object: Financials
     action: get_ratios
-    description: "Retrieves ratio metrics such as profitability, liquidity, and valuation ratios."
     category: Data Access
     risk: low
-    business_impact: "Reads computed financial ratios; non-personal market data, fully reversible read."
+    business_impact: "Returns calculated financial ratios."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: aiera.get_kpis_and_segments
     object: Financials
     action: get_kpis_and_segments
-    description: "Retrieves key performance indicators and segment-level metrics for a company."
     category: Data Access
     risk: low
-    business_impact: "Reads company KPI and segment data; non-personal market data, fully reversible read."
+    business_impact: "Returns segment-level KPIs reported by the issuer."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: aiera.get_sectors_and_subsectors
     object: Sector
     action: get_sectors_and_subsectors
-    description: "Retrieves the list of all available sectors and subsectors."
     category: Data Access
     risk: low
-    business_impact: "Reads sector taxonomy reference data; non-personal, fully reversible read."
+    business_impact: "Returns the Aiera sector taxonomy."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   # ---------- Indexes & Watchlists ----------
   - id: aiera.get_available_indexes
     object: Index
     action: get_available_indexes
-    description: "Retrieves the list of available market indexes."
     category: Data Access
     risk: low
-    business_impact: "Reads available market-index reference data; non-personal, fully reversible read."
+    business_impact: "Lists indexes available to the workspace."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: aiera.get_index_constituents
     object: Index
     action: get_index_constituents
-    description: "Retrieves all equities within a specific index."
     category: Data Access
     risk: low
-    business_impact: "Reads index-constituent listings; non-personal market data, fully reversible read."
+    business_impact: "Returns the constituents of an index."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: aiera.get_available_watchlists
     object: Watchlist
     action: get_available_watchlists
-    description: "Retrieves the list of available watchlists."
     category: Data Access
     risk: low
-    business_impact: "Reads the account's watchlist names; reveals areas of investment interest but no personal data."
+    business_impact: "Lists the user's watchlists."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: aiera.get_watchlist_constituents
     object: Watchlist
     action: get_watchlist_constituents
-    description: "Retrieves all equities within a specific watchlist."
     category: Data Access
     risk: low
-    business_impact: "Reads the equities on a user-curated watchlist; reveals investment interest but no personal data."
+    business_impact: "Returns the tickers in a watchlist."
     compliance: []
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Events & Transcripts ----------
+    confidence: high
+    access_methods: [MCP]
+  # ---------- Events ----------
   - id: aiera.find_events
     object: Event
     action: find_events
-    description: "Searches for corporate events including earnings calls and presentations."
     category: Data Access
     risk: low
-    business_impact: "Reads published corporate-event metadata; non-personal market data, fully reversible read."
+    business_impact: "Searches corporate events (earnings, conferences, capital-markets days)."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: aiera.get_event
     object: Event
     action: get_event
-    description: "Retrieves detailed information about a specific event, including its transcript."
     category: Data Access
     risk: low
-    business_impact: "Reads one event transcript and metadata; published market data, no personal data."
+    business_impact: "Reads a single event with full transcript and metadata."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: aiera.get_upcoming_events
     object: Event
     action: get_upcoming_events
-    description: "Retrieves confirmed and estimated upcoming events."
     category: Data Access
     risk: low
-    business_impact: "Reads forward-looking event calendar data; non-personal market data, fully reversible read."
+    business_impact: "Lists future scheduled corporate events."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: aiera.find_conferences
     object: Conference
     action: find_conferences
-    description: "Searches for investor conferences by date range."
     category: Data Access
     risk: low
-    business_impact: "Reads published investor-conference listings; non-personal market data, fully reversible read."
+    business_impact: "Searches investor conferences in Aiera's coverage."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: aiera.search_transcripts
     object: Transcript
     action: search_transcripts
-    description: "Performs semantic search across event transcripts using embedding-based matching."
     category: Data Access
     risk: low
-    business_impact: "Runs semantic retrieval over event transcripts; published market data, fully reversible read."
+    business_impact: "Full-text search across event transcripts."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   # ---------- SEC Filings ----------
   - id: aiera.find_filings
     object: Filing
     action: find_filings
-    description: "Retrieves SEC filings filtered by date range and other criteria."
     category: Data Access
     risk: low
-    business_impact: "Reads public SEC filing metadata; non-personal regulatory disclosures, fully reversible read."
+    business_impact: "Searches SEC filings."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: aiera.get_filing
     object: Filing
     action: get_filing
-    description: "Retrieves detailed information about a specific SEC filing."
     category: Data Access
     risk: low
-    business_impact: "Reads one public SEC filing document; non-personal regulatory disclosure."
+    business_impact: "Reads a single SEC filing's content."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: aiera.search_filings
     object: Filing
     action: search_filings
-    description: "Performs semantic search across SEC filing documents using embedding-based matching."
     category: Data Access
     risk: low
-    business_impact: "Runs semantic retrieval over public SEC filings; non-personal regulatory data, fully reversible read."
+    business_impact: "Full-text search across SEC filings."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   # ---------- Company Documents ----------
   - id: aiera.find_company_docs
-    object: CompanyDocument
+    object: CompanyDoc
     action: find_company_docs
-    description: "Retrieves company-published documents filtered by various criteria."
     category: Data Access
     risk: low
-    business_impact: "Reads company-published document metadata; non-personal market data, fully reversible read."
+    business_impact: "Searches issuer-published documents."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: aiera.get_company_doc
-    object: CompanyDocument
+    object: CompanyDoc
     action: get_company_doc
-    description: "Retrieves the raw text from a specific company document."
     category: Data Access
     risk: low
-    business_impact: "Reads the full text of one company-published document; non-personal market data."
+    business_impact: "Reads a single company document."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: aiera.get_company_doc_categories
-    object: CompanyDocument
+    object: CompanyDoc
     action: get_company_doc_categories
-    description: "Retrieves all available company-document categories."
     category: Data Access
     risk: low
-    business_impact: "Reads document-category taxonomy reference data; non-personal, fully reversible read."
+    business_impact: "Lists the company-document taxonomy."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: aiera.get_company_doc_keywords
-    object: CompanyDocument
+    object: CompanyDoc
     action: get_company_doc_keywords
-    description: "Retrieves all available company-document keywords."
     category: Data Access
     risk: low
-    business_impact: "Reads document-keyword reference data; non-personal, fully reversible read."
+    business_impact: "Returns the keywords extracted from a document."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: aiera.search_company_docs
-    object: CompanyDocument
+    object: CompanyDoc
     action: search_company_docs
-    description: "Performs semantic search within company-document chunks using embedding-based matching."
     category: Data Access
     risk: low
-    business_impact: "Runs semantic retrieval over company-published documents; non-personal market data, fully reversible read."
+    business_impact: "Full-text search across company documents."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Third Bridge (Expert Network) ----------
+    access_methods: [MCP]
+  # ---------- Third Bridge ----------
   - id: aiera.find_third_bridge_events
-    object: ExpertEvent
+    object: ThirdBridgeEvent
     action: find_third_bridge_events
-    description: "Retrieves expert-insight events from Third Bridge."
     category: Data Access
-    risk: medium
-    business_impact: "Reads metadata for licensed Third Bridge expert-network content; entitlement-gated material whose access is contractually restricted."
-    compliance: [SOC2, ISO_27001]
+    risk: low
+    business_impact: "Searches Third Bridge expert-network events."
+    compliance: []
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    confidence: high
+    access_methods: [MCP]
   - id: aiera.get_third_bridge_event
-    object: ExpertEvent
+    object: ThirdBridgeEvent
     action: get_third_bridge_event
-    description: "Retrieves detailed information about a specific Third Bridge event."
     category: Data Access
-    risk: medium
-    business_impact: "Reads the full content of one licensed Third Bridge expert interview; entitlement-gated material that may carry market-sensitive expert insight."
-    compliance: [SOC2, ISO_27001]
+    risk: low
+    business_impact: "Reads a single Third Bridge transcript."
+    compliance: []
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    confidence: high
+    access_methods: [MCP]
   - id: aiera.search_thirdbridge
-    object: ExpertEvent
+    object: ThirdBridgeEvent
     action: search_thirdbridge
-    description: "Performs semantic search within Third Bridge expert-interview transcripts using embedding-based matching."
     category: Data Access
-    risk: medium
-    business_impact: "Runs semantic retrieval across licensed Third Bridge expert transcripts; broad access to entitlement-gated, contractually restricted content."
-    compliance: [SOC2, ISO_27001]
+    risk: low
+    business_impact: "Full-text search across Third Bridge content."
+    compliance: []
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    confidence: high
+    access_methods: [MCP]
   # ---------- Research ----------
   - id: aiera.find_research
     object: Research
     action: find_research
-    description: "Finds research reports filtered by optional criteria."
     category: Data Access
-    risk: medium
-    business_impact: "Reads metadata for licensed third-party research reports; entitlement-gated content whose distribution is contractually restricted."
-    compliance: [SOC2, ISO_27001]
+    risk: low
+    business_impact: "Searches sell-side research available to the workspace."
+    compliance: []
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    confidence: high
+    access_methods: [MCP]
   - id: aiera.get_research
     object: Research
     action: get_research
-    description: "Retrieves detailed information about a specific research report."
     category: Data Access
-    risk: medium
-    business_impact: "Reads the full content of one licensed third-party research report; entitlement-gated material that may not be redistributed."
-    compliance: [SOC2, ISO_27001]
+    risk: low
+    business_impact: "Reads a research report."
+    compliance: []
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    confidence: high
+    access_methods: [MCP]
   - id: aiera.search_research
     object: Research
     action: search_research
-    description: "Performs semantic search within research content for specific topics and insights."
     category: Data Access
-    risk: medium
-    business_impact: "Runs semantic retrieval across licensed research content; broad access to entitlement-gated, contractually restricted material."
-    compliance: [SOC2, ISO_27001]
+    risk: low
+    business_impact: "Full-text search across research."
+    compliance: []
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: aiera.report_research_usage
-    object: Research
-    action: report_research_usage
-    description: "Reports which licensed research documents informed the final answer via the report-readership endpoint."
-    reference: https://github.com/aiera-inc/aiera-mcp/blob/main/aiera_mcp/tools/research/tools.py
-    category: Data Modification
-    risk: medium
-    business_impact: "Writes a readership record (HTTP POST) attributing consumption of specific licensed research documents; feeds provider entitlement accounting and is not reversible by the caller."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    confidence: high
+    access_methods: [MCP]
   - id: aiera.get_research_providers
     object: Research
     action: get_research_providers
-    description: "Retrieves all available research providers with IDs and names."
     category: Data Access
     risk: low
-    business_impact: "Reads research-provider reference data; non-personal, fully reversible read."
+    business_impact: "Lists research providers."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: aiera.get_research_authors
     object: Research
     action: get_research_authors
-    description: "Searches for research authors by name or provider."
     category: Data Access
     risk: low
-    business_impact: "Reads analyst author names tied to research reports; business-contact data of professionals, not consumer personal data."
+    business_impact: "Lists research authors."
     compliance: []
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    confidence: high
+    access_methods: [MCP]
   - id: aiera.get_research_asset_classes
     object: Research
     action: get_research_asset_classes
-    description: "Retrieves all available research asset classes with document counts."
     category: Data Access
     risk: low
-    business_impact: "Reads research asset-class reference data; non-personal, fully reversible read."
+    business_impact: "Lists asset classes covered by available research."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: aiera.get_research_asset_types
     object: Research
     action: get_research_asset_types
-    description: "Retrieves all available research asset types with document counts."
     category: Data Access
     risk: low
-    business_impact: "Reads research asset-type reference data; non-personal, fully reversible read."
+    business_impact: "Lists asset types covered by available research."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: aiera.get_research_subjects
     object: Research
     action: get_research_subjects
-    description: "Retrieves all available research subjects with document counts."
     category: Data Access
     risk: low
-    business_impact: "Reads research-subject reference data; non-personal, fully reversible read."
+    business_impact: "Lists research subject taxonomy."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: aiera.get_research_product_focuses
     object: Research
     action: get_research_product_focuses
-    description: "Retrieves all available research product-focus values with document counts."
     category: Data Access
     risk: low
-    business_impact: "Reads research product-focus reference data; non-personal, fully reversible read."
+    business_impact: "Lists product-focus taxonomy."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  - id: aiera.get_research_discipline_types
+    object: Research
+    action: get_research_discipline_types
+    category: Data Access
+    risk: low
+    business_impact: "Lists research discipline taxonomy."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
   - id: aiera.get_research_region_types
     object: Research
     action: get_research_region_types
-    description: "Retrieves all available research region types with document counts."
     category: Data Access
     risk: low
-    business_impact: "Reads research region-type reference data; non-personal, fully reversible read."
+    business_impact: "Lists research region taxonomy."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: aiera.get_research_country_codes
     object: Research
     action: get_research_country_codes
-    description: "Retrieves all available research country codes with document counts."
     category: Data Access
     risk: low
-    business_impact: "Reads research country-code reference data; non-personal, fully reversible read."
+    business_impact: "Lists country codes used in research metadata."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   # ---------- Web Search ----------
   - id: aiera.trusted_web_search
-    object: WebResult
+    object: WebSearch
     action: trusted_web_search
-    description: "Searches the web using only trusted/approved domains relevant to financial professionals."
     category: Data Access
     risk: low
-    business_impact: "Runs a web search restricted to an approved-domain allowlist; returns public web content, fully reversible read."
+    business_impact: "Performs a curated web search returning trusted-source results."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Meta & Tooling ----------
-  - id: aiera.get_grammar_template
-    object: Template
-    action: get_grammar_template
-    description: "Retrieves a grammar template for tailored response guidance."
-    category: Meta
-    risk: low
-    business_impact: "Reads a server-provided response-formatting template; non-personal helper content, fully reversible read."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: aiera.get_core_instructions
-    object: Instructions
-    action: get_core_instructions
-    description: "Retrieves core instructions for working with Aiera tools and data."
-    category: Meta
-    risk: low
-    business_impact: "Reads server-provided usage instructions for the toolset; non-personal helper content, fully reversible read."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: aiera.available_tools
-    object: Tool
-    action: available_tools
-    description: "Retrieves the list of tools available to the current user."
-    category: Meta
-    risk: low
-    business_impact: "Reads the caller's own entitled tool list; reveals available capabilities but no personal data, fully reversible read."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [MCP]

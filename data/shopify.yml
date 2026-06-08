@@ -1,102 +1,72 @@
-schema_version: "1.1"
+schema_version: "1.2"
 platform: shopify
 display_name: Shopify
 source: langguard-editorial
-updated: "2026-06"
-reference: https://claude.com/connectors/shopify
-# Surface note: this file covers the claude.com "Shopify for Claude" MERCHANT-ADMIN
-# connector (store management: products, inventory, discounts, orders, customers,
-# analytics). Its backing MCP server is OAuth-gated to a merchant/store-admin account
-# and publishes NO verbatim tool ids in any reachable docs, so all actions below use
-# id_form: capability with the connector page's verbatim capability labels and
-# confidence capped at medium.
-#
-# This is a DIFFERENT surface from Shopify's anonymously-reachable Storefront MCP
-# (https://{shop}.myshopify.com/api/mcp), whose 5 shopper-facing tools were verified
-# via live introspection: search_catalog, get_product_details, get_cart, update_cart,
-# search_shop_policies_and_faqs. Those are buyer/catalog tools, not the merchant-admin
-# capabilities the connector advertises, and are intentionally not curated here.
-#
-# No delete / archive / refund / cancel / fulfill capabilities are advertised on the
-# connector page; none are invented here (no-hallucinated-actions rule).
+updated: "2026-05"
+maintainer: https://help.shopify.com
+# NOTE: Shopify's storefront-facing MCP exposes a small UCP catalog/cart surface.
+# Merchant Admin API actions are NOT exposed by this MCP server.
 actions:
-  # ---------- Customer ----------
-  - id: shopify.view_customer_details
-    object: Customer
-    action: view_customer_details
-    id_form: capability
-    description: "view customer details"
+  # ---------- Catalog ----------
+  - id: shopify.search_catalog
+    object: Product
+    action: search_catalog
     category: Customer
-    risk: high
-    business_impact: "Surfaces individual customer PII (name, contact, shipping address) from the store's customer records."
+    risk: low
+    business_impact: "Searches the storefront product catalog by keyword."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: shopify.lookup_catalog
+    object: Product
+    action: lookup_catalog
+    category: Customer
+    risk: low
+    business_impact: "Fetches a specific catalog entry by identifier."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: shopify.get_product
+    object: Product
+    action: get_product
+    category: Customer
+    risk: low
+    business_impact: "Returns full product detail (price, variants, descriptions)."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  # ---------- Cart ----------
+  - id: shopify.get_cart
+    object: Cart
+    action: get_cart
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reads the buyer's current cart contents and totals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: shopify.update_cart
+    object: Cart
+    action: update_cart
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Modifies the buyer's cart contents on their behalf; pre-purchase commercial state."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: shopify.browse_recent_orders
-    object: Order
-    action: browse_recent_orders
-    id_form: capability
-    description: "browse recent orders"
-    category: Customer
-    risk: high
-    business_impact: "Reads recent orders across the store, exposing buyer name, shipping city, and order/transaction details for multiple customers at once."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, PCI, SOC2]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Revenue & Pipeline ----------
-  - id: shopify.create_discount_codes
-    object: DiscountCode
-    action: create_discount_codes
-    id_form: capability
-    description: "create discount codes"
-    category: Revenue & Pipeline
-    risk: medium
-    business_impact: "Creates a promotional discount code that reduces realized revenue on qualifying orders; reversible by disabling the code."
-    compliance: [SOX, COSO]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: shopify.pull_analytics
-    object: Report
-    action: pull_analytics
-    id_form: capability
-    description: "pull analytics on your store's performance"
-    category: Revenue & Pipeline
-    risk: medium
-    business_impact: "Returns aggregate store-performance metrics including total sales and conversion rate; exposes financial-reporting data."
-    compliance: [SOX, COSO]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Operations ----------
-  - id: shopify.adjust_inventory_across_locations
-    object: InventoryLevel
-    action: adjust_inventory_across_locations
-    id_form: capability
-    description: "adjust inventory across locations"
-    category: Operations
-    risk: medium
-    business_impact: "Sets on-hand inventory quantities per location; affects fulfillment availability and can cause oversell or stockout, reversible by re-adjusting."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: shopify.add_products
-    object: Product
-    action: add_products
-    id_form: capability
-    description: "add products"
-    category: Operations
+    confidence: high
+    access_methods: [MCP]
+  # ---------- Service ----------
+  - id: shopify.search_shop_policies_and_faqs
+    object: ShopPolicy
+    action: search_shop_policies_and_faqs
+    category: Service
     risk: low
-    business_impact: "Creates a new product (with images and collection assignment) in the merchant catalog; reversible and individually audited."
+    business_impact: "Searches the merchant's published store policies and FAQs."
     compliance: []
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
+    confidence: high
+    access_methods: [MCP]

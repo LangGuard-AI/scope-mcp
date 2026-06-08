@@ -1,0 +1,13 @@
+{
+  "_comment": "Codex-specific MCP config. Codex's MCP subsystem only speaks stdio while our hosted SCOPE MCP server is HTTP+OAuth at https://scope-mcp.langguard.ai/mcp. mcp-remote (https://github.com/geelen/mcp-remote) bridges stdio<->HTTP and runs the OAuth dance on first invocation; the resulting access token is cached under ~/.mcp-auth/ so subsequent Codex sessions start silently. Requires Node 18+ on PATH for npx. Claude Code reads `../.mcp.json` instead — that file uses Claude's native HTTP+OAuth transport without a bridge subprocess.",
+  "mcpServers": {
+    "scope-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote@latest",
+        "https://scope-mcp.langguard.ai/mcp"
+      ]
+    }
+  }
+}

@@ -1,1115 +1,527 @@
-schema_version: "1.1"
+schema_version: "1.2"
 platform: intuit-quickbooks
 display_name: Intuit QuickBooks
 source: langguard-editorial
-updated: "2026-06"
-# Tool ids are verbatim from Intuit's official open-source MCP server
-# (github.com/intuit/quickbooks-online-mcp-server) — 140 registered tools. Each id
-# below was confirmed against the `const toolName = "..."` declaration in the
-# corresponding src/tools/<entity>.tool.ts file: all tools register snake_case
-# except the Bill and Vendor entities, which register kebab-case (create-bill,
-# update-bill, delete-bill, create-vendor, update-vendor, delete-vendor); those
-# are preserved exactly. The Claude-distributed connector at
-# claude.com/connectors/intuit-quickbooks is the hosted equivalent.
-#
-# Write-surface completeness (verified by source diff): the server registers
-# exactly 71 create/update/delete tools and zero non-CRUD write verbs (no
-# send/void/post/sync/etc.). ALL 71 are curated here. The catalog/config
-# entities Class, Department, Term, PaymentMethod, and Account expose create+update
-# but NO delete tool in source (QBO deactivates these via update Active=false), so
-# create+update-only coverage for them is complete, not an omission. Beyond the
-# full write surface, this file curates the 11 financial reports and the 8 bulk
-# PII/financial searches. Per-entity single-record getters (get_*),
-# read_invoice/read_item, and routine config getters/searches are trimmed as
-# low-impact reads.
-reference: https://github.com/intuit/quickbooks-online-mcp-server
+updated: "2026-05"
+maintainer: https://quickbooks.intuit.com/learn-support/en-us
+# NOTE: tool ids match Intuit's official open-source quickbooks-online-mcp-server
+# (github.com/intuit/quickbooks-online-mcp-server). The Claude-distributed
+# connector at claude.com/connectors/intuit-quickbooks is the hosted equivalent.
+# This file curates the financial-statement and core CRUD tools an agent is
+# most likely to invoke; lookup-table CRUD (terms, classes, departments,
+# tax_codes/rates/agencies) and attachables are omitted as low-impact.
 actions:
-  # ---------- Financial — General Ledger & Journals ----------
-  - id: intuit-quickbooks.create_journal_entry
-    object: JournalEntry
-    action: create_journal_entry
-    description: "Create a journal entry in QuickBooks Online."
-    category: Financial
-    risk: critical
-    business_impact: "Posts debit/credit lines directly to the general ledger; affects financial statements and is in scope for SOX ITGCs."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update_journal_entry
-    object: JournalEntry
-    action: update_journal_entry
-    description: "Update a journal entry in QuickBooks Online."
-    category: Financial
-    risk: high
-    business_impact: "Alters an existing general-ledger journal entry; restates posted balances and is SOX-relevant."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.delete_journal_entry
-    object: JournalEntry
-    action: delete_journal_entry
-    description: "Delete (make inactive) a journal entry in QuickBooks Online."
-    category: Financial
-    risk: critical
-    business_impact: "Removes a posted general-ledger entry; reverses its effect on financial statements and is SOX-relevant."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Financial — Receivables (Invoices, Payments, Sales) ----------
+  # ---------- Financial ----------
   - id: intuit-quickbooks.create_invoice
     object: Invoice
     action: create_invoice
-    description: "Create an invoice in QuickBooks Online."
     category: Financial
     risk: critical
-    business_impact: "Records a receivable and recognizes revenue against the general ledger; SOX revenue-recognition event tied to customer PII."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    business_impact: "Creates a billable obligation and revenue recognition event in the GL."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
   - id: intuit-quickbooks.update_invoice
     object: Invoice
     action: update_invoice
-    description: "Update an existing invoice in QuickBooks Online by ID (sparse update)."
     category: Financial
-    risk: high
-    business_impact: "Modifies a posted invoice's amounts or terms; changes recognized revenue and the receivable balance."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    risk: critical
+    business_impact: "Modifies a recorded invoice; alters recognized revenue and AR balance."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
   - id: intuit-quickbooks.delete_invoice
     object: Invoice
     action: delete_invoice
-    description: "Delete (void) an invoice in QuickBooks Online."
     category: Financial
     risk: critical
-    business_impact: "Voids a posted invoice; reverses recognized revenue and the receivable, a direct financial-statement impact."
+    business_impact: "Removes an invoice from the books; direct revenue and audit-trail impact."
     compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.create_payment
-    object: Payment
-    action: create_payment
-    description: "Create a payment (receive money from a customer) in QuickBooks Online."
-    category: Financial
-    risk: critical
-    business_impact: "Records cash received and applies it against receivables; a direct general-ledger and bank-reconciliation event."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update_payment
-    object: Payment
-    action: update_payment
-    description: "Update an existing payment in QuickBooks Online."
-    category: Financial
-    risk: high
-    business_impact: "Modifies a recorded customer payment; reallocates cash applied to receivables and affects the ledger."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.delete_payment
-    object: Payment
-    action: delete_payment
-    description: "Delete (void) a payment in QuickBooks Online."
-    category: Financial
-    risk: critical
-    business_impact: "Voids a recorded customer payment; reverses cash applied and is a direct general-ledger impact."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.create_sales_receipt
-    object: SalesReceipt
-    action: create_sales_receipt
-    description: "Create a sales receipt (immediate-payment sale) in QuickBooks Online."
-    category: Financial
-    risk: critical
-    business_impact: "Records an immediate-payment sale and the associated cash; recognizes revenue against the general ledger."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update_sales_receipt
-    object: SalesReceipt
-    action: update_sales_receipt
-    description: "Update an existing sales receipt in QuickBooks Online."
-    category: Financial
-    risk: high
-    business_impact: "Modifies a recorded cash sale; changes recognized revenue and the cash posted to the ledger."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.delete_sales_receipt
-    object: SalesReceipt
-    action: delete_sales_receipt
-    description: "Delete (void) a sales receipt in QuickBooks Online."
-    category: Financial
-    risk: critical
-    business_impact: "Voids a recorded cash sale; reverses recognized revenue and cash, a direct financial-statement impact."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.create_refund_receipt
-    object: RefundReceipt
-    action: create_refund_receipt
-    description: "Create a refund receipt (customer refund) in QuickBooks Online."
-    category: Financial
-    risk: critical
-    business_impact: "Records money refunded to a customer; a cash-outflow and general-ledger event tied to customer PII."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update_refund_receipt
-    object: RefundReceipt
-    action: update_refund_receipt
-    description: "Update an existing refund receipt in QuickBooks Online."
-    category: Financial
-    risk: high
-    business_impact: "Modifies a recorded customer refund; changes the cash outflow posted to the ledger."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.delete_refund_receipt
-    object: RefundReceipt
-    action: delete_refund_receipt
-    description: "Delete (void) a refund receipt in QuickBooks Online."
-    category: Financial
-    risk: critical
-    business_impact: "Voids a recorded customer refund; reverses the cash outflow, a direct general-ledger impact."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.create_credit_memo
-    object: CreditMemo
-    action: create_credit_memo
-    description: "Create a credit memo (customer credit) in QuickBooks Online."
-    category: Financial
-    risk: high
-    business_impact: "Issues a customer credit that offsets receivables; reduces recognized revenue and is SOX-relevant."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update_credit_memo
-    object: CreditMemo
-    action: update_credit_memo
-    description: "Update an existing credit memo in QuickBooks Online."
-    category: Financial
-    risk: high
-    business_impact: "Modifies a customer credit; changes the receivable offset and recognized revenue."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.delete_credit_memo
-    object: CreditMemo
-    action: delete_credit_memo
-    description: "Delete (void) a credit memo in QuickBooks Online."
-    category: Financial
-    risk: high
-    business_impact: "Voids a customer credit; reverses its receivable offset and is a financial-statement impact."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Financial — Payables (Bills, Bill Payments, Vendor Credits, Purchases) ----------
-  - id: intuit-quickbooks.create-bill
-    object: Bill
-    action: create-bill
-    description: "Create a bill in QuickBooks Online."
-    category: Financial
-    risk: critical
-    business_impact: "Records a payable against the general ledger; recognizes an expense/liability and is in scope for SOX ITGCs."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update-bill
-    object: Bill
-    action: update-bill
-    description: "Update a bill in QuickBooks Online."
-    category: Financial
-    risk: high
-    business_impact: "Modifies a recorded payable's amount or terms; changes the expense and liability posted to the ledger."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.delete-bill
-    object: Bill
-    action: delete-bill
-    description: "Delete a bill in QuickBooks Online."
-    category: Financial
-    risk: critical
-    business_impact: "Removes a recorded payable; reverses the expense and liability, a direct financial-statement impact."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.create_bill_payment
-    object: BillPayment
-    action: create_bill_payment
-    description: "Create a bill payment in QuickBooks Online."
-    category: Financial
-    risk: critical
-    business_impact: "Records cash paid against a vendor bill; a cash-outflow and general-ledger event."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update_bill_payment
-    object: BillPayment
-    action: update_bill_payment
-    description: "Update a bill payment in QuickBooks Online."
-    category: Financial
-    risk: high
-    business_impact: "Modifies a recorded vendor payment; reallocates cash applied to bills and affects the ledger."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.delete_bill_payment
-    object: BillPayment
-    action: delete_bill_payment
-    description: "Delete (make inactive) a bill payment in QuickBooks Online."
-    category: Financial
-    risk: critical
-    business_impact: "Voids a recorded vendor payment; reverses the cash outflow, a direct general-ledger impact."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.create_vendor_credit
-    object: VendorCredit
-    action: create_vendor_credit
-    description: "Create a vendor credit in QuickBooks Online."
-    category: Financial
-    risk: high
-    business_impact: "Records a credit owed by a vendor that offsets payables; affects expense recognition and is SOX-relevant."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update_vendor_credit
-    object: VendorCredit
-    action: update_vendor_credit
-    description: "Update a vendor credit in QuickBooks Online."
-    category: Financial
-    risk: high
-    business_impact: "Modifies a vendor credit; changes the payable offset posted to the ledger."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.delete_vendor_credit
-    object: VendorCredit
-    action: delete_vendor_credit
-    description: "Delete a vendor credit in QuickBooks Online."
-    category: Financial
-    risk: high
-    business_impact: "Removes a vendor credit; reverses its payable offset, a financial-statement impact."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.create_purchase
-    object: Purchase
-    action: create_purchase
-    description: "Create a purchase (expense, check, or credit-card charge) in QuickBooks Online."
-    category: Financial
-    risk: critical
-    business_impact: "Records an expense and the associated cash or credit-card outflow against the general ledger."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update_purchase
-    object: Purchase
-    action: update_purchase
-    description: "Update a purchase in QuickBooks Online."
-    category: Financial
-    risk: high
-    business_impact: "Modifies a recorded expense transaction; changes the expense and outflow posted to the ledger."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.delete_purchase
-    object: Purchase
-    action: delete_purchase
-    description: "Delete (make inactive) a purchase in QuickBooks Online."
-    category: Financial
-    risk: critical
-    business_impact: "Removes a recorded expense transaction; reverses the expense and outflow, a direct ledger impact."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Financial — Banking (Deposits & Transfers) ----------
-  - id: intuit-quickbooks.create_deposit
-    object: Deposit
-    action: create_deposit
-    description: "Create a bank deposit in QuickBooks Online."
-    category: Financial
-    risk: critical
-    business_impact: "Records funds deposited to a bank account; a cash and general-ledger event affecting reconciliation."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update_deposit
-    object: Deposit
-    action: update_deposit
-    description: "Update a deposit in QuickBooks Online."
-    category: Financial
-    risk: high
-    business_impact: "Modifies a recorded bank deposit; changes the cash posted and affects bank reconciliation."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.delete_deposit
-    object: Deposit
-    action: delete_deposit
-    description: "Delete a deposit in QuickBooks Online."
-    category: Financial
-    risk: critical
-    business_impact: "Removes a recorded bank deposit; reverses the cash posted, a direct general-ledger impact."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.create_transfer
-    object: Transfer
-    action: create_transfer
-    description: "Create a bank transfer between accounts in QuickBooks Online."
-    category: Financial
-    risk: critical
-    business_impact: "Moves funds between bank accounts on the ledger; a cash-movement and reconciliation event."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update_transfer
-    object: Transfer
-    action: update_transfer
-    description: "Update a transfer in QuickBooks Online."
-    category: Financial
-    risk: high
-    business_impact: "Modifies a recorded inter-account transfer; changes the cash movement posted to the ledger."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.delete_transfer
-    object: Transfer
-    action: delete_transfer
-    description: "Delete a transfer in QuickBooks Online."
-    category: Financial
-    risk: critical
-    business_impact: "Removes a recorded inter-account transfer; reverses the cash movement, a direct ledger impact."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Revenue & Pipeline (Estimates, Purchase Orders — non-posting) ----------
-  - id: intuit-quickbooks.create_estimate
-    object: Estimate
-    action: create_estimate
-    description: "Create an estimate in QuickBooks Online."
-    category: Revenue & Pipeline
-    risk: medium
-    business_impact: "Creates a non-posting customer quote holding customer PII; no general-ledger impact until converted."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update_estimate
-    object: Estimate
-    action: update_estimate
-    description: "Update an estimate in QuickBooks Online."
-    category: Revenue & Pipeline
-    risk: medium
-    business_impact: "Modifies a non-posting customer quote; reversible and not yet a ledger event."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.delete_estimate
-    object: Estimate
-    action: delete_estimate
-    description: "Delete (void) an estimate in QuickBooks Online."
-    category: Revenue & Pipeline
-    risk: medium
-    business_impact: "Voids a non-posting customer quote; reversible with no general-ledger impact."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.create_purchase_order
-    object: PurchaseOrder
-    action: create_purchase_order
-    description: "Create a purchase order in QuickBooks Online."
-    category: Revenue & Pipeline
-    risk: medium
-    business_impact: "Creates a non-posting purchase commitment to a vendor; no general-ledger impact until received/billed."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update_purchase_order
-    object: PurchaseOrder
-    action: update_purchase_order
-    description: "Update an existing purchase order in QuickBooks Online."
-    category: Revenue & Pipeline
-    risk: medium
-    business_impact: "Modifies a non-posting purchase commitment; reversible with no general-ledger impact."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.delete_purchase_order
-    object: PurchaseOrder
-    action: delete_purchase_order
-    description: "Delete a purchase order in QuickBooks Online."
-    category: Revenue & Pipeline
-    risk: medium
-    business_impact: "Removes a non-posting purchase commitment; reversible with no general-ledger impact."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Customer & Vendor (PII master data) ----------
-  - id: intuit-quickbooks.create_customer
-    object: Customer
-    action: create_customer
-    description: "Create a customer in QuickBooks Online."
-    category: Customer
-    risk: medium
-    business_impact: "Creates a customer master record holding billing PII (name, email, address, phone)."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update_customer
-    object: Customer
-    action: update_customer
-    description: "Update an existing customer in QuickBooks Online."
-    category: Customer
-    risk: medium
-    business_impact: "Modifies a customer master record containing billing PII; reversible single-record write."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.delete_customer
-    object: Customer
-    action: delete_customer
-    description: "Delete (make inactive) a customer in QuickBooks Online."
-    category: Customer
-    risk: medium
-    business_impact: "Deactivates a customer master record holding PII; soft-delete that preserves linked transactions."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.create-vendor
-    object: Vendor
-    action: create-vendor
-    description: "Create a vendor in QuickBooks Online."
-    category: Customer
-    risk: medium
-    business_impact: "Creates a vendor master record holding PII and payment details (name, address, tax ID, bank routing)."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update-vendor
-    object: Vendor
-    action: update-vendor
-    description: "Update a vendor in QuickBooks Online."
-    category: Customer
-    risk: high
-    business_impact: "Modifies vendor master data including payment routing; a vendor-bank-detail change is a fraud-relevant control point."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOX, COSO, SOC2, ISO_27001]
     sod_concern: true
     confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.delete-vendor
-    object: Vendor
-    action: delete-vendor
-    description: "Delete a vendor in QuickBooks Online."
-    category: Customer
-    risk: medium
-    business_impact: "Deactivates a vendor master record holding PII; soft-delete that preserves linked transactions."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Workforce (Employee PII, Time Tracking) ----------
-  - id: intuit-quickbooks.create_employee
-    object: Employee
-    action: create_employee
-    description: "Create an employee in QuickBooks Online."
-    category: Customer
-    risk: high
-    business_impact: "Creates an employee master record holding sensitive HR PII (name, address, SSN/tax ID)."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update_employee
-    object: Employee
-    action: update_employee
-    description: "Update an employee in QuickBooks Online."
-    category: Customer
-    risk: high
-    business_impact: "Modifies an employee master record containing sensitive HR PII; reversible single-record write."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.delete_employee
-    object: Employee
-    action: delete_employee
-    description: "Delete (make inactive) an employee in QuickBooks Online."
-    category: Customer
-    risk: high
-    business_impact: "Deactivates an employee master record holding sensitive HR PII; soft-delete preserving linked records."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.create_time_activity
-    object: TimeActivity
-    action: create_time_activity
-    description: "Create a time activity (time tracking entry) in QuickBooks Online."
-    category: Customer
-    risk: medium
-    business_impact: "Records a worker time-tracking entry linking an employee or vendor to billable/payable hours and a rate."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update_time_activity
-    object: TimeActivity
-    action: update_time_activity
-    description: "Update a time activity in QuickBooks Online."
-    category: Customer
-    risk: medium
-    business_impact: "Modifies a recorded worker time entry; changes the hours or rate that feed billing and payroll calculations."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.delete_time_activity
-    object: TimeActivity
-    action: delete_time_activity
-    description: "Delete a time activity in QuickBooks Online."
-    category: Customer
-    risk: medium
-    business_impact: "Removes a recorded worker time entry; reverses hours that may already feed billing or payroll."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Configuration (Chart of Accounts, Company, Items, Attachments) ----------
-  - id: intuit-quickbooks.create_account
-    object: Account
-    action: create_account
-    description: "Create a chart-of-accounts entry in QuickBooks Online."
-    category: Configuration
-    risk: high
-    business_impact: "Adds a general-ledger account to the chart of accounts; a structural change to the books that is SOX-relevant."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update_account
-    object: Account
-    action: update_account
-    description: "Update an existing chart-of-accounts entry in QuickBooks Online."
-    category: Configuration
-    risk: high
-    business_impact: "Modifies a general-ledger account definition; can reclassify postings and affect financial-statement mapping."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update_company_info
-    object: CompanyInfo
-    action: update_company_info
-    description: "Update the company information in QuickBooks Online."
-    category: Configuration
-    risk: medium
-    business_impact: "Changes company-wide profile and accounting configuration affecting all users; logged but not review-gated."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.create_item
-    object: Item
-    action: create_item
-    description: "Create an item (product or service) in QuickBooks Online."
-    category: Configuration
-    risk: medium
-    business_impact: "Defines a sellable or purchasable item with default pricing and income/expense account mapping; affects revenue posting."
-    compliance: [SOX, COSO]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update_item
-    object: Item
-    action: update_item
-    description: "Update an existing item in QuickBooks Online by ID (sparse update)."
-    category: Configuration
-    risk: medium
-    business_impact: "Modifies item pricing or account mapping; changes how subsequent transactions post to the ledger."
-    compliance: [SOX, COSO]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.delete_item
-    object: Item
-    action: delete_item
-    description: "Delete (make inactive) an item in QuickBooks Online."
-    category: Configuration
-    risk: medium
-    business_impact: "Deactivates a product/service item; removes it from new transactions while preserving its account mapping on posted history."
-    compliance: [SOX, COSO]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.create_class
-    object: Class
-    action: create_class
-    description: "Create a new class in QuickBooks Online for categorizing transactions."
-    category: Configuration
+    access_methods: [MCP]
+  - id: intuit-quickbooks.get_invoice
+    object: Invoice
+    action: get_invoice
+    category: Financial
     risk: low
-    business_impact: "Adds a class dimension used to categorize transactions for reporting; a reversible configuration change."
-    compliance: [SOX, COSO]
+    business_impact: "Reads a single invoice."
+    compliance: [SOX, COSO, SOC2]
     sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update_class
-    object: Class
-    action: update_class
-    description: "Update an existing class in QuickBooks Online."
-    category: Configuration
-    risk: low
-    business_impact: "Modifies a class reporting dimension; can recategorize how transactions roll up in class-based reports."
-    compliance: [SOX, COSO]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.create_department
-    object: Department
-    action: create_department
-    description: "Create a new department in QuickBooks Online for location/department tracking."
-    category: Configuration
-    risk: low
-    business_impact: "Adds a location/department dimension used for reporting; a reversible configuration change."
-    compliance: [SOX, COSO]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update_department
-    object: Department
-    action: update_department
-    description: "Update an existing department in QuickBooks Online."
-    category: Configuration
-    risk: low
-    business_impact: "Modifies a location/department reporting dimension; can recategorize how transactions roll up in reports."
-    compliance: [SOX, COSO]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.create_term
-    object: Term
-    action: create_term
-    description: "Create a new payment term in QuickBooks Online (e.g., Net 30, Due on Receipt)."
-    category: Configuration
-    risk: low
-    business_impact: "Adds a payment-term definition used on invoices and bills; a reversible configuration change with no ledger impact."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update_term
-    object: Term
-    action: update_term
-    description: "Update an existing payment term in QuickBooks Online."
-    category: Configuration
-    risk: low
-    business_impact: "Modifies a payment-term definition; changes due-date calculation on future invoices and bills."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.create_payment_method
-    object: PaymentMethod
-    action: create_payment_method
-    description: "Create a new payment method in QuickBooks Online (e.g., Cash, Check, Credit Card)."
-    category: Configuration
-    risk: low
-    business_impact: "Adds a payment-method option used when recording payments; a reversible configuration change with no ledger impact."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update_payment_method
-    object: PaymentMethod
-    action: update_payment_method
-    description: "Update an existing payment method in QuickBooks Online."
-    category: Configuration
-    risk: low
-    business_impact: "Modifies a payment-method option; changes the choices available when recording customer or vendor payments."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.create_attachable
-    object: Attachable
-    action: create_attachable
-    description: "Create an attachable file attachment in QuickBooks Online, optionally uploading file bytes."
-    category: Configuration
-    risk: medium
-    business_impact: "Uploads a file attachment linked to a transaction or entity; attachments may contain financial documents or PII."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.update_attachable
-    object: Attachable
-    action: update_attachable
-    description: "Update an existing attachable in QuickBooks Online."
-    category: Configuration
-    risk: medium
-    business_impact: "Modifies a file attachment's metadata or linkage; attachments may contain financial documents or PII."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.delete_attachable
-    object: Attachable
-    action: delete_attachable
-    description: "Delete an attachable from QuickBooks Online."
-    category: Configuration
-    risk: medium
-    business_impact: "Removes a file attachment that may hold supporting financial documentation or PII; destroys the attached evidence."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Financial Reports (sensitive aggregate reads) ----------
-  - id: intuit-quickbooks.get_balance_sheet
-    object: Report
-    action: get_balance_sheet
-    description: "Generate a Balance Sheet report showing assets, liabilities, and equity."
-    category: Financial
-    risk: high
-    business_impact: "Reads the full balance sheet; exposes complete financial position and is SOX-relevant reporting output."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.get_profit_and_loss
-    object: Report
-    action: get_profit_and_loss
-    description: "Generate a Profit and Loss (Income Statement) report."
-    category: Financial
-    risk: high
-    business_impact: "Reads the income statement; exposes revenue, expenses, and net income, a SOX-relevant reporting output."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.get_cash_flow
-    object: Report
-    action: get_cash_flow
-    description: "Generate a Statement of Cash Flows report."
-    category: Financial
-    risk: high
-    business_impact: "Reads the cash-flow statement; exposes operating, investing, and financing cash movements."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.get_trial_balance
-    object: Report
-    action: get_trial_balance
-    description: "Generate a Trial Balance report showing all account balances."
-    category: Financial
-    risk: high
-    business_impact: "Reads every account balance in the ledger; a comprehensive financial-position export and SOX-relevant."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.get_general_ledger
-    object: Report
-    action: get_general_ledger
-    description: "Generate a General Ledger report showing detailed transaction history."
-    category: Financial
-    risk: high
-    business_impact: "Reads the full transaction-level general ledger; bulk financial-record exposure and SOX-relevant."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.get_aged_receivables
-    object: Report
-    action: get_aged_receivables
-    description: "Generate an Aged Receivables (A/R Aging) report showing outstanding customer invoices."
-    category: Financial
-    risk: high
-    business_impact: "Reads outstanding receivables by customer; couples financial figures with customer PII at the report level."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.get_aged_payables
-    object: Report
-    action: get_aged_payables
-    description: "Generate an Aged Payables (A/P Aging) report showing outstanding vendor bills."
-    category: Financial
-    risk: high
-    business_impact: "Reads outstanding payables by vendor; couples financial figures with vendor PII at the report level."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.get_customer_sales
-    object: Report
-    action: get_customer_sales
-    description: "Generate a Customer Sales report showing sales by customer."
-    category: Financial
-    risk: high
-    business_impact: "Reads sales totals broken down by customer; couples revenue figures with customer PII."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.get_customer_balance
-    object: Report
-    action: get_customer_balance
-    description: "Generate a Customer Balance report showing outstanding balances by customer."
-    category: Financial
-    risk: high
-    business_impact: "Reads outstanding balances by customer; couples financial figures with customer PII."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.get_vendor_balance
-    object: Report
-    action: get_vendor_balance
-    description: "Generate a Vendor Balance report showing outstanding balances by vendor."
-    category: Financial
-    risk: high
-    business_impact: "Reads outstanding balances by vendor; couples financial figures with vendor PII."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.get_vendor_expenses
-    object: Report
-    action: get_vendor_expenses
-    description: "Generate a Vendor Expenses report showing expenses by vendor."
-    category: Financial
-    risk: high
-    business_impact: "Reads expense totals broken down by vendor; couples financial figures with vendor PII."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Data Access (bulk searches over PII / financial records) ----------
-  - id: intuit-quickbooks.search_customers
-    object: Customer
-    action: search_customers
-    description: "Search customers in QuickBooks Online that match given criteria."
-    category: Data Access
-    risk: high
-    business_impact: "Bulk read of customer master records including billing PII; data-exfiltration risk at scale."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.search_vendors
-    object: Vendor
-    action: search_vendors
-    description: "Search vendors in QuickBooks Online that match given criteria."
-    category: Data Access
-    risk: high
-    business_impact: "Bulk read of vendor master records including PII and payment details; data-exfiltration risk at scale."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.search_employees
-    object: Employee
-    action: search_employees
-    description: "Search employees in QuickBooks Online that match given criteria."
-    category: Data Access
-    risk: high
-    business_impact: "Bulk read of employee master records including sensitive HR PII; data-exfiltration risk at scale."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: intuit-quickbooks.search_invoices
     object: Invoice
     action: search_invoices
-    description: "Search invoices in QuickBooks Online using criteria."
-    category: Data Access
-    risk: high
-    business_impact: "Bulk read of invoices including amounts and customer references; couples financial records with PII at scale."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    category: Financial
+    risk: medium
+    business_impact: "Bulk-queries invoice records including customer PII and amounts."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.create_payment
+    object: Payment
+    action: create_payment
+    category: Financial
+    risk: critical
+    business_impact: "Records a customer payment receipt; touches cash and AR balances."
+    compliance: [SOX, COSO, PCI, GLBA, SOC2, ISO_27001, PSD2]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.update_payment
+    object: Payment
+    action: update_payment
+    category: Financial
+    risk: critical
+    business_impact: "Edits a recorded payment; restates GL postings."
+    compliance: [SOX, COSO, PCI, GLBA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.delete_payment
+    object: Payment
+    action: delete_payment
+    category: Financial
+    risk: critical
+    business_impact: "Voids a recorded payment; reverses cash receipt."
+    compliance: [SOX, COSO, PCI, GLBA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
   - id: intuit-quickbooks.search_payments
     object: Payment
     action: search_payments
-    description: "Search for payments in QuickBooks Online."
-    category: Data Access
-    risk: high
-    business_impact: "Bulk read of customer payments including amounts and references; couples financial records with PII at scale."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.search_journal_entries
-    object: JournalEntry
-    action: search_journal_entries
-    description: "Search journal entries in QuickBooks Online that match given criteria."
-    category: Data Access
+    category: Financial
     risk: medium
-    business_impact: "Bulk read of general-ledger journal entries; transaction-record exposure relevant to SOX."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
+    business_impact: "Lists payment records; financial PII at scale."
+    compliance: [SOX, COSO, GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.get_payment
+    object: Payment
+    action: get_payment
+    category: Financial
+    risk: low
+    business_impact: "Reads a single payment record."
+    compliance: [SOX, COSO, GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.create_bill
+    object: Bill
+    action: create_bill
+    category: Financial
+    risk: high
+    business_impact: "Records a new vendor bill (AP liability)."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.update_bill
+    object: Bill
+    action: update_bill
+    category: Financial
+    risk: high
+    business_impact: "Modifies an existing AP bill; can alter expense and payable totals."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.delete_bill
+    object: Bill
+    action: delete_bill
+    category: Financial
+    risk: critical
+    business_impact: "Removes an AP bill; reverses expense and audit-trail."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
   - id: intuit-quickbooks.search_bills
     object: Bill
     action: search_bills
-    description: "Search bills in QuickBooks Online that match given criteria."
-    category: Data Access
+    category: Financial
     risk: medium
-    business_impact: "Bulk read of vendor bills including amounts and vendor references; financial-record exposure."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    business_impact: "Lists vendor bills."
+    compliance: [SOX, COSO, SOC2]
     sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: intuit-quickbooks.search_attachables
-    object: Attachable
-    action: search_attachables
-    description: "Search for attachables in QuickBooks Online with optional filters."
-    category: Data Access
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.get_bill
+    object: Bill
+    action: get_bill
+    category: Financial
+    risk: low
+    business_impact: "Reads a single bill."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.create_bill_payment
+    object: BillPayment
+    action: create_bill_payment
+    category: Financial
+    risk: critical
+    business_impact: "Records cash disbursement to a vendor; direct GL impact."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001, PSD2]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.update_bill_payment
+    object: BillPayment
+    action: update_bill_payment
+    category: Financial
+    risk: critical
+    business_impact: "Edits a recorded bill payment."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.delete_bill_payment
+    object: BillPayment
+    action: delete_bill_payment
+    category: Financial
+    risk: critical
+    business_impact: "Voids a vendor disbursement record."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.search_bill_payments
+    object: BillPayment
+    action: search_bill_payments
+    category: Financial
     risk: medium
-    business_impact: "Bulk read of file-attachment metadata that may reference financial documents or PII-bearing files."
+    business_impact: "Lists bill-payment records."
+    compliance: [SOX, COSO, GLBA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.get_bill_payment
+    object: BillPayment
+    action: get_bill_payment
+    category: Financial
+    risk: low
+    business_impact: "Reads a single bill payment."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.create_sales_receipt
+    object: SalesReceipt
+    action: create_sales_receipt
+    category: Financial
+    risk: critical
+    business_impact: "Records a point-of-sale receipt; revenue and cash recognition."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.update_sales_receipt
+    object: SalesReceipt
+    action: update_sales_receipt
+    category: Financial
+    risk: critical
+    business_impact: "Edits a recorded sales receipt; restates revenue."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.delete_sales_receipt
+    object: SalesReceipt
+    action: delete_sales_receipt
+    category: Financial
+    risk: critical
+    business_impact: "Removes a sales receipt; reverses revenue and cash entries."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.create_credit_memo
+    object: CreditMemo
+    action: create_credit_memo
+    category: Financial
+    risk: critical
+    business_impact: "Issues a credit to a customer; reduces AR and revenue."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.create_refund_receipt
+    object: RefundReceipt
+    action: create_refund_receipt
+    category: Financial
+    risk: critical
+    business_impact: "Records a customer refund; touches cash and revenue."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001, PSD2]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.create_deposit
+    object: Deposit
+    action: create_deposit
+    category: Financial
+    risk: high
+    business_impact: "Records a bank deposit; cash account impact."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.create_transfer
+    object: Transfer
+    action: create_transfer
+    category: Financial
+    risk: high
+    business_impact: "Records a transfer between accounts; cash-management impact."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.create_estimate
+    object: Estimate
+    action: create_estimate
+    category: Financial
+    risk: low
+    business_impact: "Creates a pre-sale estimate; no GL impact until converted."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.create_purchase_order
+    object: PurchaseOrder
+    action: create_purchase_order
+    category: Financial
+    risk: medium
+    business_impact: "Issues a purchase order; commitment but no GL posting."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.create_vendor_credit
+    object: VendorCredit
+    action: create_vendor_credit
+    category: Financial
+    risk: high
+    business_impact: "Records a credit from a vendor; reduces AP balance."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.create_time_activity
+    object: TimeActivity
+    action: create_time_activity
+    category: Financial
+    risk: medium
+    business_impact: "Records billable time; basis for invoicing and payroll."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  # ---------- Customer ----------
+  - id: intuit-quickbooks.create_customer
+    object: Customer
+    action: create_customer
+    category: Customer
+    risk: low
+    business_impact: "Adds a new customer record with contact PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.update_customer
+    object: Customer
+    action: update_customer
+    category: Customer
+    risk: medium
+    business_impact: "Modifies customer PII (address, email, billing details)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.delete_customer
+    object: Customer
+    action: delete_customer
+    category: Customer
+    risk: high
+    business_impact: "Deletes a customer record; impacts historical AR linkage."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.get_customer
+    object: Customer
+    action: get_customer
+    category: Customer
+    risk: low
+    business_impact: "Reads a single customer record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.search_customers
+    object: Customer
+    action: search_customers
+    category: Customer
+    risk: medium
+    business_impact: "Bulk-queries the customer master file; PII at scale."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP]
+    access_methods: [MCP]
+  - id: intuit-quickbooks.create_vendor
+    object: Vendor
+    action: create_vendor
+    category: Customer
+    risk: medium
+    business_impact: "Adds a new vendor master record; AP-fraud entry-point if uncontrolled."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.update_vendor
+    object: Vendor
+    action: update_vendor
+    category: Customer
+    risk: high
+    business_impact: "Modifies vendor master data (incl. payment routing); classic AP-fraud vector."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001, NY_DFS_500]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.delete_vendor
+    object: Vendor
+    action: delete_vendor
+    category: Customer
+    risk: high
+    business_impact: "Deletes a vendor record; impacts AP audit trail."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.search_vendors
+    object: Vendor
+    action: search_vendors
+    category: Customer
+    risk: low
+    business_impact: "Lists vendor master records."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  # ---------- Reporting ----------
+  - id: intuit-quickbooks.get_balance_sheet
+    object: Report
+    action: get_balance_sheet
+    category: Financial
+    risk: medium
+    business_impact: "Returns the balance-sheet financial statement."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.get_profit_and_loss
+    object: Report
+    action: get_profit_and_loss
+    category: Financial
+    risk: medium
+    business_impact: "Returns the P&L statement; reflects current period results."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.get_cash_flow
+    object: Report
+    action: get_cash_flow
+    category: Financial
+    risk: medium
+    business_impact: "Returns the cash-flow statement."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.get_trial_balance
+    object: Report
+    action: get_trial_balance
+    category: Financial
+    risk: medium
+    business_impact: "Returns the trial balance for closing controls."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.get_general_ledger
+    object: Report
+    action: get_general_ledger
+    category: Financial
+    risk: high
+    business_impact: "Returns full GL detail; reveals every posting and counterparty."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.get_aged_receivables
+    object: Report
+    action: get_aged_receivables
+    category: Financial
+    risk: medium
+    business_impact: "Returns AR aging by customer."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.get_aged_payables
+    object: Report
+    action: get_aged_payables
+    category: Financial
+    risk: medium
+    business_impact: "Returns AP aging by vendor."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.get_customer_sales
+    object: Report
+    action: get_customer_sales
+    category: Financial
+    risk: medium
+    business_impact: "Returns sales summarized by customer."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.get_vendor_expenses
+    object: Report
+    action: get_vendor_expenses
+    category: Financial
+    risk: medium
+    business_impact: "Returns expense totals summarized by vendor."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  # ---------- Operations ----------
+  - id: intuit-quickbooks.get_company_info
+    object: CompanyInfo
+    action: get_company_info
+    category: Operations
+    risk: low
+    business_impact: "Reads the QuickBooks company configuration."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: intuit-quickbooks.update_company_info
+    object: CompanyInfo
+    action: update_company_info
+    category: Operations
+    risk: high
+    business_impact: "Modifies tenant-level configuration (tax address, fiscal settings)."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]

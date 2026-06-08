@@ -1,469 +1,373 @@
-schema_version: "1.1"
+schema_version: "1.2"
 platform: sanity
 display_name: Sanity
 source: langguard-editorial
-updated: "2026-06"
-reference: https://www.sanity.io/docs/ai/mcp-server
+updated: "2026-05"
+maintainer: https://www.sanity.io/community/join
 actions:
-  # ---------- Content Documents ----------
+  # ---------- Content ----------
   - id: sanity.create_documents_from_json
     object: Document
     action: create_documents_from_json
-    description: "Create one or more draft documents by directly providing JSON."
-    category: Data Access
+    category: Content
     risk: medium
-    business_impact: "Creates draft content documents in a dataset; reversible and may contain personal data depending on the content model."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Creates structured content documents from JSON; can publish unverified content."
+    compliance: [SOC2]
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    confidence: high
+    access_methods: [MCP]
   - id: sanity.create_documents_from_markdown
     object: Document
     action: create_documents_from_markdown
-    description: "Create one or more draft documents from Markdown content."
-    category: Data Access
+    category: Content
     risk: medium
-    business_impact: "Creates draft content documents from Markdown; reversible and may contain personal data depending on the content model."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Creates content documents from Markdown input."
+    compliance: [SOC2]
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    confidence: high
+    access_methods: [MCP]
   - id: sanity.patch_document_from_json
     object: Document
     action: patch_document_from_json
-    description: "Apply precise modifications to document fields via a JSON patch."
-    category: Data Access
+    category: Content
     risk: medium
-    business_impact: "Mutates fields on an existing document; reversible and may overwrite personal data depending on the content model."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Patches an existing document with new field values."
+    compliance: [SOC2]
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    confidence: high
+    access_methods: [MCP]
   - id: sanity.patch_document_from_markdown
     object: Document
     action: patch_document_from_markdown
-    description: "Patch a specific field in a document using Markdown content."
-    category: Data Access
+    category: Content
     risk: medium
-    business_impact: "Mutates a document field from Markdown; reversible and may overwrite personal data depending on the content model."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Patches a document using Markdown content."
+    compliance: [SOC2]
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: sanity.query_documents
-    object: Document
-    action: query_documents
-    description: "Query documents from Sanity using the GROQ query language."
-    category: Data Access
-    risk: medium
-    business_impact: "Reads arbitrary documents matching a GROQ filter; a broad query can return personal data in bulk from the dataset."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: sanity.get_document
-    object: Document
-    action: get_document
-    description: "Fetch a single document by its exact ID."
-    category: Data Access
-    risk: low
-    business_impact: "Reads one document by ID; may expose personal data depending on the content model."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    confidence: high
+    access_methods: [MCP]
   - id: sanity.publish_documents
     object: Document
     action: publish_documents
-    description: "Publish one or more draft documents to make them live."
-    category: Data Access
-    risk: medium
-    business_impact: "Promotes draft content to the live published dataset; reversible via unpublish but immediately visible to consumers."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    category: Content
+    risk: high
+    business_impact: "Pushes content live to the public dataset; bypasses staged review."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [MCP]
   - id: sanity.unpublish_documents
     object: Document
     action: unpublish_documents
-    description: "Unpublish one or more published documents."
-    category: Data Access
-    risk: medium
-    business_impact: "Removes published content from the live dataset; reversible by republishing but breaks live references while down."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: sanity.discard_drafts
+    category: Content
+    risk: high
+    business_impact: "Pulls live documents from the public dataset; can break consuming sites."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [MCP]
+  - id: sanity.get_document
     object: Document
-    action: discard_drafts
-    description: "Discard one or more draft documents."
-    category: Data Access
-    risk: medium
-    business_impact: "Permanently deletes draft content; the discarded draft is not recoverable, though any published version remains."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Content Releases ----------
-  - id: sanity.create_version
-    object: DocumentVersion
-    action: create_version
-    description: "Create a version document for a specific release."
-    category: Operations
+    action: get_document
+    category: Content
     risk: low
-    business_impact: "Adds a staged version of a document to a release; reversible and not yet live."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Reads a single document's contents."
+    compliance: []
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    confidence: high
+    access_methods: [MCP]
+  - id: sanity.query_documents
+    object: Document
+    action: query_documents
+    category: Content
+    risk: medium
+    business_impact: "Runs GROQ queries that may return arbitrary content fields including drafts."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: sanity.create_version
+    object: Version
+    action: create_version
+    category: Content
+    risk: medium
+    business_impact: "Creates a new release version of a document."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
   - id: sanity.version_replace_document
-    object: DocumentVersion
+    object: Version
     action: version_replace_document
-    description: "Replace the contents of a document version."
-    category: Operations
+    category: Content
     risk: medium
-    business_impact: "Overwrites a staged document version's contents; reversible before the release runs and may carry personal data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Replaces a versioned document's contents wholesale."
+    compliance: [SOC2]
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    confidence: high
+    access_methods: [MCP]
   - id: sanity.version_discard
-    object: DocumentVersion
+    object: Version
     action: version_discard
-    description: "Discard one or more document versions from a release."
-    category: Operations
+    category: Content
     risk: medium
-    business_impact: "Removes staged document versions from a release; the discarded version is not recoverable."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Discards an in-progress version; loses unpublished work."
+    compliance: [SOC2]
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    confidence: high
+    access_methods: [MCP]
   - id: sanity.version_unpublish_document
-    object: DocumentVersion
+    object: Version
     action: version_unpublish_document
-    description: "Mark a document to be unpublished when the release runs."
-    category: Operations
+    category: Content
+    risk: high
+    business_impact: "Unpublishes a versioned document from the live dataset."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [MCP]
+  - id: sanity.discard_drafts
+    object: Draft
+    action: discard_drafts
+    category: Content
     risk: medium
-    business_impact: "Schedules a published document for removal at release time; reversible until the release runs."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Permanently removes draft documents."
+    compliance: [SOC2]
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    confidence: high
+    access_methods: [MCP]
   - id: sanity.create_release
     object: Release
     action: create_release
-    description: "Create a new release for grouping content changes."
-    category: Operations
-    risk: low
-    business_impact: "Creates an empty release container for staging content changes; no live content is affected."
-    compliance: []
+    category: Content
+    risk: medium
+    business_impact: "Creates a content release bundle for coordinated publishing."
+    compliance: [SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: sanity.list_releases
     object: Release
     action: list_releases
-    description: "List releases in a dataset."
-    category: Operations
+    category: Content
     risk: low
-    business_impact: "Reads release metadata for a dataset; no content is exposed or changed."
+    business_impact: "Lists planned and published content releases."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Schema & Deployment ----------
-  - id: sanity.deploy_schema
-    object: Schema
-    action: deploy_schema
-    description: "Directly deploy schema types to the cloud."
-    category: Platform & DevOps
-    risk: medium
-    business_impact: "Deploys a content schema to the cloud, changing how documents validate and render across the project; a change-management event."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: sanity.deploy_studio
-    object: Studio
-    action: deploy_studio
-    description: "Deploy a managed Sanity Studio bound to an MCP-managed schema."
-    category: Platform & DevOps
-    risk: medium
-    business_impact: "Provisions and deploys a hosted Studio application bound to a schema; a change-management and deployment event."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  # ---------- Schema & Configuration ----------
   - id: sanity.get_schema
     object: Schema
     action: get_schema
-    description: "Fetch the deployed schema for a workspace."
-    category: Platform & DevOps
+    category: Schema & Configuration
     risk: low
-    business_impact: "Reads the deployed content schema for a workspace; structural metadata only, no document data."
+    business_impact: "Returns the document schema for a workspace."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: sanity.list_workspace_schemas
     object: Schema
     action: list_workspace_schemas
-    description: "List the deployed schemas for a project and dataset."
-    category: Platform & DevOps
+    category: Schema & Configuration
     risk: low
-    business_impact: "Reads the set of deployed schemas for a project and dataset; metadata only."
+    business_impact: "Lists workspace schemas available to the caller."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Identity & Access ----------
-  - id: sanity.update_dataset
-    object: Dataset
-    action: update_dataset
-    description: "Modifies a dataset's name or access-control settings."
-    category: Identity & Access
-    risk: high
-    business_impact: "Changes dataset access-control settings; can flip a private dataset to public and unilaterally broaden who can read its content."
-    compliance: [SOC2, ISO_27001, NIST_CSF, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    access_methods: [MCP]
+  - id: sanity.deploy_schema
+    object: Schema
+    action: deploy_schema
+    category: Schema & Configuration
+    risk: critical
+    business_impact: "Deploys a new schema to the workspace; can break every consumer of the content API."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
     sod_concern: true
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: sanity.add_cors_origin
-    object: Project
+    object: CorsOrigin
     action: add_cors_origin
-    description: "Adds CORS origin(s) to allow client-side requests."
-    category: Identity & Access
-    risk: medium
-    business_impact: "Adds an allowed CORS origin to the project; widens the browser-origin surface that can call the API and is a security-configuration change."
+    category: Schema & Configuration
+    risk: high
+    business_impact: "Allows a new origin to call the content API; unauthorized origins can read drafts."
     compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: false
+    sod_concern: true
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: sanity.create_dataset
-    object: Dataset
-    action: create_dataset
-    description: "Creates a new dataset with the specified name."
-    category: Identity & Access
-    risk: medium
-    business_impact: "Provisions a new dataset within the project; an infrastructure-provisioning event subject to change management."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: sanity.list_datasets
-    object: Dataset
-    action: list_datasets
-    description: "Lists all datasets in your Sanity project."
-    category: Identity & Access
-    risk: low
-    business_impact: "Reads the list of datasets in a project; configuration metadata only."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: sanity.create_project
-    object: Project
-    action: create_project
-    description: "Creates a new Sanity project and initializes it."
-    category: Identity & Access
-    risk: medium
-    business_impact: "Provisions a new Sanity project under the organization; an infrastructure-provisioning event that can incur cost."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: sanity.whoami
-    object: User
-    action: whoami
-    description: "Returns information about the currently authenticated user."
-    category: Identity & Access
-    risk: low
-    business_impact: "Returns the calling user's own identity details; exposes only the authenticated principal's information."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  # ---------- Platform & DevOps ----------
   - id: sanity.list_organizations
     object: Organization
     action: list_organizations
-    description: "Lists all organizations the user has access to."
-    category: Identity & Access
+    category: Platform & DevOps
     risk: low
-    business_impact: "Reads the organizations the caller can access; account-structure metadata only."
+    business_impact: "Lists Sanity organizations the caller belongs to."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: sanity.list_projects
     object: Project
     action: list_projects
-    description: "Lists all Sanity projects associated with your account."
-    category: Identity & Access
+    category: Platform & DevOps
     risk: low
-    business_impact: "Reads the projects associated with the account; configuration metadata only."
+    business_impact: "Returns the project directory."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  - id: sanity.create_project
+    object: Project
+    action: create_project
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Provisions a new Sanity project; may incur billing and create a new content surface."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
   - id: sanity.get_project_studios
     object: Studio
     action: get_project_studios
-    description: "Retrieves all Studio applications linked to a project."
-    category: Identity & Access
+    category: Platform & DevOps
     risk: low
-    business_impact: "Reads the Studio applications linked to a project; deployment metadata only."
+    business_impact: "Lists studio deployments associated with a project."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  - id: sanity.list_datasets
+    object: Dataset
+    action: list_datasets
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Lists datasets within a project."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: sanity.create_dataset
+    object: Dataset
+    action: create_dataset
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Creates a new dataset; affects content visibility and billing."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: sanity.update_dataset
+    object: Dataset
+    action: update_dataset
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Modifies dataset visibility/access settings; can expose or hide content broadly."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [MCP]
+  - id: sanity.whoami
+    object: User
+    action: whoami
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns the authenticated principal's identity."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
   # ---------- Media ----------
   - id: sanity.generate_image
     object: Image
     action: generate_image
-    description: "Trigger async AI image generation for a document field."
-    category: Operations
+    category: Media
     risk: low
-    business_impact: "Generates an AI image into a document field; reversible content addition with no automated decisioning over individuals."
+    business_impact: "Generates an AI image asset for use in content."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: sanity.transform_image
     object: Image
     action: transform_image
-    description: "Trigger async AI transformation of an existing image."
-    category: Operations
+    category: Media
     risk: low
-    business_impact: "Transforms an existing image via AI within a document; reversible content edit with no automated decisioning over individuals."
+    business_impact: "Applies transformations to an existing image asset."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Embeddings & Search ----------
-  - id: sanity.semantic_search
-    object: EmbeddingsIndex
-    action: semantic_search
-    description: "Perform a semantic search on an embeddings index."
-    category: Data Access
-    risk: medium
-    business_impact: "Returns documents ranked by semantic similarity from an embeddings index; a broad search can surface personal data across the dataset."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  # ---------- Data Access ----------
   - id: sanity.list_embeddings_indices
-    object: EmbeddingsIndex
+    object: EmbeddingIndex
     action: list_embeddings_indices
-    description: "List all available embeddings indices for a dataset."
     category: Data Access
     risk: low
-    business_impact: "Reads the available embeddings indices for a dataset; index metadata only."
+    business_impact: "Lists semantic-search indices."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Documentation & Rules ----------
+    access_methods: [MCP]
+  - id: sanity.semantic_search
+    object: EmbeddingIndex
+    action: semantic_search
+    category: Data Access
+    risk: low
+    business_impact: "Runs semantic search over content embeddings."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  # ---------- Operations ----------
   - id: sanity.migration_guide
     object: Documentation
     action: migration_guide
-    description: "Retrieve guides for migrating schemas from other platforms."
     category: Operations
     risk: low
-    business_impact: "Returns static migration guidance content; read-only reference material with no project impact."
+    business_impact: "Returns Sanity migration guidance docs."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: sanity.search_docs
     object: Documentation
     action: search_docs
-    description: "Search Sanity documentation."
     category: Operations
     risk: low
-    business_impact: "Searches public Sanity documentation; read-only and touches no project data."
+    business_impact: "Searches Sanity public documentation."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: sanity.read_docs
     object: Documentation
     action: read_docs
-    description: "Fetch a specific documentation article."
     category: Operations
     risk: low
-    business_impact: "Reads a public Sanity documentation article; read-only reference content."
+    business_impact: "Reads a Sanity documentation page."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: sanity.list_sanity_rules
-    object: Rule
+    object: SanityRule
     action: list_sanity_rules
-    description: "List available best-practice development rules."
     category: Operations
     risk: low
-    business_impact: "Lists available best-practice development rules; static reference content with no project impact."
+    business_impact: "Lists configured Sanity assistant rules."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: sanity.get_sanity_rules
-    object: Rule
+    object: SanityRule
     action: get_sanity_rules
-    description: "Load specific best-practice development rules."
     category: Operations
     risk: low
-    business_impact: "Loads a specific best-practice development rule; static reference content with no project impact."
+    business_impact: "Returns details of a Sanity assistant rule."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: sanity.give_feedback
-    object: Feedback
-    action: give_feedback
-    description: "Submit feedback about the Sanity MCP tools."
-    category: Operations
-    risk: low
-    business_impact: "Sends user feedback to Sanity about the MCP tools; no project content or configuration is affected."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [MCP]

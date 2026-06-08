@@ -1,56 +1,47 @@
-schema_version: "1.1"
+schema_version: "1.0"
 platform: hex
 display_name: Hex
 source: langguard-editorial
-updated: "2026-06"
-reference: https://learn.hex.tech/docs/administration/mcp-server
+updated: "2026-05"
 actions:
-  # ---------- Data Access ----------
-  - id: hex.create_thread
-    object: Thread
-    action: create_thread
-    description: "Start a new Thread conversation"
-    category: Data Access
-    risk: medium
-    business_impact: "Starts a Hex Agent conversation that can execute arbitrary SQL/analytic code over connected warehouses; a single prompt can trigger a bulk read of PII or financial data depending on the warehouse."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: hex.get_thread
-    object: Thread
-    action: get_thread
-    description: "Retrieve messages and results from a Thread"
-    category: Data Access
-    risk: medium
-    business_impact: "Returns the messages and query results of a Thread; this is the data-egress surface that exposes warehouse output and may include bulk PII or financial data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: hex.continue_thread
-    object: Thread
-    action: continue_thread
-    description: "Add follow-up questions to an existing Thread"
-    category: Data Access
-    risk: medium
-    business_impact: "Adds a follow-up prompt to a Thread, potentially executing additional arbitrary warehouse queries whose results may include bulk PII or financial data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Operations ----------
+  # ---------- Data Analytics ----------
   - id: hex.search_projects
     object: Project
     action: search_projects
-    description: "Find projects in your Hex workspace"
-    category: Operations
+    category: Data Analytics
     risk: low
-    business_impact: "Returns project metadata (titles, descriptions, links) matching a query; reads catalog information, not warehouse rows."
+    business_impact: "Finds Hex projects in the workspace by name or content."
     compliance: [SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [MCP]
+  - id: hex.create_thread
+    object: Thread
+    action: create_thread
+    category: Data Analytics
+    risk: medium
+    business_impact: "Starts a Hex agent conversation that may execute SQL and analytic code over connected warehouses; results may include PII or financial data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: hex.get_thread
+    object: Thread
+    action: get_thread
+    category: Data Analytics
+    risk: medium
+    business_impact: "Reads thread messages and query results; exposes prior analytic outputs over warehouse data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: hex.continue_thread
+    object: Thread
+    action: continue_thread
+    category: Data Analytics
+    risk: medium
+    business_impact: "Adds a follow-up question to a Hex thread, potentially executing additional warehouse queries."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]

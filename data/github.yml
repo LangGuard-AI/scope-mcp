@@ -1,9 +1,11 @@
-schema_version: "1.1"
+schema_version: "1.2"
 platform: github
 display_name: GitHub
 source: langguard-editorial
 updated: "2026-05"
 reference: https://github.com/github/github-mcp-server
+server_website: https://github.com/github/github-mcp-server
+maintainer: https://github.com/github/github-mcp-server/issues
 actions:
   # ---------- Repositories ----------
   - id: github.create_or_update_file
@@ -16,8 +18,7 @@ actions:
     compliance: [SOX, COSO, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.delete_file
     object: File
     action: delete_file
@@ -28,8 +29,7 @@ actions:
     compliance: [SOX, COSO, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.push_files
     object: File
     action: push_files
@@ -40,8 +40,7 @@ actions:
     compliance: [SOX, COSO, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.create_branch
     object: Branch
     action: create_branch
@@ -52,8 +51,7 @@ actions:
     compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.create_repository
     object: Repository
     action: create_repository
@@ -64,8 +62,7 @@ actions:
     compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.fork_repository
     object: Repository
     action: fork_repository
@@ -76,8 +73,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.get_commit
     object: Commit
     action: get_commit
@@ -88,8 +84,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.get_file_contents
     object: File
     action: get_file_contents
@@ -100,8 +95,7 @@ actions:
     compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.get_latest_release
     object: Release
     action: get_latest_release
@@ -112,8 +106,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.get_release_by_tag
     object: Release
     action: get_release_by_tag
@@ -124,8 +117,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.get_tag
     object: Tag
     action: get_tag
@@ -136,8 +128,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.list_branches
     object: Branch
     action: list_branches
@@ -148,8 +139,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.list_commits
     object: Commit
     action: list_commits
@@ -160,8 +150,7 @@ actions:
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.list_releases
     object: Release
     action: list_releases
@@ -172,8 +161,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.list_tags
     object: Tag
     action: list_tags
@@ -184,8 +172,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.search_code
     object: Code
     action: search_code
@@ -196,8 +183,7 @@ actions:
     compliance: [SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.search_repositories
     object: Repository
     action: search_repositories
@@ -208,8 +194,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   # ---------- Git ----------
   - id: github.get_repository_tree
     object: Tree
@@ -221,8 +206,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   # ---------- Pull Requests ----------
   - id: github.create_pull_request
     object: PullRequest
@@ -234,8 +218,7 @@ actions:
     compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.list_pull_requests
     object: PullRequest
     action: list_pull_requests
@@ -246,8 +229,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.merge_pull_request
     object: PullRequest
     action: merge_pull_request
@@ -258,8 +240,7 @@ actions:
     compliance: [SOX, COSO, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.pull_request_read
     object: PullRequest
     action: pull_request_read
@@ -270,8 +251,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.pull_request_review_write
     object: PullRequestReview
     action: pull_request_review_write
@@ -282,8 +262,7 @@ actions:
     compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
     sod_concern: true
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.update_pull_request
     object: PullRequest
     action: update_pull_request
@@ -294,8 +273,7 @@ actions:
     compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.update_pull_request_branch
     object: PullRequest
     action: update_pull_request_branch
@@ -306,8 +284,7 @@ actions:
     compliance: [SOX, COSO, SOC2, ISO_27001]
     sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.add_comment_to_pending_review
     object: PullRequestReview
     action: add_comment_to_pending_review
@@ -318,8 +295,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.add_reply_to_pull_request_comment
     object: PullRequestComment
     action: add_reply_to_pull_request_comment
@@ -330,8 +306,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.search_pull_requests
     object: PullRequest
     action: search_pull_requests
@@ -342,8 +317,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   # ---------- Actions (CI/CD) ----------
   - id: github.actions_get
     object: WorkflowRun
@@ -355,8 +329,7 @@ actions:
     compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.actions_list
     object: WorkflowRun
     action: actions_list
@@ -367,8 +340,7 @@ actions:
     compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.actions_run_trigger
     object: WorkflowRun
     action: actions_run_trigger
@@ -379,8 +351,7 @@ actions:
     compliance: [SOX, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.get_job_logs
     object: WorkflowJob
     action: get_job_logs
@@ -391,8 +362,7 @@ actions:
     compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   # ---------- Code Security ----------
   - id: github.get_code_scanning_alert
     object: CodeScanningAlert
@@ -404,8 +374,7 @@ actions:
     compliance: [SOC2, ISO_27001, NIST_CSF]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.list_code_scanning_alerts
     object: CodeScanningAlert
     action: list_code_scanning_alerts
@@ -416,8 +385,7 @@ actions:
     compliance: [SOC2, ISO_27001, NIST_CSF]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   # ---------- Dependabot ----------
   - id: github.get_dependabot_alert
     object: DependabotAlert
@@ -429,8 +397,7 @@ actions:
     compliance: [SOC2, ISO_27001, NIST_CSF]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.list_dependabot_alerts
     object: DependabotAlert
     action: list_dependabot_alerts
@@ -441,8 +408,7 @@ actions:
     compliance: [SOC2, ISO_27001, NIST_CSF]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   # ---------- Secret Protection ----------
   - id: github.get_secret_scanning_alert
     object: SecretScanningAlert
@@ -454,8 +420,7 @@ actions:
     compliance: [SOC2, ISO_27001, NIST_CSF]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.list_secret_scanning_alerts
     object: SecretScanningAlert
     action: list_secret_scanning_alerts
@@ -466,8 +431,7 @@ actions:
     compliance: [SOC2, ISO_27001, NIST_CSF]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   # ---------- Security Advisories ----------
   - id: github.get_global_security_advisory
     object: SecurityAdvisory
@@ -479,8 +443,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.list_global_security_advisories
     object: SecurityAdvisory
     action: list_global_security_advisories
@@ -491,8 +454,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.list_org_repository_security_advisories
     object: SecurityAdvisory
     action: list_org_repository_security_advisories
@@ -503,8 +465,7 @@ actions:
     compliance: [SOC2, ISO_27001, NIST_CSF]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.list_repository_security_advisories
     object: SecurityAdvisory
     action: list_repository_security_advisories
@@ -515,8 +476,7 @@ actions:
     compliance: [SOC2, ISO_27001, NIST_CSF]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   # ---------- Issues ----------
   - id: github.add_issue_comment
     object: IssueComment
@@ -528,8 +488,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.issue_read
     object: Issue
     action: issue_read
@@ -540,8 +499,7 @@ actions:
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.issue_write
     object: Issue
     action: issue_write
@@ -552,8 +510,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.list_issue_types
     object: IssueType
     action: list_issue_types
@@ -564,8 +521,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.list_issues
     object: Issue
     action: list_issues
@@ -576,8 +532,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.search_issues
     object: Issue
     action: search_issues
@@ -588,8 +543,7 @@ actions:
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.sub_issue_write
     object: SubIssue
     action: sub_issue_write
@@ -600,8 +554,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   # ---------- Labels ----------
   - id: github.get_label
     object: Label
@@ -613,8 +566,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.label_write
     object: Label
     action: label_write
@@ -625,8 +577,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.list_label
     object: Label
     action: list_label
@@ -637,8 +588,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   # ---------- Discussions ----------
   - id: github.get_discussion
     object: Discussion
@@ -650,8 +600,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.get_discussion_comments
     object: DiscussionComment
     action: get_discussion_comments
@@ -662,8 +611,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.list_discussion_categories
     object: DiscussionCategory
     action: list_discussion_categories
@@ -674,8 +622,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.list_discussions
     object: Discussion
     action: list_discussions
@@ -686,8 +633,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   # ---------- Projects ----------
   - id: github.projects_get
     object: Project
@@ -699,8 +645,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.projects_list
     object: Project
     action: projects_list
@@ -711,8 +656,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.projects_write
     object: Project
     action: projects_write
@@ -723,8 +667,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   # ---------- Gists ----------
   - id: github.create_gist
     object: Gist
@@ -736,8 +679,7 @@ actions:
     compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.get_gist
     object: Gist
     action: get_gist
@@ -748,8 +690,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.list_gists
     object: Gist
     action: list_gists
@@ -760,8 +701,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.update_gist
     object: Gist
     action: update_gist
@@ -772,8 +712,7 @@ actions:
     compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   # ---------- Notifications ----------
   - id: github.dismiss_notification
     object: Notification
@@ -785,8 +724,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.get_notification_details
     object: Notification
     action: get_notification_details
@@ -797,8 +735,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.list_notifications
     object: Notification
     action: list_notifications
@@ -809,8 +746,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.manage_notification_subscription
     object: Notification
     action: manage_notification_subscription
@@ -821,8 +757,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.manage_repository_notification_subscription
     object: Notification
     action: manage_repository_notification_subscription
@@ -833,8 +768,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.mark_all_notifications_read
     object: Notification
     action: mark_all_notifications_read
@@ -845,8 +779,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   # ---------- Stargazers ----------
   - id: github.list_starred_repositories
     object: Repository
@@ -858,8 +791,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.star_repository
     object: Repository
     action: star_repository
@@ -870,8 +802,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.unstar_repository
     object: Repository
     action: unstar_repository
@@ -882,8 +813,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   # ---------- Copilot ----------
   - id: github.assign_copilot_to_issue
     object: Issue
@@ -895,8 +825,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.request_copilot_review
     object: PullRequest
     action: request_copilot_review
@@ -907,8 +836,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.create_pull_request_with_copilot
     object: PullRequest
     action: create_pull_request_with_copilot
@@ -919,8 +847,7 @@ actions:
     compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: github.get_copilot_space
     object: CopilotSpace
     action: get_copilot_space
@@ -931,8 +858,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: github.list_copilot_spaces
     object: CopilotSpace
     action: list_copilot_spaces
@@ -943,8 +869,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: github.github_support_docs_search
     object: Documentation
     action: github_support_docs_search
@@ -955,8 +880,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   # ---------- Context (Identity) ----------
   - id: github.get_me
     object: User
@@ -968,8 +892,7 @@ actions:
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.get_team_members
     object: TeamMember
     action: get_team_members
@@ -980,8 +903,7 @@ actions:
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   - id: github.get_teams
     object: Team
     action: get_teams
@@ -992,8 +914,7 @@ actions:
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   # ---------- Organizations ----------
   - id: github.search_orgs
     object: Organization
@@ -1005,8 +926,7 @@ actions:
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
-
+    access_methods: [MCP]
   # ---------- Users ----------
   - id: github.search_users
     object: User
@@ -1018,4 +938,4 @@ actions:
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP, CLI]
+    access_methods: [MCP]

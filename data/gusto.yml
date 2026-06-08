@@ -1,456 +1,373 @@
-schema_version: "1.1"
+schema_version: "1.2"
 platform: gusto
 display_name: Gusto
 source: langguard-editorial
-updated: "2026-06"
-reference: https://docs.gusto.com/app-integrations/docs/mcp
-# Tool ids are verbatim from the Gusto MCP docs (https://docs.gusto.com/app-integrations/docs/mcp).
-# The Gusto MCP server (https://mcp.api.gusto.com) is READ-ONLY: 36 list_*/get_* tools.
-# The vendor docs state explicitly that the server "can retrieve and analyze your data but
-# cannot: Execute payroll runs, Transfer money, Create, modify, or delete employees, Change
-# compensation or benefits, Modify company settings."
-# NOTE: `run_payroll` is NOT an MCP tool. It appears only in the changelog as a "Widgetized
-# run_payroll tool" — a UI widget surfaced via the /anthropic endpoint, never registered in
-# tools/list. It is deliberately EXCLUDED here; do not re-add it as an action.
-# The server is OAuth-gated, so live tools/list introspection returned 401; the 36 tool names
-# below are taken verbatim from the authoritative vendor MCP documentation (confirmed against
-# the raw docs HTML).
+updated: "2026-05"
+maintainer: support@gusto.com
 actions:
-  # ---------- Payroll & Compensation (bulk financial PII) ----------
-  - id: gusto.list_company_payrolls
-    object: Payroll
-    action: list_company_payrolls
-    description: "List all payroll runs with filtering (filters by pay period dates, not check dates)."
-    category: Financial
-    risk: high
-    business_impact: "Reads the company's full payroll-run history including per-employee wage amounts; bulk extraction of compensation PII and financial data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: gusto.get_payroll
-    object: Payroll
-    action: get_payroll
-    description: "Get detailed information about a specific payroll."
-    category: Financial
-    risk: medium
-    business_impact: "Reads a single payroll run's per-employee wage detail; exposes compensation PII and financial data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: gusto.list_job_compensations
-    object: Compensation
-    action: list_job_compensations
-    description: "Get compensation history for a job."
-    category: Financial
-    risk: medium
-    business_impact: "Reads compensation history for a job; exposes identifiable-employee pay PII and financial data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: gusto.get_compensation
-    object: Compensation
-    action: get_compensation
-    description: "Get details for a specific compensation record."
-    category: Financial
-    risk: medium
-    business_impact: "Reads a single compensation record; exposes identifiable-employee pay PII and financial data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Pay Schedules & Earning Types (configuration metadata) ----------
-  - id: gusto.list_company_pay_periods
-    object: PayPeriod
-    action: list_company_pay_periods
-    description: "List pay periods for a company."
-    category: Financial
+  # ---------- Company & Organization ----------
+  - id: gusto.list_gusto_companies
+    object: Company
+    action: list_gusto_companies
+    category: Company & Organization
     risk: low
-    business_impact: "Reads pay-period boundaries for the company; operational scheduling metadata with no personal data."
+    business_impact: "Lists Gusto companies the connected user can access."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: gusto.list_company_locations
+    object: Location
+    action: list_company_locations
+    category: Company & Organization
+    risk: low
+    business_impact: "Lists work locations associated with a company."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: gusto.list_company_pay_schedules
-    object: PaySchedule
-    action: list_company_pay_schedules
-    description: "List all pay schedules for a company."
-    category: Financial
+    access_methods: [MCP]
+  - id: gusto.get_location
+    object: Location
+    action: get_location
+    category: Company & Organization
     risk: low
-    business_impact: "Reads the company's pay-schedule configuration; operational metadata with no personal data."
+    business_impact: "Reads a single work location's details."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: gusto.get_pay_schedule
-    object: PaySchedule
-    action: get_pay_schedule
-    description: "Get details for a specific pay schedule."
-    category: Financial
+    access_methods: [MCP]
+  - id: gusto.list_company_departments
+    object: Department
+    action: list_company_departments
+    category: Company & Organization
     risk: low
-    business_impact: "Reads a single pay-schedule's configuration; operational metadata with no personal data."
+    business_impact: "Lists departments within a company."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: gusto.list_company_pay_schedule_assignments
-    object: PaySchedule
-    action: list_company_pay_schedule_assignments
-    description: "List employee-to-pay-schedule assignments."
-    category: Financial
-    risk: medium
-    business_impact: "Reads which employees are assigned to which pay schedule; links identifiable employees to payroll cadence."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: gusto.list_company_earning_types
-    object: EarningType
-    action: list_company_earning_types
-    description: "List earning types configured for a company."
-    category: Financial
+    access_methods: [MCP]
+  - id: gusto.get_department
+    object: Department
+    action: get_department
+    category: Company & Organization
     risk: low
-    business_impact: "Reads the company's configured earning-type catalog; operational metadata with no personal data."
+    business_impact: "Reads a single department's details."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   # ---------- Employees ----------
   - id: gusto.list_company_employees
     object: Employee
     action: list_company_employees
-    description: "List all employees with filtering options."
-    category: Customer
+    category: Employees
     risk: high
-    business_impact: "Reads the company's full employee directory; bulk extraction of identifiable-employee PII."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    business_impact: "Bulk read of employee roster including PII held by a US payroll provider."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, GLBA, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: gusto.get_gusto_employee
     object: Employee
     action: get_gusto_employee
-    description: "Get detailed information about a specific employee."
-    category: Customer
-    risk: medium
-    business_impact: "Reads a single employee's detailed record; identifiable-employee PII."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    category: Employees
+    risk: high
+    business_impact: "Reads a single employee's PII record (SSN-adjacent profile, contact, employment status)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, GLBA, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: gusto.list_employee_jobs
     object: Job
     action: list_employee_jobs
-    description: "List all jobs for an employee."
-    category: Customer
+    category: Employees
     risk: medium
-    business_impact: "Reads an employee's job assignments; identifiable-employee employment PII."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Lists jobs an employee holds; reveals role and assignment history."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: gusto.get_job
     object: Job
     action: get_job
-    description: "Get details for a specific job."
-    category: Customer
-    risk: low
-    business_impact: "Reads a single job record; employment metadata tied to an identifiable employee."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    category: Employees
+    risk: medium
+    business_impact: "Reads a single employee job record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  - id: gusto.list_job_compensations
+    object: Compensation
+    action: list_job_compensations
+    category: Employees
+    risk: high
+    business_impact: "Reads compensation history for a job; salary data is among the most sensitive HR fields."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: gusto.get_compensation
+    object: Compensation
+    action: get_compensation
+    category: Employees
+    risk: high
+    business_impact: "Reads a single compensation record (salary, rate, currency)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
   - id: gusto.list_employee_employment_history
-    object: Employee
+    object: Employment
     action: list_employee_employment_history
-    description: "List employment history for an employee."
-    category: Customer
+    category: Employees
     risk: medium
-    business_impact: "Reads an employee's employment history; sensitive identifiable-employee HR PII."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Reads an employee's historical employment record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: gusto.list_employee_terminations
-    object: Employee
+    object: Termination
     action: list_employee_terminations
-    description: "List termination records for an employee."
-    category: Customer
+    category: Employees
     risk: medium
-    business_impact: "Reads an employee's termination records; sensitive identifiable-employee HR PII."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Lists termination records; sensitive HR data subject to discrimination/wrongful-termination concerns."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: gusto.get_employee_rehire
-    object: Employee
+    object: Rehire
     action: get_employee_rehire
-    description: "Get rehire details for an employee."
-    category: Customer
+    category: Employees
     risk: medium
-    business_impact: "Reads an employee's rehire details; sensitive identifiable-employee HR PII."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Reads a rehire record for an employee."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: gusto.list_employee_custom_fields
-    object: Employee
+    object: CustomField
     action: list_employee_custom_fields
-    description: "List custom field values for an employee."
-    category: Customer
+    category: Employees
     risk: medium
-    business_impact: "Reads custom-field values stored against an employee; may contain arbitrary identifiable-employee PII."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Reads custom HR fields on employees; content varies by company configuration and may include sensitive data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: gusto.list_employee_home_addresses
     object: Address
     action: list_employee_home_addresses
-    description: "List home addresses for an employee."
-    category: Customer
-    risk: medium
-    business_impact: "Reads an employee's home addresses; sensitive identifiable-individual location PII."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    category: Employees
+    risk: high
+    business_impact: "Reads employee home addresses; directly identifying personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: gusto.get_employee_home_address
     object: Address
     action: get_employee_home_address
-    description: "Get details for a specific home address."
-    category: Customer
-    risk: medium
-    business_impact: "Reads a single employee home address; sensitive identifiable-individual location PII."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    category: Employees
+    risk: high
+    business_impact: "Reads a specific employee home address."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: gusto.list_employee_work_addresses
     object: Address
     action: list_employee_work_addresses
-    description: "List work addresses for an employee."
-    category: Customer
-    risk: low
-    business_impact: "Reads an employee's work addresses; location metadata tied to an identifiable employee."
+    category: Employees
+    risk: medium
+    business_impact: "Reads employee work address assignments."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: gusto.get_employee_work_address
     object: Address
     action: get_employee_work_address
-    description: "Get details for a specific work address."
-    category: Customer
+    category: Employees
     risk: low
-    business_impact: "Reads a single employee work address; location metadata tied to an identifiable employee."
+    business_impact: "Reads a single work address record."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   # ---------- Contractors ----------
   - id: gusto.list_company_contractors
     object: Contractor
     action: list_company_contractors
-    description: "List all contractors."
-    category: Customer
+    category: Contractors
     risk: high
-    business_impact: "Reads the company's full contractor directory; bulk extraction of identifiable-individual PII."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    business_impact: "Lists contractors and their PII (1099-style records)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, GLBA, SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: gusto.get_contractor
     object: Contractor
     action: get_contractor
-    description: "Get detailed information about a specific contractor."
-    category: Customer
-    risk: medium
-    business_impact: "Reads a single contractor's detailed record; identifiable-individual PII."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    category: Contractors
+    risk: high
+    business_impact: "Reads a single contractor's profile and tax-relevant data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, GLBA, SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: gusto.list_company_contractor_payments
     object: ContractorPayment
     action: list_company_contractor_payments
-    description: "List payment history for contractors."
-    category: Financial
+    category: Contractors
     risk: high
-    business_impact: "Reads the company's full contractor payment history; bulk extraction of identifiable-individual payment amounts and financial data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    business_impact: "Reads contractor payment history; financial-record exposure relevant to revenue and tax controls."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: gusto.get_contractor_payment
     object: ContractorPayment
     action: get_contractor_payment
-    description: "Get details for a specific contractor payment."
-    category: Financial
-    risk: medium
-    business_impact: "Reads a single contractor payment; exposes identifiable-individual payment amount and financial data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: gusto.list_company_contractor_payment_groups
-    object: ContractorPaymentGroup
-    action: list_company_contractor_payment_groups
-    description: "List contractor payment groups."
-    category: Financial
+    category: Contractors
     risk: high
-    business_impact: "Reads batched contractor payment groups across the company; bulk extraction of identifiable-individual payment amounts and financial data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    business_impact: "Reads a single contractor payment."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: gusto.get_contractor_payment_group
-    object: ContractorPaymentGroup
-    action: get_contractor_payment_group
-    description: "Get all payments in a payment group."
-    category: Financial
+    access_methods: [MCP]
+  - id: gusto.list_company_contractor_payment_groups
+    object: PaymentGroup
+    action: list_company_contractor_payment_groups
+    category: Contractors
     risk: medium
-    business_impact: "Reads all payments in a single contractor payment group; exposes identifiable-individual payment amounts and financial data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Lists batched contractor-payment groups."
+    compliance: [SOX, COSO, SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  - id: gusto.get_contractor_payment_group
+    object: PaymentGroup
+    action: get_contractor_payment_group
+    category: Contractors
+    risk: medium
+    business_impact: "Reads a single contractor payment group."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  # ---------- Payroll ----------
+  - id: gusto.list_company_payrolls
+    object: Payroll
+    action: list_company_payrolls
+    category: Payroll
+    risk: high
+    business_impact: "Lists payroll runs; aggregate compensation, taxes, and disbursement totals are core financial-reporting inputs."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: gusto.get_payroll
+    object: Payroll
+    action: get_payroll
+    category: Payroll
+    risk: high
+    business_impact: "Reads a single payroll run including per-employee gross/net and tax detail."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: gusto.list_company_pay_schedules
+    object: PaySchedule
+    action: list_company_pay_schedules
+    category: Payroll
+    risk: low
+    business_impact: "Lists pay schedules configured at the company."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: gusto.get_pay_schedule
+    object: PaySchedule
+    action: get_pay_schedule
+    category: Payroll
+    risk: low
+    business_impact: "Reads a single pay schedule."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: gusto.list_company_pay_periods
+    object: PayPeriod
+    action: list_company_pay_periods
+    category: Payroll
+    risk: low
+    business_impact: "Lists pay periods on the company's calendar."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: gusto.list_company_pay_schedule_assignments
+    object: PayScheduleAssignment
+    action: list_company_pay_schedule_assignments
+    category: Payroll
+    risk: low
+    business_impact: "Lists which employees are assigned to which pay schedules."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: gusto.list_company_earning_types
+    object: EarningType
+    action: list_company_earning_types
+    category: Payroll
+    risk: low
+    business_impact: "Lists earning types configured at the company (regular, bonus, commission, etc.)."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
   # ---------- Time Tracking ----------
   - id: gusto.list_company_time_sheets
     object: TimeSheet
     action: list_company_time_sheets
-    description: "List all timesheets for a company."
-    category: Operations
-    risk: high
-    business_impact: "Reads all company timesheets in bulk; mass extraction of identifiable-employee work-time PII."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    category: Time Tracking
+    risk: medium
+    business_impact: "Lists submitted timesheets; basis for hourly payroll and labor-cost reporting."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    confidence: high
+    access_methods: [MCP]
   - id: gusto.get_time_sheet
     object: TimeSheet
     action: get_time_sheet
-    description: "Get details and time entries for a timesheet."
-    category: Operations
-    risk: low
-    business_impact: "Reads a single timesheet's time entries; identifiable-employee work-time PII."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    category: Time Tracking
+    risk: medium
+    business_impact: "Reads a single timesheet record."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Company & Organization (configuration metadata) ----------
-  - id: gusto.list_gusto_companies
-    object: Company
-    action: list_gusto_companies
-    description: "Get company information for the authenticated account (returns array with one company)."
-    category: Operations
-    risk: low
-    business_impact: "Reads the authenticated account's company information; organizational metadata."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: gusto.list_company_locations
-    object: Location
-    action: list_company_locations
-    description: "List all company locations."
-    category: Operations
-    risk: low
-    business_impact: "Reads the company's office/work locations; organizational metadata with no personal data."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: gusto.get_location
-    object: Location
-    action: get_location
-    description: "Get details for a specific location."
-    category: Operations
-    risk: low
-    business_impact: "Reads a single company location; organizational metadata with no personal data."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: gusto.list_company_departments
-    object: Department
-    action: list_company_departments
-    description: "List all departments."
-    category: Operations
-    risk: low
-    business_impact: "Reads the company's department structure; organizational metadata with no personal data."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: gusto.get_department
-    object: Department
-    action: get_department
-    description: "Get details for a specific department."
-    category: Operations
-    risk: low
-    business_impact: "Reads a single department; organizational metadata with no personal data."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: gusto.list_company_custom_fields_schema
-    object: CustomFieldSchema
-    action: list_company_custom_fields_schema
-    description: "Get custom field schema for a company."
-    category: Operations
-    risk: low
-    business_impact: "Reads the company's custom-field schema definition; configuration metadata with no personal data."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Identity & Access ----------
+    access_methods: [MCP]
+  # ---------- Utility ----------
   - id: gusto.get_token_info
     object: Token
     action: get_token_info
-    description: "Get OAuth scope and token information."
-    category: Identity & Access
+    category: Utility
     risk: low
-    business_impact: "Reads the current OAuth token's scope and metadata; reveals granted access but no personal or financial data."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Returns metadata about the OAuth token used for the connection."
+    compliance: [SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [MCP]
+  - id: gusto.list_company_custom_fields_schema
+    object: CustomFieldSchema
+    action: list_company_custom_fields_schema
+    category: Utility
+    risk: low
+    business_impact: "Reads the schema definition of company-defined custom fields."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]

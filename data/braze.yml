@@ -1,576 +1,423 @@
-schema_version: "1.1"
+schema_version: "1.2"
 platform: braze
 display_name: Braze
 source: langguard-editorial
-updated: "2026-06"
-reference: https://www.braze.com/docs/user_guide/brazeai/mcp_server/available_api_functions
+updated: "2026-05"
+maintainer: https://www.braze.com/docs/user_guide/brazeai/mcp_server/#faq
 actions:
-  # ---------- Platform & DevOps ----------
-  # The Braze MCP server exposes three core dispatch tools. Named "API functions"
-  # (below) are invoked THROUGH these. call_write_function is the single gateway
-  # for every state-changing operation, so it carries the aggregate write risk.
-  - id: braze.call_write_function
-    object: '*'
-    action: call_write_function
-    description: "Calls a write-capable Braze API function (create/update) with provided parameters."
-    category: Platform & DevOps
-    risk: medium
-    business_impact: "Single dispatch gateway for every write function; executes content, template, and asset mutations against the live Braze workspace."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: braze.call_function
-    object: '*'
-    action: call_function
-    description: "Calls a specific read-only Braze API function with provided parameters."
-    category: Platform & DevOps
-    risk: low
-    business_impact: "Dispatch gateway for read-only analytics and metadata functions; returns aggregate, non-profile data."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+  # ---------- Discovery ----------
   - id: braze.list_functions
-    object: '*'
+    object: "*"
     action: list_functions
-    description: "Lists all available Braze API functions with their descriptions and parameters."
-    category: Platform & DevOps
+    category: Discovery
     risk: low
-    business_impact: "Enumerates the server's callable functions; discovery only, no workspace data returned."
+    business_impact: "Enumerates available MCP functions; pure metadata read."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Content & Templates (write surface) ----------
-  - id: braze.create_content_block
-    object: ContentBlock
-    action: create_content_block
-    description: "Create a content block; requires name and content."
-    category: Content & Templates
+    access_methods: [MCP]
+  - id: braze.call_function
+    object: "*"
+    action: call_function
+    category: Discovery
     risk: medium
-    business_impact: "Adds a reusable content block injected into live customer messaging; reversible but affects production sends."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: braze.update_content_block
-    object: ContentBlock
-    action: update_content_block
-    description: "Update an existing content block by content_block_id."
-    category: Content & Templates
-    risk: medium
-    business_impact: "Modifies a content block already embedded across campaigns and Canvases; changes propagate to every message referencing it."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: braze.create_email_template
-    object: EmailTemplate
-    action: create_email_template
-    description: "Create an email template; requires template_name, subject, and body."
-    category: Content & Templates
-    risk: medium
-    business_impact: "Adds an email template available for production campaigns; reversible but enters the live messaging surface."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: braze.update_email_template
-    object: EmailTemplate
-    action: update_email_template
-    description: "Update an existing email template by email_template_id."
-    category: Content & Templates
-    risk: medium
-    business_impact: "Alters email content used by active campaigns; changes reach every send that references the template."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: braze.create_media_library_asset
-    object: MediaAsset
-    action: create_media_library_asset
-    description: "Upload an asset (public URL or base64 file) to the Braze media library; 5 MB image limit."
-    category: Content & Templates
-    risk: medium
-    business_impact: "Uploads an externally-sourced asset into the media library for use in live messaging; can fetch from an arbitrary public URL."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Identity & Access ----------
-  - id: braze.get_sdk_authentication_keys
-    object: SdkAuthenticationKey
-    action: get_sdk_authentication_keys
-    description: "List all SDK Authentication keys for your app."
-    category: Identity & Access
-    risk: high
-    business_impact: "Exposes SDK authentication key metadata; disclosure of credential material weakens client-side authentication controls."
-    compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Customer ----------
-  # Subscription/consent state is tied to identifiable users; preference-center
-  # and subscription functions touch personal data and messaging-consent records.
-  - id: braze.get_user_subscription_groups
-    object: SubscriptionGroup
-    action: get_user_subscription_groups
-    description: "List and get the subscription groups of a certain user."
-    category: Customer
-    risk: medium
-    business_impact: "Returns a specific user's subscription-group memberships; reveals personal messaging-consent state for an identifiable individual."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: braze.get_subscription_group_status
-    object: SubscriptionGroup
-    action: get_subscription_group_status
-    description: "Get the subscription state of a user in a subscription group."
-    category: Customer
-    risk: medium
-    business_impact: "Returns an individual user's opt-in/opt-out status; exposes personal messaging-consent state."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: braze.get_preference_centers
-    object: PreferenceCenter
-    action: get_preference_centers
-    description: "List your available preference centers."
-    category: Customer
-    risk: low
-    business_impact: "Lists preference-center configurations; consent-management metadata, no individual records returned."
-    compliance: [GDPR, UK_GDPR, CCPA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: braze.get_preference_center_details
-    object: PreferenceCenter
-    action: get_preference_center_details
-    description: "View details for a specific preference center including HTML content and options."
-    category: Customer
-    risk: low
-    business_impact: "Returns a preference center's HTML and option set; consent-management configuration, no individual records returned."
-    compliance: [GDPR, UK_GDPR, CCPA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: braze.get_custom_attributes
-    object: CustomAttribute
-    action: get_custom_attributes
-    description: "Export custom attributes recorded for your app."
-    category: Customer
-    risk: medium
-    business_impact: "Exports the custom-attribute schema recorded for the app; attribute names can reveal what personal data is tracked, though no per-user values are returned."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Operations ----------
-  # Cloud Data Ingestion + catalog functions touch data-pipeline and reference
-  # data; catalogs can hold arbitrary product/customer reference rows.
-  - id: braze.list_integrations
-    object: Integration
-    action: list_integrations
-    description: "Return a list of existing Cloud Data Ingestion integrations."
-    category: Operations
-    risk: low
-    business_impact: "Lists configured data-ingestion integrations; reveals which external data pipelines feed the workspace."
+    business_impact: "Generic dispatcher to invoke any other Braze MCP function; effective risk depends on the wrapped call."
     compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: braze.get_integration_job_sync_status
-    object: Integration
-    action: get_integration_job_sync_status
-    description: "Return past sync statuses for a given CDI integration."
-    category: Operations
-    risk: low
-    business_impact: "Returns sync history for a data-ingestion integration; operational status only."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: braze.get_catalogs
-    object: Catalog
-    action: get_catalogs
-    description: "Return a list of catalogs in a workspace."
-    category: Operations
-    risk: low
-    business_impact: "Lists catalogs in the workspace; metadata only, no item rows returned."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: braze.get_catalog_items
-    object: CatalogItem
-    action: get_catalog_items
-    description: "Return multiple catalog items and their content with pagination support."
-    category: Operations
-    risk: medium
-    business_impact: "Bulk-reads catalog item rows; catalogs may hold reference data about products or customers depending on workspace use."
-    compliance: [GDPR, UK_GDPR, CCPA]
-    sod_concern: false
-    confidence: low
-    access_methods: [REST, MCP]
-
-  - id: braze.get_catalog_item
-    object: CatalogItem
-    action: get_catalog_item
-    description: "Return a specific catalog item and its content by ID."
-    category: Operations
-    risk: low
-    business_impact: "Reads a single catalog item by ID; data sensitivity depends on what the workspace stores in the catalog."
-    compliance: []
-    sod_concern: false
-    confidence: low
-    access_methods: [REST, MCP]
-
-  # ---------- Marketing Analytics ----------
-  # Aggregate, non-profile analytics. Braze documents the MCP server as returning
-  # no PII / user-profile data, so these are tagged conservatively.
+    access_methods: [MCP]
+  # ---------- Campaigns ----------
   - id: braze.get_campaign_list
     object: Campaign
     action: get_campaign_list
-    description: "Export a list of campaigns with metadata."
-    category: Marketing Analytics
+    category: Campaigns
     risk: low
-    business_impact: "Lists campaigns with metadata; aggregate marketing configuration, no personal data."
+    business_impact: "Lists marketing campaign metadata; no PII subject identifiers exposed."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: braze.get_campaign_details
     object: Campaign
     action: get_campaign_details
-    description: "Get detailed information about specific campaigns."
-    category: Marketing Analytics
+    category: Campaigns
     risk: low
-    business_impact: "Returns campaign configuration details; aggregate marketing data, no personal records."
-    compliance: []
+    business_impact: "Reads campaign configuration and copy; reveals targeting logic."
+    compliance: [SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: braze.get_campaign_dataseries
     object: Campaign
     action: get_campaign_dataseries
-    description: "Retrieve time series analytics data for campaigns."
-    category: Marketing Analytics
+    category: Campaigns
     risk: low
-    business_impact: "Returns aggregate time-series campaign analytics; no individual-level data."
+    business_impact: "Returns time-series performance metrics for a campaign; aggregate only."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  # ---------- Canvases ----------
   - id: braze.get_canvas_list
     object: Canvas
     action: get_canvas_list
-    description: "Export a list of Canvases with metadata."
-    category: Marketing Analytics
+    category: Canvases
     risk: low
-    business_impact: "Lists Canvas journeys with metadata; aggregate marketing configuration, no personal data."
+    business_impact: "Lists Canvas (multi-step journey) metadata."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: braze.get_canvas_details
     object: Canvas
     action: get_canvas_details
-    description: "Get detailed information about specific Canvases."
-    category: Marketing Analytics
+    category: Canvases
     risk: low
-    business_impact: "Returns Canvas journey configuration details; aggregate marketing data, no personal records."
-    compliance: []
+    business_impact: "Reveals journey steps, branching, and audience definitions."
+    compliance: [SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: braze.get_canvas_data_summary
     object: Canvas
     action: get_canvas_data_summary
-    description: "Get summary analytics for Canvas performance."
-    category: Marketing Analytics
+    category: Canvases
     risk: low
-    business_impact: "Returns aggregate Canvas performance summaries; no individual-level data."
+    business_impact: "Summary performance for a Canvas; aggregate metrics."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: braze.get_canvas_data_series
     object: Canvas
     action: get_canvas_data_series
-    description: "Retrieve time series analytics data for Canvases."
-    category: Marketing Analytics
+    category: Canvases
     risk: low
-    business_impact: "Returns aggregate time-series Canvas analytics; no individual-level data."
+    business_impact: "Time-series performance for a Canvas; aggregate metrics."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: braze.get_segment_list
-    object: Segment
-    action: get_segment_list
-    description: "Export list of segments with analytics tracking status."
-    category: Marketing Analytics
+    access_methods: [MCP]
+  # ---------- Catalogs ----------
+  - id: braze.get_catalogs
+    object: Catalog
+    action: get_catalogs
+    category: Catalogs
     risk: low
-    business_impact: "Lists audience segments and their tracking status; reveals audience definitions, no individual records."
+    business_impact: "Lists product or content catalogs."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: braze.get_segment_details
-    object: Segment
-    action: get_segment_details
-    description: "Detailed information about specific segments."
-    category: Marketing Analytics
+    access_methods: [MCP]
+  - id: braze.get_catalog_items
+    object: CatalogItem
+    action: get_catalog_items
+    category: Catalogs
     risk: low
-    business_impact: "Returns segment filter definitions; reveals how an audience is targeted, no individual records returned."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: braze.get_segment_data_series
-    object: Segment
-    action: get_segment_data_series
-    description: "Time series analytics data for segments."
-    category: Marketing Analytics
-    risk: low
-    business_impact: "Returns aggregate segment-size time series; no individual-level data."
+    business_impact: "Lists items within a catalog."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: braze.get_scheduled_broadcasts
-    object: Message
-    action: get_scheduled_broadcasts
-    description: "List upcoming scheduled campaigns and Canvases."
-    category: Marketing Analytics
+    access_methods: [MCP]
+  - id: braze.get_catalog_item
+    object: CatalogItem
+    action: get_catalog_item
+    category: Catalogs
     risk: low
-    business_impact: "Lists upcoming scheduled sends; reveals the messaging calendar, no personal data."
+    business_impact: "Returns a single catalog item record."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  # ---------- Cloud Data Ingestion ----------
+  - id: braze.list_integrations
+    object: Integration
+    action: list_integrations
+    category: Cloud Data Ingestion
+    risk: low
+    business_impact: "Lists configured cloud-data ingestion integrations."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: braze.get_integration_job_sync_status
+    object: Integration
+    action: get_integration_job_sync_status
+    category: Cloud Data Ingestion
+    risk: low
+    business_impact: "Returns sync job status for a data ingestion integration."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  # ---------- Content Blocks & Templates ----------
   - id: braze.get_content_blocks_list
     object: ContentBlock
     action: get_content_blocks_list
-    description: "List your available content blocks."
-    category: Marketing Analytics
+    category: Content Blocks & Templates
     risk: low
-    business_impact: "Lists content blocks; reusable messaging-content metadata, no personal data."
+    business_impact: "Lists reusable content blocks."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: braze.get_content_blocks_info
     object: ContentBlock
     action: get_content_blocks_info
-    description: "Get information on your content blocks."
-    category: Marketing Analytics
+    category: Content Blocks & Templates
     risk: low
-    business_impact: "Returns content-block details; reusable messaging content, no personal data."
+    business_impact: "Returns content block bodies; may include marketing copy."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: braze.get_email_templates_list
     object: EmailTemplate
     action: get_email_templates_list
-    description: "List your available email templates."
-    category: Marketing Analytics
+    category: Content Blocks & Templates
     risk: low
-    business_impact: "Lists email templates; messaging-content metadata, no personal data."
+    business_impact: "Lists email templates."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: braze.get_email_template_info
     object: EmailTemplate
     action: get_email_template_info
-    description: "Get information on your email templates."
-    category: Marketing Analytics
+    category: Content Blocks & Templates
     risk: low
-    business_impact: "Returns email-template content and settings; messaging content, no personal data."
+    business_impact: "Returns email template body and metadata."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: braze.get_events_list
-    object: CustomEvent
-    action: get_events_list
-    description: "Export a list of custom events recorded for your app."
-    category: Marketing Analytics
-    risk: low
-    business_impact: "Lists custom-event names tracked by the app; event-schema metadata, no per-user values."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: braze.get_events_data_series
-    object: CustomEvent
-    action: get_events_data_series
-    description: "Retrieve time series data for custom events."
-    category: Marketing Analytics
-    risk: low
-    business_impact: "Returns aggregate time-series counts for a custom event; no individual-level data."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: braze.get_events
-    object: CustomEvent
-    action: get_events
-    description: "Get detailed event data with pagination support."
-    category: Marketing Analytics
+    access_methods: [MCP]
+  # ---------- Custom Attributes ----------
+  - id: braze.get_custom_attributes
+    object: CustomAttribute
+    action: get_custom_attributes
+    category: Custom Attributes
     risk: medium
-    business_impact: "Paginated read of detailed custom-event data; event payloads may include behavioral attributes depending on what the app records."
-    compliance: [GDPR, UK_GDPR, CCPA]
-    sod_concern: false
-    confidence: low
-    access_methods: [REST, MCP]
-
-  - id: braze.get_product_list
-    object: Product
-    action: get_product_list
-    description: "Export paginated list of product IDs."
-    category: Marketing Analytics
-    risk: low
-    business_impact: "Lists product IDs tracked for purchases; catalog reference data, no personal records."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: braze.get_revenue_series
-    object: Purchase
-    action: get_revenue_series
-    description: "Revenue analytics time series data."
-    category: Marketing Analytics
-    risk: low
-    business_impact: "Returns aggregate revenue time series; marketing-attributed revenue analytics, not financial-statement-of-record data."
-    compliance: []
+    business_impact: "Reveals custom user-attribute schema; can include sensitive trait names referencing PII fields."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: braze.get_quantity_series
-    object: Purchase
-    action: get_quantity_series
-    description: "Purchase quantity time series data."
-    category: Marketing Analytics
+    access_methods: [MCP]
+  # ---------- Events ----------
+  - id: braze.get_events_list
+    object: Event
+    action: get_events_list
+    category: Events
     risk: low
-    business_impact: "Returns aggregate purchase-quantity time series; no individual-level data."
+    business_impact: "Lists tracked event names."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- KPIs & Engagement ----------
-  # Aggregate KPI, send, and session time-series functions. These return
-  # counts only — no user-profile or individual-level data per Braze MCP docs.
+    access_methods: [MCP]
+  - id: braze.get_events_data_series
+    object: Event
+    action: get_events_data_series
+    category: Events
+    risk: low
+    business_impact: "Time-series counts for a tracked event; aggregate only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: braze.get_events
+    object: Event
+    action: get_events
+    category: Events
+    risk: low
+    business_impact: "Returns event metadata; aggregate."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  # ---------- KPIs ----------
   - id: braze.get_new_users_data_series
-    object: Kpi
+    object: KPI
     action: get_new_users_data_series
-    description: "Daily series of new user counts."
-    category: KPIs & Engagement
+    category: KPIs
     risk: low
-    business_impact: "Returns aggregate daily new-user counts; no individual-level data."
+    business_impact: "Time-series of new user counts; aggregate metric."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: braze.get_dau_data_series
-    object: Kpi
+    object: KPI
     action: get_dau_data_series
-    description: "Daily Active Users time series data."
-    category: KPIs & Engagement
+    category: KPIs
     risk: low
-    business_impact: "Returns aggregate daily-active-user counts; no individual-level data."
+    business_impact: "Daily active users metric."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: braze.get_mau_data_series
-    object: Kpi
+    object: KPI
     action: get_mau_data_series
-    description: "Monthly Active Users time series data."
-    category: KPIs & Engagement
+    category: KPIs
     risk: low
-    business_impact: "Returns aggregate monthly-active-user counts; no individual-level data."
+    business_impact: "Monthly active users metric."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: braze.get_uninstalls_data_series
-    object: Kpi
+    object: KPI
     action: get_uninstalls_data_series
-    description: "App uninstall time series data."
-    category: KPIs & Engagement
+    category: KPIs
     risk: low
-    business_impact: "Returns aggregate app-uninstall counts over time; no individual-level data."
+    business_impact: "Uninstall counts over time."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  # ---------- Messages & Sends ----------
+  - id: braze.get_scheduled_broadcasts
+    object: Broadcast
+    action: get_scheduled_broadcasts
+    category: Messages & Sends
+    risk: low
+    business_impact: "Lists upcoming scheduled broadcasts."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
   - id: braze.get_send_data_series
     object: Send
     action: get_send_data_series
-    description: "Daily analytics for tracked campaign sends."
-    category: KPIs & Engagement
+    category: Messages & Sends
     risk: low
-    business_impact: "Returns aggregate daily send analytics for a tracked send; no individual-level data."
+    business_impact: "Send-level performance metrics over time."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  # ---------- Sessions ----------
   - id: braze.get_session_data_series
     object: Session
     action: get_session_data_series
-    description: "Time series data for app session counts."
-    category: KPIs & Engagement
+    category: Sessions
     risk: low
-    business_impact: "Returns aggregate app-session counts over time; no individual-level data."
+    business_impact: "Session counts over time; aggregate."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [MCP]
+  # ---------- Preference Centers ----------
+  - id: braze.get_preference_centers
+    object: PreferenceCenter
+    action: get_preference_centers
+    category: Preference Centers
+    risk: low
+    business_impact: "Lists subscription preference centers."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: braze.get_preference_center_details
+    object: PreferenceCenter
+    action: get_preference_center_details
+    category: Preference Centers
+    risk: low
+    business_impact: "Returns preference-center configuration that drives consent UX."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  # ---------- Purchases ----------
+  - id: braze.get_product_list
+    object: Product
+    action: get_product_list
+    category: Purchases
+    risk: low
+    business_impact: "Lists tracked products."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: braze.get_revenue_series
+    object: Revenue
+    action: get_revenue_series
+    category: Purchases
+    risk: low
+    business_impact: "Aggregate revenue time series; informs commercial dashboards."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: braze.get_quantity_series
+    object: Revenue
+    action: get_quantity_series
+    category: Purchases
+    risk: low
+    business_impact: "Aggregate purchase quantity time series."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  # ---------- Segments ----------
+  - id: braze.get_segment_list
+    object: Segment
+    action: get_segment_list
+    category: Segments
+    risk: low
+    business_impact: "Lists user segments."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: braze.get_segment_data_series
+    object: Segment
+    action: get_segment_data_series
+    category: Segments
+    risk: low
+    business_impact: "Segment size over time; aggregate."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: braze.get_segment_details
+    object: Segment
+    action: get_segment_details
+    category: Segments
+    risk: medium
+    business_impact: "Reveals segment definition criteria, which can encode targeting on protected characteristics."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  # ---------- Subscription ----------
+  - id: braze.get_user_subscription_groups
+    object: SubscriptionGroup
+    action: get_user_subscription_groups
+    category: Subscription
+    risk: medium
+    business_impact: "Reads a user's subscription-group memberships; tied to consent state."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: braze.get_subscription_group_status
+    object: SubscriptionGroup
+    action: get_subscription_group_status
+    category: Subscription
+    risk: medium
+    business_impact: "Returns opt-in/opt-out state for a subscription group."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  # ---------- Platform & Auth ----------
+  - id: braze.get_sdk_authentication_keys
+    object: AuthKey
+    action: get_sdk_authentication_keys
+    category: Platform & Auth
+    risk: high
+    business_impact: "Returns SDK authentication key metadata; key material can authorize device-level identity claims."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]

@@ -1,262 +1,88 @@
-schema_version: "1.1"
+# NOTE: Stytch's MCP server reports "21 tools enabled" but Stytch's published
+# docs (stytch.com/docs/workspace-management/stytch-mcp,
+# stytch.com/docs/resources/workspace-management/stytch-mcp-server, and the
+# launch blog) only enumerate the seven canonical workspace-management tools
+# below. The remaining ~14 are surfaced only at runtime in MCP clients. We
+# curate the verified seven here; unmatched tool names from the same MCP
+# server fall through to platform-level matching for stytch.*
+schema_version: "1.2"
 platform: stytch
 display_name: Stytch
 source: langguard-editorial
-updated: "2026-06"
-reference: https://stytch.com/docs/workspace-management/stytch-mcp
+updated: "2026-05"
+maintainer: support@stytch.com
 actions:
-  # ---------- Secrets & Workflows ----------
-  - id: stytch.createSecret
-    object: Secret
-    action: createSecret
-    description: "Creates a new project secret (API key secret) used to authenticate to the project's Stytch auth APIs."
-    category: Secrets & Workflows
-    risk: critical
-    business_impact: "Mints a live credential that can authenticate to the project's authentication APIs; credential-issuance event that bypasses normal key-provisioning review."
-    compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: stytch.deleteSecret
-    object: Secret
-    action: deleteSecret
-    description: "Deletes an existing project secret."
-    category: Secrets & Workflows
-    risk: high
-    business_impact: "Revokes a project credential; can break production authentication for any service still using the secret."
-    compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: stytch.createPublicToken
-    object: PublicToken
-    action: createPublicToken
-    description: "Creates a new public token (publishable client identifier) for a project."
-    category: Secrets & Workflows
-    risk: low
-    business_impact: "Issues a non-secret publishable client identifier; reversible and not a credential on its own."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: stytch.getAllPublicTokens
-    object: PublicToken
-    action: getAllPublicTokens
-    description: "Lists all public tokens configured for a project."
-    category: Secrets & Workflows
-    risk: low
-    business_impact: "Reads the project's publishable client identifiers; no secret material disclosed."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: stytch.deletePublicToken
-    object: PublicToken
-    action: deletePublicToken
-    description: "Deletes a public token from a project."
-    category: Secrets & Workflows
-    risk: medium
-    business_impact: "Removes a publishable client identifier; can break client apps relying on that token until reconfigured."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Identity & Access ----------
-  - id: stytch.createRedirectURL
-    object: RedirectURL
-    action: createRedirectURL
-    description: "Adds an allowed redirect (callback) URL to a project's allowlist."
-    category: Identity & Access
-    risk: high
-    business_impact: "Adds an entry to the OAuth/auth callback allowlist; a malicious or overly broad URL is an open-redirect and account-takeover vector."
-    compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: stytch.updateRedirectURL
-    object: RedirectURL
-    action: updateRedirectURL
-    description: "Updates an existing allowed redirect URL on a project."
-    category: Identity & Access
-    risk: high
-    business_impact: "Changes an entry in the auth callback allowlist; a broadened URL is an open-redirect and account-takeover vector."
-    compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: stytch.deleteRedirectURL
-    object: RedirectURL
-    action: deleteRedirectURL
-    description: "Removes an allowed redirect URL from a project's allowlist."
-    category: Identity & Access
-    risk: medium
-    business_impact: "Removes an auth callback URL; can break login and password-reset flows that redirect to it."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: stytch.getAllRedirectURLs
-    object: RedirectURL
-    action: getAllRedirectURLs
-    description: "Lists all allowed redirect URLs configured for a project."
-    category: Identity & Access
-    risk: low
-    business_impact: "Reads the project's auth callback allowlist; configuration metadata only."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: stytch.getPasswordStrengthConfig
-    object: PasswordStrengthConfig
-    action: getPasswordStrengthConfig
-    description: "Reads the project's password-strength policy configuration."
-    category: Identity & Access
-    risk: low
-    business_impact: "Reads the project's password-strength policy; security configuration metadata only."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: stytch.setPasswordStrengthConfig
-    object: PasswordStrengthConfig
-    action: setPasswordStrengthConfig
-    description: "Sets the project's password-strength policy configuration."
-    category: Identity & Access
-    risk: high
-    business_impact: "Changes the project's password-strength enforcement; weakening it degrades the authentication security posture for all end users."
-    compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Configuration ----------
-  - id: stytch.updateConsumerSDKConfig
-    object: SDKConfig
-    action: updateConsumerSDKConfig
-    description: "Updates the Consumer (B2C) SDK configuration for a project, including enabled auth methods and SDK security settings."
-    category: Configuration
-    risk: high
-    business_impact: "Changes tenant-wide Consumer SDK auth settings; loosening enabled methods or security controls weakens the authentication posture for all end users."
-    compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: stytch.updateB2BSDKConfig
-    object: SDKConfig
-    action: updateB2BSDKConfig
-    description: "Updates the B2B SDK configuration for a project, including enabled auth methods and SDK security settings."
-    category: Configuration
-    risk: high
-    business_impact: "Changes tenant-wide B2B SDK auth settings; loosening enabled methods or security controls weakens the authentication posture for all member organizations."
-    compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: stytch.getConsumerSDKConfig
-    object: SDKConfig
-    action: getConsumerSDKConfig
-    description: "Reads the Consumer (B2C) SDK configuration for a project."
-    category: Configuration
-    risk: low
-    business_impact: "Reads tenant-wide Consumer SDK auth configuration; security configuration metadata only."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: stytch.getB2BSDKConfig
-    object: SDKConfig
-    action: getB2BSDKConfig
-    description: "Reads the B2B SDK configuration for a project."
-    category: Configuration
-    risk: low
-    business_impact: "Reads tenant-wide B2B SDK auth configuration; security configuration metadata only."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: stytch.createProject
-    object: Project
-    action: createProject
-    description: "Creates a new Stytch project within the workspace."
-    category: Configuration
-    risk: medium
-    business_impact: "Provisions a new authentication project in the workspace; reversible but establishes new tenant-wide configuration."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+  # ---------- Project Management ----------
   - id: stytch.listProjects
     object: Project
     action: listProjects
-    description: "Lists all projects in the workspace."
-    category: Configuration
+    category: Project Management
     risk: low
-    business_impact: "Reads the inventory of authentication projects in the workspace; configuration metadata only."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Lists Stytch projects in the workspace."
+    compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Messaging ----------
-  - id: stytch.createEmailTemplate
-    object: EmailTemplate
-    action: createEmailTemplate
-    description: "Creates a new email template (e.g. magic-link, OTP, password-reset) for a project."
-    category: Messaging
+    access_methods: [MCP]
+  - id: stytch.createProject
+    object: Project
+    action: createProject
+    category: Project Management
     risk: medium
-    business_impact: "Adds an authentication-email template; malicious content is a phishing vector since end users receive it as a trusted auth message."
+    business_impact: "Creates a new Stytch project; expands the workspace's authentication footprint."
     compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: stytch.updateEmailTemplate
-    object: EmailTemplate
-    action: updateEmailTemplate
-    description: "Updates an existing email template for a project."
-    category: Messaging
-    risk: medium
-    business_impact: "Changes an authentication-email template; altered content is a phishing vector since end users receive it as a trusted auth message."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
+    access_methods: [MCP]
+  # ---------- SDK & Auth Configuration ----------
+  - id: stytch.updateConsumerSDKConfig
+    object: SDKConfig
+    action: updateConsumerSDKConfig
+    category: SDK & Auth Configuration
+    risk: critical
+    business_impact: "Reconfigures consumer SDK settings, enabled auth products, and permissions; misconfiguration can disable MFA or lock users out at scale."
+    compliance: [SOC2, ISO_27001, NIST_CSF, NY_DFS_500, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: stytch.deleteEmailTemplate
-    object: EmailTemplate
-    action: deleteEmailTemplate
-    description: "Deletes an email template from a project."
-    category: Messaging
-    risk: medium
-    business_impact: "Removes an authentication-email template; can break login or password-reset emails that reference it."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: stytch.getAllEmailTemplates
-    object: EmailTemplate
-    action: getAllEmailTemplates
-    description: "Lists all email templates configured for a project."
-    category: Messaging
+    access_methods: [MCP]
+  # ---------- Redirect URLs ----------
+  - id: stytch.getAllRedirectURLs
+    object: RedirectURL
+    action: getAllRedirectURLs
+    category: Redirect URLs
     risk: low
-    business_impact: "Reads the project's authentication-email templates; configuration content only."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Reads registered redirect URLs for the project."
+    compliance: [SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [MCP]
+  - id: stytch.createRedirectURLs
+    object: RedirectURL
+    action: createRedirectURLs
+    category: Redirect URLs
+    risk: high
+    business_impact: "Registers new authentication callback URLs; an attacker-controlled URL here enables credential interception."
+    compliance: [SOC2, ISO_27001, NIST_CSF, GDPR, UK_GDPR, CCPA]
+    sod_concern: true
+    confidence: high
+    access_methods: [MCP]
+  # ---------- Public Tokens ----------
+  - id: stytch.getAllPublicTokens
+    object: PublicToken
+    action: getAllPublicTokens
+    category: Public Tokens
+    risk: medium
+    business_impact: "Reads public tokens used by client applications; intended public credentials but still a credential."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: stytch.createPublicToken
+    object: PublicToken
+    action: createPublicToken
+    category: Public Tokens
+    risk: high
+    business_impact: "Issues a new public token for a project; expands the set of identifiers that can initiate auth flows."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]

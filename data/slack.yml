@@ -1,172 +1,104 @@
-schema_version: "1.1"
+schema_version: "1.2"
 platform: slack
 display_name: Slack
 source: langguard-editorial
-updated: "2026-06"
-reference: https://docs.slack.dev/ai/slack-mcp-server/
-# Tool ids verified verbatim from the LIVE in-session Slack connector tools/list
-# (mcp__claude_ai_Slack__*). The hosted server (https://mcp.slack.com/mcp) gates
-# anonymous tools/list behind OAuth (401), so the ids below come from the running
-# server's surface, not from REST docs or doc-page capability labels. Every id is
-# slack.<verbatim_tool_name> with the slack_ prefix preserved (id_form verbatim,
-# the default — field omitted). 13 tools discovered, all 13 written.
+updated: "2026-05"
+server_website: https://docs.slack.dev/ai/slack-mcp-server
+maintainer: https://docs.slack.dev/developer-support/
+# The official Slack MCP server (https://mcp.slack.com/mcp) is closed-source
+# and gates `tools/list` behind OAuth. Slack's developer docs publish the tool
+# surface only as plain-language capability labels in a docs table — verbatim
+# tool identifiers are not publicly available. Per CONTRIBUTING.md Rule 1's
+# escape hatch, every entry below uses `id_form: capability`. When a real
+# `tools/list` capture becomes available, refresh this file to `id_form:
+# verbatim` with the actual identifier strings.
+reference: https://docs.slack.dev/ai/slack-mcp-server/developing
 actions:
-  # ---------- Data Access ----------
-  - id: slack.slack_search_public_and_private
+  # ---------- Messaging ----------
+  - id: slack.send_message
     object: Message
-    action: slack_search_public_and_private
-    description: "Searches messages across public and private channels, group DMs, and direct messages the user can access."
-    category: Data Access
-    risk: high
-    business_impact: "Reaches private channels and direct messages across the workspace; a single call can surface confidential or PII-bearing private communications."
+    action: send_message
+    id_form: capability
+    description: "Send a message"
+    category: Messaging
+    risk: low
+    business_impact: "Posts a message to a channel, thread, or DM as the authorized user; agent speech in Slack."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  # ---------- Conversations ----------
+  - id: slack.read_channel_or_thread
+    object: Conversation
+    action: read_channel_or_thread
+    id_form: capability
+    description: "Read a channel/thread"
+    category: Conversations
+    risk: medium
+    business_impact: "Surfaces channel and thread history to the caller; private channel and DM history is personal communications data."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: slack.slack_search_public
-    object: Message
-    action: slack_search_public
-    description: "Searches messages across public channels the user can access."
-    category: Data Access
-    risk: medium
-    business_impact: "Returns matching public-channel messages; can surface personal data posted in public conversations, but does not reach private channels or DMs."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: slack.slack_read_channel
-    object: Channel
-    action: slack_read_channel
-    description: "Retrieves the message history of a single channel."
-    category: Data Access
-    risk: medium
-    business_impact: "Pulls a channel's message history; can expose confidential or PII-bearing conversation content within that channel's scope."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: slack.slack_read_thread
-    object: Thread
-    action: slack_read_thread
-    description: "Retrieves the full reply chain of a single message thread."
-    category: Data Access
-    risk: medium
-    business_impact: "Returns a thread's full reply conversation; can expose confidential or PII-bearing discussion content."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: slack.slack_search_channels
-    object: Channel
-    action: slack_search_channels
-    description: "Searches the workspace's channels by name and description."
-    category: Data Access
-    risk: low
-    business_impact: "Returns channel metadata matching a query; reveals channel structure but not message content."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Identity & Admin ----------
-  - id: slack.slack_search_users
-    object: User
-    action: slack_search_users
-    description: "Searches the workspace directory for users by name, email, or user ID."
-    category: Identity & Admin
-    risk: medium
-    business_impact: "Returns directory records for matching users; exposes names, emails, and user IDs as personal data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: slack.slack_read_user_profile
-    object: User
-    action: slack_read_user_profile
-    description: "Retrieves a single user's full profile, including custom profile fields."
-    category: Identity & Admin
-    risk: medium
-    business_impact: "Returns a user's complete profile including custom fields; exposes personal data about an identifiable individual."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Messaging ----------
-  - id: slack.slack_send_message
+    access_methods: [MCP]
+  - id: slack.search_messages
     object: Message
-    action: slack_send_message
-    description: "Posts a message to a channel, group DM, or direct message."
-    category: Messaging
-    risk: low
-    business_impact: "Posts a message to a conversation; visible to that conversation's members and individually attributed."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: slack.slack_send_message_draft
-    object: Message
-    action: slack_send_message_draft
-    description: "Generates a draft message for human review before it is posted."
-    category: Messaging
-    risk: low
-    business_impact: "Stages a draft message for review without posting it; no message is delivered until a human sends it."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: slack.slack_schedule_message
-    object: Message
-    action: slack_schedule_message
-    description: "Schedules a message to be posted to a conversation at a future time."
-    category: Messaging
-    risk: low
-    business_impact: "Queues a message for future delivery to a conversation; reversible until the scheduled send time."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Canvas ----------
-  - id: slack.slack_update_canvas
-    object: Canvas
-    action: slack_update_canvas
-    description: "Modifies an existing Slack canvas, overwriting its content."
-    category: Canvas
+    action: search_messages
+    id_form: capability
+    description: "Search messages/channels"
+    category: Conversations
     risk: high
-    business_impact: "Overwrites the full content of an existing canvas with no built-in version recovery; the prior document state is irreversibly lost."
+    business_impact: "Cross-workspace message search returns DMs, private-channel content, and posts at scale; data-exfiltration vector for personal communications."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: slack.search_files
+    object: File
+    action: search_files
+    id_form: capability
+    description: "Search files"
+    category: Conversations
+    risk: high
+    business_impact: "Surfaces files shared in any conversation the user can see; file content can include PII, credentials, or regulated data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  # ---------- Canvases ----------
+  - id: slack.write_canvas
+    object: Canvas
+    action: write_canvas
+    id_form: capability
+    description: "Create/update a canvas"
+    category: Canvases
+    risk: medium
+    business_impact: "Writes durable workspace documents; persists agent output beyond a single message and may be visible to many members."
     compliance: [SOC2, ISO_27001]
     sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: slack.slack_create_canvas
-    object: Canvas
-    action: slack_create_canvas
-    description: "Creates and shares a new Slack canvas document."
-    category: Canvas
-    risk: low
-    business_impact: "Creates a new canvas document; additive and individually attributed."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: slack.slack_read_canvas
-    object: Canvas
-    action: slack_read_canvas
-    description: "Exports the content of a Slack canvas as markdown."
-    category: Canvas
+    confidence: medium
+    access_methods: [MCP]
+  # ---------- Identity & Directory ----------
+  - id: slack.read_user_profile
+    object: UserProfile
+    action: read_user_profile
+    id_form: capability
+    description: "Read user profile/email"
+    category: Identity & Directory
     risk: medium
-    business_impact: "Returns the full content of a canvas; can expose confidential or PII-bearing document material depending on the canvas."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    business_impact: "Returns a user's profile and email; single-record PII read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP]
+    access_methods: [MCP]
+  - id: slack.search_users
+    object: User
+    action: search_users
+    id_form: capability
+    description: "Search users"
+    category: Identity & Directory
+    risk: medium
+    business_impact: "Enumerates workspace members with profile/email matches; bulk surface of directory PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]

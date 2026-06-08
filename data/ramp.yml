@@ -1,395 +1,185 @@
-schema_version: "1.1"
+schema_version: "1.2"
 platform: ramp
 display_name: Ramp
 source: langguard-editorial
-updated: "2026-06"
-reference: https://docs.ramp.com/developer-api/v1/ramp-mcp
-# Tool surface for the REMOTE, account-acting Ramp MCP server at
-# https://mcp.ramp.com/mcp — the server the claude.com/connectors/ramp page links
-# to ("ramp-mcp-remote"). This REPLACES the prior ramp.yml, which was built from
-# the separate local "Developer MCP"/ETL server (GitHub ramp-public/ramp_mcp:
-# load_transactions / process_data / execute_query / ...). That is a different
-# server with a different surface — its own header admitted "the hosted
-# mcp.ramp.com endpoint may add additional approval/write tools" — and is not the
-# connector target, so those ids are excluded here.
-#
-# Live tools/list introspection of mcp.ramp.com is OAuth-gated (401), and the
-# vendor DELIBERATELY does not publish verbatim tool ids for this server: both
-# authoritative docs state "Tools are grouped here by what the user is trying to
-# accomplish, not by tool name — the underlying surface evolves continuously." A
-# full grep of /llms-full.txt (696 KB) found zero remote tool ids. Per the curator
-# spec's capability-form fallback, entries below use id_form: capability with the
-# verbatim vendor capability label in `description`, a slugified id, and confidence
-# capped at medium (intent-level match, not identifier-level).
-#
-# The ONE exception is ramp_get_agent_card_creds — the single verbatim id the AI
-# Agents guide names in prose ("Available through both MCP (ramp_get_agent_card_creds)
-# and the CLI"). That entry is id_form: verbatim.
-#
-# The OAuth scope list (/.well-known/oauth-protected-resource) corroborates the
-# write surface: transactions:write, reimbursements:write, approvals:write,
-# cards:write, trips:write, limits:write, receipts:write, comments:write.
-# Bill approvals are explicitly NOT yet available via MCP, so there is no
-# bill-approval / vendor-payout surface here.
+updated: "2026-05"
+server_website: https://github.com/ramp-public/ramp_mcp
+maintainer: https://github.com/ramp-public/ramp_mcp/issues
+# NOTE: tool ids are sourced from the open-source ramp_mcp project (an ETL-style
+# server: load_* tools fetch into an ephemeral SQLite DB; execute_query analyzes).
+# The hosted mcp.ramp.com endpoint may add additional approval/write tools.
 actions:
-  # ---------- Approvals (financial-state writes — highest blast radius) ----------
-  - id: ramp.approve_transactions
+  # ---------- Financial ----------
+  - id: ramp.load_transactions
     object: Transaction
-    action: approve_transactions
-    id_form: capability
-    description: "Approve or reject transactions"
+    action: load_transactions
     category: Financial
-    risk: critical
-    business_impact: "Approves or rejects card transactions, finalizing corporate spend that flows into the general ledger and financial statements; one principal completing this bypasses the maker-checker approval control."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  - id: ramp.approve_reimbursements
+    risk: high
+    business_impact: "Pulls corporate card transaction records into the analysis sandbox; financial PII at scale."
+    compliance: [SOX, COSO, GLBA, PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: ramp.load_reimbursements
     object: Reimbursement
-    action: approve_reimbursements
-    id_form: capability
-    description: "Approve or reject reimbursements"
+    action: load_reimbursements
     category: Financial
-    risk: critical
-    business_impact: "Approves or rejects employee reimbursements, authorizing a payout that hits the books; unilateral self-approval bypasses segregation-of-duties on expense disbursement."
+    risk: high
+    business_impact: "Pulls employee reimbursement records, including amounts and supporting metadata."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: ramp.load_bills
+    object: Bill
+    action: load_bills
+    category: Financial
+    risk: medium
+    business_impact: "Imports vendor bills due for payment."
     compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  - id: ramp.approve_unified_requests
-    object: UnifiedRequest
-    action: approve_unified_requests
-    id_form: capability
-    description: "Approve or reject unified requests (purchase orders, fund requests)"
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: ramp.load_bank_accounts
+    object: BankAccount
+    action: load_bank_accounts
     category: Financial
-    risk: critical
-    business_impact: "Approves or rejects purchase orders and fund requests, committing the company to spend; one principal approving bypasses the procurement maker-checker control."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  - id: ramp.view_pending_approvals
-    object: Approval
-    action: view_pending_approvals
-    id_form: capability
-    description: "View pending approvals across types"
+    risk: high
+    business_impact: "Loads bank-account configuration including routing/account references."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001, NY_DFS_500]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: ramp.load_vendor_bank_accounts
+    object: VendorBankAccount
+    action: load_vendor_bank_accounts
     category: Financial
+    risk: high
+    business_impact: "Loads vendor payout banking details; tampering enables payment redirection fraud."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [MCP]
+  - id: ramp.load_spend_limits
+    object: SpendLimit
+    action: load_spend_limits
+    category: Financial
+    risk: medium
+    business_impact: "Imports per-card or per-program spend limits."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: ramp.load_spend_programs
+    object: SpendProgram
+    action: load_spend_programs
+    category: Financial
+    risk: medium
+    business_impact: "Imports spend program definitions used to govern card-issuance policy."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: ramp.load_vendors
+    object: Vendor
+    action: load_vendors
+    category: Financial
+    risk: medium
+    business_impact: "Imports the vendor master file."
+    compliance: [SOX, COSO, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  # ---------- Operations ----------
+  - id: ramp.load_locations
+    object: Location
+    action: load_locations
+    category: Operations
     risk: low
-    business_impact: "Reads the queue of pending approvals across transactions, reimbursements, and requests; surfaces pending spend and who owes what, read-only."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Imports configured business locations."
+    compliance: []
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  # ---------- Purchasing & Agent Cards (real payment authority) ----------
-  - id: ramp.ramp_get_agent_card_creds
-    object: AgentCard
-    action: ramp_get_agent_card_creds
-    description: "Generate per-merchant, per-amount Agent Card payment credentials via Visa Intelligent Commerce for an agent purchase."
-    reference: https://docs.ramp.com/developer-api/v1/build-for-ai-agents
-    category: Financial
-    risk: critical
-    business_impact: "Mints a live single-use card payment credential the agent can spend with, granting real purchasing authority on company funds; card-credential data falls under PCI and the resulting spend posts to financial statements."
-    compliance: [PCI, SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  # ---------- Cards (card-state writes; PCI-adjacent) ----------
-  - id: ramp.lock_card
-    object: Card
-    action: lock_card
-    id_form: capability
-    description: "Manage cards (lock, unlock, activate) — lock"
-    category: Cards
-    risk: medium
-    business_impact: "Locks a corporate card, immediately blocking the cardholder from spending; reversible but disrupts an employee's payment ability."
-    compliance: [PCI, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  - id: ramp.unlock_card
-    object: Card
-    action: unlock_card
-    id_form: capability
-    description: "Manage cards (lock, unlock, activate) — unlock"
-    category: Cards
-    risk: medium
-    business_impact: "Unlocks a corporate card, restoring spend ability; re-enables a payment instrument and is in scope for PCI card-state controls."
-    compliance: [PCI, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  - id: ramp.activate_card
-    object: Card
-    action: activate_card
-    id_form: capability
-    description: "Manage cards (lock, unlock, activate) — activate"
-    category: Cards
-    risk: medium
-    business_impact: "Activates a corporate card by last-four digits, bringing a live payment instrument into use; PCI applies to the card-activation flow."
-    compliance: [PCI, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  - id: ramp.list_cards
-    object: Card
-    action: list_cards
-    id_form: capability
-    description: "List cards (read of issued cards and their status)"
-    category: Cards
-    risk: medium
-    business_impact: "Reads issued corporate cards, their holders, and activation status; card metadata is typically masked to last-four, but PCI applies if any full PAN is exposed."
-    compliance: [PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  # ---------- Transactions (edits + sensitive reads) ----------
-  - id: ramp.edit_transaction
-    object: Transaction
-    action: edit_transaction
-    id_form: capability
-    description: "Edit transactions (memo, fund assignment, accounting category, trip assignment)"
-    category: Financial
-    risk: medium
-    business_impact: "Edits a transaction's memo, fund assignment, accounting category, or trip; reversible but alters the coding that feeds the general ledger and audit trail."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  - id: ramp.search_transactions
-    object: Transaction
-    action: search_transactions
-    id_form: capability
-    description: "Search and retrieve card transactions"
-    category: Financial
-    risk: medium
-    business_impact: "Searches card transactions by merchant, amount, date, or user; returns named employees' spend detail — financial data tied to identifiable individuals."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  - id: ramp.view_declined_transactions
-    object: Transaction
-    action: view_declined_transactions
-    id_form: capability
-    description: "View declined transactions and get decline explanations"
-    category: Financial
+    confidence: high
+    access_methods: [MCP]
+  - id: ramp.load_departments
+    object: Department
+    action: load_departments
+    category: Operations
     risk: low
-    business_impact: "Reads declined transactions and their decline reasons for named cardholders; financial-activity detail of identifiable individuals."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Imports the department list used for cost-center attribution."
+    compliance: [SOX, COSO]
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  - id: ramp.load_spend_export
-    object: Transaction
-    action: load_spend_export
-    id_form: capability
-    description: "Pull full spend exports and run SQL-style analysis"
+    confidence: high
+    access_methods: [MCP]
+  - id: ramp.load_entities
+    object: Entity
+    action: load_entities
+    category: Operations
+    risk: low
+    business_impact: "Imports legal-entity definitions used for accounting consolidation."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  # ---------- Identity & Access ----------
+  - id: ramp.load_users
+    object: User
+    action: load_users
+    category: Identity & Access
+    risk: medium
+    business_impact: "Imports the user roster including employee identifiers and roles."
+    compliance: [SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  # ---------- Data Access ----------
+  - id: ramp.process_data
+    object: AnalysisJob
+    action: process_data
+    category: Data Access
+    risk: low
+    business_impact: "Stages loaded data into the analysis SQLite database."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: ramp.execute_query
+    object: Query
+    action: execute_query
     category: Data Access
     risk: high
-    business_impact: "Pulls a full company-wide spend export for analysis; bulk extraction of financial records plus employee PII leaving as a single dataset, a data-exfiltration event regardless of intent."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    business_impact: "Runs arbitrary SQL over loaded financial records inside the sandbox."
+    compliance: [SOX, COSO, GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  # ---------- Reimbursements (expense disbursement workflow) ----------
-  - id: ramp.submit_reimbursement
-    object: Reimbursement
-    action: submit_reimbursement
-    id_form: capability
-    description: "Submit and resubmit reimbursements"
-    category: Financial
-    risk: medium
-    business_impact: "Submits or resubmits an expense reimbursement into the approval pipeline; initiates a payout request tied to a named employee but is still gated by downstream approval."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOX, COSO]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  - id: ramp.search_reimbursements
-    object: Reimbursement
-    action: search_reimbursements
-    id_form: capability
-    description: "View recent reimbursements and search with filters"
-    category: Financial
+    confidence: high
+    access_methods: [MCP]
+  - id: ramp.clear_table
+    object: AnalysisTable
+    action: clear_table
+    category: Data Access
     risk: low
-    business_impact: "Reads reimbursement records with filters; surfaces named employees' expense claims and amounts."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  # ---------- Accounting (GL coding writes) ----------
-  - id: ramp.apply_gl_coding
-    object: AccountingRecord
-    action: apply_gl_coding
-    id_form: capability
-    description: "Apply GL coding to transactions and reimbursements"
-    category: Financial
-    risk: medium
-    business_impact: "Applies general-ledger coding to transactions and reimbursements; reversible but directly shapes how spend lands in financial reporting and is in scope for SOX ITGCs."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  - id: ramp.get_tracking_categories
-    object: AccountingCategory
-    action: get_tracking_categories
-    id_form: capability
-    description: "Query vendors and accounting (tracking) categories"
-    category: Financial
-    risk: low
-    business_impact: "Reads accounting tracking categories and vendor lists used for coding; financial-system reference data, no consumer PII."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  # ---------- Trips (travel writes + traveller PII reads) ----------
-  - id: ramp.create_trip
-    object: Trip
-    action: create_trip
-    id_form: capability
-    description: "Create trips"
-    category: Operations
-    risk: low
-    business_impact: "Creates a travel trip record for a named traveller; reversible write that captures an individual's itinerary data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  - id: ramp.connect_transactions_to_trips
-    object: Trip
-    action: connect_transactions_to_trips
-    id_form: capability
-    description: "Connect transactions to trips"
-    category: Operations
-    risk: low
-    business_impact: "Associates card transactions with a trip for a named traveller; reversible categorization write linking spend to an individual's travel."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  - id: ramp.view_trips
-    object: Trip
-    action: view_trips
-    id_form: capability
-    description: "View trips with status filters and retrieve flight and hotel bookings"
-    category: Operations
-    risk: medium
-    business_impact: "Reads trips and their flight/hotel bookings; exposes named travellers' itineraries, dates, and locations over time."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  # ---------- Comments & Communication ----------
-  - id: ramp.post_comment
-    object: Comment
-    action: post_comment
-    id_form: capability
-    description: "Post comments and mention users on workflow items"
-    category: Operations
-    risk: low
-    business_impact: "Posts a comment and mentions users on a workflow item; low-impact write that records named individuals and is visible to participants."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  # ---------- Banking & Treasury (financial-account reads) ----------
-  - id: ramp.get_treasury_balances
-    object: TreasuryAccount
-    action: get_treasury_balances
-    id_form: capability
-    description: "Get treasury balances"
-    category: Financial
-    risk: medium
-    business_impact: "Reads Ramp treasury, checking, and investment balances for the company; sensitive corporate financial-position data, admin-scoped."
-    compliance: [GLBA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  # ---------- Directory & Org (people reads) ----------
-  - id: ramp.get_org_chart
-    object: OrgChart
-    action: get_org_chart
-    id_form: capability
-    description: "Get the org chart"
-    category: Directory & Org
-    risk: low
-    business_impact: "Reads the company org chart; bulk personal data mapping named employees to reporting lines and departments."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  - id: ramp.search_users
-    object: User
-    action: search_users
-    id_form: capability
-    description: "Get user details and search users"
-    category: Directory & Org
-    risk: low
-    business_impact: "Searches the employee directory and returns user details; personal data of identifiable individuals."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  - id: ramp.load_org_reference_data
-    object: Department
-    action: load_org_reference_data
-    id_form: capability
-    description: "Load departments, entities, and locations"
-    category: Directory & Org
-    risk: low
-    business_impact: "Reads departments, legal entities, and office locations; organizational reference data with no consumer PII."
+    business_impact: "Empties the ephemeral analysis SQLite table; no impact on Ramp data."
     compliance: []
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  # ---------- Policy & Help (Q&A reads) ----------
-  - id: ramp.answer_policy_questions
-    object: Policy
-    action: answer_policy_questions
-    id_form: capability
-    description: "Policy Q&A from natural-language prompts and decline explanations"
-    category: Operations
+    confidence: high
+    access_methods: [MCP]
+  - id: ramp.get_ramp_categories
+    object: Category
+    action: get_ramp_categories
+    category: Data Access
     risk: low
-    business_impact: "Answers natural-language policy questions and explains transaction declines; reads policy configuration and individual decline reasons, no write."
+    business_impact: "Returns the canonical Ramp expense-category taxonomy."
     compliance: []
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
-
-  - id: ramp.search_help_center
-    object: HelpArticle
-    action: search_help_center
-    id_form: capability
-    description: "Help Center search"
-    category: Operations
+    confidence: high
+    access_methods: [MCP]
+  - id: ramp.get_currencies
+    object: Currency
+    action: get_currencies
+    category: Data Access
     risk: low
-    business_impact: "Searches Ramp's Help Center articles; public documentation read with no account data."
+    business_impact: "Returns supported currencies and ISO codes."
     compliance: []
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP, CLI]
+    confidence: high
+    access_methods: [MCP]

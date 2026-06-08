@@ -2,7 +2,19 @@
   <img src="./logo.png" alt="SCOPE MCP" width="320">
 </p>
 
-<p align="center"><b>SCOPE</b> - <b>S</b>ecurity, <b>C</b>ompliance &amp; <b>O</b>perational <b>P</b>olicy <b>E</b>valuation.</p>
+<p align="center"><b>LangGuard SCOPE</b> - <b>S</b>ecurity, <b>C</b>ompliance &amp; <b>O</b>perational <b>P</b>olicy <b>E</b>valuation.</p>
+
+<p align="center">
+  <a href="https://scope-mcp.langguard.ai/register-account"><b>Get an access token</b></a>
+  ·
+  <a href="https://discord.gg/TPmBYR6pV"><b>Join the Discord</b></a>
+  ·
+  <a href="https://github.com/LangGuard-AI/scope-mcp/issues/new?template=data-revision.yml"><b>File a data revision</b></a>
+</p>
+
+<p align="center">
+  <img src="./intro_image.png" alt="SCOPE pre-flight compliance evaluation" width="675">
+</p>
 
 ## Why this exists
 
@@ -25,9 +37,19 @@ A Claude plugin that runs a **pre-flight evaluation** on agentic workflows you'r
 
 - A **risk level** for every action (`low` / `medium` / `high` / `critical`)
 - The **business impact** in one sentence
-- Which **regulatory regimes** the action touches (25 codes - GDPR, HIPAA, PCI, SOX, SOC 2, EU AI Act, NY DFS 500, and more)
+- Which **regulatory regimes** the action touches (26 codes - GDPR, HIPAA, PCI, SOX, SOC 2, EU AI Act, ISO 42001, NY DFS 500, and more)
 - Whether the action raises a **segregation-of-duties** concern
 - A **recommendation**: `proceed`, `proceed_with_audit_trail`, `require_human_review`, `require_human_approval`, or `block_and_require_human_approval`
+
+## Quick start for contributors
+
+New to contributing? Start here:
+
+1. **`/scope-mcp:curate <platform>`** — add or expand a platform's action coverage.
+2. **`/scope-mcp:audit <platform>`** — review existing entries for drift/errors.
+3. **`/scope-mcp:compliance-check <regime>`** — produce a cross-platform compliance report.
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed rules on tool ids, confidence calibration, and regime tagging.
 
 ## Quickstart
 
@@ -45,9 +67,20 @@ Three things to know before you submit:
 
 #### Claude Cowork
 
-1. **Add the plugin** in Claude Cowork: Settings → Plugins → *Add plugin* → paste `https://github.com/LangGuard-AI/scope-mcp` as the repo URL.
-2. When prompted, **authorize via OAuth**. You'll be redirected to a consent page where you paste the `cp_…` token from your signup email. Claude Cowork stores the authorization; you don't see the token again.
-3. Start designing an agent — SCOPE's auto-trigger skill fires the moment you describe one.
+> **Demo video**: [Installing SCOPE in Claude Cowork](https://youtu.be/7bVYyXjIPGU)
+
+1. **Add the plugin** in Claude Cowork: Customize → Personal Plugins → *Click the + icon* → Create Plugin → Add Marketplace → paste `LangGuard-AI/scope-mcp` as the  URL. Then, click on the Scope MCP plugin entry, and click the `Install` button.
+2. **Authorize via OAuth.** Under 'Personal Plugins, 'Scope mcp', 'Connectors', click the 'Install' button, followed by 'Add'. Then, click the 'Connect' button. Paste the `cp_…` token from your signup email in the Client Secret field, and enter anything you want into the Client ID field. Claude Cowork stores the authorization; you don't see the token again.
+3. **Allow the plugin to run.** Claude Cowork prompts you to approve the plugin's tool access. Choose **Always allow** (or the equivalent in your build) so SCOPE's audit tool can fire without re-prompting on every call.
+4. Start designing an agent — SCOPE's auto-trigger skill fires the moment you describe one.
+
+#### Claude Code (desktop app / GUI)
+
+1. **Open Claude Code's plugin manager.** In any chat, type `/plugin` to open the interactive plugin chooser, or open the **Plugins** panel from the app's settings/sidebar (the exact location depends on your Claude Code version — recent builds expose it both ways).
+2. **Add a marketplace.** Choose **Add marketplace** and paste `https://github.com/LangGuard-AI/scope-mcp` as the source.
+3. **Install the plugin.** From the resolved marketplace, select **scope-mcp** and confirm install. Claude Code wires up the bundled skills (`audit`, `compliance-check`, `curate`) and the plugin's MCP server config in one step.
+4. **Allow the plugin to run.** Claude Code prompts you to approve the plugin's tool access on first use. Choose **Always allow** so subsequent MCP calls don't re-prompt — otherwise every `/scope-mcp:audit …` invocation will pause for confirmation.
+5. **Authorize on first MCP call.** Claude Code then starts an OAuth flow against the hosted SCOPE server. Paste your `cp_…` token from your signup email when the consent page asks for it; Claude Code reuses the resulting authorization across subsequent sessions.
 
 #### Claude Code CLI
 
@@ -59,9 +92,10 @@ Three things to know before you submit:
 /plugin install scope-mcp@scope-mcp-local
 ```
 
-The plugin's `.mcp.json` configures Claude Code to launch [`mcp-remote`](https://github.com/geelen/mcp-remote) as a stdio subprocess; `mcp-remote` proxies stdio↔HTTP to `https://scope-mcp.langguard.ai/mcp` and handles the OAuth dance on first run. A browser tab opens — paste your `cp_…` token in the consent page; the resulting access token caches under `~/.mcp-auth/` and is reused silently across sessions.
+The plugin ships an `.mcp.json` that points Claude Code at the hosted SCOPE MCP server over HTTP. The first time you trigger an MCP call (e.g. `/scope-mcp:audit …`), Claude Code prompts you twice:
 
-> Requires **Node 18+** on `PATH` (the bridge uses `npx` on first run; the package is then cached by npm).
+1. **Approve the plugin's tool access.** Choose **Always allow** so subsequent calls don't re-prompt.
+2. **Authorize via OAuth.** Paste your `cp_…` token from your signup email when the consent page opens. Claude Code reuses the resulting authorization across sessions.
 
 #### Codex
 
@@ -79,7 +113,7 @@ The end-to-end install (skills + MCP server in one shot) goes through the `/plug
    ```
    LangGuard-AI/scope-mcp
    ```
-4. From the resolved marketplace, select **scope-mcp** and confirm install. Codex copies the bundled skills (`audit`, `compliance-check`) into `~/.codex/skills/` and registers the plugin's MCP server config.
+4. From the resolved marketplace, select **scope-mcp** and confirm install. Codex copies the bundled skills (`audit`, `compliance-check`, `curate`) into `~/.codex/skills/` and registers the plugin's MCP server config.
 5. On the first MCP call, [`mcp-remote`](https://github.com/geelen/mcp-remote) opens a browser to the SCOPE consent page — paste your `cp_…` token from the signup email. The resulting access token caches under `~/.mcp-auth/` and is reused silently across Codex sessions.
 
 > Requires **Node 18+** on `PATH` (the bridge uses `npx` on first run; the package is then cached by npm).
@@ -125,8 +159,8 @@ The `audit_agent_design` tool is now wired up to your OpenClaw agent. OpenClaw r
 To also pick up the design-time auto-trigger and `/scope-mcp:audit` skills (the same `SKILL.md` files Claude Code and Codex use — OpenClaw uses the identical format), copy them into `~/.openclaw/skills/`:
 
 ```bash
-mkdir -p ~/.openclaw/skills/audit ~/.openclaw/skills/compliance-check
-for s in audit compliance-check; do
+mkdir -p ~/.openclaw/skills/audit ~/.openclaw/skills/compliance-check ~/.openclaw/skills/curate
+for s in audit compliance-check curate; do
   curl -s "https://raw.githubusercontent.com/LangGuard-AI/scope-mcp/main/plugins/scope-mcp/skills/${s}/SKILL.md" \
     > ~/.openclaw/skills/${s}/SKILL.md
 done
@@ -166,6 +200,18 @@ Pass anything: tool ids, connector wildcards, bare platform names, or a prose de
 
 The output adapts: design-time scoping advice when you're iterating on what to attach, run-time pre-flight gating when you're about to execute a fixed set of tools.
 
+### Curate - `/scope-mcp:curate`
+
+Create or refresh a YAML compliance data file for a single MCP server platform. Pass a GitHub repo URL, a vendor MCP docs page, a claude.com/connectors link, or a local file path to MCP server source code.
+
+```
+/scope-mcp:curate https://github.com/stripe/agent-toolkit
+/scope-mcp:curate https://docs.slack.dev/ai/slack-mcp-server
+/scope-mcp:curate ./path/to/local/mcp-server
+```
+
+The skill walks through an interactive 6-step workflow: resolve the source, confirm platform metadata, enumerate the tool surface (preserving verbatim tool names), classify each tool for risk/compliance/SoD, write the YAML to `data/`, and present a summary. It asks for confirmation at each step and flags low-confidence entries for review.
+
 ## Example output
 
 ```
@@ -204,11 +250,13 @@ flowchart TD
     D[("<b>YAML compliance data</b><br/>THIS REPO → data/*.yml<br/>80 platforms, fully auditable")]
 ```
 
-The plugin in this repo distributes the *interface*: skills (`audit`, `compliance-check`), the `/scope-mcp:audit` slash command, and an `.mcp.json` manifest pointing at the hosted SCOPE MCP server. It also distributes the *data*: the 80+ per-platform YAML files in [`data/`](./data) that catalogue every MCP tool the server knows about and how each one is classified.
+The plugin in this repo distributes the *interface*: skills (`audit`, `compliance-check`, `curate`), the `/scope-mcp:audit` and `/scope-mcp:curate` slash commands, and an `.mcp.json` manifest pointing at the hosted SCOPE MCP server. It also distributes the *data*: the 80+ per-platform YAML files in [`data/`](./data) that catalogue every MCP tool the server knows about and how each one is classified.
 
 When you run an audit, your Claude session calls the hosted MCP server over HTTPS. The server reads its data from the YAML files in this repository - that's the canonical source of truth, publicly auditable, and updated by pull request. You can read every classification this plugin will ever emit by browsing [`data/`](./data).
 
 ## Data and schema
+
+Full field-by-field schema documentation is in [**SCHEMA.md**](./SCHEMA.md).
 
 ```
 data/
@@ -246,7 +294,7 @@ Tool ids are **verbatim** from each connector's published MCP `tools/list` docum
 
 ## Compliance regimes covered
 
-A closed list of 25 canonical codes. The audit returns the subset triggered by your tool selection.
+A closed list of 26 canonical codes. The audit returns the subset triggered by your tool selection.
 
 | Category | Codes |
 |---|---|
@@ -254,8 +302,10 @@ A closed list of 25 canonical codes. The audit returns the subset triggered by y
 | **Industry / sector data** | `HIPAA`, `PCI`, `GLBA`, `FERPA`, `COPPA` |
 | **Financial reporting** | `SOX`, `COSO` |
 | **Security frameworks** | `SOC2`, `ISO_27001`, `NIST_CSF` |
-| **AI regulation** | `EU_AI_ACT`, `NIST_AI_RMF`, `CO_AI_ACT` |
+| **AI regulation** | `EU_AI_ACT`, `NIST_AI_RMF`, `CO_AI_ACT`, `ISO_42001` |
 | **Sector-specific** | `FEDRAMP`, `NY_DFS_500`, `PSD2`, `FDA_PART_11` |
+
+**Canonical machine-readable list:** [`_meta/regimes.yml`](_meta/regimes.yml)
 
 ## Repository layout
 
@@ -275,7 +325,8 @@ scope-mcp/
         ├── .mcp.json                          # universal stdio bridge (mcp-remote)
         └── skills/
             ├── audit/SKILL.md                 # /scope-mcp:audit (explicit)
-            └── compliance-check/SKILL.md      # auto-trigger (design-time)
+            ├── compliance-check/SKILL.md      # auto-trigger (design-time)
+            └── curate/SKILL.md                # /scope-mcp:curate (data file creator)
 ```
 
 The marketplace catalogs at the repo root point both Claude and Codex at `./plugins/scope-mcp/`, where the actual plugin lives. `data/` stays at the repo root because the hosted MCP server reads it directly from S3, independent of plugin install — community PRs and issue-driven corrections land there.
@@ -294,7 +345,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for issue templates, the three hard rul
 ## Limitations
 
 - **Coverage**: ~80 platforms today, expanding. If you audit a tool SCOPE doesn't recognize, it surfaces as `unmapped` and the audit recommends human review by default.
-- **Not a runtime gate**: SCOPE produces an advisory report. It does not enforce execution policy at runtime - that's a separate problem your agent harness solves.
+- **Not a runtime gate**: SCOPE produces an advisory report. It does not enforce execution policy at runtime - **that's a separate problem solved by LangGuard. Interested? Find out more at [our website](https://langguard.ai)**
 - **Editorial judgment**: Risk and regime classifications reflect informed industry consensus, not legal advice. Sector-specific applicability (e.g. whether HIPAA applies to a given Slack workspace) depends on your deployment and is flagged in `business_impact` prose.
 
 ## Privacy
@@ -308,6 +359,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for issue templates, the three hard rul
 
 ## Contact
 
+- **Discord (community support, fastest live help)**: [discord.gg/TPmBYR6pV](https://discord.gg/TPmBYR6pV)
 - **Get an access token**: self-service at [scope-mcp.langguard.ai/register-account](https://scope-mcp.langguard.ai/register-account).
 - **Lost your token, rate-limit increase, commercial inquiries**: [support@langguard.ai](mailto:support@langguard.ai).
-- **Issues / data corrections**: open a GitHub issue on this repo.
+- **Issues / data corrections**: [file a Data revision](https://github.com/LangGuard-AI/scope-mcp/issues/new?template=data-revision.yml) on this repo.

@@ -1,410 +1,346 @@
-schema_version: "1.1"
+schema_version: "1.2"
 platform: paypal
 display_name: PayPal
 source: langguard-editorial
-updated: "2026-06"
-reference: https://docs.paypal.ai/developer/tools/ai/agent-tools-ref
+updated: "2026-05"
+server_website: https://github.com/paypal/paypal-mcp-server
+maintainer: https://github.com/paypal/paypal-mcp-server/issues
 actions:
   # ---------- Payments ----------
   - id: paypal.create_order
     object: Order
     action: create_order
-    description: "Create an order in the PayPal system based on the provided details."
-    category: Financial
+    category: Payments
     risk: high
-    business_impact: "Creates a payment order committing a charge intent against a buyer; reversible before capture but binds payment terms and counterparty PII."
-    compliance: [SOX, COSO, PCI, GLBA, PSD2, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    business_impact: "Creates a PayPal payment order; commits a charge intent against a buyer."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001, PSD2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: paypal.pay_order
-    object: Order
-    action: pay_order
-    description: "Capture payment for an authorized order."
-    category: Financial
-    risk: critical
-    business_impact: "Captures funds from an authorized order; moves money and posts revenue with direct financial-statement impact."
-    compliance: [SOX, COSO, PCI, GLBA, PSD2, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: paypal.create_refund
-    object: Refund
-    action: create_refund
-    description: "Process a refund for a captured payment."
-    category: Financial
-    risk: critical
-    business_impact: "Moves money back to a buyer against a captured payment; an irreversible disbursement that classically requires a second approver."
-    compliance: [SOX, COSO, PCI, GLBA, PSD2, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: paypal.get_order
     object: Order
     action: get_order
-    description: "Get details of a specific payment."
-    category: Financial
+    category: Payments
     risk: medium
-    business_impact: "Reads a single payment record including amount and counterparty financial details."
-    compliance: [PCI, GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Returns details of a payment order including amount and payer."
+    compliance: [SOX, COSO, PCI, SOC2, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  - id: paypal.pay_order
+    object: Order
+    action: pay_order
+    category: Payments
+    risk: critical
+    business_impact: "Captures funds against a payment order; direct money movement and GL impact."
+    compliance: [SOX, COSO, PCI, GLBA, SOC2, ISO_27001, PSD2]
+    sod_concern: true
+    confidence: high
+    access_methods: [MCP]
+  - id: paypal.create_refund
+    object: Refund
+    action: create_refund
+    category: Payments
+    risk: critical
+    business_impact: "Issues a refund of captured funds back to the buyer; touches payment rails and GL."
+    compliance: [SOX, COSO, PCI, GLBA, SOC2, ISO_27001, PSD2]
+    sod_concern: true
+    confidence: high
+    access_methods: [MCP]
   - id: paypal.get_refund
     object: Refund
     action: get_refund
-    description: "Get the details for a specific refund."
-    category: Financial
+    category: Payments
     risk: medium
-    business_impact: "Reads a single refund record including amount and payer financial details."
-    compliance: [PCI, GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Returns details of a refund."
+    compliance: [SOX, COSO, PCI, SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Disputes ----------
-  - id: paypal.accept_dispute_claim
-    object: Dispute
-    action: accept_dispute_claim
-    description: "Accept a dispute claim, resolving it in favor of the buyer."
-    category: Financial
-    risk: critical
-    business_impact: "Unilaterally concedes a dispute in the buyer's favor, triggering an irreversible money-out resolution with no second-actor gate."
-    compliance: [SOX, COSO, PCI, GLBA, PSD2, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: paypal.list_disputes
-    object: Dispute
-    action: list_disputes
-    description: "Retrieve a summary of all disputes with optional filtering."
-    category: Financial
-    risk: medium
-    business_impact: "Reads dispute records across the account, exposing transaction and counterparty details."
-    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: paypal.get_dispute
-    object: Dispute
-    action: get_dispute
-    description: "Retrieve detailed information about a specific dispute."
-    category: Financial
-    risk: medium
-    business_impact: "Reads detailed dispute information including transaction amounts and counterparty PII."
-    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   # ---------- Invoices ----------
   - id: paypal.create_invoice
     object: Invoice
     action: create_invoice
-    description: "Create a new invoice in the PayPal system."
-    category: Financial
-    risk: high
-    business_impact: "Creates an invoice carrying recipient email and line-item amounts; affects accounts-receivable records and stores counterparty PII."
-    compliance: [SOX, COSO, GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
+    category: Invoices
+    risk: critical
+    business_impact: "Creates a billable obligation and revenue recognition event."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: paypal.send_invoice
-    object: Invoice
-    action: send_invoice
-    description: "Send an existing invoice to the specified recipient."
-    category: Financial
-    risk: medium
-    business_impact: "Dispatches an invoice to a recipient's email, initiating a billing demand for payment."
-    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: paypal.send_invoice_reminder
-    object: Invoice
-    action: send_invoice_reminder
-    description: "Send a reminder for an existing invoice."
-    category: Financial
-    risk: low
-    business_impact: "Sends a payment reminder to the invoice recipient; reversible and low-impact."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: paypal.cancel_sent_invoice
-    object: Invoice
-    action: cancel_sent_invoice
-    description: "Cancel a sent invoice."
-    category: Financial
-    risk: medium
-    business_impact: "Cancels an outstanding invoice, voiding the billing demand and affecting accounts-receivable state."
-    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: paypal.generate_invoice_qr_code
-    object: Invoice
-    action: generate_invoice_qr_code
-    description: "Generate a QR code for an invoice."
-    category: Financial
-    risk: low
-    business_impact: "Generates a payment QR code for an existing invoice; non-destructive and reversible."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: paypal.list_invoices
     object: Invoice
     action: list_invoices
-    description: "List invoices. Pagination and filtering options are available."
-    category: Financial
-    risk: high
-    business_impact: "Bulk read of invoice records exposing recipient PII and receivable amounts across the account."
-    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    category: Invoices
+    risk: medium
+    business_impact: "Lists invoices in the merchant account; financial-reporting-relevant data."
+    compliance: [SOX, COSO, SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: paypal.get_invoice
     object: Invoice
     action: get_invoice
-    description: "Retrieve details about a specific invoice."
-    category: Financial
+    category: Invoices
     risk: medium
-    business_impact: "Reads a single invoice including recipient email and line-item amounts."
-    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Returns one invoice with line items and recipient PII."
+    compliance: [SOX, COSO, SOC2, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Reporting & Insights ----------
-  - id: paypal.get_merchant_insights
-    object: MerchantInsight
-    action: get_merchant_insights
-    description: "Retrieve business intelligence metrics and analytics for a merchant, filtered by date range, insight type, and time interval."
-    category: Financial
+    access_methods: [MCP]
+  - id: paypal.send_invoice
+    object: Invoice
+    action: send_invoice
+    category: Invoices
     risk: high
-    business_impact: "Returns aggregated merchant sales/orders financial intelligence; exposes revenue performance data even though the metrics are aggregated rather than per-record PII."
-    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: paypal.list_transaction
-    object: Transaction
-    action: list_transaction
-    description: "List all transactions. Pagination and filtering options are available."
-    category: Financial
-    risk: high
-    business_impact: "Bulk read of transaction history exposing amounts and counterparty financial PII; a data-exfiltration surface for account-wide payment activity."
-    compliance: [PCI, GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    business_impact: "Delivers an invoice to a customer via email; commits the billing communication."
+    compliance: [SOX, COSO, SOC2, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Shipment Tracking ----------
-  - id: paypal.create_shipment_tracking
-    object: ShipmentTracking
-    action: create_shipment_tracking
-    description: "Create shipment tracking information for a PayPal transaction."
-    category: Operations
+    access_methods: [MCP]
+  - id: paypal.send_invoice_reminder
+    object: Invoice
+    action: send_invoice_reminder
+    category: Invoices
     risk: medium
-    business_impact: "Attaches shipment tracking to a transaction, signaling fulfillment and affecting buyer-protection and dispute outcomes."
-    compliance: [GLBA]
+    business_impact: "Sends a payment reminder to the customer."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: paypal.get_shipment_tracking
-    object: ShipmentTracking
-    action: get_shipment_tracking
-    description: "Get shipment tracking information for a specific shipment."
-    category: Operations
+    access_methods: [MCP]
+  - id: paypal.cancel_sent_invoice
+    object: Invoice
+    action: cancel_sent_invoice
+    category: Invoices
+    risk: high
+    business_impact: "Voids an issued invoice; reverses a recognized obligation."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [MCP]
+  - id: paypal.generate_invoice_qr_code
+    object: Invoice
+    action: generate_invoice_qr_code
+    category: Invoices
     risk: low
-    business_impact: "Reads shipment tracking details for a transaction; non-sensitive operational data."
+    business_impact: "Generates a QR code that links to an invoice payment page."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: paypal.update_shipment_tracking
-    object: ShipmentTracking
-    action: update_shipment_tracking
-    description: "Update shipment tracking information for a specific shipment."
-    category: Operations
-    risk: medium
-    business_impact: "Changes the tracking number or fulfillment status on a transaction, which can alter buyer-protection and dispute eligibility."
-    compliance: [GLBA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   # ---------- Subscriptions ----------
-  - id: paypal.create_subscription
-    object: Subscription
-    action: create_subscription
-    description: "Create a new subscription."
-    category: Financial
-    risk: high
-    business_impact: "Creates a recurring-billing subscription against a plan, committing the subscriber to repeated charges and storing subscriber PII."
-    compliance: [SOX, COSO, PCI, GLBA, PSD2, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: paypal.update_subscription
-    object: Subscription
-    action: update_subscription
-    description: "Update an existing subscription."
-    category: Financial
-    risk: high
-    business_impact: "Modifies an active subscription's billing terms, changing recurring revenue and the amounts charged to the subscriber."
-    compliance: [SOX, COSO, GLBA, PSD2, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: paypal.cancel_subscription
-    object: Subscription
-    action: cancel_subscription
-    description: "Cancel an active subscription."
-    category: Financial
-    risk: medium
-    business_impact: "Terminates an active subscription, stopping recurring revenue; reversible only by re-subscribing."
-    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
   - id: paypal.create_subscription_plan
     object: SubscriptionPlan
     action: create_subscription_plan
-    description: "Create a new subscription plan."
-    category: Financial
-    risk: medium
-    business_impact: "Defines a new recurring-billing plan with pricing and cycles that future subscriptions will charge against."
-    compliance: [SOX, COSO, PSD2, SOC2, ISO_27001]
+    category: Subscriptions
+    risk: high
+    business_impact: "Defines a recurring billing plan; basis for downstream subscription revenue."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: paypal.list_subscription_plans
     object: SubscriptionPlan
     action: list_subscription_plans
-    description: "List subscription plans."
-    category: Financial
+    category: Subscriptions
     risk: low
-    business_impact: "Reads available subscription plans; pricing configuration data with no PII."
-    compliance: []
+    business_impact: "Lists subscription plans in the account."
+    compliance: [SOX]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: paypal.show_subscription_details
-    object: Subscription
-    action: show_subscription_details
-    description: "Show details of a specific subscription."
-    category: Financial
-    risk: medium
-    business_impact: "Reads a single subscription including subscriber identity and billing terms."
-    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: paypal.show_subscription_plan_details
     object: SubscriptionPlan
     action: show_subscription_plan_details
-    description: "Show details of a specific subscription plan."
-    category: Financial
+    category: Subscriptions
     risk: low
-    business_impact: "Reads pricing and cycle configuration for a single subscription plan; no PII."
-    compliance: []
+    business_impact: "Returns one subscription plan's pricing and cycle definition."
+    compliance: [SOX]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  - id: paypal.create_subscription
+    object: Subscription
+    action: create_subscription
+    category: Subscriptions
+    risk: critical
+    business_impact: "Enrolls a customer in a recurring charge; ongoing financial commitment."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001, PSD2]
+    sod_concern: true
+    confidence: high
+    access_methods: [MCP]
+  - id: paypal.show_subscription_details
+    object: Subscription
+    action: show_subscription_details
+    category: Subscriptions
+    risk: medium
+    business_impact: "Returns one subscription's status and billing history."
+    compliance: [SOX, COSO, PCI, SOC2, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: paypal.update_subscription
+    object: Subscription
+    action: update_subscription
+    category: Subscriptions
+    risk: high
+    business_impact: "Modifies an active subscription (price, cycle, status); changes recurring revenue."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [MCP]
+  - id: paypal.cancel_subscription
+    object: Subscription
+    action: cancel_subscription
+    category: Subscriptions
+    risk: high
+    business_impact: "Terminates a subscription; halts recurring revenue and may trigger prorated refunds."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
   # ---------- Catalog ----------
   - id: paypal.create_product
     object: Product
     action: create_product
-    description: "Create a new product in the PayPal catalog."
-    category: Operations
+    category: Catalog
     risk: low
-    business_impact: "Adds a new product to the merchant catalog; reversible and non-sensitive."
+    business_impact: "Adds a product to the merchant catalog."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: paypal.list_product
     object: Product
     action: list_product
-    description: "List products from the PayPal catalog. Pagination options are available."
-    category: Operations
+    category: Catalog
     risk: low
-    business_impact: "Reads the merchant product catalog; non-sensitive configuration data."
+    business_impact: "Lists products in the catalog."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: paypal.show_product_details
     object: Product
     action: show_product_details
-    description: "Show details of a specific product from the PayPal catalog."
-    category: Operations
+    category: Catalog
     risk: low
-    business_impact: "Reads a single catalog product's details; non-sensitive."
+    business_impact: "Returns one catalog product."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Commerce (remote MCP server) ----------
+    access_methods: [MCP]
   - id: paypal.search_product
     object: Product
     action: search_product
-    description: "Find gift card products in the PayPal catalog."
-    category: Operations
+    category: Catalog
     risk: low
-    business_impact: "Searches the gift-card catalog for available products; read-only and non-sensitive."
+    business_impact: "Searches the merchant's product catalog."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  # ---------- Commerce ----------
   - id: paypal.create_cart
     object: Cart
     action: create_cart
-    description: "Open a new shopping cart with specified items and shipping preferences."
-    category: Operations
+    category: Commerce
     risk: low
-    business_impact: "Initializes a shopping cart with selected items; reversible pre-checkout with no money movement."
+    business_impact: "Initializes a checkout cart; not yet a financial commitment."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: paypal.checkout_cart
     object: Cart
     action: checkout_cart
-    description: "Finalize a shopping cart to complete the purchase process using PayPal for payment."
-    category: Financial
+    category: Commerce
     risk: critical
-    business_impact: "Processes final checkout and payment for a cart; moves money and completes a purchase with direct financial-statement impact."
-    compliance: [SOX, COSO, PCI, GLBA, PSD2, SOC2, ISO_27001]
+    business_impact: "Completes checkout and authorizes payment against the cart contents."
+    compliance: [SOX, COSO, PCI, GLBA, SOC2, ISO_27001, PSD2]
     sod_concern: true
     confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [MCP]
+  # ---------- Disputes ----------
+  - id: paypal.list_disputes
+    object: Dispute
+    action: list_disputes
+    category: Disputes
+    risk: medium
+    business_impact: "Lists buyer disputes/chargebacks; financial-reporting-relevant exposures."
+    compliance: [SOX, COSO, PCI, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: paypal.get_dispute
+    object: Dispute
+    action: get_dispute
+    category: Disputes
+    risk: medium
+    business_impact: "Returns one dispute with buyer correspondence and evidence."
+    compliance: [SOX, COSO, PCI, SOC2, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: paypal.accept_dispute_claim
+    object: Dispute
+    action: accept_dispute_claim
+    category: Disputes
+    risk: critical
+    business_impact: "Concedes a dispute and authorizes a refund to the buyer; direct financial loss."
+    compliance: [SOX, COSO, PCI, GLBA, SOC2, ISO_27001, PSD2]
+    sod_concern: true
+    confidence: high
+    access_methods: [MCP]
+  # ---------- Shipment ----------
+  - id: paypal.create_shipment_tracking
+    object: ShipmentTracking
+    action: create_shipment_tracking
+    category: Shipment
+    risk: low
+    business_impact: "Records a tracking number against a transaction; protects seller from non-delivery disputes."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: paypal.get_shipment_tracking
+    object: ShipmentTracking
+    action: get_shipment_tracking
+    category: Shipment
+    risk: low
+    business_impact: "Returns the tracking record for a transaction."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: paypal.update_shipment_tracking
+    object: ShipmentTracking
+    action: update_shipment_tracking
+    category: Shipment
+    risk: low
+    business_impact: "Updates the tracking record for a transaction."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  # ---------- Reporting ----------
+  - id: paypal.list_transaction
+    object: Transaction
+    action: list_transaction
+    category: Reporting
+    risk: high
+    business_impact: "Bulk read of transactions; full payment history for the merchant including PII and amounts."
+    compliance: [SOX, COSO, PCI, GLBA, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: paypal.get_merchant_insights
+    object: Insight
+    action: get_merchant_insights
+    category: Reporting
+    risk: medium
+    business_impact: "Returns aggregated merchant performance insights."
+    compliance: [SOX, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]

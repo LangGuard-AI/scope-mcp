@@ -1,786 +1,659 @@
-schema_version: "1.1"
+schema_version: "1.2"
 platform: pagerduty
 display_name: PagerDuty
 source: langguard-editorial
-updated: "2026-06"
-reference: https://developer.pagerduty.com/docs/mcp-tooling-remote-server
+updated: "2026-05"
+server_website: https://github.com/PagerDuty/pagerduty-mcp-server
+maintainer: https://www.pagerduty.com/support/
 actions:
   # ---------- Incidents ----------
   - id: pagerduty.create_incident
     object: Incident
     action: create_incident
-    description: "Create an incident."
-    category: Operations
+    category: Incidents
     risk: medium
-    business_impact: "Opens a new incident that pages on-call responders and starts escalation; reversible but immediately triggers notifications."
-    compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.manage_incidents
-    object: Incident
-    action: manage_incidents
-    description: "Manage one or more incidents by changing its status, urgency, assignment, or escalation level."
-    category: Operations
-    risk: high
-    business_impact: "Bulk-mutates incident status, urgency, assignment, or escalation — one call can resolve or reassign many active incidents and rewrite the incident-response record."
-    compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.add_responders
-    object: Incident
-    action: add_responders
-    description: "Add responders to an incident."
-    category: Operations
-    risk: medium
-    business_impact: "Pages additional users into an active incident; notifies and obligates the named responders."
-    compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.add_note_to_incident
-    object: IncidentNote
-    action: add_note_to_incident
-    description: "Add a note to an incident."
-    category: Operations
-    risk: low
-    business_impact: "Appends a free-text note to the incident timeline; a permanent part of the record but low-impact."
+    business_impact: "Pages on-call responders; mistaken creation wakes engineers."
     compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.list_incidents
-    object: Incident
-    action: list_incidents
-    description: "List incidents with optional filtering."
-    category: Operations
-    risk: low
-    business_impact: "Reads the incident queue including assignees and service exposure; operational visibility, no state change."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: pagerduty.get_incident
     object: Incident
     action: get_incident
-    description: "Get a specific incident."
-    category: Operations
+    category: Incidents
     risk: low
-    business_impact: "Reads one incident's detail including responders and timeline; no state change."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Returns details for a single incident."
+    compliance: [SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.list_incident_notes
-    object: IncidentNote
-    action: list_incident_notes
-    description: "List all notes for a specific incident."
-    category: Operations
-    risk: low
-    business_impact: "Reads free-text incident notes that may contain operational or personal detail; no state change."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.get_outlier_incident
+    access_methods: [MCP]
+  - id: pagerduty.list_incidents
     object: Incident
-    action: get_outlier_incident
-    description: "Get Outlier Incident information for a given incident on its service."
-    category: Operations
+    action: list_incidents
+    category: Incidents
     risk: low
-    business_impact: "Reads analytics about how anomalous an incident is for its service; no state change."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Lists incidents matching filters."
+    compliance: [SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.get_past_incidents
+    access_methods: [MCP]
+  - id: pagerduty.manage_incidents
     object: Incident
-    action: get_past_incidents
-    description: "Get past incidents related to a specific incident ID."
-    category: Operations
-    risk: low
-    business_impact: "Reads historically similar incidents for context; no state change."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
+    action: manage_incidents
+    category: Incidents
+    risk: high
+    business_impact: "Bulk-acknowledges, resolves, or reassigns incidents; can suppress alerts during a real outage."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.get_related_incidents
+    access_methods: [MCP]
+  - id: pagerduty.add_note_to_incident
     object: Incident
-    action: get_related_incidents
-    description: "Get related incidents for a specific incident ID."
-    category: Operations
+    action: add_note_to_incident
+    category: Incidents
     risk: low
-    business_impact: "Reads incidents correlated with the target incident; no state change."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Appends a note to an incident's timeline."
+    compliance: [SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Alerts ----------
-  - id: pagerduty.get_alert_from_incident
-    object: Alert
-    action: get_alert_from_incident
-    description: "Get a specific alert from an incident."
-    category: Operations
-    risk: low
-    business_impact: "Reads one alert's payload attached to an incident; may contain monitoring detail, no state change."
-    compliance: [SOC2, ISO_27001]
+    access_methods: [MCP]
+  - id: pagerduty.add_responders
+    object: Incident
+    action: add_responders
+    category: Incidents
+    risk: medium
+    business_impact: "Pages additional responders into an incident."
+    compliance: [SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: pagerduty.list_alerts_from_incident
     object: Alert
     action: list_alerts_from_incident
-    description: "List alerts for a specific incident."
-    category: Operations
+    category: Incidents
     risk: low
-    business_impact: "Reads the alerts rolled up into an incident; operational visibility, no state change."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Lists alerts associated with an incident."
+    compliance: [SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  - id: pagerduty.get_alert_from_incident
+    object: Alert
+    action: get_alert_from_incident
+    category: Incidents
+    risk: low
+    business_impact: "Returns one alert tied to an incident."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: pagerduty.list_incident_notes
+    object: Incident
+    action: list_incident_notes
+    category: Incidents
+    risk: low
+    business_impact: "Lists notes on an incident."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: pagerduty.get_outlier_incident
+    object: Incident
+    action: get_outlier_incident
+    category: Incidents
+    risk: low
+    business_impact: "Returns analytics on whether an incident is an outlier vs. baseline."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: pagerduty.get_past_incidents
+    object: Incident
+    action: get_past_incidents
+    category: Incidents
+    risk: low
+    business_impact: "Returns historical incidents similar to the current one."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: pagerduty.get_related_incidents
+    object: Incident
+    action: get_related_incidents
+    category: Incidents
+    risk: low
+    business_impact: "Returns incidents related to a given one."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
   # ---------- Incident Workflows ----------
   - id: pagerduty.start_incident_workflow
     object: IncidentWorkflow
     action: start_incident_workflow
-    description: "Start an incident workflow instance."
-    category: Operations
+    category: Incident Workflows
     risk: medium
-    business_impact: "Triggers an automated incident-response workflow that can run downstream actions and notifications; reversible only by the workflow's own steps."
-    compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.list_incident_workflows
-    object: IncidentWorkflow
-    action: list_incident_workflows
-    description: "List incident workflows with optional filtering."
-    category: Operations
-    risk: low
-    business_impact: "Reads the catalog of automated incident workflows; no state change."
+    business_impact: "Triggers a defined incident-response automation; downstream actions depend on the workflow."
     compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: pagerduty.get_incident_workflow
     object: IncidentWorkflow
     action: get_incident_workflow
-    description: "Get a specific incident workflow."
-    category: Operations
+    category: Incident Workflows
     risk: low
-    business_impact: "Reads one incident workflow's definition; no state change."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Returns one incident workflow definition."
+    compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  - id: pagerduty.list_incident_workflows
+    object: IncidentWorkflow
+    action: list_incident_workflows
+    category: Incident Workflows
+    risk: low
+    business_impact: "Lists incident workflows."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
   # ---------- Services ----------
   - id: pagerduty.create_service
     object: Service
     action: create_service
-    description: "Create a new service."
-    category: Operations
+    category: Services
     risk: medium
-    business_impact: "Adds a monitored service with its escalation and alerting configuration; shapes who gets paged for which signals."
+    business_impact: "Creates a service definition that downstream alerts route into."
     compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.update_service
-    object: Service
-    action: update_service
-    description: "Update an existing service."
-    category: Operations
-    risk: high
-    business_impact: "Changes a live service's escalation, alerting, or integration settings; a misconfiguration can silence pages for production systems."
-    compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.list_services
-    object: Service
-    action: list_services
-    description: "List all services."
-    category: Operations
-    risk: low
-    business_impact: "Reads the catalog of monitored services and their configuration; no state change."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: pagerduty.get_service
     object: Service
     action: get_service
-    description: "Get details for a specific service."
-    category: Operations
+    category: Services
     risk: low
-    business_impact: "Reads one service's escalation and alerting configuration; no state change."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Returns details for one service."
+    compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Identity & Access ----------
-  - id: pagerduty.create_team
-    object: Team
-    action: create_team
-    description: "Create a team."
-    category: Identity & Access
+    access_methods: [MCP]
+  - id: pagerduty.list_services
+    object: Service
+    action: list_services
+    category: Services
+    risk: low
+    business_impact: "Lists services in the account."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: pagerduty.update_service
+    object: Service
+    action: update_service
+    category: Services
     risk: medium
-    business_impact: "Adds a team that scopes ownership of services, schedules, and escalation policies; affects who can be paged and who can access what."
+    business_impact: "Modifies how a service routes alerts and to whom."
     compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.update_team
-    object: Team
-    action: update_team
-    description: "Update a team."
-    category: Identity & Access
-    risk: medium
-    business_impact: "Changes a team definition that governs resource ownership and on-call scoping; logged but not gated by review."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.delete_team
-    object: Team
-    action: delete_team
-    description: "Delete a team."
-    category: Identity & Access
-    risk: high
-    business_impact: "Removes a team and its ownership of services, schedules, and escalation policies; can orphan on-call coverage for production services."
-    compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.add_team_member
-    object: TeamMember
-    action: add_team_member
-    description: "Add a user to a team."
-    category: Identity & Access
-    risk: high
-    business_impact: "Grants a user a role on a team, expanding their access to that team's services, schedules, and on-call rotations."
-    compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.remove_team_member
-    object: TeamMember
-    action: remove_team_member
-    description: "Remove a user from a team."
-    category: Identity & Access
-    risk: high
-    business_impact: "Revokes a user's team access and can drop them from on-call coverage, potentially leaving a rotation unstaffed."
-    compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.list_teams
-    object: Team
-    action: list_teams
-    description: "List teams based on the provided query model."
-    category: Identity & Access
-    risk: low
-    business_impact: "Reads the set of teams and their scope; no state change."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.get_team
-    object: Team
-    action: get_team
-    description: "Get a specific team."
-    category: Identity & Access
-    risk: low
-    business_impact: "Reads one team's definition and scope; no state change."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.list_team_members
-    object: TeamMember
-    action: list_team_members
-    description: "List members of a team."
-    category: Identity & Access
-    risk: medium
-    business_impact: "Reads the user roster of a team — names and identities of personnel; personal-data read."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.list_users
-    object: User
-    action: list_users
-    description: "List users, optionally filtering by name (query) and team IDs."
-    category: Identity & Access
-    risk: high
-    business_impact: "Reads the full user directory — names, roles, and identities of all personnel; a bulk personal-data read across the account."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.get_user_data
-    object: User
-    action: get_user_data
-    description: "Get the current user's data."
-    category: Identity & Access
-    risk: low
-    business_impact: "Reads the calling user's own profile (name, role, id, teams); minimal personal-data exposure."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   # ---------- Schedules & On-call ----------
   - id: pagerduty.create_schedule
     object: Schedule
     action: create_schedule
-    description: "Create a new on-call schedule."
-    category: Operations
+    category: Schedules & On-call
     risk: medium
-    business_impact: "Defines a new on-call rotation that determines who gets paged and when; shapes operational coverage."
+    business_impact: "Defines a new on-call rotation."
     compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.create_schedule_override
-    object: Schedule
-    action: create_schedule_override
-    description: "Create an override for a schedule."
-    category: Operations
-    risk: medium
-    business_impact: "Temporarily reassigns who is on call for a window; can silently move paging responsibility for a critical period."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: pagerduty.update_schedule
     object: Schedule
     action: update_schedule
-    description: "Update an existing schedule."
-    category: Operations
+    category: Schedules & On-call
     risk: high
-    business_impact: "Rewrites an on-call rotation; a mistake can leave a production service with no one paged during an outage."
+    business_impact: "Changes who is on call and when; misconfiguration delays response to outages."
     compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: false
+    sod_concern: true
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.list_schedules
+    access_methods: [MCP]
+  - id: pagerduty.create_schedule_override
     object: Schedule
-    action: list_schedules
-    description: "List schedules with optional filtering."
-    category: Operations
-    risk: low
-    business_impact: "Reads the set of on-call rotations and their assigned personnel; operational and personal-data read."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
+    action: create_schedule_override
+    category: Schedules & On-call
+    risk: medium
+    business_impact: "Temporarily reassigns on-call coverage; immediate effect on paging."
+    compliance: [SOC2]
+    sod_concern: true
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: pagerduty.get_schedule
     object: Schedule
     action: get_schedule
-    description: "Get a specific schedule by ID."
-    category: Operations
+    category: Schedules & On-call
     risk: low
-    business_impact: "Reads one rotation including the identities and shift times of assigned personnel; personal-data read."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Returns a schedule definition."
+    compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  - id: pagerduty.list_schedules
+    object: Schedule
+    action: list_schedules
+    category: Schedules & On-call
+    risk: low
+    business_impact: "Lists on-call schedules."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
   - id: pagerduty.list_schedule_users
-    object: User
+    object: Schedule
     action: list_schedule_users
-    description: "List users in a schedule."
-    category: Operations
-    risk: medium
-    business_impact: "Reads the personnel assigned to a rotation — names and identities; personal-data read."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    category: Schedules & On-call
+    risk: low
+    business_impact: "Lists users on a schedule."
+    compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: pagerduty.list_oncalls
-    object: Oncall
+    object: OnCall
     action: list_oncalls
-    description: "List on-call schedules with optional filtering."
-    category: Operations
-    risk: medium
-    business_impact: "Reveals exactly who is on call now and when — personnel identities plus a real-time staffing/coverage map; personal-data read."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    category: Schedules & On-call
+    risk: low
+    business_impact: "Returns who is currently on call."
+    compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Escalation Policies ----------
+    access_methods: [MCP]
+  # ---------- Escalation ----------
   - id: pagerduty.list_escalation_policies
     object: EscalationPolicy
     action: list_escalation_policies
-    description: "List escalation policies with optional filtering."
-    category: Operations
+    category: Escalation
     risk: low
-    business_impact: "Reads the rules that decide who is paged next and how incidents escalate; operational visibility, no state change."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Lists escalation policies."
+    compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: pagerduty.get_escalation_policy
     object: EscalationPolicy
     action: get_escalation_policy
-    description: "Get a specific escalation policy."
-    category: Operations
+    category: Escalation
     risk: low
-    business_impact: "Reads one escalation policy's chain of responders; no state change."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Returns one escalation policy."
+    compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Event Orchestrations ----------
-  - id: pagerduty.update_event_orchestration_router
-    object: EventOrchestration
-    action: update_event_orchestration_router
-    description: "Update the router configuration for a specific event orchestration."
-    category: Operations
-    risk: high
-    business_impact: "Replaces the routing rules that decide which service every inbound event hits; a bad rule set can misroute or drop alerts account-wide."
-    compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.append_event_orchestration_router_rule
-    object: EventOrchestration
-    action: append_event_orchestration_router_rule
-    description: "Append a new routing rule to the end of an event orchestration's router rules."
-    category: Operations
-    risk: medium
-    business_impact: "Adds a rule that redirects matching inbound events to a chosen service; changes alert routing without removing existing rules."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  # ---------- Event Orchestration ----------
   - id: pagerduty.list_event_orchestrations
     object: EventOrchestration
     action: list_event_orchestrations
-    description: "List event orchestrations with optional filtering."
-    category: Operations
+    category: Event Orchestration
     risk: low
-    business_impact: "Reads the set of event orchestrations; no state change."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Lists event orchestration rule sets."
+    compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: pagerduty.get_event_orchestration
     object: EventOrchestration
     action: get_event_orchestration
-    description: "Get details for a specific event orchestration."
-    category: Operations
+    category: Event Orchestration
     risk: low
-    business_impact: "Reads one event orchestration's configuration; no state change."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Returns an orchestration definition."
+    compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.get_event_orchestration_router
-    object: EventOrchestration
-    action: get_event_orchestration_router
-    description: "Get the router configuration for a specific event orchestration."
-    category: Operations
-    risk: low
-    business_impact: "Reads the current event-routing rules; no state change."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.get_event_orchestration_service
-    object: EventOrchestration
-    action: get_event_orchestration_service
-    description: "Get the Service Orchestration configuration for a specific service."
-    category: Operations
-    risk: low
-    business_impact: "Reads a service's orchestration configuration; no state change."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: pagerduty.get_event_orchestration_global
     object: EventOrchestration
     action: get_event_orchestration_global
-    description: "Get the Global Orchestration configuration for a specific event orchestration."
-    category: Operations
+    category: Event Orchestration
     risk: low
-    business_impact: "Reads the global orchestration configuration; no state change."
+    business_impact: "Returns the global event orchestration."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: pagerduty.get_event_orchestration_router
+    object: EventOrchestration
+    action: get_event_orchestration_router
+    category: Event Orchestration
+    risk: low
+    business_impact: "Returns the router orchestration definition."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: pagerduty.get_event_orchestration_service
+    object: EventOrchestration
+    action: get_event_orchestration_service
+    category: Event Orchestration
+    risk: low
+    business_impact: "Returns the service-specific orchestration definition."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: pagerduty.update_event_orchestration_router
+    object: EventOrchestration
+    action: update_event_orchestration_router
+    category: Event Orchestration
+    risk: high
+    business_impact: "Replaces routing rules that decide which alerts page which services; misroute can swallow outages."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [MCP]
+  - id: pagerduty.append_event_orchestration_router_rule
+    object: EventOrchestration
+    action: append_event_orchestration_router_rule
+    category: Event Orchestration
+    risk: medium
+    business_impact: "Adds a routing rule to the router; affects which incidents are paged."
     compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   # ---------- Alert Grouping ----------
   - id: pagerduty.create_alert_grouping_setting
     object: AlertGroupingSetting
     action: create_alert_grouping_setting
-    description: "Create a new alert grouping setting."
-    category: Operations
+    category: Alert Grouping
     risk: medium
-    business_impact: "Defines how raw alerts are bundled into incidents; affects how much noise reaches responders."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Creates an alert-grouping configuration that affects how raw alerts are deduplicated into incidents."
+    compliance: [SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.update_alert_grouping_setting
-    object: AlertGroupingSetting
-    action: update_alert_grouping_setting
-    description: "Update an existing alert grouping setting."
-    category: Operations
-    risk: medium
-    business_impact: "Changes how alerts are grouped into incidents; an over-aggressive setting can collapse distinct outages into one incident."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: pagerduty.delete_alert_grouping_setting
     object: AlertGroupingSetting
     action: delete_alert_grouping_setting
-    description: "Delete an alert grouping setting."
-    category: Operations
+    category: Alert Grouping
     risk: medium
-    business_impact: "Removes an alert grouping rule; reverts grouping behavior for the affected service and is not individually recoverable."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Removes an alert-grouping setting; can change incident behavior immediately."
+    compliance: [SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.list_alert_grouping_settings
-    object: AlertGroupingSetting
-    action: list_alert_grouping_settings
-    description: "List all alert grouping settings with optional filtering."
-    category: Operations
-    risk: low
-    business_impact: "Reads the alert grouping configuration; no state change."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: pagerduty.get_alert_grouping_setting
     object: AlertGroupingSetting
     action: get_alert_grouping_setting
-    description: "Get details for a specific alert grouping setting."
-    category: Operations
+    category: Alert Grouping
     risk: low
-    business_impact: "Reads one alert grouping setting; no state change."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Returns one alert-grouping setting."
+    compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  - id: pagerduty.list_alert_grouping_settings
+    object: AlertGroupingSetting
+    action: list_alert_grouping_settings
+    category: Alert Grouping
+    risk: low
+    business_impact: "Lists alert-grouping settings."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: pagerduty.update_alert_grouping_setting
+    object: AlertGroupingSetting
+    action: update_alert_grouping_setting
+    category: Alert Grouping
+    risk: medium
+    business_impact: "Modifies an alert-grouping setting."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
   # ---------- Change Events ----------
   - id: pagerduty.list_change_events
     object: ChangeEvent
     action: list_change_events
-    description: "List all change events with optional filtering."
-    category: Operations
+    category: Change Events
     risk: low
-    business_impact: "Reads the stream of deploy/config change events used to correlate with incidents; no state change."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Lists tracked change events from CI/CD or deploys."
+    compliance: [SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: pagerduty.get_change_event
     object: ChangeEvent
     action: get_change_event
-    description: "Get details about a specific change event."
-    category: Operations
+    category: Change Events
     risk: low
-    business_impact: "Reads one change event's detail; no state change."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Returns one change event."
+    compliance: [SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.list_service_change_events
-    object: ChangeEvent
-    action: list_service_change_events
-    description: "List all change events for a specific service."
-    category: Operations
-    risk: low
-    business_impact: "Reads change events scoped to one service; no state change."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: pagerduty.list_incident_change_events
     object: ChangeEvent
     action: list_incident_change_events
-    description: "List change events related to a specific incident."
-    category: Operations
+    category: Change Events
     risk: low
-    business_impact: "Reads change events correlated with an incident; no state change."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Lists change events correlated with an incident."
+    compliance: [SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  - id: pagerduty.list_service_change_events
+    object: ChangeEvent
+    action: list_service_change_events
+    category: Change Events
+    risk: low
+    business_impact: "Lists change events tied to a service."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
   # ---------- Status Pages ----------
   - id: pagerduty.create_status_page_post
     object: StatusPagePost
     action: create_status_page_post
-    description: "Create a Post for a Status Page by Status Page ID."
-    category: Operations
+    category: Status Pages
     risk: high
-    business_impact: "Publishes a customer-facing status post; externally visible to end users and can signal an outage to the public regardless of intent."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Publishes a customer-facing incident notice; reputational and reg-disclosure implications if inaccurate."
+    compliance: [SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: pagerduty.create_status_page_post_update
     object: StatusPagePost
     action: create_status_page_post_update
-    description: "Create a Post Update for a Post by Post ID."
-    category: Operations
+    category: Status Pages
     risk: medium
-    business_impact: "Appends a customer-facing update to a published status post; externally visible to end users."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Appends an update to an existing customer-facing status post."
+    compliance: [SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.list_status_pages
-    object: StatusPage
-    action: list_status_pages
-    description: "List Status Pages with optional filtering."
-    category: Operations
-    risk: low
-    business_impact: "Reads the set of status pages; no state change."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: pagerduty.get_status_page_post
     object: StatusPagePost
     action: get_status_page_post
-    description: "Get a Post for a Status Page by Status Page ID and Post ID."
-    category: Operations
+    category: Status Pages
     risk: low
-    business_impact: "Reads one status-page post, including any already-published customer-facing content; no state change."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Returns one status page post."
+    compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: pagerduty.list_status_page_post_updates
     object: StatusPagePost
     action: list_status_page_post_updates
-    description: "List Post Updates for a Status Page by Status Page ID and Post ID."
-    category: Operations
+    category: Status Pages
     risk: low
-    business_impact: "Reads the updates attached to a status-page post; no state change."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pagerduty.list_status_page_severities
-    object: StatusPage
-    action: list_status_page_severities
-    description: "List Severities for a Status Page by Status Page ID."
-    category: Operations
-    risk: low
-    business_impact: "Reads the configured severity levels for a status page; no state change."
+    business_impact: "Lists updates on a status post."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: pagerduty.list_status_page_impacts
     object: StatusPage
     action: list_status_page_impacts
-    description: "List Impacts for a Status Page by Status Page ID."
-    category: Operations
+    category: Status Pages
     risk: low
-    business_impact: "Reads the configured impact levels for a status page; no state change."
+    business_impact: "Lists impact levels available on the status page."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  - id: pagerduty.list_status_page_severities
+    object: StatusPage
+    action: list_status_page_severities
+    category: Status Pages
+    risk: low
+    business_impact: "Lists severity levels available on the status page."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
   - id: pagerduty.list_status_page_statuses
     object: StatusPage
     action: list_status_page_statuses
-    description: "List Statuses for a Status Page by Status Page ID."
-    category: Operations
+    category: Status Pages
     risk: low
-    business_impact: "Reads the configured status values for a status page; no state change."
+    business_impact: "Lists statuses available on the status page."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Logs & Audit ----------
+    access_methods: [MCP]
+  - id: pagerduty.list_status_pages
+    object: StatusPage
+    action: list_status_pages
+    category: Status Pages
+    risk: low
+    business_impact: "Lists configured status pages."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  # ---------- Identity & Access ----------
+  - id: pagerduty.create_team
+    object: Team
+    action: create_team
+    category: Identity & Access
+    risk: medium
+    business_impact: "Creates a team that owns services and schedules."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: pagerduty.update_team
+    object: Team
+    action: update_team
+    category: Identity & Access
+    risk: medium
+    business_impact: "Modifies team metadata."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: pagerduty.delete_team
+    object: Team
+    action: delete_team
+    category: Identity & Access
+    risk: high
+    business_impact: "Deletes a team; ownership of services and schedules must be reassigned."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [MCP]
+  - id: pagerduty.get_team
+    object: Team
+    action: get_team
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns one team."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: pagerduty.list_teams
+    object: Team
+    action: list_teams
+    category: Identity & Access
+    risk: low
+    business_impact: "Lists teams in the account."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: pagerduty.add_team_member
+    object: Team
+    action: add_team_member
+    category: Identity & Access
+    risk: medium
+    business_impact: "Adds a user to a team; expands their access to that team's services and rotations."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [MCP]
+  - id: pagerduty.remove_team_member
+    object: Team
+    action: remove_team_member
+    category: Identity & Access
+    risk: medium
+    business_impact: "Removes a user from a team; can drop coverage if the user is on a rotation."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: pagerduty.list_team_members
+    object: Team
+    action: list_team_members
+    category: Identity & Access
+    risk: low
+    business_impact: "Lists members of a team."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: pagerduty.get_user_data
+    object: User
+    action: get_user_data
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns one user's profile."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: pagerduty.list_users
+    object: User
+    action: list_users
+    category: Identity & Access
+    risk: low
+    business_impact: "Lists users in the account."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  # ---------- Audit ----------
   - id: pagerduty.list_log_entries
     object: LogEntry
     action: list_log_entries
-    description: "List all log entries across the account."
-    category: Operations
-    risk: medium
-    business_impact: "Reads the account-wide activity log — a record of who did what and when, including responder identities; audit-trail and personal-data read."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    category: Audit
+    risk: low
+    business_impact: "Reads PagerDuty's incident log entries (audit trail of incident lifecycle events)."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    confidence: high
+    access_methods: [MCP]
   - id: pagerduty.get_log_entry
     object: LogEntry
     action: get_log_entry
-    description: "Get a specific log entry by ID."
-    category: Operations
+    category: Audit
     risk: low
-    business_impact: "Reads one activity-log entry including the acting user's identity; audit-trail and personal-data read."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    business_impact: "Returns one incident log entry."
+    compliance: [SOC2, ISO_27001]
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
+    confidence: high
+    access_methods: [MCP]

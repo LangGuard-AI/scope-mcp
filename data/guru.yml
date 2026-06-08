@@ -1,103 +1,59 @@
-schema_version: "1.1"
+schema_version: "1.2"
 platform: guru
 display_name: Guru
 source: langguard-editorial
-updated: "2026-06"
-reference: https://developer.getguru.com/docs/available-capabilities
-# ---------------------------------------------------------------------------
-# PROVENANCE / id_form NOTE
-# Guru's hosted MCP server (https://mcp.api.getguru.com/mcp) is fully
-# OAuth-gated: an unauthenticated tools/list returns HTTP 401, and probing
-# candidate anonymous catalog paths (/tools, /mcp/tools, /.well-known/mcp)
-# returns 401/405 with no tool data. Guru's developer docs deliberately
-# publish NO verbatim identifier strings — the "Available Capabilities" page
-# (developer.getguru.com/docs/available-capabilities) lists exactly 5 tools
-# as plain-language display labels and explicitly notes it provides "only
-# their display names as shown in the capabilities table," not technical
-# identifiers. Verbatim tool ids are therefore not reachable from any
-# authoritative primary source (live introspection, vendor MCP docs, or
-# vendor server source).
-#
-# Third-party MCP catalog sites surfaced candidate snake_case names
-# (e.g. guru_search_documents, guru_create_card_draft) but they are
-# unverifiable and disagree on count (Speakeasy lists 6 tools, others 5),
-# so per the curator anti-fabrication rule those ids are NOT written here.
-#
-# The 5 actions below are reconstructed at the INTENT level from the vendor's
-# verbatim capability labels. ids are best-effort snake_case slugs of those
-# labels; audit matching is intent-level, not identifier-level; and confidence
-# is capped at medium per the curator spec (id_form: capability). The live
-# server surface may be marginally larger (the 5-vs-6 catalog disagreement).
-# ---------------------------------------------------------------------------
+updated: "2026-05"
+server_website: https://github.com/guruhq/remote-mcp-server
+maintainer: https://github.com/guruhq/remote-mcp-server/issues
 actions:
-  # ---------- Data Access ----------
-  - id: guru.ask
-    object: Answer
-    action: ask
-    id_form: capability
-    description: "Ask"
-    reference: https://developer.getguru.com/docs/available-capabilities
-    category: Data Access
-    risk: medium
-    business_impact: "Returns a verified answer synthesized across the entire Guru knowledge base and connected sources (Salesforce, Slack, Google Drive, Confluence, SharePoint); RBAC-scoped but can surface confidential content from any connected system."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: guru.search
-    object: Card
-    action: search
-    id_form: capability
-    description: "Search"
-    reference: https://developer.getguru.com/docs/available-capabilities
-    category: Data Access
-    risk: medium
-    business_impact: "Keyword search across Guru Cards and connected third-party documents; RBAC-scoped but can surface confidential content beyond the searched scope."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+  # ---------- Knowledge ----------
   - id: guru.list_knowledge_agents
     object: KnowledgeAgent
     action: list_knowledge_agents
-    id_form: capability
-    description: "List Knowledge Agents"
-    reference: https://developer.getguru.com/docs/available-capabilities
-    category: Data Access
+    category: Knowledge
     risk: low
-    business_impact: "Lists the Knowledge Agents available in the workspace and their ids; metadata only, no content returned."
+    business_impact: "Enumerates Knowledge Agents available in the workspace."
     compliance: []
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Content ----------
-  - id: guru.create_draft
+    confidence: high
+    access_methods: [MCP]
+  - id: guru.ask_question
+    object: KnowledgeAgent
+    action: ask_question
+    category: Knowledge
+    risk: medium
+    business_impact: "Generates an answer grounded in Guru cards and connected sources (Slack, Drive, Confluence); answers may include policy data, customer info, or other regulated content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: guru.search_content
     object: Card
-    action: create_draft
-    id_form: capability
-    description: "Create Draft"
-    reference: https://developer.getguru.com/docs/available-capabilities
-    category: Content
+    action: search_content
+    category: Knowledge
+    risk: medium
+    business_impact: "Searches Guru content; can surface internal documentation including HR, security, and customer data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: guru.create_card_draft
+    object: Card
+    action: create_card_draft
+    category: Knowledge
     risk: low
-    business_impact: "Creates an unpublished draft Guru Card from an AI conversation; not visible as verified knowledge until reviewed and published, and reversible."
+    business_impact: "Drafts a new Guru card; visible to authors as a draft, not auto-published."
     compliance: []
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    confidence: high
+    access_methods: [MCP]
   - id: guru.update_card
     object: Card
     action: update_card
-    id_form: capability
-    description: "Update Card"
-    reference: https://developer.getguru.com/docs/available-capabilities
-    category: Content
+    category: Knowledge
     risk: medium
-    business_impact: "Suggests changes to the content of an existing Guru Card; alters knowledge other users rely on, but reversible via card version history."
-    compliance: [SOC2]
-    sod_concern: false
+    business_impact: "Modifies an existing Guru card; changes the source of truth employees rely on for policy and procedure."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
     confidence: medium
-    access_methods: [REST, MCP]
+    access_methods: [MCP]

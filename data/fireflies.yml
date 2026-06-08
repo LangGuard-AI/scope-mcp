@@ -1,240 +1,37 @@
-schema_version: "1.1"
+schema_version: "1.0"
 platform: fireflies
 display_name: Fireflies
 source: langguard-editorial
-updated: "2026-06"
-reference: https://docs.fireflies.ai/mcp-tools/overview
+updated: "2026-05"
 actions:
-  # ---------- Meeting Content ----------
-  - id: fireflies.fireflies_get_transcript
-    object: Transcript
-    action: fireflies_get_transcript
-    description: "Fetches a detailed transcript by meeting ID with sentences, speakers, and timestamps."
-    category: Data Access
-    risk: high
-    business_impact: "Returns a verbatim recording of a private business conversation; may contain PII, PHI, or material non-public information."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: fireflies.fireflies_fetch
-    object: Transcript
-    action: fireflies_fetch
-    description: "Retrieves complete meeting data including transcript, summary, and metadata in one call."
-    category: Data Access
-    risk: high
-    business_impact: "Returns the full content of a private meeting (transcript plus summary and analytics) in a single call; broad personal-data exposure per meeting."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: fireflies.fireflies_get_transcripts
-    object: Transcript
-    action: fireflies_get_transcripts
-    description: "Queries multiple meetings with structured filters and returns metadata and summaries."
-    category: Data Access
-    risk: high
-    business_impact: "Bulk retrieval across meeting history; aggregated personal-data exposure spanning many private conversations."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: fireflies.fireflies_search
-    object: Transcript
-    action: fireflies_search
-    description: "Advanced search for meeting transcripts using a mini grammar syntax (experimental)."
-    category: Data Access
-    risk: high
-    business_impact: "Free-text and keyword search across the entire meeting archive; can surface private conversation content from many meetings in one query."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: fireflies.fireflies_get_summary
-    object: Summary
-    action: fireflies_get_summary
-    description: "Fetches a meeting summary by ID with action items, keywords, and overview."
-    category: Data Access
-    risk: high
-    business_impact: "Returns the AI-generated summary of a private meeting, including action items and topics; may contain PII, PHI, or material non-public information."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: fireflies.fireflies_get_soundbites
-    object: Soundbite
-    action: fireflies_get_soundbites
-    description: "Fetches soundbites (short shareable audio/transcript clips from meetings), filterable by transcript, owner, or team."
-    category: Data Access
-    risk: medium
-    business_impact: "Returns clipped excerpts of private meeting content along with summaries; partial conversation exposure across self or team."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: fireflies.fireflies_create_soundbite
-    object: Soundbite
-    action: fireflies_create_soundbite
-    description: "Creates a soundbite clip from a meeting transcript over a specified time range."
-    category: Data Access
-    risk: medium
-    business_impact: "Extracts a private-meeting audio/video segment into a shareable clip; a content sub-export that can be set public."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: fireflies.fireflies_get_active_meetings
-    object: Meeting
-    action: fireflies_get_active_meetings
-    description: "Retrieves currently active (in-progress) meetings; admins can query any user, regular users only their own."
-    category: Data Access
-    risk: medium
-    business_impact: "Reveals who is in a live meeting right now, including organizer and meeting link; admins can surveil any team member's active calls."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Meeting Sharing ----------
-  - id: fireflies.fireflies_share_meeting
-    object: Meeting
-    action: fireflies_share_meeting
-    description: "Shares a meeting transcript with up to 100 specified email addresses, with optional access expiry."
-    category: Data Access
-    risk: high
-    business_impact: "Distributes a full private-meeting transcript to up to 100 recipients, external addresses included; intentional exfiltration vector for sensitive conversation content."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: fireflies.fireflies_revoke_meeting_access
-    object: Meeting
-    action: fireflies_revoke_meeting_access
-    description: "Revokes a previously shared meeting's access for a specific email address."
-    category: Data Access
-    risk: medium
-    business_impact: "Removes a recipient's access to a shared meeting; reversible access-control change limiting exposure of conversation content."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Meeting Management ----------
-  - id: fireflies.fireflies_update_meeting_title
-    object: Meeting
-    action: fireflies_update_meeting_title
-    description: "Updates the title of a meeting transcript (5-256 characters)."
-    category: Operations
+  # ---------- Meeting Intelligence ----------
+  - id: fireflies.get_user
+    object: User
+    action: get_user
+    category: Meeting Intelligence
     risk: low
-    business_impact: "Renames a meeting transcript; reversible metadata change that does not expose conversation content."
+    business_impact: "Returns the authenticated user's profile."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: fireflies.fireflies_move_meeting
-    object: Meeting
-    action: fireflies_move_meeting
-    description: "Moves up to five meeting transcripts to a specified channel/folder."
-    category: Operations
-    risk: low
-    business_impact: "Relocates meetings into a channel/folder; reversible organizational change that can alter who can see a meeting via channel membership."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Channels ----------
-  - id: fireflies.fireflies_list_channels
-    object: Channel
-    action: fireflies_list_channels
-    description: "Lists all channels/folders available to the authenticated user, including privacy setting and members."
-    category: Data Access
-    risk: low
-    business_impact: "Returns channel structure and member lists; exposes team membership but no conversation content."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: fireflies.fireflies_get_channel
-    object: Channel
-    action: fireflies_get_channel
-    description: "Retrieves details of a specific channel/folder by ID, including privacy setting and member list."
-    category: Data Access
-    risk: low
-    business_impact: "Returns one channel's members and privacy setting; exposes team membership but no conversation content."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- User & Team ----------
-  - id: fireflies.fireflies_get_user_contacts
-    object: Contact
-    action: fireflies_get_user_contacts
-    description: "Fetches the user's contact list sorted by most recent meeting date."
-    category: Data Access
+    access_methods: [MCP]
+  - id: fireflies.get_transcript
+    object: Transcript
+    action: get_transcript
+    category: Meeting Intelligence
     risk: high
-    business_impact: "Returns a full contact directory of names, emails, and last-meeting dates; bulk PII extraction mapping the user's relationship graph."
+    business_impact: "Pulls a full meeting transcript; verbatim recording of private business conversations may contain PII, PHI, or material non-public information."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: fireflies.fireflies_get_analytics
-    object: Analytics
-    action: fireflies_get_analytics
-    description: "Retrieves team and per-user meeting and conversation analytics; team-level data requires admin privileges."
-    category: Data Access
+    access_methods: [MCP]
+  - id: fireflies.get_transcripts
+    object: Transcript
+    action: get_transcripts
+    category: Meeting Intelligence
     risk: high
-    business_impact: "Returns per-user behavioral metrics (sentiment, talk-listen ratio, monologues) across the team; employee-profiling surface available to admins."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: fireflies.fireflies_get_usergroups
-    object: UserGroup
-    action: fireflies_get_usergroups
-    description: "Fetches user groups for the authenticated user or team, including member emails and roles."
-    category: Data Access
-    risk: medium
-    business_impact: "Returns team structure with member emails and roles; exposes org-directory PII but no conversation content."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: fireflies.fireflies_get_user
-    object: User
-    action: fireflies_get_user
-    description: "Fetches user account details; returns the authenticated user when no ID is supplied."
-    category: Data Access
-    risk: low
-    business_impact: "Returns a single user's profile (email, name, usage stats, admin status); individual PII read."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Bulk transcript search across meeting history; aggregated personal-data exposure."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Automation ----------
-  - id: fireflies.fireflies_get_rule_executions
-    object: RuleExecution
-    action: fireflies_get_rule_executions
-    description: "Retrieves rule execution logs grouped by meeting, showing which automation rules fired and the actions taken (Enterprise tier)."
-    category: Operations
-    risk: medium
-    business_impact: "Returns automation-rule execution logs including sharing and privacy-change actions taken on meetings; reveals data-flow and access history."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
+    access_methods: [MCP]

@@ -1,822 +1,182 @@
-schema_version: "1.1"
+schema_version: "1.2"
 platform: monday
 display_name: monday.com
 source: langguard-editorial
-updated: "2026-06"
-reference: https://developer.monday.com/apps/docs/mondaycom-mcp-integration
+updated: "2026-05"
+maintainer: https://support.monday.com/hc/en-us/requests/new?ticket_form_id=13855862562962
 actions:
-  # ---------- Platform & DevOps ----------
-  - id: monday.all_monday_api
-    object: "*"
-    action: all_monday_api
-    description: "Execute any monday.com API operation by generating GraphQL queries and mutations dynamically."
-    category: Platform & DevOps
-    risk: critical
-    business_impact: "Runs an arbitrary GraphQL query or mutation against the whole account, bypassing every per-tool guardrail; can read, mutate, or bulk-export any data the token can reach."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: monday.undo_action
-    object: Action
-    action: undo_action
-    description: "Reverts a previously performed action on the account."
-    category: Platform & DevOps
-    risk: medium
-    business_impact: "Reverses a prior change to board or item state; alters the record of what was last done without a separate approval."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.manage_tools
-    object: Tool
-    action: manage_tools
-    description: "Enables or disables which MCP tools are exposed in the current session."
-    category: Platform & DevOps
-    risk: medium
-    business_impact: "Changes which tools the agent may invoke; can unlock capabilities that were intentionally withheld from the session."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Records ----------
+  # ---------- Items ----------
   - id: monday.create_item
     object: Item
     action: create_item
-    description: "Creates a new item (row) on a board."
-    category: Records
+    category: Items
     risk: low
-    business_impact: "Adds a new item to a board; reversible and individually audited, may carry personal data in its column values."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: monday.change_item_column_values
-    object: Item
-    action: change_item_column_values
-    description: "Updates one or more column values on an existing item."
-    category: Records
-    risk: low
-    business_impact: "Modifies field values on an existing item; reversible and may overwrite personal data stored in columns."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: monday.move_item_to_group
-    object: Item
-    action: move_item_to_group
-    description: "Moves an item to a different group within its board."
-    category: Records
-    risk: low
-    business_impact: "Reorganizes where an item lives on a board; reversible workflow change."
+    business_impact: "Adds a new row to a board; routine work-tracking write."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: monday.delete_item
     object: Item
     action: delete_item
-    description: "Deletes an item from a board."
-    category: Records
+    category: Items
     risk: medium
-    business_impact: "Removes an item and its column data from a board; recoverable from the recycle bin for a limited window before permanent loss."
-    compliance: [GDPR, UK_GDPR, CCPA, SOC2, ISO_27001]
+    business_impact: "Removes a row; downstream automations and reporting lose the record."
+    compliance: [SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: monday.create_timeline_item
-    object: TimelineItem
-    action: create_timeline_item
-    description: "Adds a timeline (activity) entry to an item."
-    category: Records
-    risk: low
-    business_impact: "Posts a timeline entry on an item; reversible annotation."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.create_custom_activity
-    object: CustomActivity
-    action: create_custom_activity
-    description: "Creates a custom activity type used in item timelines."
-    category: Records
-    risk: low
-    business_impact: "Defines a new custom activity type; account-level metadata change, reversible."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.update_assets_on_item
-    object: Asset
-    action: update_assets_on_item
-    description: "Adds, replaces, or removes file assets attached to an item."
-    category: Records
-    risk: medium
-    business_impact: "Changes the files attached to an item; uploaded or removed files may contain personal or confidential data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.get_asset_upload_url
-    object: Asset
-    action: get_asset_upload_url
-    description: "Returns a signed URL for uploading a file asset."
-    category: Records
-    risk: low
-    business_impact: "Issues a pre-signed upload target for a new file; first half of an attachment write."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.finalize_asset_upload
-    object: Asset
-    action: finalize_asset_upload
-    description: "Finalizes a file upload and attaches the asset to its target."
-    category: Records
-    risk: low
-    business_impact: "Completes a file upload and links it to an item; uploaded file may contain personal or confidential data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Boards & Structure ----------
-  - id: monday.create_board
-    object: Board
-    action: create_board
-    description: "Creates a new board in a workspace."
-    category: Boards & Structure
-    risk: low
-    business_impact: "Adds a new board to a workspace; reversible structural change."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: monday.create_column
-    object: Column
-    action: create_column
-    description: "Adds a new column to a board."
-    category: Boards & Structure
-    risk: low
-    business_impact: "Adds a column to a board schema; reversible structural change."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: monday.update_column
-    object: Column
-    action: update_column
-    description: "Updates the metadata or settings of an existing column."
-    category: Boards & Structure
-    risk: low
-    business_impact: "Changes a column's configuration on a board; reversible structural change."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: monday.delete_column
-    object: Column
-    action: delete_column
-    description: "Deletes a column from a board."
-    category: Boards & Structure
-    risk: medium
-    business_impact: "Removes a column and all data stored in it across every item on the board; data loss is not individually recoverable."
-    compliance: [GDPR, UK_GDPR, CCPA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: monday.create_group
-    object: Group
-    action: create_group
-    description: "Creates a new group (section) within a board."
-    category: Boards & Structure
-    risk: low
-    business_impact: "Adds a group to a board; reversible structural change."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: monday.create_view
-    object: View
-    action: create_view
-    description: "Creates a new view on a board."
-    category: Boards & Structure
-    risk: low
-    business_impact: "Adds a view to a board; reversible presentation change."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.update_view
-    object: View
-    action: update_view
-    description: "Updates an existing board view."
-    category: Boards & Structure
-    risk: low
-    business_impact: "Changes how a board view is configured; reversible presentation change."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.create_view_table
-    object: View
-    action: create_view_table
-    description: "Creates a table-type view on a board."
-    category: Boards & Structure
-    risk: low
-    business_impact: "Adds a table view to a board; reversible presentation change."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.update_view_table
-    object: View
-    action: update_view_table
-    description: "Updates a table-type board view."
-    category: Boards & Structure
-    risk: low
-    business_impact: "Changes a table view's configuration; reversible presentation change."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.link_board_items_workflow
+    access_methods: [MCP]
+  - id: monday.get_board_items_by_name
     object: Item
-    action: link_board_items_workflow
-    description: "Creates links between items across boards as part of a workflow."
-    category: Boards & Structure
+    action: get_board_items_by_name
+    category: Items
     risk: low
-    business_impact: "Establishes relationships between items across boards; reversible structural change."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Workspace & Org ----------
-  - id: monday.create_workspace
-    object: Workspace
-    action: create_workspace
-    description: "Creates a new workspace in the account."
-    category: Workspace & Org
-    risk: medium
-    business_impact: "Provisions a new workspace at the account level; changes account structure and billing footprint."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: monday.update_workspace
-    object: Workspace
-    action: update_workspace
-    description: "Updates a workspace's settings or metadata."
-    category: Workspace & Org
-    risk: medium
-    business_impact: "Changes workspace-level configuration affecting everyone with access; logged but not gated by review."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.create_folder
-    object: Folder
-    action: create_folder
-    description: "Creates a folder within a workspace."
-    category: Workspace & Org
-    risk: low
-    business_impact: "Adds a folder to organize boards within a workspace; reversible structural change."
+    business_impact: "Searches items on a board by name."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: monday.update_folder
-    object: Folder
-    action: update_folder
-    description: "Updates a folder's name or location."
-    category: Workspace & Org
-    risk: low
-    business_impact: "Renames or relocates a folder; reversible structural change."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: monday.move_object
-    object: "*"
-    action: move_object
-    description: "Moves a board, folder, or other object to a different location."
-    category: Workspace & Org
-    risk: medium
-    business_impact: "Relocates a board or folder between workspaces, potentially changing who can see its contents."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Communications ----------
+    access_methods: [MCP]
   - id: monday.create_update
     object: Update
     action: create_update
-    description: "Posts an update (comment) on an item."
-    category: Communications
+    category: Items
     risk: low
-    business_impact: "Posts a comment on an item; visible to collaborators and may contain personal data in its text."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: monday.create_update_in_monday
-    object: Update
-    action: create_update_in_monday
-    description: "Posts an update on an item via the in-product UI flow."
-    category: Communications
-    risk: low
-    business_impact: "Posts a comment on an item through the UI path; visible to collaborators and may contain personal data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.create_notification
-    object: Notification
-    action: create_notification
-    description: "Sends a notification to a user."
-    category: Communications
-    risk: low
-    business_impact: "Delivers an in-app notification to a user; reversible, low-impact message."
+    business_impact: "Posts a comment/update on an item; visible to board collaborators."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: monday.get_updates
-    object: Update
-    action: get_updates
-    description: "Reads updates (comments) posted on items."
-    category: Communications
+    access_methods: [MCP]
+  - id: monday.change_item_column_values
+    object: Item
+    action: change_item_column_values
+    category: Items
     risk: medium
-    business_impact: "Reads item comment threads; conversation text routinely contains personal data of identifiable individuals."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Modifies status, dates, owners, or other column values; advances workflows that may have downstream effects."
+    compliance: [SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: monday.get_notetaker_meetings
-    object: Meeting
-    action: get_notetaker_meetings
-    description: "Lists AI notetaker meetings with transcripts, summaries, and participant names/emails."
-    category: Communications
-    risk: high
-    business_impact: "Reads recorded meeting transcripts, AI summaries, and participant identities; private-communications exposure that may include sensitive or health-related discussion."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, HIPAA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Documents ----------
-  - id: monday.create_doc
-    object: Doc
-    action: create_doc
-    description: "Creates a new monday doc."
-    category: Documents
+    access_methods: [MCP]
+  - id: monday.move_item_to_group
+    object: Item
+    action: move_item_to_group
+    category: Items
     risk: low
-    business_impact: "Adds a new document; reversible and may hold personal or confidential content."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Moves an item between groups; reorganization within a board."
+    compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: monday.add_content_to_doc
-    object: Doc
-    action: add_content_to_doc
-    description: "Appends content blocks to an existing doc."
-    category: Documents
+    access_methods: [MCP]
+  # ---------- Boards ----------
+  - id: monday.create_board
+    object: Board
+    action: create_board
+    category: Boards
     risk: low
-    business_impact: "Adds content to an existing document; reversible edit that may introduce personal data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Creates a new board for tracking work."
+    compliance: []
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.update_doc
-    object: Doc
-    action: update_doc
-    description: "Overwrites or modifies the content of an existing doc."
-    category: Documents
+    confidence: high
+    access_methods: [MCP]
+  - id: monday.get_board_schema
+    object: Board
+    action: get_board_schema
+    category: Boards
+    risk: low
+    business_impact: "Returns a board's column and group structure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: monday.create_group
+    object: Group
+    action: create_group
+    category: Boards
+    risk: low
+    business_impact: "Adds a group (section) to a board."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: monday.create_column
+    object: Column
+    action: create_column
+    category: Boards
+    risk: low
+    business_impact: "Adds a new column to a board's schema."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: monday.delete_column
+    object: Column
+    action: delete_column
+    category: Boards
     risk: medium
-    business_impact: "Replaces document content; overwrites prior text that may not be individually recoverable and can hold personal data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    business_impact: "Removes a column; data stored in that column on every item is lost."
+    compliance: [SOC2]
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.read_docs
-    object: Doc
-    action: read_docs
-    description: "Reads the content of one or more monday docs."
-    category: Documents
-    risk: medium
-    business_impact: "Reads document contents that frequently contain personal or confidential business data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    confidence: high
+    access_methods: [MCP]
   # ---------- Forms ----------
   - id: monday.create_form
     object: Form
     action: create_form
-    description: "Creates a new WorkForms form."
     category: Forms
     risk: low
-    business_impact: "Creates a data-collection form; reversible, becomes a personal-data intake point once published."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.update_form
-    object: Form
-    action: update_form
-    description: "Updates the settings of an existing form."
-    category: Forms
-    risk: low
-    business_impact: "Changes a form's configuration; reversible edit affecting what respondent data is collected."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.form_questions_editor
-    object: Form
-    action: form_questions_editor
-    description: "Adds, edits, or removes questions on a form."
-    category: Forms
-    risk: medium
-    business_impact: "Edits form questions; removing or altering questions can drop or change collected respondent personal data and is destructive to existing question state."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.create_form_submission
-    object: FormSubmission
-    action: create_form_submission
-    description: "Submits a response to a form on behalf of a respondent."
-    category: Forms
-    risk: low
-    business_impact: "Records a form submission; written data routinely contains personal data of an identifiable individual."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Automations & Workflows ----------
-  - id: monday.create_automation
-    object: Automation
-    action: create_automation
-    description: "Creates an automation recipe on a board."
-    category: Automations & Workflows
-    risk: medium
-    business_impact: "Adds an automation that runs unattended on board events; can move, notify, or mutate data without a human in the loop."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.create_workflow
-    object: Workflow
-    action: create_workflow
-    description: "Creates a workflow in the workflow builder."
-    category: Automations & Workflows
-    risk: medium
-    business_impact: "Defines an unattended multi-step workflow that can act on board data autonomously once published."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.update_workflow
-    object: Workflow
-    action: update_workflow
-    description: "Updates an existing workflow definition."
-    category: Automations & Workflows
-    risk: medium
-    business_impact: "Changes the behavior of an existing automated workflow; alters unattended actions taken on board data."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.publish_workflow
-    object: Workflow
-    action: publish_workflow
-    description: "Publishes a workflow so it begins executing."
-    category: Automations & Workflows
-    risk: medium
-    business_impact: "Activates a workflow into production where it runs unattended against live board data; a single actor changes automated behavior without separate review."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: true
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.manage_workflows
-    object: Workflow
-    action: manage_workflows
-    description: "Manages existing workflows, including disabling or deleting them."
-    category: Automations & Workflows
-    risk: medium
-    business_impact: "Enables, disables, or deletes automated workflows; can remove controls that govern how board data is processed."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- AI Agents ----------
-  - id: monday.manage_agent
-    object: Agent
-    action: manage_agent
-    description: "Creates, configures, or deletes an AI agent on the account."
-    category: AI Agents
-    risk: high
-    business_impact: "Provisions or removes an autonomous AI agent that can take actions on account data; destructive to existing agent configuration and expands what acts without a human."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: true
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.manage_agent_triggers
-    object: Agent
-    action: manage_agent_triggers
-    description: "Configures the events that cause an AI agent to run."
-    category: AI Agents
-    risk: medium
-    business_impact: "Changes when an autonomous agent activates; can broaden the conditions under which it acts on account data unattended."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.manage_agent_skills
-    object: Agent
-    action: manage_agent_skills
-    description: "Configures the skills (capabilities) available to an AI agent."
-    category: AI Agents
-    risk: medium
-    business_impact: "Changes what an autonomous agent is permitted to do; can grant it new capabilities over account data."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.manage_agent_knowledge
-    object: Agent
-    action: manage_agent_knowledge
-    description: "Manages the knowledge sources an AI agent can draw on."
-    category: AI Agents
-    risk: medium
-    business_impact: "Changes the data an autonomous agent grounds its decisions on; may feed personal or confidential data into the agent's context."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Object Schema ----------
-  - id: monday.create_object_schema
-    object: ObjectSchema
-    action: create_object_schema
-    description: "Defines a new object schema used to model account data."
-    category: Object Schema
-    risk: low
-    business_impact: "Adds a new data-model schema; reversible account-level structural change."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.update_object_schema
-    object: ObjectSchema
-    action: update_object_schema
-    description: "Updates an existing object schema definition."
-    category: Object Schema
-    risk: medium
-    business_impact: "Changes a data-model schema that boards and items depend on; can affect how existing records are interpreted."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.delete_object_schema
-    object: ObjectSchema
-    action: delete_object_schema
-    description: "Deletes an object schema."
-    category: Object Schema
-    risk: high
-    business_impact: "Removes a data-model schema other objects rely on; structural deletion that can orphan or break dependent records."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.delete_object_schema_columns
-    object: ObjectSchema
-    action: delete_object_schema_columns
-    description: "Deletes columns from an object schema."
-    category: Object Schema
-    risk: medium
-    business_impact: "Removes columns from a data-model schema; deletes the field definitions and can drop data mapped to them."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.manage_object_schema_columns
-    object: ObjectSchema
-    action: manage_object_schema_columns
-    description: "Adds or modifies columns on an object schema."
-    category: Object Schema
-    risk: medium
-    business_impact: "Changes the column structure of a data-model schema affecting dependent boards and items; reversible per change but structurally significant."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.manage_object_schema_board_connection
-    object: ObjectSchema
-    action: manage_object_schema_board_connection
-    description: "Connects or disconnects a board from an object schema."
-    category: Object Schema
-    risk: medium
-    business_impact: "Binds or unbinds a board to a data-model schema; changes how that board's data is structured and surfaced."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.set_object_schema_column_active_state
-    object: ObjectSchema
-    action: set_object_schema_column_active_state
-    description: "Activates or deactivates a column within an object schema."
-    category: Object Schema
-    risk: low
-    business_impact: "Toggles whether a schema column is active; reversible structural change."
+    business_impact: "Creates a WorkForm tied to a board for collecting submissions."
     compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Dashboards ----------
-  - id: monday.create_dashboard
-    object: Dashboard
-    action: create_dashboard
-    description: "Creates a new dashboard."
-    category: Dashboards
-    risk: low
-    business_impact: "Adds a dashboard; reversible reporting artifact that may aggregate personal data from underlying boards."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.create_widget
-    object: Widget
-    action: create_widget
-    description: "Adds a widget to a dashboard."
-    category: Dashboards
-    risk: low
-    business_impact: "Adds a widget to a dashboard; reversible reporting artifact."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.board_insights
-    object: Board
-    action: board_insights
-    description: "Generates analytical insights across a board's data."
-    category: Dashboards
-    risk: medium
-    business_impact: "Aggregates and analyzes board data including any personal data stored in items; produces a derived view of that data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Data Access ----------
-  - id: monday.get_full_board_data
-    object: Board
-    action: get_full_board_data
-    description: "Returns the complete contents of a board including every item and column value."
-    category: Data Access
-    risk: high
-    business_impact: "Pulls an entire board's items and column values in one call; bulk personal-data read and a data-exfiltration vector regardless of intent."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: monday.get_board_items_page
-    object: Item
-    action: get_board_items_page
-    description: "Returns a paginated page of items and their column values from a board."
-    category: Data Access
-    risk: medium
-    business_impact: "Reads a page of board items including their column values; personal data of identifiable individuals when present."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    access_methods: [MCP]
+  - id: monday.get_form
+    object: Form
+    action: get_form
+    category: Forms
+    risk: low
+    business_impact: "Returns a form's configuration."
+    compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  # ---------- Org & Access ----------
   - id: monday.list_users_and_teams
     object: User
     action: list_users_and_teams
-    description: "Lists account users and teams including names and emails."
-    category: Data Access
+    category: Org & Access
     risk: medium
-    business_impact: "Reads the account directory of users and teams including names and emails; bulk personal-data read."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Enumerates workspace members and team membership; full directory disclosure."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: monday.get_user_context
-    object: User
-    action: get_user_context
-    description: "Returns context about the current user, including identity details."
-    category: Data Access
-    risk: low
-    business_impact: "Reads the calling user's profile and account context; personal data of an identifiable individual."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: monday.fetch_file_content
-    object: Asset
-    action: fetch_file_content
-    description: "Downloads and extracts the text content of a file attached to an item (PDF, Word, Excel, CSV, etc.)."
-    category: Data Access
-    risk: high
-    business_impact: "Reads the full contents of an attached file; documents and spreadsheets frequently contain personal, financial, or confidential data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.get_assets
-    object: Asset
-    action: get_assets
-    description: "Lists file assets and their metadata or download URLs."
-    category: Data Access
-    risk: medium
-    business_impact: "Returns file asset metadata and access URLs; the referenced files may contain personal or confidential data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.get_board_activity
-    object: Board
-    action: get_board_activity
-    description: "Reads the activity log of changes made on a board."
-    category: Data Access
-    risk: medium
-    business_impact: "Reads the board's audit trail of who changed what and when; exposes user activity records."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: monday.search
+    access_methods: [MCP]
+  # ---------- Platform & DevOps ----------
+  - id: monday.all_monday_api
     object: "*"
-    action: search
-    description: "Searches across boards, items, docs, and other objects in the account."
-    category: Data Access
-    risk: medium
-    business_impact: "Runs a cross-account search that can surface personal or confidential data from any object the token can reach."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
+    action: all_monday_api
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Generic GraphQL passthrough to monday.com's API; can perform any operation the token authorizes."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
     confidence: medium
-    access_methods: [REST, MCP]
+    access_methods: [MCP]
+  - id: monday.get_graphql_schema
+    object: Schema
+    action: get_graphql_schema
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns the GraphQL schema available to the token."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: monday.get_type_details
+    object: Schema
+    action: get_type_details
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns details for one GraphQL type."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]

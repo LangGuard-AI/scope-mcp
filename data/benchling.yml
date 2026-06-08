@@ -1,80 +1,48 @@
-schema_version: "1.1"
+schema_version: "1.2"
 platform: benchling
 display_name: Benchling
 source: langguard-editorial
-updated: "2026-06"
-reference: https://help.benchling.com/hc/en-us/articles/40342713479437-Benchling-MCP
-# ---------------------------------------------------------------------------
-# PROVENANCE / id_form NOTE
-# Benchling's hosted MCP server is tenant-scoped and OAuth-2.1 / DCR-gated:
-# the URL format is https://<tenant>.mcp.benchling.com/mcp and the apex host
-# mcp.benchling.com does not resolve in DNS. Authentication is delegated
-# OAuth 2.1 via Dynamic Client Registration; the canonical help article
-# explicitly states API-key auth is NOT supported. No anonymous tools-catalog
-# endpoint exists, and the server cannot be introspected without a real tenant
-# and an interactive login (neither of which was available or invented).
-#
-# Benchling publishes NO verbatim tools/list identifier strings in any reachable
-# primary source. The canonical "Benchling MCP Server" help article (read in
-# full) documents the surface only as plain-language CAPABILITIES, not discrete
-# tool ids. The action surface below is therefore reconstructed in capability
-# form (id_form: capability): each action's `description` is the verbatim
-# capability bullet from that article, the `id`/`action` slug is best-effort,
-# audit matching is intent-level (not identifier-level), and confidence is
-# capped at medium per the curator spec.
-#
-# REJECTED SOURCES: a third-party catalog (apigene.ai) asserted four snake_case
-# tool ids (get_entity, query_benchling, retrieve_data, search_experiments), a
-# single global endpoint https://mcp.benchling.com/mcp, and API-key auth. All
-# three claims are contradicted by Benchling's own docs (non-resolving host,
-# OAuth-only auth) and the host does not resolve — that source is treated as
-# fabricated and NOT used. The prior benchling.yml stub inherited those four
-# ids from the same lineage and has been fully replaced.
-#
-# SURFACE: the MCP wraps Benchling's Deep Research agentic APIs for natural-
-# language access to scientific R&D data. It is read-oriented ("access and
-# query," "retrieve"; "No data is stored externally or used to train AI
-# models") — no create / update / delete / write tools are documented. The
-# vendor agent "Ask" is referenced in marketing but the docs state MCPs work
-# with Deep Research only, so it is NOT modeled as a separate action.
-# ---------------------------------------------------------------------------
+updated: "2026-05"
+maintainer: https://help.benchling.com/hc/en-us/requests/new
 actions:
   # ---------- Data Access ----------
-  - id: benchling.ask_questions_about_data
-    object: "*"
-    action: ask_questions_about_data
-    id_form: capability
-    description: "Ask questions about their scientific data using natural language"
-    category: Data Access
-    risk: high
-    business_impact: "Free-form natural-language query over the tenant's Benchling R&D data; can surface confidential scientific records (sequences, ELN entries, results) across everything the authenticated user can see."
-    compliance: [SOC2, ISO_27001, FDA_PART_11]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: benchling.pull_structured_data
-    object: "*"
-    action: pull_structured_data
-    id_form: capability
-    description: "Pull structured data from Benchling (e.g., results, notebook entries, or inventory items)"
-    category: Data Access
-    risk: high
-    business_impact: "Extracts structured Benchling records — results, notebook (ELN) entries, and inventory items — into the agent; broad pull of regulated R&D data is a data-exfiltration surface regardless of intent."
-    compliance: [SOC2, ISO_27001, FDA_PART_11]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: benchling.retrieve_structured_insights
-    object: "*"
-    action: retrieve_structured_insights
-    id_form: capability
-    description: "Retrieve structured insights such as summaries, tables, or comparisons"
+  - id: benchling.get_entity
+    object: Entity
+    action: get_entity
     category: Data Access
     risk: medium
-    business_impact: "Returns derived summaries, tables, and comparisons computed over Benchling data; aggregated but can still expose confidential experimental detail."
+    business_impact: "Returns a Benchling entity (sequence, plasmid, result); may include regulated R&D data."
     compliance: [SOC2, ISO_27001, FDA_PART_11]
     sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP]
+    access_methods: [MCP]
+  - id: benchling.query_benchling
+    object: "*"
+    action: query_benchling
+    category: Data Access
+    risk: high
+    business_impact: "Free-form natural-language query over Benchling data; can surface regulated experimental records."
+    compliance: [SOC2, ISO_27001, FDA_PART_11]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: benchling.retrieve_data
+    object: "*"
+    action: retrieve_data
+    category: Data Access
+    risk: high
+    business_impact: "Pulls structured data (results, notebook entries, inventory) via the Benchling agentic API."
+    compliance: [SOC2, ISO_27001, FDA_PART_11]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: benchling.search_experiments
+    object: Experiment
+    action: search_experiments
+    category: Data Access
+    risk: medium
+    business_impact: "Searches and filters experiment and study records."
+    compliance: [SOC2, ISO_27001, FDA_PART_11]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]

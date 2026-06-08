@@ -1,325 +1,262 @@
-schema_version: "1.1"
+schema_version: "1.2"
 platform: sentry
 display_name: Sentry
 source: langguard-editorial
-updated: "2026-06"
-reference: https://docs.sentry.io/product/sentry-mcp/
+updated: "2026-05"
+server_website: https://github.com/getsentry/sentry-mcp
+maintainer: https://github.com/getsentry/sentry-mcp/issues
 actions:
-  # ---------- Agent & Workflows ----------
-  - id: sentry.use_sentry
-    object: "*"
-    action: use_sentry
-    description: "Natural-language interface that routes a request to an embedded Sentry agent which can chain inspect, triage, and project-management operations."
-    category: Secrets & Workflows
-    risk: high
-    business_impact: "Single tool whose embedded agent can unilaterally search PII-bearing events, resolve issues, and create teams, projects, and ingest DSNs depending on granted skills."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: sentry.analyze_issue_with_seer
-    object: Issue
-    action: analyze_issue_with_seer
-    description: "Sends an issue's error context to the Seer AI service for root-cause analysis and code-fix suggestions."
-    category: Issues
-    risk: medium
-    business_impact: "Transmits issue context that may contain PII to the Seer AI analysis service for root-cause processing."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Issues & Events ----------
-  - id: sentry.update_issue
-    object: Issue
-    action: update_issue
-    description: "Resolves, reopens, ignores, or reassigns a Sentry issue."
-    category: Issues
-    risk: medium
-    business_impact: "Resolves or ignores an issue, which can suppress an active production error from monitoring; reversible by reopening."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+  # ---------- Issues & Errors ----------
   - id: sentry.search_issues
     object: Issue
     action: search_issues
-    description: "Searches grouped issues and returns a list of matching problems."
     category: Issues
     risk: medium
-    business_impact: "Searches issues whose stack traces and request context may surface PII."
+    business_impact: "Searches issues that may surface stack traces and request data containing PII."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: sentry.search_events
-    object: Event
-    action: search_events
-    description: "Searches events, logs, spans, metrics, profiles, and replays with natural-language or Sentry search syntax."
+    access_methods: [MCP]
+  - id: sentry.list_issues
+    object: Issue
+    action: list_issues
     category: Issues
     risk: medium
-    business_impact: "Queries the raw event store across errors, logs, and replays; result payloads may carry identifying user data."
+    business_impact: "Bulk-lists project issues; may include identifying user context."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: sentry.search_issue_events
-    object: Event
-    action: search_issue_events
-    description: "Searches and filters the individual events within a specific issue."
+    access_methods: [MCP]
+  - id: sentry.get_issue_details
+    object: Issue
+    action: get_issue_details
     category: Issues
     risk: medium
-    business_impact: "Returns event-level detail for an issue; payloads may carry PII."
+    business_impact: "Returns full issue details including breadcrumbs and user context."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  - id: sentry.update_issue
+    object: Issue
+    action: update_issue
+    category: Issues
+    risk: medium
+    business_impact: "Resolves, ignores, or reassigns an issue; can suppress active production errors."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [MCP]
   - id: sentry.get_issue_tag_values
     object: Issue
     action: get_issue_tag_values
-    description: "Returns the distribution of tag values for a specific issue."
     category: Issues
     risk: medium
-    business_impact: "Returns tag-value distributions that can include user identifiers such as URLs, emails, or device IDs."
+    business_impact: "Returns tag values associated with issues; can include user identifiers."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  - id: sentry.list_issue_events
+    object: Event
+    action: list_issue_events
+    category: Issues
+    risk: medium
+    business_impact: "Lists individual events for an issue; payloads may carry PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: sentry.search_issue_events
+    object: Event
+    action: search_issue_events
+    category: Issues
+    risk: medium
+    business_impact: "Searches across an issue's event history."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: sentry.list_events
+    object: Event
+    action: list_events
+    category: Issues
+    risk: medium
+    business_impact: "Bulk-lists raw events including request/user payloads."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: sentry.search_events
+    object: Event
+    action: search_events
+    category: Issues
+    risk: medium
+    business_impact: "Runs natural-language search over the event store."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
   - id: sentry.get_event_attachment
     object: Attachment
     action: get_event_attachment
-    description: "Downloads files attached to a Sentry event, such as screenshots, log files, or minidumps."
     category: Issues
     risk: high
-    business_impact: "Downloads raw event attachments (screenshots, logs, minidumps) that frequently contain PII or secrets."
+    business_impact: "Downloads attached files (minidumps, screenshots, custom uploads) which often contain PII."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: sentry.get_replay_details
-    object: Replay
-    action: get_replay_details
-    description: "Returns high-level information about a specific session replay by URL or replay ID."
-    category: Issues
-    risk: high
-    business_impact: "Returns session-replay detail reconstructing a real user's browser session, including visited pages and interactions."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: sentry.get_profile_details
-    object: Profile
-    action: get_profile_details
-    description: "Inspects a specific transaction or continuous profile in detail."
+    access_methods: [MCP]
+  - id: sentry.analyze_issue_with_seer
+    object: Issue
+    action: analyze_issue_with_seer
     category: Issues
     risk: medium
-    business_impact: "Returns performance-profile timing and call-stack data, which is largely non-personal but may expose code paths and identifiers."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: sentry.get_sentry_resource
-    object: Resource
-    action: get_sentry_resource
-    description: "Fetches a Sentry resource by URL or type — issues, events, traces, spans, AI conversations, breadcrumbs, replays, or snapshots."
-    category: Issues
-    risk: medium
-    business_impact: "Generic fetcher that can return PII-bearing resources such as events, breadcrumbs, replays, and AI-conversation spans depending on the target."
+    business_impact: "Sends issue context to Seer AI for root-cause analysis."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Preprod Snapshots ----------
-  - id: sentry.get_snapshot
-    object: Snapshot
-    action: get_snapshot
-    description: "Returns a preprod snapshot comparison summary with metadata, counts, and changed image sections."
-    category: Operations
-    risk: low
-    business_impact: "Reads a CI preprod snapshot diff summary; internal build-artifact data with no end-user PII."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: sentry.get_snapshot_image
-    object: Snapshot
-    action: get_snapshot_image
-    description: "Returns metadata and full-resolution image content for one image in a preprod snapshot."
-    category: Operations
-    risk: low
-    business_impact: "Downloads a preprod UI screenshot from CI; internal build-artifact data with no end-user PII."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: sentry.get_latest_base_snapshot
-    object: Snapshot
-    action: get_latest_base_snapshot
-    description: "Retrieves the latest reference UI screenshots for an app from the preprod snapshot system."
-    category: Operations
-    risk: low
-    business_impact: "Reads reference app screenshots from the preprod snapshot system; internal build-artifact data."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Platform & DevOps ----------
-  - id: sentry.create_project
-    object: Project
-    action: create_project
-    description: "Creates a new Sentry project, automatically provisioning a DSN."
-    category: Platform & DevOps
+    access_methods: [MCP]
+  - id: sentry.get_trace_details
+    object: Trace
+    action: get_trace_details
+    category: Issues
     risk: medium
-    business_impact: "Provisions a new project and ingest DSN, expanding the monitored and ingest surface; reversible."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Returns distributed trace details including span tags and request data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: sentry.update_project
-    object: Project
-    action: update_project
-    description: "Updates project settings such as name, slug, platform, team assignment, and data-handling configuration."
-    category: Platform & DevOps
-    risk: high
-    business_impact: "Changes project settings that can include data-scrubbing and retention rules, weakening PII-handling controls without review."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: sentry.find_projects
-    object: Project
-    action: find_projects
-    description: "Finds projects within a Sentry organization by name or slug."
-    category: Platform & DevOps
-    risk: low
-    business_impact: "Lists projects in an organization; metadata only."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: sentry.find_releases
-    object: Release
-    action: find_releases
-    description: "Finds tracked code releases for an organization or project."
-    category: Platform & DevOps
-    risk: low
-    business_impact: "Lists code releases and deploy metadata for an organization."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  # ---------- Platform & DevOps ----------
   - id: sentry.find_organizations
     object: Organization
     action: find_organizations
-    description: "Finds organizations the authenticated user can access."
     category: Platform & DevOps
     risk: low
-    business_impact: "Lists organizations available to the caller; metadata only."
+    business_impact: "Lists organizations available to the caller."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Secrets & Workflows ----------
-  - id: sentry.create_dsn
-    object: DSN
-    action: create_dsn
-    description: "Creates an additional ingest DSN for an existing project."
-    category: Secrets & Workflows
-    risk: high
-    business_impact: "Provisions a new ingest DSN; anyone holding the DSN can spoof events into the project."
-    compliance: [SOC2, ISO_27001, NIST_CSF]
+    access_methods: [MCP]
+  - id: sentry.find_projects
+    object: Project
+    action: find_projects
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Lists projects within an organization."
+    compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: sentry.find_dsns
-    object: DSN
-    action: find_dsns
-    description: "Lists the ingest DSNs configured for a specific project."
-    category: Secrets & Workflows
+    access_methods: [MCP]
+  - id: sentry.create_project
+    object: Project
+    action: create_project
+    category: Platform & DevOps
     risk: medium
-    business_impact: "Reveals project ingest DSNs (event-submission credentials) to the caller."
-    compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Identity & Access ----------
-  - id: sentry.create_team
-    object: Team
-    action: create_team
-    description: "Creates a new team within a Sentry organization."
-    category: Identity & Access
-    risk: medium
-    business_impact: "Creates a new team scope within the organization; expands the access structure but grants no elevated permissions by itself."
+    business_impact: "Provisions a new Sentry project, expanding the monitored surface."
     compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  - id: sentry.update_project
+    object: Project
+    action: update_project
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Modifies project settings including data scrubbing and retention rules."
+    compliance: [SOC2, ISO_27001, NIST_CSF, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: high
+    access_methods: [MCP]
+  - id: sentry.find_releases
+    object: Release
+    action: find_releases
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Lists tracked code releases for an organization."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
   - id: sentry.find_teams
     object: Team
     action: find_teams
-    description: "Finds teams within a Sentry organization by name or slug."
     category: Identity & Access
     risk: low
-    business_impact: "Lists teams in an organization; metadata only."
+    business_impact: "Lists Sentry teams in an organization."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: sentry.whoami
-    object: User
-    action: whoami
-    description: "Returns the authenticated user's name and email address."
+    access_methods: [MCP]
+  - id: sentry.create_team
+    object: Team
+    action: create_team
     category: Identity & Access
-    risk: low
-    business_impact: "Returns the authenticated principal's own name and email."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    risk: medium
+    business_impact: "Creates a new team scope; expands access surface."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [MCP]
+  # ---------- Secrets & Workflows ----------
+  - id: sentry.find_dsns
+    object: DSN
+    action: find_dsns
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Lists project DSNs (ingest credentials)."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Documentation ----------
+    access_methods: [MCP]
+  - id: sentry.create_dsn
+    object: DSN
+    action: create_dsn
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Provisions a new ingest DSN; an attacker with the DSN can spoof events into the project."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [MCP]
+  # ---------- Operations ----------
   - id: sentry.search_docs
     object: Documentation
     action: search_docs
-    description: "Searches Sentry public documentation for setup and configuration guidance."
     category: Operations
     risk: low
-    business_impact: "Searches Sentry's public documentation corpus; no tenant data."
+    business_impact: "Searches Sentry public documentation."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: sentry.get_doc
     object: Documentation
     action: get_doc
-    description: "Fetches the full markdown content of a Sentry documentation page."
     category: Operations
     risk: low
-    business_impact: "Reads a public Sentry documentation page; no tenant data."
+    business_impact: "Reads a Sentry documentation page."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [MCP]
+  - id: sentry.get_sentry_resource
+    object: Resource
+    action: get_sentry_resource
+    category: Operations
+    risk: low
+    business_impact: "Returns a generic Sentry resource document."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: sentry.whoami
+    object: User
+    action: whoami
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns the authenticated principal's identity."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]

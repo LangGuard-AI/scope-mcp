@@ -1,402 +1,182 @@
-schema_version: "1.1"
+schema_version: "1.2"
 platform: outreach
 display_name: Outreach
 source: langguard-editorial
-updated: "2026-06"
-reference: https://support.outreach.io/hc/en-us/articles/46370115253403-Outreach-MCP-Server
+updated: "2026-05"
+maintainer: https://support.outreach.io/
 actions:
-  # ---------- Destructive Deletes (capability-form) ----------
-  # The Outreach MCP Server gates create/delete writes behind an admin toggle
-  # ("create (ON by default) and delete (OFF by default) actions over MCP") and
-  # the May 2026 release notes describe the destructive surface in plain prose:
-  # "Agents can now create and delete accounts, opportunities, and prospects, as
-  # well as add or remove prospects from sequences." The vendor publishes NO
-  # verbatim tool identifier for any delete/remove operation, so these four
-  # entries use id_form: capability (confidence capped at medium) rather than
-  # fabricated verbatim ids. The 27 verbatim tools below are unchanged.
-  - id: outreach.prospect_delete
-    object: Prospect
-    action: prospect_delete
-    id_form: capability
-    description: "Delete a prospect"
-    reference: https://support.outreach.io/support/solutions/articles/159000431194-outreach-product-release-notes-may-2026
-    category: Revenue & Pipeline
-    risk: critical
-    business_impact: "Irreversibly destroys a prospect/contact record and its associated personal data; single-actor deletion with no documented recovery, off by default and gated by an admin toggle."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: outreach.account_delete
-    object: Account
-    action: account_delete
-    id_form: capability
-    description: "Delete an account"
-    reference: https://support.outreach.io/support/solutions/articles/159000431194-outreach-product-release-notes-may-2026
-    category: Customer
-    risk: critical
-    business_impact: "Irreversibly destroys a company account record along with its associated contact and owner identities; single-actor deletion with no documented recovery, off by default and gated by an admin toggle."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: outreach.opportunity_delete
-    object: Opportunity
-    action: opportunity_delete
-    id_form: capability
-    description: "Delete an opportunity"
-    reference: https://support.outreach.io/support/solutions/articles/159000431194-outreach-product-release-notes-may-2026
-    category: Revenue & Pipeline
-    risk: critical
-    business_impact: "Irreversibly destroys a deal/opportunity record and its pipeline history; single-actor deletion with no documented recovery, off by default and gated by an admin toggle."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: outreach.sequence_remove_prospects
-    object: Sequence
-    action: sequence_remove_prospects
-    id_form: capability
-    description: "Remove prospects from sequences"
-    reference: https://support.outreach.io/support/solutions/articles/159000431194-outreach-product-release-notes-may-2026
-    category: Revenue & Pipeline
-    risk: medium
-    business_impact: "Unenrolls prospects from an automated outreach sequence, halting their in-flight steps; reversible by re-adding them, and the counterpart to sequence_add_prospects."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Communications & Recordings ----------
-  - id: outreach.kaia_meeting_search
-    object: Recording
-    action: kaia_meeting_search
-    description: "Retrieve transcripts and recordings from Kaia calls."
-    category: Data Access
-    risk: high
-    business_impact: "Returns sales-call transcripts and recordings containing participant speech; private-communications read subject to call-recording consent law."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: outreach.emails_search
-    object: Email
-    action: emails_search
-    description: "Retrieve email content."
-    category: Data Access
-    risk: high
-    business_impact: "Returns the body and metadata of prospect emails; private-communications read that can expose PII and confidential deal content at scale."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: outreach.calendar_events_fetch
-    object: CalendarEvent
-    action: calendar_events_fetch
-    description: "Retrieve scheduled calendar events and meetings."
-    category: Data Access
-    risk: low
-    business_impact: "Returns scheduled meetings with attendee identities and times; reads personal scheduling data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Sequences ----------
-  - id: outreach.sequence_add_prospects
-    object: Sequence
-    action: sequence_add_prospects
-    description: "Add prospects to a sequence."
-    category: Revenue & Pipeline
-    risk: medium
-    business_impact: "Enrolls individuals into an automated email/call outreach sequence; triggers outbound contact governed by messaging-consent rules (TCPA/CAN-SPAM) and processes their personal data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: outreach.sequence_search
-    object: Sequence
-    action: sequence_search
-    description: "Lookup existing sequences."
-    category: Revenue & Pipeline
-    risk: low
-    business_impact: "Lists configured outreach sequences; reads sales-process configuration without exposing prospect PII."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: outreach.sequence_state_search
-    object: SequenceState
-    action: sequence_state_search
-    description: "Track prospect progress through a sequence."
-    category: Revenue & Pipeline
-    risk: low
-    business_impact: "Returns per-prospect enrollment and step progress within sequences; reads personal-data-linked engagement state."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
   # ---------- Prospects ----------
-  - id: outreach.prospect_create
-    object: Prospect
-    action: prospect_create
-    description: "Create a new prospect."
-    category: Revenue & Pipeline
-    risk: medium
-    business_impact: "Writes a new contact record with name, email, and other personal data into the CRM; reversible but processes third-party PII."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: outreach.prospect_search
-    object: Prospect
-    action: prospect_search
-    description: "Search prospects by name, account, opportunity, or owner."
-    category: Revenue & Pipeline
-    risk: medium
-    business_impact: "Returns matching prospect records with personal data; broad filters enable bulk retrieval of contact PII."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
   - id: outreach.prospect_get_by_id
     object: Prospect
     action: prospect_get_by_id
-    description: "Lookup prospect by ID."
-    category: Revenue & Pipeline
-    risk: low
-    business_impact: "Returns a single prospect record with personal contact data."
+    category: Prospects
+    risk: medium
+    business_impact: "Returns a single prospect's PII (name, email, phone, employer)."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: outreach.prospect_search_by_external_id
+    access_methods: [MCP]
+  - id: outreach.prospect_search_by_name
     object: Prospect
-    action: prospect_search_by_external_id
-    description: "Lookup prospect by external IDs like CRM IDs."
-    category: Revenue & Pipeline
-    risk: low
-    business_impact: "Resolves a prospect's personal record from an external/CRM identifier."
+    action: prospect_search_by_name
+    category: Prospects
+    risk: medium
+    business_impact: "Searches the prospect database by name; can enumerate sales contacts."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  - id: outreach.prospect_search_by_ext_id
+    object: Prospect
+    action: prospect_search_by_ext_id
+    category: Prospects
+    risk: medium
+    business_impact: "Looks up a prospect by external (CRM) id; PII read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
   # ---------- Accounts ----------
-  - id: outreach.account_create
-    object: Account
-    action: account_create
-    description: "Create a new account."
-    category: Customer
-    risk: low
-    business_impact: "Writes a new company account record into the CRM; reversible business write with limited personal data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: outreach.account_search
-    object: Account
-    action: account_search
-    description: "Search accounts by name, owner, or team."
-    category: Customer
-    risk: low
-    business_impact: "Returns matching company account records and associated owner identities."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
   - id: outreach.account_get_by_id
     object: Account
     action: account_get_by_id
-    description: "Lookup account by account ID."
-    category: Customer
+    category: Accounts
     risk: low
-    business_impact: "Returns a single company account record with associated contacts and owner."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Returns details on one target account."
+    compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: outreach.account_search_by_external_id
+    access_methods: [MCP]
+  - id: outreach.account_search_by_name
     object: Account
-    action: account_search_by_external_id
-    description: "Lookup account by external IDs like CRM IDs."
-    category: Customer
+    action: account_search_by_name
+    category: Accounts
     risk: low
-    business_impact: "Resolves a company account record from an external/CRM identifier."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Searches accounts by name."
+    compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  - id: outreach.account_search_by_ext_id
+    object: Account
+    action: account_search_by_ext_id
+    category: Accounts
+    risk: low
+    business_impact: "Looks up an account by external id."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
   - id: outreach.account_answer_question
     object: Account
     action: account_answer_question
-    description: "Ask general QnA and ask for Account insights."
-    category: Customer
+    category: Accounts
     risk: medium
-    business_impact: "Returns AI-generated insights synthesized across account data, which may aggregate personal data of associated contacts."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Returns Outreach-AI generated answers about an account; can synthesize across activity records."
+    compliance: [SOC2]
     sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Opportunities ----------
-  - id: outreach.opportunity_create
-    object: Opportunity
-    action: opportunity_create
-    description: "Create a new opportunity."
-    category: Revenue & Pipeline
-    risk: medium
-    business_impact: "Creates a new deal/opportunity record in the pipeline; reversible business write that feeds revenue forecasting but does not post to the financial ledger."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: outreach.opportunity_search
-    object: Opportunity
-    action: opportunity_search
-    description: "Search opportunities by name, account, owner, or date range."
-    category: Revenue & Pipeline
-    risk: low
-    business_impact: "Returns matching deal records with associated account, owner, and value data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  # ---------- Deals ----------
   - id: outreach.opportunity_get_by_id
     object: Opportunity
     action: opportunity_get_by_id
-    description: "Lookup opportunity by ID."
-    category: Revenue & Pipeline
-    risk: low
-    business_impact: "Returns a single deal record with value, stage, and associated contacts."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    category: Deals
+    risk: medium
+    business_impact: "Returns a single opportunity's amount, stage, and contacts; pipeline-sensitive."
+    compliance: [SOX, COSO]
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: outreach.opportunity_search_by_external_id
+    access_methods: [MCP]
+  - id: outreach.opportunity_search_by_name
     object: Opportunity
-    action: opportunity_search_by_external_id
-    description: "Lookup opportunity by external IDs like CRM IDs."
-    category: Revenue & Pipeline
+    action: opportunity_search_by_name
+    category: Deals
     risk: low
-    business_impact: "Resolves a deal record from an external/CRM identifier."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Searches opportunities by name."
+    compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  - id: outreach.opportunity_search_by_ext_id
+    object: Opportunity
+    action: opportunity_search_by_ext_id
+    category: Deals
+    risk: low
+    business_impact: "Looks up an opportunity by external id."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
   - id: outreach.opportunity_answer_question
     object: Opportunity
     action: opportunity_answer_question
-    description: "Ask general QnA and ask for Opportunity insights."
-    category: Revenue & Pipeline
+    category: Deals
     risk: medium
-    business_impact: "Returns AI-generated insights synthesized across opportunity data, which may aggregate personal data of associated contacts."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Returns Outreach-AI answers about an opportunity; synthesizes pipeline-sensitive data."
+    compliance: [SOX, SOC2]
     sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: outreach.opportunity_stage_fetch
-    object: OpportunityStage
-    action: opportunity_stage_fetch
-    description: "Retrieve opportunity stages (e.g. Discovery, Negotiation, Closed Won)."
-    category: Revenue & Pipeline
+    access_methods: [MCP]
+  # ---------- Engagement ----------
+  - id: outreach.fetch_kaia_meetings
+    object: Meeting
+    action: fetch_kaia_meetings
+    category: Engagement
+    risk: high
+    business_impact: "Returns transcripts and recordings from Kaia-captured sales calls; verbatim customer voice and identifiers."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: outreach.emails_search
+    object: Email
+    action: emails_search
+    category: Engagement
+    risk: high
+    business_impact: "Searches outbound and inbound sales email; full message bodies including any PII shared with prospects."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: outreach.sequence_search_by_name
+    object: Sequence
+    action: sequence_search_by_name
+    category: Engagement
     risk: low
-    business_impact: "Returns the configured pipeline stage definitions; reads sales-process metadata without personal data."
+    business_impact: "Searches outbound sequence templates by name."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Users ----------
-  - id: outreach.user_search
-    object: User
-    action: user_search
-    description: "Search users by name or email."
-    category: Identity & Access
-    risk: low
-    business_impact: "Returns internal user records matching name or email; reads employee personal data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
+  # ---------- Identity & Access ----------
   - id: outreach.user_get_by_id
     object: User
     action: user_get_by_id
-    description: "Lookup user by ID."
     category: Identity & Access
     risk: low
-    business_impact: "Returns a single internal user record with employee personal data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Returns one Outreach user record."
+    compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: outreach.current_user
+    access_methods: [MCP]
+  - id: outreach.user_search_by_name
     object: User
-    action: current_user
-    description: "Get the current authenticated user."
+    action: user_search_by_name
     category: Identity & Access
     risk: low
-    business_impact: "Returns the identity of the authenticated caller; reads the acting user's own profile."
+    business_impact: "Searches Outreach users by name."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Configuration ----------
-  - id: outreach.filter_fields_fetch
-    object: FieldSchema
-    action: filter_fields_fetch
-    description: "Fetch filterable and custom fields for prospects, accounts, or opportunities."
-    category: Configuration
+    access_methods: [MCP]
+  - id: outreach.user_search_by_ext_id
+    object: User
+    action: user_search_by_ext_id
+    category: Identity & Access
     risk: low
-    business_impact: "Returns the schema of filterable and custom fields; reads metadata without record data."
+    business_impact: "Looks up an Outreach user by external id."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: outreach.input_fields_fetch
-    object: FieldSchema
-    action: input_fields_fetch
-    description: "Fetch available input fields before creating a record."
-    category: Configuration
-    risk: low
-    business_impact: "Returns the writable field schema for record creation; reads metadata without record data."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: outreach.stage_fetch
-    object: ProspectStage
-    action: stage_fetch
-    description: "Retrieve prospect lifecycle stages configured for your org."
-    category: Configuration
-    risk: low
-    business_impact: "Returns the configured prospect lifecycle stage definitions; reads sales-process metadata without personal data."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [MCP]

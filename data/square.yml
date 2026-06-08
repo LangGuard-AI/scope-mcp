@@ -1,60 +1,47 @@
-schema_version: "1.1"
+# NOTE: Square's MCP server (github.com/square/square-mcp-server) exposes
+# only three generic dispatcher tools. Concrete Square API behavior (creating
+# customers, refunds, payments, etc.) flows through `make_api_request`, so
+# the agent's blast radius is the entire Square API platform. Customers
+# auditing this connector should treat `make_api_request` as the high-water
+# mark for risk and tag downstream effects (PCI, payment movement) at the
+# agent-design level.
+schema_version: "1.2"
 platform: square
 display_name: Square
 source: langguard-editorial
-updated: "2026-06"
-reference: https://developer.squareup.com/docs/mcp
-# NOTE: The Square MCP server (square/square-mcp-server; hosted at
-# https://mcp.squareup.com/sse) uses a GENERIC-DISPATCHER architecture. It
-# registers exactly THREE verbatim MCP tools (verified against server.ts in the
-# vendor's GitHub source): `make_api_request`, `get_type_info`, `get_service_info`.
-# It does NOT expose one tool per Square API operation. Instead, every Square
-# operation — payments, refunds, payouts, customers (PII), invoices, team,
-# disputes, bank accounts, OAuth, webhooks — is dispatched through the single
-# `make_api_request` tool via its `service`/`method` arguments. The ~40 entries
-# in the README "Service Catalog" are internal method maps, NOT MCP tools, and
-# MUST NOT be curated as separate actions (they are not names an MCP client can
-# send). This mirrors HubSpot's `manage_crm_objects` collapse. The full
-# write/destructive + PII + payment-card surface therefore concentrates in
-# `make_api_request`, classified critical accordingly.
+updated: "2026-05"
+server_website: https://github.com/square/square-mcp-server
+maintainer: https://github.com/square/square-mcp-server/issues
 actions:
-  # ---------- Financial ----------
+  # ---------- Discovery ----------
+  - id: square.get_service_info
+    object: Service
+    action: get_service_info
+    category: Discovery
+    risk: low
+    business_impact: "Lists methods available for a Square API service; documentation read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  - id: square.get_type_info
+    object: TypeSchema
+    action: get_type_info
+    category: Discovery
+    risk: low
+    business_impact: "Returns parameter requirements for a Square API type; documentation read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+  # ---------- API Execution ----------
   - id: square.make_api_request
     object: "*"
     action: make_api_request
-    description: "Unified dispatcher executing any Square API operation (service + method), covering payments, refunds, payouts, customers, invoices, team, disputes, bank accounts, and OAuth."
-    reference: https://github.com/square/square-mcp-server
-    category: Financial
+    category: API Execution
     risk: critical
-    business_impact: "Single dispatcher reaching every Square write operation — issues refunds and moves money (irreversible once settled), creates and cancels payments and payouts, handles cardholder and bank-account data, and creates/updates/deletes customer PII; one principal can move funds and alter financial records unilaterally."
-    compliance: [SOX, COSO, PCI, PSD2, GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    business_impact: "Generic dispatcher that executes any Square API call: payments, refunds, customer PII, orders, catalog, payouts. Effective scope equals the connected merchant's full Square access."
+    compliance: [SOX, COSO, PCI, GLBA, PSD2, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: true
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Discovery (read-only schema helpers) ----------
-  - id: square.get_type_info
-    object: ApiMethodType
-    action: get_type_info
-    description: "Returns the request-parameter type schema for a given Square API service and method; metadata only, touches no business data."
-    reference: https://github.com/square/square-mcp-server
-    category: Data Access
-    risk: low
-    business_impact: "Returns static API request-schema metadata for a method; exposes no customer, payment, or financial data."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: square.get_service_info
-    object: ApiService
-    action: get_service_info
-    description: "Lists the methods available for a given Square API service; discovery metadata only, touches no business data."
-    reference: https://github.com/square/square-mcp-server
-    category: Data Access
-    risk: low
-    business_impact: "Returns the catalog of methods for a service; exposes no customer, payment, or financial data."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [MCP]

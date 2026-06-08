@@ -1,341 +1,160 @@
-schema_version: "1.1"
+schema_version: "1.2"
 platform: pendo
 display_name: Pendo
 source: langguard-editorial
-updated: "2026-06"
-reference: https://support.pendo.io/hc/en-us/articles/42476316360731-Pendo-MCP-tools-for-AI-agents
+updated: "2026-05"
+maintainer: https://support.pendo.io/hc/en-us
 actions:
+  # ---------- Data Access ----------
+  - id: pendo.search_pages
+    object: Page
+    action: search_pages
+    category: Data Access
+    risk: low
+    business_impact: "Lists tracked product pages and metadata; no end-user impact."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: pendo.search_features
+    object: Feature
+    action: search_features
+    category: Data Access
+    risk: low
+    business_impact: "Returns feature definitions and tagging metadata for product analytics."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: pendo.search_track_events
+    object: TrackEvent
+    action: search_track_events
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces custom track-event definitions used for product instrumentation."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
   # ---------- Customer ----------
-  # Visitor- and account-level reads on the pendo-external MCP server. Visitor and
-  # account records carry identifiable PII (job title, CRM fields, region, ARR);
-  # schema tools return field structure only and stay light.
-  - id: pendo.visitorQuery
+  - id: pendo.get_visitor_details
     object: Visitor
-    action: visitorQuery
-    description: "Retrieve visitor records that match specific criteria based on available metadata fields."
-    category: Customer
-    risk: high
-    business_impact: "Returns up to 50,000 identifiable visitor records with metadata; bulk PII read regardless of intent."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pendo.accountQuery
-    object: Account
-    action: accountQuery
-    description: "Retrieve account records that match specific criteria based on available metadata fields."
+    action: get_visitor_details
     category: Customer
     risk: medium
-    business_impact: "Returns account records and business metadata (ARR, renewal, segment); exposes customer-organization data at scale."
+    business_impact: "Returns identifiable visitor profile including custom metadata fields."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pendo.visitorMetadataSchema
+    confidence: medium
+    access_methods: [MCP]
+  - id: pendo.search_visitors
     object: Visitor
-    action: visitorMetadataSchema
-    description: "View the available metadata fields for visitors, such as job title, CRM fields, region, or role."
+    action: search_visitors
     category: Customer
-    risk: low
-    business_impact: "Returns the visitor metadata field schema (names, types); reveals which PII attributes exist but no records."
-    compliance: []
+    risk: medium
+    business_impact: "Queries visitor records; can return PII at scale depending on filters."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pendo.accountMetadataSchema
+    confidence: medium
+    access_methods: [MCP]
+  - id: pendo.get_account_details
     object: Account
-    action: accountMetadataSchema
-    description: "View the available metadata fields for accounts, such as ARR, industry, renewal date, or product tier."
+    action: get_account_details
     category: Customer
     risk: low
-    business_impact: "Returns the account metadata field schema (names, types); reveals available fields but no records."
-    compliance: []
+    business_impact: "Retrieves account-level metadata for a single customer organization."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pendo.segmentList
+    confidence: medium
+    access_methods: [MCP]
+  - id: pendo.search_accounts
+    object: Account
+    action: search_accounts
+    category: Customer
+    risk: low
+    business_impact: "Returns account directory for product-analytics segmentation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: pendo.analyze_segments
     object: Segment
-    action: segmentList
-    description: "List all publicly shared segments with their names and IDs."
+    action: analyze_segments
     category: Customer
-    risk: low
-    business_impact: "Enumerates publicly shared segment definitions and IDs; no individual records returned."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Session Replay ----------
-  # Session replay and developer-log reads. These surface visitor-level behavior
-  # and can capture request/response payloads, making them the most sensitive
-  # read surface on the connector.
-  - id: pendo.sessionReplayList
-    object: SessionReplay
-    action: sessionReplayList
-    description: "Returns links to replays for specific visitors or behaviors, with frustration-event and property filters."
-    category: Session Replay
-    risk: high
-    business_impact: "Returns replay metadata and links tied to identifiable visitors and their in-product behavior; visitor-level surveillance read."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pendo.devlogEvents
-    object: SessionReplay
-    action: devlogEvents
-    description: "Retrieve raw development logs for a visitor or session, including HTTP request/response details, log levels, messages, and stack traces."
-    category: Session Replay
-    risk: high
-    business_impact: "Returns raw HTTP request/response payloads and stack traces from a visitor session; may contain PII or secrets captured in transit."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Listen (Voice of Customer) ----------
-  # Feedback, ideas, and insights reads, plus the connector's single write tool.
-  # Raw feedback items carry account/visitor attribution; insights and topics are
-  # aggregated summaries.
-  - id: pendo.createFeedbackItem
-    object: FeedbackItem
-    action: createFeedbackItem
-    description: "Create a new feedback item in Listen."
-    category: Listen
-    risk: low
-    business_impact: "Creates a single feedback item attributed to a visitor or account; reversible business write, individually auditable."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pendo.get_feedback_items
-    object: FeedbackItem
-    action: get_feedback_items
-    description: "Retrieve raw customer feedback items matching filters, including title, description, and associated account and visitor details."
-    category: Listen
     risk: medium
-    business_impact: "Returns raw free-text feedback with account and visitor attribution; can contain identifying personal data in the verbatim text."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pendo.get_feedback_insights
-    object: FeedbackInsight
-    action: get_feedback_insights
-    description: "Retrieve extracted feedback insights including summaries, explanations, and supporting quotes."
-    category: Listen
-    risk: low
-    business_impact: "Returns aggregated feedback insights and themes; supporting quotes may include verbatim customer language."
+    business_impact: "Aggregates engagement across visitor segments; can re-identify small cohorts."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: pendo.generate_feedback_topics
-    object: FeedbackTopic
-    action: generate_feedback_topics
-    description: "Generate AI-clustered topics from customer feedback, each with a name, description, and count of related insights."
-    category: Listen
-    risk: low
-    business_impact: "Returns AI-clustered feedback themes and counts; aggregate summaries only, not individual records."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: pendo.get_ideas
-    object: Idea
-    action: get_ideas
-    description: "Retrieve product ideas that match specific filters; each item includes a title and description."
-    category: Listen
-    risk: low
-    business_impact: "Returns submitted product ideas with titles and descriptions; free-text may carry minor identifying context."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Operations (Usage Analytics) ----------
-  # Aggregated product-usage and engagement reads. These return aggregated metrics
-  # rather than individual records, so privacy tags are omitted unless the tool
-  # resolves to visitor-level data.
-  - id: pendo.activityQuery
+    access_methods: [MCP]
+  # ---------- Operations ----------
+  - id: pendo.analyze_usage
     object: Usage
-    action: activityQuery
-    description: "Retrieve aggregated product usage metrics for Pages, Features, Track Events, accounts, visitors, and polls."
+    action: analyze_usage
     category: Operations
     risk: low
-    business_impact: "Returns aggregated usage metrics (events, visitor and account counts); aggregate-only, no individual events."
+    business_impact: "Aggregates page and feature usage trends over time."
     compliance: []
     sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pendo.productAreaMemberActivity
-    object: ProductArea
-    action: productAreaMemberActivity
-    description: "Return all Pages, Features, and Track Events belonging to a product area, including those with zero activity in the date range."
+    confidence: medium
+    access_methods: [MCP]
+  - id: pendo.analyze_feature_adoption
+    object: Feature
+    action: analyze_feature_adoption
     category: Operations
     risk: low
-    business_impact: "Lists product-area entities and their activity status; product-structure metadata, no end-user impact."
+    business_impact: "Reports feature adoption rates across the user base."
     compliance: []
     sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pendo.listProductAreas
-    object: ProductArea
-    action: listProductAreas
-    description: "List all product areas for a subscription, including their IDs, names, and descriptions."
+    confidence: medium
+    access_methods: [MCP]
+  - id: pendo.analyze_retention
+    object: Retention
+    action: analyze_retention
     category: Operations
     risk: low
-    business_impact: "Enumerates product-area definitions and IDs; configuration metadata only."
+    business_impact: "Computes cohort retention curves over a date range."
     compliance: []
     sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pendo.searchEntities
-    object: Entity
-    action: searchEntities
-    description: "Find Pendo items by name or conceptual meaning, including Pages, Features, Track Events, accounts, and saved clips."
+    confidence: medium
+    access_methods: [MCP]
+  - id: pendo.analyze_funnels
+    object: Funnel
+    action: analyze_funnels
     category: Operations
     risk: low
-    business_impact: "Locates Pages, Features, events, and accounts by name; returns entity references for query building."
+    business_impact: "Calculates conversion through a defined step sequence."
     compliance: []
     sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pendo.productEngagementScore
+    confidence: medium
+    access_methods: [MCP]
+  - id: pendo.analyze_user_paths
+    object: Path
+    action: analyze_user_paths
+    category: Operations
+    risk: medium
+    business_impact: "Surfaces individual navigation sequences; can expose visitor-level behavior patterns."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+  - id: pendo.calculate_product_engagement
     object: EngagementScore
-    action: productEngagementScore
-    description: "View product health using Pendo's Product Engagement Score (PES) for adoption, stickiness, and growth."
+    action: calculate_product_engagement
     category: Operations
     risk: low
-    business_impact: "Returns aggregate adoption, stickiness, and growth scores; no individual records."
+    business_impact: "Returns the product engagement score (PES) summary."
     compliance: []
     sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Guides & Surveys ----------
-  # Guide-content and NPS-survey reads. Guide metrics are aggregate; NPS can
-  # optionally return individual survey responses.
-  - id: pendo.listGuides
-    object: Guide
-    action: listGuides
-    description: "List, filter, and optionally retrieve full content for in-app guides, including IDs, names, states, types, and scheduling."
-    category: Guides & Surveys
-    risk: low
-    business_impact: "Returns guide definitions, scheduling, and full guide content; in-app messaging metadata, no end-user PII."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pendo.guideMetrics
-    object: Guide
-    action: guideMetrics
-    description: "Returns performance data for guides (views, completions, dismissals, poll activity)."
-    category: Guides & Surveys
-    risk: low
-    business_impact: "Returns aggregate guide performance metrics; no individual records."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pendo.npsScore
+    confidence: medium
+    access_methods: [MCP]
+  - id: pendo.analyze_nps_feedback
     object: NPS
-    action: npsScore
-    description: "Return NPS metrics for surveys, including overall score, average rating, and response distribution; can optionally return up to 500 individual responses."
-    category: Guides & Surveys
+    action: analyze_nps_feedback
+    category: Operations
     risk: medium
-    business_impact: "Returns aggregate NPS metrics and, when a guide ID is supplied, up to 500 individual survey responses with free-text that may identify respondents."
+    business_impact: "Surfaces qualitative feedback that may contain identifying free-text."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Agent Analytics ----------
-  # Reads over AI-agent conversation analytics. issue-diagnosis returns visitor
-  # prompt content, which can include identifying free-text.
-  - id: pendo.list_ai_agents
-    object: AIAgent
-    action: list_ai_agents
-    description: "Retrieve a list of all AI agents you have access to."
-    category: Agent Analytics
-    risk: low
-    business_impact: "Enumerates configured AI agents and their IDs; configuration metadata only."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pendo.agent_analytics_key_metrics
-    object: AIAgent
-    action: agent_analytics_key_metrics
-    description: "Retrieve key aggregate metrics for an AI agent's conversations, including prompt volume, visitor and account counts, rage-prompt rates, and retention."
-    category: Agent Analytics
-    risk: low
-    business_impact: "Returns aggregate AI-agent conversation metrics; counts and rates only, no individual prompts."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: pendo.list_use_cases
-    object: AIAgent
-    action: list_use_cases
-    description: "Retrieve conversation clustering analysis for an AI agent, grouping prompts and conversations by semantic topic."
-    category: Agent Analytics
-    risk: low
-    business_impact: "Returns clustered conversation topics for an AI agent; aggregate themes without individual conversations."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: pendo.list_ai_agent_issues
-    object: AIAgent
-    action: list_ai_agent_issues
-    description: "Retrieve detected issues in AI agent conversations."
-    category: Agent Analytics
-    risk: low
-    business_impact: "Returns detected patterns of failure in AI-agent conversations; aggregate issue clusters."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: pendo.ai_agent_issue_analysis
-    object: AIAgent
-    action: ai_agent_issue_analysis
-    description: "Retrieve issue diagnoses, flagged response tool/model usage, and visitor prompt content for the events of a specific detected issue cluster."
-    category: Agent Analytics
-    risk: medium
-    business_impact: "Returns verbatim visitor prompt content for flagged conversations; free-text may contain identifying personal data."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Configuration ----------
-  - id: pendo.list_all_applications
-    object: Application
-    action: list_all_applications
-    description: "Retrieve a list of subscriptions and applications you have access to."
-    category: Configuration
-    risk: low
-    business_impact: "Returns subscription and application IDs the principal can access; basic tenant information used to scope other tools."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [MCP]

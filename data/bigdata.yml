@@ -1,128 +1,87 @@
-schema_version: "1.1"
+schema_version: "1.0"
 platform: bigdata
 display_name: Bigdata.com
 source: langguard-editorial
-updated: "2026-06"
-reference: https://docs.bigdata.com/mcp-reference
+updated: "2026-05"
 actions:
-  # ---------- Data Access ----------
+  # ---------- Financial Research ----------
   - id: bigdata.bigdata_search
     object: Document
     action: bigdata_search
-    description: "Search for insights in news, regulatory filings, earnings call transcripts, podcasts, expert interviews, financial research and uploaded documents with similarity search."
-    reference: https://docs.bigdata.com/mcp-reference/tools
     category: Data Access
-    risk: medium
-    business_impact: "Performs similarity search across the financial corpus including the organization's own privately uploaded documents and expert-interview content, which may contain confidential or personal information."
-    compliance: [GDPR, UK_GDPR, CCPA, SOC2, ISO_27001]
+    risk: low
+    business_impact: "Searches Bigdata.com's financial document corpus."
+    compliance: []
     sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
+    confidence: high
+    access_methods: [MCP]
   - id: bigdata.find_companies
     object: Company
     action: find_companies
-    description: "Identify a private or public company by name and return the Knowledge Graph ID to use as input in other tools (being sunset, replaced by find_securities)."
     category: Data Access
     risk: low
-    business_impact: "Resolves a company name to a Knowledge Graph identifier over aggregated reference data; deprecated and slated for removal in favor of find_securities."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: bigdata.find_securities
-    object: Security
-    action: find_securities
-    description: "Search for companies, ETFs, funds, and securities by name, ticker, identifier, or theme."
-    category: Data Access
-    risk: low
-    business_impact: "Resolves securities and companies to Knowledge Graph identifiers over aggregated public reference data."
+    business_impact: "Resolves company identifiers across the Bigdata.com universe."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: bigdata.get_securities
-    object: Security
-    action: get_securities
-    description: "Resolve exact security identifiers (ISIN, CUSIP, SEDOL, listing codes) to company or security records."
-    category: Data Access
-    risk: low
-    business_impact: "Resolves standardized securities identifiers to company or security records over aggregated reference data."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: bigdata.bigdata_events_calendar
     object: Event
     action: bigdata_events_calendar
-    description: "Returns the corporate earnings calendar and conference call schedule."
     category: Data Access
     risk: low
-    business_impact: "Returns upcoming corporate earnings and conference-call schedule data; read-only market reference."
+    business_impact: "Returns upcoming financial events (earnings, filings, calls)."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: bigdata.bigdata_company_tearsheet
     object: Company
     action: bigdata_company_tearsheet
-    description: "Get a comprehensive company tearsheet with financial data, market intelligence, and analyst coverage."
     category: Data Access
     risk: low
-    business_impact: "Returns an aggregated company profile spanning financials, market intelligence, and analyst coverage; read-only."
+    business_impact: "Returns a structured company profile and key metrics."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: bigdata.bigdata_country_tearsheet
     object: Country
     action: bigdata_country_tearsheet
-    description: "A comprehensive economic snapshot providing upcoming calendar events, recent releases, market indices and currencies for a specific country."
     category: Data Access
     risk: low
-    business_impact: "Returns a country-level macroeconomic snapshot of events, releases, indices, and currencies; read-only."
+    business_impact: "Returns a country-level macro indicator summary."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: bigdata.bigdata_market_tearsheet
     object: Market
     action: bigdata_market_tearsheet
-    description: "A curated cross-asset market snapshot - energy benchmarks, major equity indexes, FX pairs, and country equity ETFs - with multi-period performance."
     category: Data Access
     risk: low
-    business_impact: "Returns an aggregated cross-asset market snapshot across benchmarks, indexes, FX pairs, and ETFs; read-only."
+    business_impact: "Returns a market-level summary across asset classes."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
+    access_methods: [MCP]
   - id: bigdata.bigdata_sentiment_tearsheet
     object: Sentiment
     action: bigdata_sentiment_tearsheet
-    description: "Real-time media sentiment analysis for public companies with sentiment scores, media attention metrics, AI-generated narratives, and cited source articles."
     category: Data Access
     risk: low
-    business_impact: "Returns AI-generated media-sentiment analysis and scores for public companies; read-only and scoped to corporate entities rather than individuals."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: bigdata.bigdata_etf_tearsheet
-    object: ETF
-    action: bigdata_etf_tearsheet
-    description: "A comprehensive ETF analysis covering fund facts, top holdings, price performance, historical returns, risk metrics, sector breakdown, and country allocation."
-    category: Data Access
-    risk: low
-    business_impact: "Returns an aggregated ETF profile spanning holdings, performance, risk metrics, and allocations; read-only."
+    business_impact: "Returns sentiment signals derived from news and filings."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [MCP]
+  - id: bigdata.bigdata_etf_tearsheet
+    object: ETF
+    action: bigdata_etf_tearsheet
+    category: Data Access
+    risk: low
+    business_impact: "Returns ETF profile, holdings, and performance summary."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
