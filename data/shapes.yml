@@ -1,0 +1,432 @@
+schema_version: "1.1"
+platform: shapes
+display_name: Shapes
+source: langguard-editorial
+updated: "2026-06"
+reference: https://mcp.shapes.co/
+actions:
+  # ---------- People & Directory ----------
+  - id: shapes.list_employees
+    object: Employee
+    action: list_employees
+    description: "Searches and filters employee records with pagination."
+    category: People & Directory
+    risk: high
+    business_impact: "Returns directory-scale employee PII (names, identifiers, org placement); a filtered query can stream a large fraction of the workforce, sitting at the bulk-extraction boundary."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: shapes.aggregate_employees
+    object: Employee
+    action: aggregate_employees
+    description: "Computes counts and distributions over workforce data."
+    category: People & Directory
+    risk: medium
+    business_impact: "Returns aggregated headcount and demographic distributions; can become identifying personal data when slices are narrow enough to re-identify individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: shapes.get_current_employee
+    object: Employee
+    action: get_current_employee
+    description: "Retrieves the authenticated caller's own employee profile."
+    category: People & Directory
+    risk: low
+    business_impact: "Returns the caller's own profile PII; self-scoped and individually audited."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: shapes.get_reporting_chain
+    object: Employee
+    action: get_reporting_chain
+    description: "Navigates the manager-to-report relationships above or below an employee."
+    category: People & Directory
+    risk: medium
+    business_impact: "Exposes the management hierarchy as relational PII linking named individuals to one another."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: shapes.list_entities
+    object: Entity
+    action: list_entities
+    description: "Looks up organizational entities such as jobs, offices, and teams by id or name."
+    category: People & Directory
+    risk: low
+    business_impact: "Returns non-personal organizational reference metadata (jobs, offices, teams)."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: shapes.list_employee_field_types
+    object: FieldType
+    action: list_employee_field_types
+    description: "Discovers the available employee field definitions in the HR schema."
+    category: People & Directory
+    risk: low
+    business_impact: "Returns HR schema and field-definition metadata; no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: shapes.list_employee_field_value_changes
+    object: FieldValueChange
+    action: list_employee_field_value_changes
+    description: "Reads the audit trail of changes made to employee record fields."
+    category: People & Directory
+    risk: high
+    business_impact: "Exposes the historical change log of employee records, including prior values of sensitive HR PII; a read of the audit trail rather than a modification of it."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: shapes.list_profile_pictures
+    object: ProfilePicture
+    action: list_profile_pictures
+    description: "Returns employee profile-photo URLs in bulk."
+    category: People & Directory
+    risk: high
+    business_impact: "Returns workforce-scale employee photographs; facial imagery is biometric-adjacent personal data and bulk retrieval sits at the extraction boundary."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Performance Reviews ----------
+  - id: shapes.list_performance_review_cycles
+    object: PerformanceReviewCycle
+    action: list_performance_review_cycles
+    description: "Lists performance review cycles and their statuses."
+    category: Performance Reviews
+    risk: low
+    business_impact: "Returns review-cycle configuration metadata; no individual review content or personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: shapes.list_performance_review_participations
+    object: PerformanceReviewParticipation
+    action: list_performance_review_participations
+    description: "Lists the participants of a performance review cycle."
+    category: Performance Reviews
+    risk: high
+    business_impact: "Exposes who is being reviewed across the organization; sensitive employment data linking named individuals to evaluation cycles."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: shapes.list_performance_review_reviewers
+    object: PerformanceReviewReviewer
+    action: list_performance_review_reviewers
+    description: "Lists the reviewers assigned to a performance review cycle."
+    category: Performance Reviews
+    risk: medium
+    business_impact: "Exposes reviewer-to-reviewee assignments; sensitive relational HR data about who evaluates whom."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: shapes.list_my_performance_review_participations
+    object: PerformanceReviewParticipation
+    action: list_my_performance_review_participations
+    description: "Lists the caller's own performance review participations."
+    category: Performance Reviews
+    risk: low
+    business_impact: "Returns the caller's own review participations; self-scoped sensitive HR data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: shapes.list_my_performance_review_reviews
+    object: PerformanceReviewReview
+    action: list_my_performance_review_reviews
+    description: "Lists the caller's own pending and submitted performance reviews."
+    category: Performance Reviews
+    risk: low
+    business_impact: "Returns the caller's own review records; self-scoped sensitive HR data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: shapes.aggregate_performance_review_cycles
+    object: PerformanceReviewCycle
+    action: aggregate_performance_review_cycles
+    description: "Computes completion analytics over performance review cycles."
+    category: Performance Reviews
+    risk: low
+    business_impact: "Returns aggregated review-cycle completion statistics; no individual review content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: shapes.aggregate_performance_review_participations
+    object: PerformanceReviewParticipation
+    action: aggregate_performance_review_participations
+    description: "Computes analytics over review participation and rating distributions."
+    category: Performance Reviews
+    risk: medium
+    business_impact: "Returns aggregated rating and participation distributions; can become identifying sensitive HR data when slices are narrow enough to re-identify individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Time Away ----------
+  - id: shapes.list_time_away_bookings
+    object: TimeAwayBooking
+    action: list_time_away_bookings
+    description: "Lists leave and absence bookings."
+    category: Time Away
+    risk: high
+    business_impact: "Exposes employee leave and absence records whose reasons can reveal health, disability, or family-care circumstances (GDPR special-category data); workforce-scale retrieval sits at the extraction boundary."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: shapes.list_time_away_balances
+    object: TimeAwayBalance
+    action: list_time_away_balances
+    description: "Lists remaining leave balances per employee."
+    category: Time Away
+    risk: medium
+    business_impact: "Exposes per-employee leave balances; HR PII tied to named individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: shapes.list_time_away_reasons
+    object: TimeAwayReason
+    action: list_time_away_reasons
+    description: "Lists the available absence-reason types."
+    category: Time Away
+    risk: low
+    business_impact: "Returns the catalogue of leave-reason types; configuration metadata that may name medical or family-care categories but holds no individual data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: shapes.list_time_away_reason_policies
+    object: TimeAwayReasonPolicy
+    action: list_time_away_reason_policies
+    description: "Lists approval and limit rules for leave reasons."
+    category: Time Away
+    risk: low
+    business_impact: "Returns leave-reason policy configuration; no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: shapes.list_time_away_policy_assignments
+    object: TimeAwayPolicyAssignment
+    action: list_time_away_policy_assignments
+    description: "Lists which leave policies are assigned to which employees."
+    category: Time Away
+    risk: medium
+    business_impact: "Exposes per-employee leave-policy assignments; HR PII linking named individuals to entitlement rules."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: shapes.list_time_away_days_grants
+    object: TimeAwayDaysGrant
+    action: list_time_away_days_grants
+    description: "Lists leave-day grants and entitlement sources per employee."
+    category: Time Away
+    risk: medium
+    business_impact: "Exposes per-employee leave-day grants and entitlements; HR PII tied to named individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: shapes.list_time_away_holidays
+    object: Holiday
+    action: list_time_away_holidays
+    description: "Lists company holidays."
+    category: Time Away
+    risk: low
+    business_impact: "Returns the company holiday calendar; non-personal reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: shapes.aggregate_time_away_bookings
+    object: TimeAwayBooking
+    action: aggregate_time_away_bookings
+    description: "Computes trends over leave and absence bookings."
+    category: Time Away
+    risk: medium
+    business_impact: "Returns aggregated absence statistics; can become identifying personal data, including health-adjacent leave patterns, when slices are narrow enough to re-identify individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Surveys ----------
+  - id: shapes.list_surveys
+    object: Survey
+    action: list_surveys
+    description: "Lists survey definitions and participation data."
+    category: Surveys
+    risk: low
+    business_impact: "Returns survey configuration metadata; no individual response content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: shapes.list_survey_participations
+    object: SurveyParticipation
+    action: list_survey_participations
+    description: "Lists survey respondents and their participation."
+    category: Surveys
+    risk: medium
+    business_impact: "Exposes employee survey participation and engagement responses; sensitive HR PII tied to named individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: shapes.list_my_survey_participations
+    object: SurveyParticipation
+    action: list_my_survey_participations
+    description: "Lists the caller's own survey participations."
+    category: Surveys
+    risk: low
+    business_impact: "Returns the caller's own survey participations; self-scoped HR PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: shapes.aggregate_survey_participations
+    object: SurveyParticipation
+    action: aggregate_survey_participations
+    description: "Computes analytics over survey responses."
+    category: Surveys
+    risk: medium
+    business_impact: "Returns aggregated survey results; can become identifying personal data when slices are narrow enough to re-identify respondents."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Attendance ----------
+  - id: shapes.list_attendances
+    object: Attendance
+    action: list_attendances
+    description: "Lists attendance and time records per employee."
+    category: Attendance
+    risk: medium
+    business_impact: "Exposes per-employee attendance and time records; HR PII tied to named individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: shapes.list_attendance_submissions
+    object: AttendanceSubmission
+    action: list_attendance_submissions
+    description: "Lists submitted attendance and timesheet entries."
+    category: Attendance
+    risk: medium
+    business_impact: "Exposes submitted timesheet entries; payroll-adjacent HR PII tied to named individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: shapes.list_time_management_policies
+    object: TimeManagementPolicy
+    action: list_time_management_policies
+    description: "Lists working-hours and break rules."
+    category: Attendance
+    risk: low
+    business_impact: "Returns time-management policy configuration; no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Knowledge Base & Helpdesk ----------
+  - id: shapes.list_knowledge_base_files
+    object: KnowledgeBaseFile
+    action: list_knowledge_base_files
+    description: "Browses the internal knowledge-base document listing."
+    category: Knowledge Base & Helpdesk
+    risk: medium
+    business_impact: "Enumerates internal knowledge-base files; may expose confidential company documents to the agent."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: shapes.search_knowledge_base
+    object: KnowledgeBaseFile
+    action: search_knowledge_base
+    description: "Runs full-text search over the internal knowledge base."
+    category: Knowledge Base & Helpdesk
+    risk: medium
+    business_impact: "Surfaces internal handbook and policy content via full-text search; may expose confidential company information."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: shapes.list_helpdesk_collections
+    object: HelpdeskCollection
+    action: list_helpdesk_collections
+    description: "Browses helpdesk article categories."
+    category: Knowledge Base & Helpdesk
+    risk: low
+    business_impact: "Returns helpdesk article groupings; low-sensitivity reference metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: shapes.search_helpdesk
+    object: HelpdeskArticle
+    action: search_helpdesk
+    description: "Runs full-text search over helpdesk articles."
+    category: Knowledge Base & Helpdesk
+    risk: low
+    business_impact: "Surfaces internal helpdesk article content via search; limited exposure of internal procedures."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: shapes.read_helpdesk_article
+    object: HelpdeskArticle
+    action: read_helpdesk_article
+    description: "Fetches the full body of a helpdesk article."
+    category: Knowledge Base & Helpdesk
+    risk: low
+    business_impact: "Returns a full helpdesk article body; may expose internal procedures to the agent."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

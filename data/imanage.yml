@@ -1,0 +1,177 @@
+schema_version: "1.1"
+platform: imanage
+display_name: iManage
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.imanage.com/ai/mcpserver-user-help/en-US/Tools_for_iManage_Work_connector.html
+actions:
+  # ---------- Data Access ----------
+  - id: imanage.download_document
+    object: Document
+    action: download_document
+    description: "Downloads the text content of a document based on its ID."
+    category: Data Access
+    risk: high
+    business_impact: "Extracts the full text of a stored legal or client document; single-document content exfiltration that routinely surfaces confidential PII and may include PHI in healthcare-related matters."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: imanage.get_rows_from_csv_document
+    object: Document
+    action: get_rows_from_csv_document
+    description: "Gets all the rows from a CSV document."
+    category: Data Access
+    risk: high
+    business_impact: "Returns every row of a stored CSV; bulk structured-data extraction that can expose tabular PII or client records, and may include PHI in healthcare-related matters, in one call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: imanage.fetch
+    object: Document
+    action: fetch
+    description: "Returns details of the document or workspace for the specified ID."
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves the details of a specific document or workspace by ID; exposes content and metadata that may contain client PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: imanage.search
+    object: Document
+    action: search
+    description: "Searches across iManage Work for workspaces, folders, and documents by name, description, comments, and content."
+    category: Data Access
+    risk: medium
+    business_impact: "Full-text search across stored content; can surface confidential documents and PII matching a query the searcher would not otherwise locate."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: imanage.get_document_profile
+    object: Document
+    action: get_document_profile
+    description: "Retrieves document properties including client and workspace information."
+    category: Data Access
+    risk: low
+    business_impact: "Returns document profile metadata including client and matter associations; exposes organizational client/matter identifiers without document content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: imanage.get_document_versions
+    object: Document
+    action: get_document_versions
+    description: "Gets the complete version history of a document, including all version metadata."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the version history and metadata of a single document; reveals revision activity but not document content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: imanage.get_container_children
+    object: Container
+    action: get_container_children
+    description: "Retrieves up to 500 child items from a workspace, tab, or folder."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the documents and subfolders within a container; enumerates document metadata but does not return content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: imanage.get_recent_documents
+    object: Document
+    action: get_recent_documents
+    description: "Retrieves recently accessed documents sorted by access time."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the list of documents the user recently accessed; metadata listing scoped to the caller's own activity."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: imanage.get_recent_workspaces
+    object: Workspace
+    action: get_recent_workspaces
+    description: "Retrieves recently accessed workspaces or matters."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the list of workspaces or matters the user recently accessed; metadata listing scoped to the caller's own activity."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: imanage.search_workspaces
+    object: Workspace
+    action: search_workspaces
+    description: "Searches for workspaces based on the provided criteria."
+    category: Data Access
+    risk: low
+    business_impact: "Finds workspaces matching the supplied criteria; returns workspace listings without document content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: imanage.get_workspace_profile
+    object: Workspace
+    action: get_workspace_profile
+    description: "Retrieves the profile for a specified workspace."
+    category: Data Access
+    risk: low
+    business_impact: "Returns workspace profile metadata such as client and matter attributes; exposes organizational client/matter identifiers without document content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: imanage.get_user_information
+    object: User
+    action: get_user_information
+    description: "Retrieves user details including authorship, access levels, and workspace ownership."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Returns user details including access levels and workspace ownership; exposes personal data about staff and their entitlements."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Configuration ----------
+  - id: imanage.get_workspace_templates
+    object: Workspace
+    action: get_workspace_templates
+    description: "Gets list of workspace templates available in a library."
+    category: Configuration
+    risk: low
+    business_impact: "Lists the workspace templates configured in a library; exposes configuration metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: imanage.get_libraries
+    object: Library
+    action: get_libraries
+    description: "Gets all the libraries for the current user."
+    category: Configuration
+    risk: low
+    business_impact: "Enumerates the document libraries available to the caller; exposes tenant structure metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

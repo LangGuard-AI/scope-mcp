@@ -1,0 +1,31 @@
+schema_version: "1.1"
+platform: lloyd
+display_name: Lloyd
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.lsuite.co/lloyd/mcp-documentation
+actions:
+  # ---------- Data Access ----------
+  - id: lloyd.get_peer_insights
+    object: PeerInsight
+    action: get_peer_insights
+    description: "Surfaces peer-generated insights, guidance, benchmarks, and shared documents from across The L Suite community, filterable by practice area, company profile, stage, and matter type."
+    category: Data Access
+    risk: low
+    business_impact: "Read-only retrieval of cited community content; the request parameters (practice area, company profile, stage, matter type) disclose sensitive internal legal/business context to an external community service, and returned shared documents may carry third-party confidentiality considerations."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: lloyd.find_vendors
+    object: Vendor
+    action: find_vendors
+    description: "Returns peer-recommended vendors tailored to a company's profile, regulatory context, and team size."
+    category: Data Access
+    risk: low
+    business_impact: "Read-only advisory retrieval with no procurement or contract action; the inputs reveal the company's profile and regulatory context to an external service."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
