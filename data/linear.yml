@@ -6,218 +6,428 @@ updated: "2026-05"
 maintainer: https://linear.app/contact/support
 actions:
   # ---------- Issues ----------
+  - id: linear.save_issue
+    object: Issue
+    action: save_issue
+    description: "Creates or updates a Linear issue; if id is provided, updates the existing issue, otherwise creates a new one."
+    category: Issues
+    risk: medium
+    business_impact: "Creates or updates an issue including assignee, state, priority, and relations; reassigns, reprioritizes, or closes tracked work and is reversible."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
   - id: linear.list_issues
     object: Issue
     action: list_issues
+    description: "Lists issues in the user's Linear workspace filtered by team, cycle, project, assignee, or state."
     category: Issues
     risk: low
-    business_impact: "Reads issues filtered by team, state, or assignee; engineering metadata."
+    business_impact: "Reads issue titles, descriptions, assignees, and states across the workspace; bodies may contain incidental personal data or internal context."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [MCP]
-  - id: linear.list_my_issues
-    object: Issue
-    action: list_my_issues
-    category: Issues
-    risk: low
-    business_impact: "Reads issues assigned to the authenticated user."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [MCP]
+    access_methods: [REST, MCP]
+
   - id: linear.get_issue
     object: Issue
     action: get_issue
+    description: "Retrieves a single issue by its LIN-123 identifier including attachments and git branch name."
     category: Issues
     risk: low
-    business_impact: "Reads a single issue including description and comments."
+    business_impact: "Reads a single issue including description, attachments, and branch name; bodies may contain incidental personal data or internal context."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [MCP]
-  - id: linear.create_issue
-    object: Issue
-    action: create_issue
-    category: Issues
-    risk: low
-    business_impact: "Creates a new tracked work item; routine engineering operation."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [MCP]
-  - id: linear.update_issue
-    object: Issue
-    action: update_issue
+    access_methods: [REST, MCP]
+
+  - id: linear.save_comment
+    object: Comment
+    action: save_comment
+    description: "Creates or updates a comment on a Linear issue, project, initiative, document, or project milestone."
     category: Issues
     risk: medium
-    business_impact: "Modifies issue fields including status, assignee, priority; can move work between sprints or close tickets."
+    business_impact: "Posts or edits a comment under the authenticated identity; an impersonation surface that is reversible."
     compliance: [SOC2]
     sod_concern: false
     confidence: high
-    access_methods: [MCP]
-  # ---------- Projects ----------
-  - id: linear.list_projects
-    object: Project
-    action: list_projects
-    category: Issues
-    risk: low
-    business_impact: "Reads project list; planning metadata only."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [MCP]
-  - id: linear.get_project
-    object: Project
-    action: get_project
-    category: Issues
-    risk: low
-    business_impact: "Reads a single project's details including milestones."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [MCP]
-  - id: linear.create_project
-    object: Project
-    action: create_project
-    category: Issues
-    risk: low
-    business_impact: "Creates a new project container for issues."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [MCP]
-  - id: linear.update_project
-    object: Project
-    action: update_project
-    category: Issues
-    risk: medium
-    business_impact: "Modifies project state, lead, or target date; affects roadmap reporting."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [MCP]
-  # ---------- Teams & Users ----------
-  - id: linear.list_teams
-    object: Team
-    action: list_teams
-    category: Identity & Access
-    risk: low
-    business_impact: "Reads workspace team list."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [MCP]
-  - id: linear.get_team
-    object: Team
-    action: get_team
-    category: Identity & Access
-    risk: low
-    business_impact: "Reads a single team's metadata."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [MCP]
-  - id: linear.list_users
-    object: User
-    action: list_users
-    category: Identity & Access
-    risk: medium
-    business_impact: "Reads workspace user roster including names and emails."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [MCP]
-  - id: linear.get_user
-    object: User
-    action: get_user
-    category: Identity & Access
-    risk: low
-    business_impact: "Reads a single user record including name and email."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [MCP]
-  # ---------- Comments ----------
+    access_methods: [REST, MCP]
+
   - id: linear.list_comments
     object: Comment
     action: list_comments
+    description: "Lists comment threads on Linear issues, projects, and other entities."
     category: Issues
     risk: low
-    business_impact: "Reads comments on an issue; may contain user-generated content."
+    business_impact: "Reads comment threads whose free-text bodies may contain incidental personal data or confidential discussion."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [MCP]
-  - id: linear.create_comment
+    access_methods: [REST, MCP]
+
+  - id: linear.delete_comment
     object: Comment
-    action: create_comment
+    action: delete_comment
+    description: "Deletes a Linear comment by ID."
     category: Issues
-    risk: low
-    business_impact: "Posts a comment on an issue under the authenticated user's identity."
-    compliance: []
+    risk: high
+    business_impact: "Permanently removes a comment containing user-generated content; destructive, not recoverable through the API, and erases discussion trail."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
-    access_methods: [MCP]
-  # ---------- Workflow ----------
-  - id: linear.list_issue_statuses
-    object: IssueStatus
-    action: list_issue_statuses
-    category: Issues
-    risk: low
-    business_impact: "Reads workflow states defined for a team."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [MCP]
-  - id: linear.get_issue_status
-    object: IssueStatus
-    action: get_issue_status
-    category: Issues
-    risk: low
-    business_impact: "Reads a specific workflow state's metadata."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [MCP]
+    access_methods: [REST, MCP]
+
   - id: linear.list_issue_labels
     object: IssueLabel
     action: list_issue_labels
+    description: "Lists labels available for tagging issues."
     category: Issues
     risk: low
-    business_impact: "Reads labels available for issue tagging."
+    business_impact: "Reads the issue label taxonomy; configuration metadata only."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [MCP]
+    access_methods: [REST, MCP]
+
+  - id: linear.create_issue_label
+    object: IssueLabel
+    action: create_issue_label
+    description: "Creates a new Linear issue label, team-scoped or workspace-wide."
+    category: Issues
+    risk: low
+    business_impact: "Adds a new label to the issue label set; low-impact configuration write."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: linear.list_issue_statuses
+    object: IssueStatus
+    action: list_issue_statuses
+    description: "Lists the workflow states defined for a team."
+    category: Issues
+    risk: low
+    business_impact: "Reads workflow state definitions for a team; configuration metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: linear.get_issue_status
+    object: IssueStatus
+    action: get_issue_status
+    description: "Retrieves a single workflow state's details by name or id within a team."
+    category: Issues
+    risk: low
+    business_impact: "Reads a specific workflow state's metadata; configuration data only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: linear.list_cycles
+    object: Cycle
+    action: list_cycles
+    description: "Lists a team's cycles (current, previous, or next sprints)."
+    category: Issues
+    risk: low
+    business_impact: "Reads team cycles (sprints); planning metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Attachments ----------
+  - id: linear.delete_attachment
+    object: Attachment
+    action: delete_attachment
+    description: "Deletes an attachment by ID."
+    category: Issues
+    risk: high
+    business_impact: "Permanently removes an attachment that may contain personal data or evidentiary files; destructive and not recoverable through the API."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: linear.create_attachment
+    object: Attachment
+    action: create_attachment
+    description: "Deprecated fallback that uploads tiny base64-encoded file content as an attachment on an existing issue."
+    category: Issues
+    risk: medium
+    business_impact: "Uploads arbitrary file content as an attachment; the payload may contain personal data such as screenshots, logs, or customer information."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: linear.prepare_attachment_upload
+    object: Attachment
+    action: prepare_attachment_upload
+    description: "Prepares a direct file upload for an existing issue by minting a short-lived signed upload URL."
+    category: Issues
+    risk: medium
+    business_impact: "Mints a 60-second signed upload URL scoped to an issue; a credentialed upload grant, though no data is written yet."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: linear.create_attachment_from_upload
+    object: Attachment
+    action: create_attachment_from_upload
+    description: "Links an already-uploaded asset URL to an existing issue as an attachment."
+    category: Issues
+    risk: medium
+    business_impact: "Finalizes file injection into an issue by linking an uploaded asset; the file may contain personal data such as screenshots or logs."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: linear.get_attachment
+    object: Attachment
+    action: get_attachment
+    description: "Retrieves an attachment's content by ID."
+    category: Issues
+    risk: medium
+    business_impact: "Reads attachment content that may contain personal data or confidential files; a single-record data-exfiltration vector."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: linear.extract_images
+    object: Attachment
+    action: extract_images
+    description: "Fetches images embedded in markdown bodies."
+    category: Issues
+    risk: medium
+    business_impact: "Pulls image content embedded in markdown that may include screenshots or personal data; a data-exfiltration vector."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Projects ----------
+  - id: linear.save_project
+    object: Project
+    action: save_project
+    description: "Creates or updates a Linear project; name and at least one team are required on create."
+    category: Projects
+    risk: medium
+    business_impact: "Creates or updates a project including team assignment, lead, state, and dates; affects roadmap and delivery reporting and is reversible."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: linear.list_projects
+    object: Project
+    action: list_projects
+    description: "Lists projects in the workspace including names, states, leads, and dates."
+    category: Projects
+    risk: low
+    business_impact: "Reads the project list exposing roadmap and strategic context; low individual-PII risk."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: linear.get_project
+    object: Project
+    action: get_project
+    description: "Retrieves a single project's details."
+    category: Projects
+    risk: low
+    business_impact: "Reads a single project's details exposing roadmap and planning context; low individual-PII risk."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: linear.list_project_labels
+    object: ProjectLabel
+    action: list_project_labels
+    description: "Lists labels available for tagging projects."
+    category: Projects
+    risk: low
+    business_impact: "Reads the project label taxonomy; configuration metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Milestones ----------
+  - id: linear.save_milestone
+    object: ProjectMilestone
+    action: save_milestone
+    description: "Creates or updates a milestone in a Linear project; name is required on create."
+    category: Projects
+    risk: medium
+    business_impact: "Creates or updates a project milestone including target dates and parent project; affects delivery planning and is reversible."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: linear.list_milestones
+    object: ProjectMilestone
+    action: list_milestones
+    description: "Lists project milestones including names and target dates."
+    category: Projects
+    risk: low
+    business_impact: "Reads project milestones; roadmap and planning metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: linear.get_milestone
+    object: ProjectMilestone
+    action: get_milestone
+    description: "Retrieves a single milestone's details."
+    category: Projects
+    risk: low
+    business_impact: "Reads a single milestone's details; roadmap and planning metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
   # ---------- Documents ----------
+  - id: linear.save_document
+    object: Document
+    action: save_document
+    description: "Creates or updates a Linear document; if id is provided, updates the existing document, otherwise creates a new one."
+    category: Documents
+    risk: medium
+    business_impact: "Creates or overwrites a Linear document and can reparent it across project, issue, initiative, or cycle; bodies may hold confidential or internal content and the write is reversible."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
   - id: linear.list_documents
     object: Document
     action: list_documents
-    category: Issues
+    description: "Lists Linear documents in the workspace."
+    category: Documents
     risk: low
-    business_impact: "Reads list of Linear docs in the workspace."
+    business_impact: "Reads the list of Linear documents; bodies may contain incidental confidential or personal content."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [MCP]
+    access_methods: [REST, MCP]
+
   - id: linear.get_document
     object: Document
     action: get_document
-    category: Issues
+    description: "Retrieves a single Linear document's content by id or slug."
+    category: Documents
     risk: low
-    business_impact: "Reads a single Linear doc; may contain internal product/strategy content."
+    business_impact: "Reads a single Linear document; long-form content may contain incidental confidential or personal material."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [MCP]
+    access_methods: [REST, MCP]
+
   - id: linear.search_documentation
     object: Document
     action: search_documentation
-    category: Issues
+    description: "Searches Linear's own product documentation."
+    category: Documents
     risk: low
-    business_impact: "Searches Linear documentation content."
+    business_impact: "Searches Linear's public product documentation; no customer or workspace data accessed."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [MCP]
+    access_methods: [REST, MCP]
+
+  # ---------- Code Review ----------
+  - id: linear.list_diffs
+    object: Diff
+    action: list_diffs
+    description: "Lists Linear code-review and pull-request diffs visible to the user."
+    category: Code & Release
+    risk: medium
+    business_impact: "Lists source-code change diffs; exposes source-code change context and intellectual property."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: linear.get_diff
+    object: Diff
+    action: get_diff
+    description: "Retrieves an exact diff by review or pull-request URL, Linear id, or slug."
+    category: Code & Release
+    risk: medium
+    business_impact: "Reads source-code change content; exposes intellectual property and confidential code."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: linear.get_diff_threads
+    object: Diff
+    action: get_diff_threads
+    description: "Reads code-review discussion threads on a diff, filterable by resolved state or thread id."
+    category: Code & Release
+    risk: low
+    business_impact: "Reads code-review discussion threads on a diff; exposes review commentary and change context."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: linear.list_users
+    object: User
+    action: list_users
+    description: "Enumerates workspace users including names and email addresses."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Reads the full workspace user roster including names and emails; bulk personal-data enumeration."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: linear.get_user
+    object: User
+    action: get_user
+    description: "Retrieves a specific user's profile by id, name, email, or 'me'."
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads a single user record including name and email; personal data of an identifiable individual."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: linear.list_teams
+    object: Team
+    action: list_teams
+    description: "Lists the teams defined in the workspace."
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads workspace team structure; organizational metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: linear.get_team
+    object: Team
+    action: get_team
+    description: "Retrieves details of a specific Linear team by UUID, key, or name."
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads a single team's metadata; organizational data only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
