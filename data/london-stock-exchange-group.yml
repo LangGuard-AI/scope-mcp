@@ -1,0 +1,288 @@
+schema_version: "1.1"
+platform: london-stock-exchange-group
+display_name: LSEG
+source: langguard-editorial
+updated: "2026-06"
+reference: https://github.com/LSEG-API-Samples/lseg-claude-plugin/blob/main/CONNECTORS.md
+# LSEG (London Stock Exchange Group) exposes a single read-only financial-analytics
+# MCP server (the LFA MCP Server at https://api.analytics.lseg.com/lfa/mcp/server-cl).
+# Every tool retrieves market data, prices, curves, or analytics — there are no
+# writes, no destructive actions, no money movement, and no personal data of
+# identifiable individuals. compliance arrays are intentionally empty: this is
+# market/instrument reference data, not customer PII (privacy regimes out), not the
+# org's own financial-reporting system (SOX/COSO out), and not a financial-account
+# data store (GLBA out). LSEG's data-licensing/entitlement sensitivity is contractual,
+# not a regulatory regime, so it is noted in business_impact prose only.
+actions:
+  # ---------- Bond Pricing ----------
+  - id: london-stock-exchange-group.bond_price
+    object: Bond
+    action: bond_price
+    description: "Calculate bond pricing, valuation, and analytics from ISIN/RIC/CUSIP/AssetId; returns yield, duration, convexity, DV01, accrued interest, with what-if overrides."
+    category: Bond Pricing
+    risk: low
+    business_impact: "Reads bond pricing and analytics from LSEG market data; no state change, though results are entitlement-gated licensed data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: london-stock-exchange-group.bond_future_price
+    object: BondFuture
+    action: bond_future_price
+    description: "Calculate bond future pricing and analytics; returns fair value, cheapest-to-deliver, delivery basket, conversion factors, and contract DV01."
+    category: Bond Pricing
+    risk: low
+    business_impact: "Reads bond-future pricing and delivery analytics from LSEG market data; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- FX Pricing ----------
+  - id: london-stock-exchange-group.fx_spot_price
+    object: FXRate
+    action: fx_spot_price
+    description: "FX spot rate pricing for ISO currency pairs; returns mid/bid/ask rates."
+    category: FX Pricing
+    risk: low
+    business_impact: "Reads FX spot rates from LSEG market data; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: london-stock-exchange-group.fx_forward_price
+    object: FXForward
+    action: fx_forward_price
+    description: "FX forward rate pricing at specific tenors or dates; returns forward points, outright rates, and carry."
+    category: FX Pricing
+    risk: low
+    business_impact: "Reads FX forward pricing from LSEG market data; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Curves ----------
+  - id: london-stock-exchange-group.interest_rate_curve
+    object: YieldCurve
+    action: interest_rate_curve
+    description: "Government yield curves; lists available curves then calculates par/zero rates, discount factors, and forward rates."
+    category: Curves
+    risk: low
+    business_impact: "Reads government yield-curve data and derived rates from LSEG; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: london-stock-exchange-group.credit_curve
+    object: CreditCurve
+    action: credit_curve
+    description: "Credit spread curves by country and issuer type; calculates the spread term structure."
+    category: Curves
+    risk: low
+    business_impact: "Reads credit-spread curve data from LSEG; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: london-stock-exchange-group.inflation_curve
+    object: InflationCurve
+    action: inflation_curve
+    description: "Inflation breakeven curves by country/currency; calculates breakeven rates and real yields."
+    category: Curves
+    risk: low
+    business_impact: "Reads inflation breakeven curve data from LSEG; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: london-stock-exchange-group.fx_forward_curve
+    object: FXForwardCurve
+    action: fx_forward_curve
+    description: "FX forward point curves; lists curves then calculates forward points across standard tenors."
+    category: Curves
+    risk: low
+    business_impact: "Reads FX forward-point curve data from LSEG; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Swaps ----------
+  - id: london-stock-exchange-group.ir_swap
+    object: InterestRateSwap
+    action: ir_swap
+    description: "Interest rate swap pricing; lists templates by currency/index then prices swaps at specified tenors, returning par rates, DV01, and NPV."
+    category: Swaps
+    risk: low
+    business_impact: "Reads interest-rate-swap pricing and analytics from LSEG; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Options ----------
+  - id: london-stock-exchange-group.option_value
+    object: Option
+    action: option_value
+    description: "Option valuation for vanilla, barrier, binary, and Asian options; returns premium, full Greeks, and risk metrics."
+    category: Options
+    risk: low
+    business_impact: "Reads option valuations and Greeks from LSEG analytics; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: london-stock-exchange-group.option_template_list
+    object: Option
+    action: option_template_list
+    description: "Lists available option templates for pricing."
+    category: Options
+    risk: low
+    business_impact: "Reads the list of available option-pricing templates from LSEG; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Volatility ----------
+  - id: london-stock-exchange-group.fx_vol_surface
+    object: VolatilitySurface
+    action: fx_vol_surface
+    description: "FX volatility surface generation using the SABR model; returns vol surface across tenors and delta strikes."
+    category: Volatility
+    risk: low
+    business_impact: "Reads FX implied-volatility surface data from LSEG; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: london-stock-exchange-group.equity_vol_surface
+    object: VolatilitySurface
+    action: equity_vol_surface
+    description: "Equity implied volatility surface for equities/indices via RIC and futures via RICROOT."
+    category: Volatility
+    risk: low
+    business_impact: "Reads equity implied-volatility surface data from LSEG; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Quantitative Analytics ----------
+  - id: london-stock-exchange-group.qa_ibes_consensus
+    object: ConsensusEstimate
+    action: qa_ibes_consensus
+    description: "IBES analyst consensus estimates (EPS, revenue, EBITDA, DPS) with analyst count, dispersion, and high/low ranges."
+    category: Quantitative Analytics
+    risk: low
+    business_impact: "Reads forward-looking analyst consensus estimates for companies from LSEG; no state change and no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: london-stock-exchange-group.qa_company_fundamentals
+    object: CompanyFundamentals
+    action: qa_company_fundamentals
+    description: "Reported company financials (income statement and balance sheet metrics) by historical fiscal year."
+    category: Quantitative Analytics
+    risk: low
+    business_impact: "Reads public company financial fundamentals from LSEG; no state change and no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: london-stock-exchange-group.qa_historical_equity_price
+    object: EquityPrice
+    action: qa_historical_equity_price
+    description: "Historical equity prices with OHLCV, total returns, and beta."
+    category: Quantitative Analytics
+    risk: low
+    business_impact: "Reads historical equity price series from LSEG; no state change and no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: london-stock-exchange-group.qa_macroeconomic
+    object: MacroeconomicIndicator
+    action: qa_macroeconomic
+    description: "Macroeconomic indicators database; searches by mnemonic or description and retrieves latest values or time series."
+    category: Quantitative Analytics
+    risk: low
+    business_impact: "Reads macroeconomic indicator data from LSEG; no state change and no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Time Series ----------
+  - id: london-stock-exchange-group.tscc_historical_pricing_summaries
+    object: PricingTimeSeries
+    action: tscc_historical_pricing_summaries
+    description: "Historical pricing summaries for any RIC, supporting interday (daily/weekly/monthly) and intraday (1min to 1hr) intervals."
+    category: Time Series
+    risk: low
+    business_impact: "Reads historical instrument pricing time series from LSEG; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Fixed Income Analytics ----------
+  - id: london-stock-exchange-group.yieldbook_bond_reference
+    object: Bond
+    action: yieldbook_bond_reference
+    description: "Bond reference data: security type, sector, ratings, coupon, maturity, and issuer."
+    category: Fixed Income Analytics
+    risk: low
+    business_impact: "Reads bond reference data from LSEG YieldBook; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: london-stock-exchange-group.yieldbook_cashflow
+    object: Bond
+    action: yieldbook_cashflow
+    description: "Bond cashflow projections: future coupon and principal payment schedules."
+    category: Fixed Income Analytics
+    risk: low
+    business_impact: "Reads projected bond cashflow schedules from LSEG YieldBook; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: london-stock-exchange-group.yieldbook_scenario
+    object: Bond
+    action: yieldbook_scenario
+    description: "Bond scenario analysis: price/yield under parallel rate shifts."
+    category: Fixed Income Analytics
+    risk: low
+    business_impact: "Reads bond scenario analytics under hypothetical rate shifts from LSEG YieldBook; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: london-stock-exchange-group.fixed_income_risk_analytics
+    object: Bond
+    action: fixed_income_risk_analytics
+    description: "Bond risk analytics: OAS, effective duration, key rate durations, and convexity."
+    category: Fixed Income Analytics
+    risk: low
+    business_impact: "Reads fixed-income risk analytics (OAS, duration, convexity) from LSEG; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

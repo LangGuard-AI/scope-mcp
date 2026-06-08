@@ -1,0 +1,19 @@
+schema_version: "1.1"
+platform: cortellis-regulatory
+display_name: Cortellis Regulatory Intelligence
+source: langguard-editorial
+updated: "2026-06"
+reference: https://api.clarivate.com/lifesciences/mcp-regulatory/documentation
+actions:
+  # ---------- Data Access ----------
+  - id: cortellis-regulatory.Cortellis_Regulatory_Intelligence_Agent
+    object: RegulatoryContent
+    action: Cortellis_Regulatory_Intelligence_Agent
+    description: "An intelligent agent that searches Clarivate's Cortellis Regulatory Intelligence database for regulatory documents, guidelines, and forms, and summarizes requirements, compliance steps, and pharmacovigilance details across countries."
+    category: Data Access
+    risk: low
+    business_impact: "Read-only retrieval and summarization of Clarivate's licensed regulatory reference content; returns curated guidance rather than reading or writing the customer's own records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

@@ -1,0 +1,20 @@
+schema_version: "1.1"
+platform: scholar-gateway
+display_name: Scholar Gateway
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.scholargateway.ai
+actions:
+  # ---------- Data Access ----------
+  - id: scholar-gateway.semantic_search
+    object: Article
+    action: semantic_search
+    description: "Runs a semantic search over Wiley's published journal corpus and returns relevant article snippets with citations and DOI links."
+    reference: https://docs.scholargateway.ai
+    category: Data Access
+    risk: low
+    business_impact: "Read-only query against a published scholarly corpus; returns snippets and citations without writing or exporting customer data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

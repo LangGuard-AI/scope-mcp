@@ -1,0 +1,90 @@
+schema_version: "1.1"
+platform: thumbtack
+display_name: Thumbtack
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/connectors/thumbtack
+# Official first-party Thumbtack connector for Claude. The MCP endpoint
+# https://mcp.thumbtack.com/mcp is OAuth-gated: an anonymous JSON-RPC tools/list
+# POST returns HTTP 401 Unauthorized (confirmed live, and mcp-introspect.py exits
+# 2 auth/401). No first-party document publishes the verbatim snake_case tool-name
+# strings, and there is no anonymous /tools endpoint. The only public tool-name
+# candidates (Apify scrapers, community repos such as markswendsen-code/mcp-thumbtack)
+# are unofficial, conflicting third-party implementations and are deliberately NOT
+# used as a first-party id source.
+#
+# id_form is therefore CAPABILITY, not verbatim. The ids below are best-effort
+# snake_case slugs matched at the intent level, not the identifier level, so
+# confidence is capped at medium. Each entry is anchored to a verbatim plain-language
+# capability label published on the official connector directory page
+# https://claude.com/connectors/thumbtack — exactly three such labels exist:
+# "Find a pro", "Read reviews", and "Get recommendations" — and each is used verbatim
+# as the action's description. Three published labels therefore yield three actions.
+#
+# The vendor's OAuth protected-resource metadata at
+# https://mcp.thumbtack.com/.well-known/oauth-protected-resource advertises four
+# read-only scopes:
+#   demand::businesses/search.read
+#   demand::categories.read
+#   demand::categories/request-form.read
+#   demand::businesses/reviews.read
+# All four are *.read; there are zero write, delete, or money-movement scopes, so the
+# server exposes no state-changing tools — the write surface is genuinely complete and
+# empty. The fourth scope (demand::categories/request-form.read) has NO corresponding
+# published capability label, and a scope string is not a verbatim tool id, so it is
+# DELIBERATELY NOT CURATED as a separate action: inventing an id for it would be
+# fabrication. It is documented here only so a future reviewer can see it was excluded
+# on purpose, not missed.
+#
+# Thumbtack operates exclusively in the United States, so the global privacy stack
+# does not apply. Only CCPA is tagged, and only on the two actions that return
+# individuals' personal data: home-service "pros" are frequently sole proprietors
+# (so business-listing results can be individuals' personal data), and reviews carry
+# reviewer display names. The generic category-recommendation action returns no
+# personal data and is left untagged to avoid over-tagging. The "Interactive" badge on
+# the connector directory corresponds to a ui:// pro-list widget resource, not an
+# invocable state-changing tool. The vendor REST API (developers.thumbtack.com) was
+# NOT used to derive any id.
+actions:
+  # ---------- Data Access ----------
+  - id: thumbtack.find_a_pro
+    object: Business
+    action: find_a_pro
+    id_form: capability
+    description: "Find a pro"
+    reference: https://claude.com/connectors/thumbtack
+    category: Data Access
+    risk: low
+    business_impact: "Returns public Thumbtack marketplace listings for home-service professionals matching a job description and US location; many pros are sole proprietors, so results can include individuals' personal data, but it is read-only discovery over already-public listings with no state change."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: thumbtack.read_reviews
+    object: Review
+    action: read_reviews
+    id_form: capability
+    description: "Read reviews"
+    reference: https://claude.com/connectors/thumbtack
+    category: Data Access
+    risk: low
+    business_impact: "Returns published customer reviews including reviewer display names for selected professionals; read-only surfacing of third-party personal data already public on Thumbtack."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: thumbtack.get_recommendations
+    object: Category
+    action: get_recommendations
+    id_form: capability
+    description: "Get recommendations"
+    reference: https://claude.com/connectors/thumbtack
+    category: Data Access
+    risk: low
+    business_impact: "Returns generic home-service category recommendations for a US location; non-personal reference data, read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

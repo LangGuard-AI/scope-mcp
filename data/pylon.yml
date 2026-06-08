@@ -1,0 +1,141 @@
+schema_version: "1.1"
+platform: pylon
+display_name: Pylon
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.usepylon.com/pylon-docs/integrations/pylon-mcp
+actions:
+  # ---------- Service ----------
+  - id: pylon.create_issue
+    object: Issue
+    action: create_issue
+    description: "Add a new issue to the system."
+    category: Service
+    risk: medium
+    business_impact: "Creates a new customer support issue containing customer-supplied PII; reversible but visible to the support team."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: pylon.update_issue
+    object: Issue
+    action: update_issue
+    description: "Modify issue fields like status, assignee, or custom fields."
+    category: Service
+    risk: medium
+    business_impact: "Changes the state, ownership, or custom fields of a customer support issue; reversible business write touching customer records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: pylon.search_issues
+    object: Issue
+    action: search_issues
+    description: "Locate issues using title, state, account, assignee, tags, or custom fields."
+    category: Service
+    risk: medium
+    business_impact: "Returns a filtered set of customer support issues containing PII; a bulk read of customer records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: pylon.get_issue
+    object: Issue
+    action: get_issue
+    description: "Retrieve a single issue by ID or number."
+    category: Service
+    risk: low
+    business_impact: "Reads a single customer support issue including any customer PII it contains."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: pylon.get_issue_messages
+    object: Issue
+    action: get_issue_messages
+    description: "Access complete message history for an issue."
+    category: Service
+    risk: medium
+    business_impact: "Reads the full customer support conversation thread; exposes private customer communications that may contain sensitive personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Customer ----------
+  - id: pylon.update_account
+    object: Account
+    action: update_account
+    description: "Modify account fields."
+    category: Customer
+    risk: medium
+    business_impact: "Changes customer account fields; reversible business write touching customer-organization records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: pylon.search_accounts
+    object: Account
+    action: search_accounts
+    description: "Find accounts by name, domain, tags, or custom fields."
+    category: Customer
+    risk: medium
+    business_impact: "Returns a filtered set of customer accounts with their fields; a bulk read of customer-organization records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: pylon.get_account
+    object: Account
+    action: get_account
+    description: "Fetch a single account with custom field values."
+    category: Customer
+    risk: low
+    business_impact: "Reads a single customer account including its custom field values."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: pylon.get_contact
+    object: Contact
+    action: get_contact
+    description: "Retrieve a contact by ID."
+    category: Customer
+    risk: low
+    business_impact: "Reads a single customer contact record including name, email, and contact history."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: pylon.get_user
+    object: User
+    action: get_user
+    description: "Get a Pylon team member by ID."
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads a single Pylon team member's profile, including name, email, and role."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: pylon.get_me
+    object: User
+    action: get_me
+    description: "Return the authenticated user's information."
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns the authenticated caller's own profile, role, and permissions."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

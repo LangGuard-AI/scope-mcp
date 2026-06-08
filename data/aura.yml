@@ -1,0 +1,86 @@
+schema_version: "1.1"
+platform: aura
+display_name: Aura
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.getaura.ai/
+actions:
+  # ---------- Company Research ----------
+  - id: aura.find_companies
+    object: Company
+    action: find_companies
+    description: "Search and retrieve detailed company information including industry classification, employee count, headquarters location, and market positioning."
+    reference: https://docs.getaura.ai/
+    category: Data Access
+    risk: medium
+    business_impact: "Bulk read of a third-party workforce-data broker's company database; returns aggregate firmographic and headcount intelligence on arbitrary companies for competitive and due-diligence research."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aura.get_company_subsidiaries
+    object: Company
+    action: get_company_subsidiaries
+    description: "Explore complete corporate structures and ownership hierarchies to understand business portfolios."
+    reference: https://docs.getaura.ai/
+    category: Data Access
+    risk: low
+    business_impact: "Returns the corporate ownership and subsidiary tree for a named company; company-level structural data, no individual records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Workforce Analytics ----------
+  - id: aura.get_monthly_headcount
+    object: Company
+    action: get_monthly_headcount
+    description: "Access 12+ months of historical employee headcount data to track workforce trends and patterns."
+    reference: https://docs.getaura.ai/
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregate historical headcount figures for a named company; competitive-intelligence read with no individual-level data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aura.analyze_employee_growth
+    object: Company
+    action: analyze_employee_growth
+    description: "Get detailed growth metrics including hire rates, attrition rates, and month-over-month workforce changes."
+    reference: https://docs.getaura.ai/
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregate hiring and attrition rate metrics for a named company; company-level analytics, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aura.breakdown_by_job_function
+    object: Company
+    action: breakdown_by_job_function
+    description: "Understand workforce composition with detailed breakdowns by department and role."
+    reference: https://docs.getaura.ai/
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregate workforce composition by department and role for a named company; no identifiable-individual data exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: aura.analyze_seniority_levels
+    object: Company
+    action: analyze_seniority_levels
+    description: "Examine employee distribution across seniority levels and experience tiers within organizations."
+    reference: https://docs.getaura.ai/
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregate seniority and experience-tier distributions for a named company; statistical composition data, not personal records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

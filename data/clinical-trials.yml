@@ -1,0 +1,79 @@
+schema_version: "1.1"
+platform: clinical-trials
+display_name: Clinical Trials
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/resources/tutorials/using-the-clinicaltrials-gov-connector-in-claude
+actions:
+  # ---------- Data Access ----------
+  - id: clinical-trials.search_trials
+    object: ClinicalTrial
+    action: search_trials
+    description: "Finds trials by condition, intervention, location, sponsor, recruitment status, and development phase."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a filtered list from the public ClinicalTrials.gov registry; results can name identifiable sponsors and contacts (personal data of professionals); no patient PHI is returned."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: clinical-trials.get_trial_details
+    object: ClinicalTrial
+    action: get_trial_details
+    description: "Retrieves full protocol information for a trial by NCT identifier, including eligibility criteria, study design, and endpoints."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a single published trial record that names individual investigators, study sites, and contacts — personal data of identifiable professionals; no patient PHI is returned."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: clinical-trials.search_by_sponsor
+    object: ClinicalTrial
+    action: search_by_sponsor
+    description: "Finds all trials funded by a specific company or institution for pharmaceutical pipeline analysis."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a sponsor-scoped list from the public registry; surfaces named funding organizations and associated contacts (professional personal data); no patient PHI is returned."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: clinical-trials.search_investigators
+    object: Investigator
+    action: search_investigators
+    description: "Identifies principal investigators and research sites by therapeutic area, returning names, roles, affiliations, and facility locations."
+    category: Data Access
+    risk: low
+    business_impact: "Returns named principal investigators, institutional affiliations, and site locations — personal data of identifiable professionals from the public registry; no patient PHI is returned."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: clinical-trials.search_by_eligibility
+    object: ClinicalTrial
+    action: search_by_eligibility
+    description: "Screens trials by demographic and clinical eligibility criteria (age, sex) and inclusion/exclusion keyword searches."
+    category: Data Access
+    risk: low
+    business_impact: "Searches published trial eligibility text by demographic criteria; returns trials and their named contacts, not patient records — no patient PHI is accessed."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: clinical-trials.analyze_endpoints
+    object: Endpoint
+    action: analyze_endpoints
+    description: "Compares outcome measures across trials in single-trial or aggregate mode for protocol-design benchmarking."
+    category: Data Access
+    risk: low
+    business_impact: "Aggregates published outcome-measure and endpoint data across trials; no personal data of identifiable individuals is returned."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

@@ -1,0 +1,527 @@
+schema_version: "1.1"
+platform: third-bridge
+display_name: Third Bridge
+source: langguard-editorial
+updated: "2026-06"
+# Third Bridge's MCP connector is served by the Aiera MCP server (mcp-pub.aiera.com).
+# Tool ids are verbatim from the open-source aiera-inc/aiera-mcp TOOL_REGISTRY and are
+# corroborated by the vendor tools reference below. Classifications are kept in parity
+# with the sibling aiera.yml because these are byte-for-byte the same tool calls.
+# The entire surface is read-only data retrieval (no create/update/delete/send/pay).
+# The dominant real-world concern is MNPI / insider-trading exposure and the IP-licensing
+# terms on Third Bridge expert content — neither maps to a canonical regime code, so it is
+# captured in business_impact prose only, never in compliance.
+reference: https://rest.aiera.com/docs/mcp-tools
+actions:
+  # ---------- Third Bridge ----------
+  - id: third-bridge.find_third_bridge_events
+    object: ThirdBridgeEvent
+    action: find_third_bridge_events
+    description: "Retrieves expert-insight events from Third Bridge."
+    category: Data Access
+    risk: low
+    business_impact: "Searches Third Bridge expert-network event metadata; licensed third-party content governed by the customer's Third Bridge agreement, no personal data on data subjects."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_third_bridge_event
+    object: ThirdBridgeEvent
+    action: get_third_bridge_event
+    description: "Retrieves detail and transcript for a specific Third Bridge event."
+    category: Data Access
+    risk: low
+    business_impact: "Reads one Third Bridge expert-interview transcript; licensed research content whose use is bound by Third Bridge's IP and MNPI-handling terms, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.search_thirdbridge
+    object: ThirdBridgeEvent
+    action: search_thirdbridge
+    description: "Performs semantic search within Third Bridge expert-interview transcripts."
+    category: Data Access
+    risk: low
+    business_impact: "Semantic search over Third Bridge expert transcripts; licensed third-party content subject to IP and MNPI-handling terms, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Events ----------
+  - id: third-bridge.find_events
+    object: Event
+    action: find_events
+    description: "Searches corporate events including earnings calls, conferences, and capital-markets days."
+    category: Data Access
+    risk: low
+    business_impact: "Reads published corporate-event metadata; non-personal market data, fully reversible read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.find_conferences
+    object: Conference
+    action: find_conferences
+    description: "Searches investor conferences by date range."
+    category: Data Access
+    risk: low
+    business_impact: "Reads published investor-conference listings; non-personal market data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_event
+    object: Event
+    action: get_event
+    description: "Retrieves a single event with its full transcript and metadata."
+    category: Data Access
+    risk: low
+    business_impact: "Reads one event transcript and metadata; published market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_upcoming_events
+    object: Event
+    action: get_upcoming_events
+    description: "Retrieves confirmed and estimated upcoming corporate events."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the forward calendar of scheduled corporate events; non-personal market data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.search_transcripts
+    object: Transcript
+    action: search_transcripts
+    description: "Performs semantic search across event transcripts."
+    category: Data Access
+    risk: low
+    business_impact: "Semantic search over published event transcripts; non-personal market data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- SEC Filings ----------
+  - id: third-bridge.find_filings
+    object: Filing
+    action: find_filings
+    description: "Retrieves SEC filings filtered by company, type, and date range."
+    category: Data Access
+    risk: low
+    business_impact: "Reads public SEC filing metadata; published regulatory data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_filing
+    object: Filing
+    action: get_filing
+    description: "Retrieves the detail and content of a specific SEC filing."
+    category: Data Access
+    risk: low
+    business_impact: "Reads one public SEC filing's content; published regulatory disclosure, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.search_filings
+    object: Filing
+    action: search_filings
+    description: "Performs semantic search across SEC filing documents."
+    category: Data Access
+    risk: low
+    business_impact: "Semantic search over public SEC filings; published regulatory data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Equities & Market Data ----------
+  - id: third-bridge.find_equities
+    object: Equity
+    action: find_equities
+    description: "Searches for equities by identifier or search term."
+    category: Data Access
+    risk: low
+    business_impact: "Searches the universe of covered public equities; non-personal reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_equity_summaries
+    object: Equity
+    action: get_equity_summaries
+    description: "Retrieves detailed summary information for specific equities."
+    category: Data Access
+    risk: low
+    business_impact: "Returns summary metrics for covered public equities; non-personal market data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_financials
+    object: Financials
+    action: get_financials
+    description: "Retrieves income statement, balance sheet, and cash-flow data for a company."
+    category: Data Access
+    risk: low
+    business_impact: "Returns issuer-reported financial-statement line items; published market data, not the customer's own books."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_ratios
+    object: Financials
+    action: get_ratios
+    description: "Retrieves profitability, liquidity, and valuation ratios for a company."
+    category: Data Access
+    risk: low
+    business_impact: "Returns calculated financial ratios for covered issuers; non-personal market data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_kpis_and_segments
+    object: Financials
+    action: get_kpis_and_segments
+    description: "Retrieves key performance indicators and segment-level metrics for a company."
+    category: Data Access
+    risk: low
+    business_impact: "Returns issuer-reported segment KPIs; published market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_sectors_and_subsectors
+    object: Sector
+    action: get_sectors_and_subsectors
+    description: "Retrieves the list of available sectors and subsectors."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the sector/subsector taxonomy used for filtering; non-personal reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Indexes & Watchlists ----------
+  - id: third-bridge.get_available_indexes
+    object: Index
+    action: get_available_indexes
+    description: "Retrieves the list of available market indexes."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the market indexes available to the workspace; non-personal reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_index_constituents
+    object: Index
+    action: get_index_constituents
+    description: "Retrieves all equities within a specific index."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the constituent equities of an index; non-personal market data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_available_watchlists
+    object: Watchlist
+    action: get_available_watchlists
+    description: "Retrieves the list of available watchlists."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the workspace's watchlists; reveals which tickers a user tracks but no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_watchlist_constituents
+    object: Watchlist
+    action: get_watchlist_constituents
+    description: "Retrieves all equities within a specific watchlist."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the tickers in a watchlist; reveals user-tracked symbols but no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Company Documents ----------
+  - id: third-bridge.find_company_docs
+    object: CompanyDoc
+    action: find_company_docs
+    description: "Retrieves company-published documents filtered by keyword, category, and date range."
+    category: Data Access
+    risk: low
+    business_impact: "Searches issuer-published documents such as press releases and presentations; published material, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_company_doc
+    object: CompanyDoc
+    action: get_company_doc
+    description: "Retrieves the raw text of a specific company document."
+    category: Data Access
+    risk: low
+    business_impact: "Reads one issuer-published document's full text; published corporate communication."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_company_doc_categories
+    object: CompanyDoc
+    action: get_company_doc_categories
+    description: "Retrieves all available company-document categories."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the company-document category taxonomy used for filtering; non-personal reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_company_doc_keywords
+    object: CompanyDoc
+    action: get_company_doc_keywords
+    description: "Retrieves all available company-document keywords."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the company-document keyword taxonomy used for filtering; non-personal reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.search_company_docs
+    object: CompanyDoc
+    action: search_company_docs
+    description: "Performs semantic search within company-document chunks."
+    category: Data Access
+    risk: low
+    business_impact: "Semantic search over issuer-published documents; published corporate material."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Research ----------
+  - id: third-bridge.find_research
+    object: Research
+    action: find_research
+    description: "Finds research reports filtered by optional criteria."
+    category: Data Access
+    risk: low
+    business_impact: "Searches sell-side research entitled to the workspace; licensed third-party content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_research
+    object: Research
+    action: get_research
+    description: "Retrieves the detail and content of a specific research report."
+    category: Data Access
+    risk: low
+    business_impact: "Reads one entitled research report; licensed third-party content, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_research_providers
+    object: Research
+    action: get_research_providers
+    description: "Retrieves all available research providers."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the research providers entitled to the workspace; non-personal reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_research_authors
+    object: Research
+    action: get_research_authors
+    description: "Searches for research authors by name or provider."
+    category: Data Access
+    risk: low
+    business_impact: "Lists research-author names for a provider; professional-directory metadata, not consumer personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_research_asset_classes
+    object: Research
+    action: get_research_asset_classes
+    description: "Retrieves all available research asset classes."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the research asset-class taxonomy used for filtering; non-personal reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_research_asset_types
+    object: Research
+    action: get_research_asset_types
+    description: "Retrieves all available research asset types."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the research asset-type taxonomy used for filtering; non-personal reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_research_subjects
+    object: Research
+    action: get_research_subjects
+    description: "Retrieves all available research subjects."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the research subject taxonomy used for filtering; non-personal reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_research_product_focuses
+    object: Research
+    action: get_research_product_focuses
+    description: "Retrieves all available research product-focus values."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the research product-focus taxonomy used for filtering; non-personal reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_research_region_types
+    object: Research
+    action: get_research_region_types
+    description: "Retrieves all available research region types."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the research region taxonomy used for filtering; non-personal reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_research_country_codes
+    object: Research
+    action: get_research_country_codes
+    description: "Retrieves all available research country codes."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the research country-code taxonomy used for filtering; non-personal reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.search_research
+    object: Research
+    action: search_research
+    description: "Performs semantic search within research content."
+    category: Data Access
+    risk: low
+    business_impact: "Semantic search over entitled research content; licensed third-party material."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.report_research_usage
+    object: Research
+    action: report_research_usage
+    description: "Reports which research documents informed the final answer (readership tracking for entitlement)."
+    category: Data Access
+    risk: low
+    business_impact: "POSTs research-document readership plus the originating user prompt to the vendor for entitlement/licensing telemetry; vendor annotates it read-only, but it egresses consumption metadata rather than reading business records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Web Search ----------
+  - id: third-bridge.trusted_web_search
+    object: WebSearch
+    action: trusted_web_search
+    description: "Searches the web using only trusted/approved financial-news domains."
+    category: Data Access
+    risk: low
+    business_impact: "Performs a domain-restricted web search over approved financial-news sources; returns public web content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Utility ----------
+  - id: third-bridge.get_grammar_template
+    object: Template
+    action: get_grammar_template
+    description: "Retrieves a grammar/output template used to format research responses."
+    category: Data Access
+    risk: low
+    business_impact: "Reads a server-side output-formatting template; no data access, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.get_core_instructions
+    object: Instruction
+    action: get_core_instructions
+    description: "Retrieves the core usage instructions for the toolset."
+    category: Data Access
+    risk: low
+    business_impact: "Reads server-side usage instructions for the toolset; no data access, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: third-bridge.available_tools
+    object: Tool
+    action: available_tools
+    description: "Lists the tools available in the current entitlement."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the tools exposed to the session; capability discovery, no data access."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

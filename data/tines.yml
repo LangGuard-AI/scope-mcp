@@ -1,0 +1,34 @@
+schema_version: "1.1"
+platform: tines
+display_name: Tines
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/connectors/tines
+# NOTE: The Anthropic-distributed Tines connector publishes only a read-only
+# capability ("Read") plus plain-language example-use labels — no verbatim MCP
+# tool identifiers are reachable in any first-party source. Live tools/list
+# introspection requires a per-tenant URL (https://<tenant>.tines.com/mcp/<path>)
+# and a tenant bearer token, neither of which is available. The vendor's
+# "MCP server" docs describe a server-BUILDER whose tools are entirely
+# user-defined (templates, send-to-story, custom tools) and therefore have no
+# stable identifiers. Per the curator spec's Step 3 fallback, this entry uses
+# id_form: capability with the verbatim vendor label as its description; the id
+# is an intent-level slug, not an identifier-level match, and confidence is
+# capped at medium. The connector is declared Read-only, so no write/destructive
+# actions are modeled (modeling story-authoring tools would over-reach beyond
+# the connector's published surface).
+actions:
+  # ---------- Data Access ----------
+  - id: tines.summarize_activity
+    object: Activity
+    action: summarize_activity
+    id_form: capability
+    description: "Summarize the most recent activity in Tines."
+    reference: https://claude.com/connectors/tines
+    category: Data Access
+    risk: medium
+    business_impact: "Reads and summarizes recent Tines automation activity (story runs, events, case records); on a SOAR/security-automation tenant this surfaces operationally sensitive workflow and incident data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

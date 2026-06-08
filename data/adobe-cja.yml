@@ -1,0 +1,324 @@
+schema_version: "1.1"
+platform: adobe-cja
+display_name: Adobe Customer Journey Analytics
+source: langguard-editorial
+updated: "2026-06"
+reference: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+actions:
+  # ---------- Create & Update ----------
+  - id: adobe-cja.upsertAudience
+    object: Audience
+    action: upsertAudience
+    description: "Creates new audiences or updates existing ones."
+    category: Data Access
+    risk: medium
+    business_impact: "Creates or modifies an audience cohort used to target and activate identifiable individuals; reversible but shapes downstream profiling and activation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-cja.upsertSegment
+    object: Segment
+    action: upsertSegment
+    description: "Creates new segments or modifies existing ones."
+    category: Data Access
+    risk: medium
+    business_impact: "Creates or modifies a segment definition that filters individuals by behavioral and personal attributes; reversible analytics-configuration change."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-cja.upsertCalculatedMetric
+    object: CalculatedMetric
+    action: upsertCalculatedMetric
+    description: "Creates new calculated metrics or updates existing ones."
+    category: Data Access
+    risk: medium
+    business_impact: "Creates or modifies a calculated-metric definition used across reports; reversible but can alter reported figures organization-wide."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-cja.upsertProject
+    object: Project
+    action: upsertProject
+    description: "Creates new workspace projects or modifies existing ones with a direct workspace URL."
+    category: Data Access
+    risk: medium
+    business_impact: "Creates or modifies a Workspace project that surfaces analytics on identifiable individuals; reversible business write."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-cja.createDateRange
+    object: DateRange
+    action: createDateRange
+    description: "Establishes reusable date range components."
+    category: Data Access
+    risk: low
+    business_impact: "Adds a reusable date-range component; reversible configuration object with no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-cja.setDefaultSessionDataViewId
+    object: Session
+    action: setDefaultSessionDataViewId
+    description: "Configures the default data view ID for the current session."
+    category: Data Access
+    risk: low
+    business_impact: "Sets a session-scoped default data view; affects only the current session and persists no data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Reporting & Analysis ----------
+  - id: adobe-cja.runReport
+    object: Report
+    action: runReport
+    description: "Executes ranked reports with dimensions, metrics, and optional segments over specified date ranges."
+    category: Data Access
+    risk: medium
+    business_impact: "Pulls analytics broken down by dimensions that can surface identifiable visitor data; reversible read of behavioral personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-cja.searchDimensionItems
+    object: Dimension
+    action: searchDimensionItems
+    description: "Retrieves top dimension items and supports keyword search for specific values."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns actual dimension item values that can include identifiers such as user IDs, URLs, or geographies; read of potentially personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Discovery ----------
+  - id: adobe-cja.findAudiences
+    object: Audience
+    action: findAudiences
+    description: "Lists audience components accessible to the user."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates audience definitions used to target individuals; exposes targeting criteria but not raw personal records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-cja.findSegments
+    object: Segment
+    action: findSegments
+    description: "Lists segments accessible to the current user."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates segment definitions that profile individuals by attribute; exposes filter criteria, not raw personal records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-cja.findDimensions
+    object: Dimension
+    action: findDimensions
+    description: "Locates dimensions available in a data view with semantic search support."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the catalog of available dimensions; metadata only, no personal data values."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-cja.findMetrics
+    object: Metric
+    action: findMetrics
+    description: "Discovers standard and custom metrics with optional semantic search."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the catalog of available metrics; metadata only, no personal data values."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-cja.findCalculatedMetrics
+    object: CalculatedMetric
+    action: findCalculatedMetrics
+    description: "Retrieves available calculated metrics with pagination and filtering."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the catalog of calculated metrics; metadata only, no personal data values."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-cja.findDateRanges
+    object: DateRange
+    action: findDateRanges
+    description: "Retrieves saved date range components."
+    category: Data Access
+    risk: low
+    business_impact: "Returns saved date-range components; metadata only, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-cja.findDataViews
+    object: DataView
+    action: findDataViews
+    description: "Discovers data views accessible to the user."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the data views the user can access; configuration metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-cja.findProjects
+    object: Project
+    action: findProjects
+    description: "Locates workspace projects available to the user."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates Workspace projects; configuration metadata only, no personal data values."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Component Details ----------
+  - id: adobe-cja.describeSegment
+    object: Segment
+    action: describeSegment
+    description: "Shows segment metadata, definition, and compatibility details."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a segment's definition revealing the personal attributes used to filter individuals; criteria only, not raw records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-cja.describeAudience
+    object: Audience
+    action: describeAudience
+    description: "Returns audience metadata, definition, and publishing status."
+    category: Data Access
+    risk: low
+    business_impact: "Returns an audience's definition and publishing status revealing targeting criteria for individuals; criteria only, not raw records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-cja.describeDimension
+    object: Dimension
+    action: describeDimension
+    description: "Returns metadata for a specific dimension."
+    category: Data Access
+    risk: low
+    business_impact: "Returns metadata for one dimension; describes the field, not personal data values."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-cja.describeMetric
+    object: Metric
+    action: describeMetric
+    description: "Provides metadata for a specific metric."
+    category: Data Access
+    risk: low
+    business_impact: "Returns metadata for one metric; describes the field, not personal data values."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-cja.describeCalculatedMetric
+    object: CalculatedMetric
+    action: describeCalculatedMetric
+    description: "Displays calculated metric formulas and base metrics."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a calculated metric's formula and base metrics; definition metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-cja.describeProject
+    object: Project
+    action: describeProject
+    description: "Details workspace project configuration with a direct workspace URL."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a Workspace project's configuration and URL; setup metadata only, no personal data values."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Component Usage ----------
+  - id: adobe-cja.listComponentUsage
+    object: Component
+    action: listComponentUsage
+    description: "Ranks components by usage frequency in reports."
+    category: Data Access
+    risk: low
+    business_impact: "Returns usage-frequency rankings for analytics components; operational metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-cja.listFrequentlyUsedWith
+    object: Component
+    action: listFrequentlyUsedWith
+    description: "Identifies components commonly paired together in reports."
+    category: Data Access
+    risk: low
+    business_impact: "Returns component co-occurrence data; operational metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-cja.listSimilarTo
+    object: Component
+    action: listSimilarTo
+    description: "Lists components serving similar purposes."
+    category: Data Access
+    risk: low
+    business_impact: "Returns components similar to a reference component; operational metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Setup & Guides ----------
+  - id: adobe-cja.describeCja
+    object: Documentation
+    action: describeCja
+    description: "Returns reference guides for tools, dimensions, metrics, segments, calculated metrics, breakdown reports, and workspace projects."
+    category: Data Access
+    risk: low
+    business_impact: "Returns static usage documentation for the CJA toolset; no personal data or state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

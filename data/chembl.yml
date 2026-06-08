@@ -1,0 +1,87 @@
+schema_version: "1.1"
+platform: chembl
+display_name: ChEMBL
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/resources/tutorials/using-the-chembl-connector-in-claude
+actions:
+  # ---------- Data Access ----------
+  # ChEMBL (EMBL-EBI) is a public, manually curated database of bioactive
+  # drug-like compounds and their quantitative bioactivity data. The connector
+  # exposes read-only query tools over public scientific reference data — no
+  # personal data, no PHI, no patient records, no writes, and no destructive
+  # surface. compliance: [] is correct on every action: privacy regimes require
+  # identifiable individuals (none), HIPAA requires PHI (none), and FDA Part 11
+  # governs electronic records in FDA-regulated systems (this is a read of a
+  # public reference DB, not such a system).
+  - id: chembl.compound_search
+    object: Compound
+    action: compound_search
+    description: "Finds molecules by name, ChEMBL ID, or chemical structure (SMILES)."
+    category: Data Access
+    risk: low
+    business_impact: "Returns public compound records from the ChEMBL reference database; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: chembl.target_search
+    object: Target
+    action: target_search
+    description: "Queries biological targets (proteins, enzymes, receptors) by name, gene symbol, or organism."
+    category: Data Access
+    risk: low
+    business_impact: "Returns public biological-target records; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: chembl.get_bioactivity
+    object: Activity
+    action: get_bioactivity
+    description: "Retrieves quantitative activity measurements (IC50, EC50, Ki, Kd values) for compound-target interactions."
+    category: Data Access
+    risk: low
+    business_impact: "Returns public quantitative bioactivity measurements; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: chembl.get_mechanism
+    object: Mechanism
+    action: get_mechanism
+    description: "Accesses manually curated mechanism-of-action data for approved drugs."
+    category: Data Access
+    risk: low
+    business_impact: "Returns public mechanism-of-action records for approved drugs; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: chembl.drug_search
+    object: Drug
+    action: drug_search
+    description: "Finds approved drugs and clinical candidates by therapeutic indication using MeSH disease terminology."
+    category: Data Access
+    risk: low
+    business_impact: "Returns public approved-drug and clinical-candidate records by indication; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: chembl.get_admet
+    object: Compound
+    action: get_admet
+    description: "Provides calculated molecular properties critical for drug-likeness (ADMET) assessment."
+    category: Data Access
+    risk: low
+    business_impact: "Returns calculated public molecular/ADMET properties for compounds; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

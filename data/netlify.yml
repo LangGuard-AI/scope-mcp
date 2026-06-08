@@ -1,0 +1,138 @@
+schema_version: "1.1"
+platform: netlify
+display_name: Netlify
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.netlify.com/build/build-with-ai/netlify-mcp-server/
+# Tool ids are verbatim from the official server source (github.com/netlify/netlify-mcp,
+# @netlify/mcp v1.15.1). In its default (non-verbose) mode — which is how the remote
+# Anthropic connector runs — bindTools() registers ONE grouped tool per domain per
+# read/write split, named `netlify-<domain>-services-<reader|updater>` (see
+# src/tools/index.ts registerDomainTools). Individual CRUD verbs (create-new-project,
+# manage-env-vars, update-visitor-access-controls, manage-form-submissions, etc.) are
+# `operation` sub-selectors INSIDE those grouped tools, not separate MCP tools, so they
+# are documented in description/business_impact rather than given their own ids.
+# The remote server also filters out tools flagged omitFromRemoteMCP. The standalone
+# context tool is registered as `get-netlify-coding-context` on the remote server
+# (the local stdio binary names it `netlify-coding-rules`).
+actions:
+  # ---------- Platform & DevOps ----------
+  - id: netlify.netlify-project-services-updater
+    object: Project
+    action: netlify-project-services-updater
+    description: "Grouped write tool for Netlify projects; bundles create-new-project, update-project-name, update-visitor-access-controls, update-forms, manage-form-submissions, and manage-env-vars operations."
+    reference: https://github.com/netlify/netlify-mcp/blob/main/src/tools/project-tools/index.ts
+    category: Platform & DevOps
+    risk: critical
+    business_impact: "Single generic tool that can create projects, rewrite environment variables and secrets, change password/visitor access controls, and mutate form submissions — a secret-write and access-control surface with no per-operation review gate."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: netlify.netlify-project-services-reader
+    object: Project
+    action: netlify-project-services-reader
+    description: "Grouped read tool for Netlify projects; bundles get-project, get-projects, and get-forms-for-project operations."
+    reference: https://github.com/netlify/netlify-mcp/blob/main/src/tools/project-tools/index.ts
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Reads project configuration and form definitions across the team; form data and project settings may include personal data submitted by site visitors."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  - id: netlify.netlify-deploy-services-updater
+    object: Deploy
+    action: netlify-deploy-services-updater
+    description: "Grouped write tool for deploys; runs the deploy-site operation to build and publish a project to production."
+    reference: https://github.com/netlify/netlify-mcp/blob/main/src/tools/deploy-tools/index.ts
+    category: Code & Release
+    risk: high
+    business_impact: "Builds and publishes a project to its live production URL without a separate review gate; a unilateral change-management action affecting what end users see."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: netlify.netlify-deploy-services-reader
+    object: Deploy
+    action: netlify-deploy-services-reader
+    description: "Grouped read tool for deploys; bundles get-deploy and get-deploy-for-site operations."
+    reference: https://github.com/netlify/netlify-mcp/blob/main/src/tools/deploy-tools/index.ts
+    category: Code & Release
+    risk: low
+    business_impact: "Reads deploy status and metadata for a deploy or site; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Secrets & Workflows ----------
+  - id: netlify.netlify-extension-services-updater
+    object: Extension
+    action: netlify-extension-services-updater
+    description: "Grouped write tool for extensions; bundles change-extension-installation (install/uninstall) and initialize-database operations."
+    reference: https://github.com/netlify/netlify-mcp/blob/main/src/tools/extension-tools/index.ts
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Installs or uninstalls Netlify extensions and provisions databases on the team, altering the project's trusted dependency and infrastructure surface."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  - id: netlify.netlify-extension-services-reader
+    object: Extension
+    action: netlify-extension-services-reader
+    description: "Grouped read tool for extensions; bundles get-extensions and get-full-extension-details operations."
+    reference: https://github.com/netlify/netlify-mcp/blob/main/src/tools/extension-tools/index.ts
+    category: Secrets & Workflows
+    risk: low
+    business_impact: "Lists available extensions and returns extension configuration details; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Org & Access ----------
+  - id: netlify.netlify-team-services-reader
+    object: Team
+    action: netlify-team-services-reader
+    description: "Grouped read tool for teams; bundles get-teams and get-team operations."
+    reference: https://github.com/netlify/netlify-mcp/blob/main/src/tools/team-tools/index.ts
+    category: Org & Access
+    risk: medium
+    business_impact: "Reads team membership and team metadata; returns identifiable member information."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: netlify.netlify-user-services-reader
+    object: User
+    action: netlify-user-services-reader
+    description: "Grouped read tool for the user; runs the get-user operation to return the authenticated account's profile."
+    reference: https://github.com/netlify/netlify-mcp/blob/main/src/tools/user-tools/index.ts
+    category: Org & Access
+    risk: low
+    business_impact: "Returns the authenticated user's own account profile (name, email); single-record personal data read scoped to the caller."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Operations ----------
+  - id: netlify.get-netlify-coding-context
+    object: CodingContext
+    action: get-netlify-coding-context
+    description: "ALWAYS call when writing code; returns Netlify coding context, SDK/library usage rules, and dev guidance before creating or editing functions."
+    reference: https://github.com/netlify/netlify-mcp/blob/main/src/context/coding-context.ts
+    category: Operations
+    risk: low
+    business_impact: "Returns static Netlify coding guidance and context for a requested creation type; read-only with no account or customer data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]

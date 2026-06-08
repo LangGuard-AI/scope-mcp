@@ -1,0 +1,76 @@
+schema_version: "1.1"
+platform: learning-commons-knowledge-graph
+display_name: Learning Commons Knowledge Graph
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.learningcommons.org/knowledge-graph/using-knowledge-graph/mcp-server
+# NOTE: The Learning Commons Knowledge Graph (a Chan Zuckerberg Initiative /
+# Anthropic K-12 education project) exposes a read-only MCP server. The live
+# server (documented at https://kg.mcp.learningcommons.org/mcp; the connector
+# also resolves via https://mcp.learningcommons.org/mcp) is API-key-gated: an
+# anonymous tools/list returns HTTP 401 "No API key found in request", so the
+# tool list is not anonymously retrievable and no anonymous /tools catalog
+# endpoint exists. The vendor's own MCP docs (mcp-server.md, claude-connector.md)
+# and the claude.com connector page publish ONLY plain-language capability
+# labels for the three tools — no verbatim tool identifiers appear anywhere
+# reachable. The public GitHub repo (learning-commons-org/knowledge-graph) ships
+# REST/JSONL data + REST tutorials, not MCP tool-registration source. A
+# third-party catalog (apigene.ai) lists snake_case ids (standard_lookup,
+# learning_components, learning_progressions) but these are slugified paraphrases
+# of the vendor labels, conflict with the vendor's own per-tool descriptions, and
+# are excluded per the "third-party catalog never as sole source" rule. These
+# entries therefore use the capability-form fallback (id_form: capability): ids
+# are intent-level snake_case slugs derived from the verbatim connector-page
+# labels, NOT verbatim MCP identifiers, so every entry is capped at
+# confidence: medium.
+# COMPLIANCE: all three tools are read-only lookups against PUBLIC K-12 academic
+# standards reference data — official standards statements (e.g. 5.NBT.A.2),
+# learning components, and the SAP Coherence Map. They return curriculum/standards
+# metadata, NOT any identifiable individual's personal data and NOT student
+# records. Therefore the privacy-regime stack is intentionally NOT tagged, and
+# FERPA (student education records) and COPPA (collection of children's data) do
+# NOT apply — these tools collect nothing about any student and read only public
+# reference content. compliance: [] is correct for every action here.
+actions:
+  # ---------- Data Access ----------
+  - id: learning-commons-knowledge-graph.standard_lookup
+    object: Standard
+    action: standard_lookup
+    id_form: capability
+    description: "Standard lookup"
+    reference: https://docs.learningcommons.org/knowledge-graph/using-knowledge-graph/claude-connector
+    category: Data Access
+    risk: low
+    business_impact: "Resolves a K-12 academic standard code into its official statement and metadata from public reference data; read-only, no personal or student data involved."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: learning-commons-knowledge-graph.learning_components
+    object: LearningComponent
+    action: learning_components
+    id_form: capability
+    description: "Learning components (Mathematics)"
+    reference: https://docs.learningcommons.org/knowledge-graph/using-knowledge-graph/claude-connector
+    category: Data Access
+    risk: low
+    business_impact: "Decomposes a broad mathematics standard into granular, teachable learning components from public reference data; read-only, no personal or student data involved."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: learning-commons-knowledge-graph.learning_progressions
+    object: LearningProgression
+    action: learning_progressions
+    id_form: capability
+    description: "Learning progressions (Mathematics)"
+    reference: https://docs.learningcommons.org/knowledge-graph/using-knowledge-graph/claude-connector
+    category: Data Access
+    risk: low
+    business_impact: "Traces prerequisite or subsequent mathematics standards along the SAP Coherence Map from public reference data; read-only, no personal or student data involved."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

@@ -1,0 +1,129 @@
+schema_version: "1.1"
+platform: icd-10-codes
+display_name: ICD-10 Codes
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/resources/tutorials/using-the-icd-10-connector-in-claude
+# Anthropic-distributed connector; MCP server hosted by deepsense.ai at
+# https://mcp.deepsense.ai/icd10_codes/mcp (per anthropics/healthcare plugin.json).
+# Read-only reference lookups against a static 2026 CMS/CDC ICD-10-CM and
+# ICD-10-PCS code dictionary — a public classification standard, not patient data.
+# No writes, no PII, no PHI: query terms are not linked to any identifiable
+# individual and no medical record, claim, or communication is handled. Every
+# action is therefore low-risk with an empty compliance array.
+actions:
+  # ---------- Code Search ----------
+  # NOTE: the vendor's own (deepsense) docs describe the search surface as a single
+  # parameterized "Search Codes" tool (query / code_type / search_by). The Anthropic
+  # tutorial prints these four as distinct verbatim snake_case identifiers. The four
+  # search_* ids below are copied verbatim from the tutorial but flagged medium
+  # confidence: an MCP client may instead send one unified search-style id.
+  - id: icd-10-codes.search_diagnosis_by_description
+    object: DiagnosisCode
+    action: search_diagnosis_by_description
+    description: "Finds ICD-10-CM diagnosis codes by disease name or medical terminology."
+    category: Data Access
+    risk: low
+    business_impact: "Reads ICD-10-CM diagnosis codes from a static public code dictionary; no record or PII is touched."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  - id: icd-10-codes.search_diagnosis_by_code
+    object: DiagnosisCode
+    action: search_diagnosis_by_code
+    description: "Finds ICD-10-CM diagnosis codes by exact code match or prefix search."
+    category: Data Access
+    risk: low
+    business_impact: "Reads ICD-10-CM diagnosis codes from a static public code dictionary; no record or PII is touched."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  - id: icd-10-codes.search_procedure_by_description
+    object: ProcedureCode
+    action: search_procedure_by_description
+    description: "Searches ICD-10-PCS procedure codes by anatomical terms and root operations."
+    category: Data Access
+    risk: low
+    business_impact: "Reads ICD-10-PCS procedure codes from a static public code dictionary; no record or PII is touched."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  - id: icd-10-codes.search_procedure_by_code
+    object: ProcedureCode
+    action: search_procedure_by_code
+    description: "Finds ICD-10-PCS procedure codes by exact match or prefix."
+    category: Data Access
+    risk: low
+    business_impact: "Reads ICD-10-PCS procedure codes from a static public code dictionary; no record or PII is touched."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  # ---------- Code Lookup & Validation ----------
+  - id: icd-10-codes.lookup_code
+    object: Code
+    action: lookup_code
+    description: "Retrieves complete details for a specific ICD-10 code when the exact code is known."
+    category: Data Access
+    risk: low
+    business_impact: "Returns dictionary details (descriptions, structure) for one ICD-10 code; no record or PII is touched."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  - id: icd-10-codes.validate_code
+    object: Code
+    action: validate_code
+    description: "Checks whether an ICD-10 code exists in the database and confirms its validity and billability for HIPAA transactions."
+    category: Data Access
+    risk: low
+    business_impact: "Confirms whether an ICD-10 code is valid and billable; informs downstream claim submission but writes nothing and handles no patient data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  # ---------- Code Hierarchy & Navigation ----------
+  - id: icd-10-codes.get_hierarchy
+    object: Code
+    action: get_hierarchy
+    description: "Retrieves the full code family tree under a category prefix."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the hierarchy of child codes under a category from the static dictionary; no record or PII is touched."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  - id: icd-10-codes.get_by_category
+    object: DiagnosisCode
+    action: get_by_category
+    description: "Navigates ICD-10-CM diagnosis codes by chapter or 3-character category."
+    category: Data Access
+    risk: low
+    business_impact: "Lists diagnosis codes within a chapter or category from the static dictionary; no record or PII is touched."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  - id: icd-10-codes.get_by_body_system
+    object: ProcedureCode
+    action: get_by_body_system
+    description: "Retrieves ICD-10-PCS procedure codes for a specific anatomical body system (first-character code)."
+    category: Data Access
+    risk: low
+    business_impact: "Lists procedure codes for one anatomical body system from the static dictionary; no record or PII is touched."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]

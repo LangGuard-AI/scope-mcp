@@ -1,0 +1,136 @@
+schema_version: "1.1"
+platform: thoughtspot-spotter
+display_name: ThoughtSpot Spotter
+source: langguard-editorial
+updated: "2026-06"
+reference: https://developers.thoughtspot.com/docs/mcp-integration
+# Tool ids are verbatim from the vendor source repo (thoughtspot/mcp-server,
+# src/servers/tool-definitions.ts + version-registry.ts). The server is
+# version-split: the Claude connector hits api-version `latest` = the V2
+# (Spotter 3) tool set; the V1 tools are reachable only by pinning an older
+# api-version. Both generations are documented below, grouped by version.
+# All tools carry destructiveHint:false in source; none deletes or exports in bulk.
+actions:
+  # ---------- Data Access (Spotter 3 / V2 — api-version=latest) ----------
+  - id: thoughtspot-spotter.get_session_updates
+    object: AnalysisSession
+    action: get_session_updates
+    description: "Get the latest updates from the Analytics Agent, including answer visualizations and embeddable result URLs."
+    category: Data Access
+    risk: high
+    business_impact: "Returns the Analytics Agent's answers — query results and embeddable visualizations that can surface business-data rows including PII or financial figures depending on the connected datasource."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: thoughtspot-spotter.create_analysis_session
+    object: AnalysisSession
+    action: create_analysis_session
+    description: "Start a stateful analytical session with the Analytics Agent and return an analytical_session_id."
+    category: Data Access
+    risk: low
+    business_impact: "Opens an analytical session against a selected data source; reserves no data and is reversible by abandoning the session."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: thoughtspot-spotter.send_session_message
+    object: AnalysisSession
+    action: send_session_message
+    description: "Send a natural-language analytical question or follow-up to an active analysis session."
+    category: Data Access
+    risk: low
+    business_impact: "Submits the user's own question text to the Analytics Agent; carries no data read by itself and is reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: thoughtspot-spotter.check_connectivity
+    object: Connection
+    action: check_connectivity
+    description: "Ping tool to test connectivity and authentication when other calls are failing."
+    category: Data Access
+    risk: low
+    business_impact: "Verifies connectivity and authentication; returns only a success flag and touches no business data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Visualization & Sharing (Spotter 3 / V2 — api-version=latest) ----------
+  - id: thoughtspot-spotter.create_dashboard
+    object: Dashboard
+    action: create_dashboard
+    description: "Create a dashboard from a list of answers so the user can revisit or share the results later."
+    category: Operations
+    risk: medium
+    business_impact: "Persists collected answer tiles into a shareable dashboard; widens distribution of query results that may embed identifiable rows, and is reversible by deleting the dashboard."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access (Base / V1 — older api-version pin) ----------
+  - id: thoughtspot-spotter.getAnswer
+    object: Answer
+    action: getAnswer
+    description: "Get the answer to a question from the ThoughtSpot database; returns the result set as CSV data."
+    category: Data Access
+    risk: high
+    business_impact: "Returns query result rows as CSV, which can include identifiable PII or financial figures depending on the connected datasource; a single-question data-read surface."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: thoughtspot-spotter.getRelevantQuestions
+    object: Question
+    action: getRelevantQuestions
+    description: "Get relevant data questions from ThoughtSpot analytics based on a user query and the data source schema."
+    category: Data Access
+    risk: low
+    business_impact: "Suggests candidate analytical questions from the datasource schema; exposes column/metric names but no row-level data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: thoughtspot-spotter.getDataSourceSuggestions
+    object: DataSource
+    action: getDataSourceSuggestions
+    description: "Get data source suggestions for a query, ranked by confidence."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates candidate data sources and their names for a query; reveals datasource catalog structure but no row-level data."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: thoughtspot-spotter.ping
+    object: Connection
+    action: ping
+    description: "Simple ping tool to test connectivity and auth."
+    category: Data Access
+    risk: low
+    business_impact: "Tests connectivity and authentication; returns no business data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Visualization & Sharing (Base / V1 — older api-version pin) ----------
+  - id: thoughtspot-spotter.createLiveboard
+    object: Liveboard
+    action: createLiveboard
+    description: "Create a liveboard from a list of answers, with an HTML summary note tile."
+    category: Operations
+    risk: medium
+    business_impact: "Persists answer tiles into a shareable liveboard; widens distribution of query results that may embed identifiable rows, and is reversible by deleting the liveboard."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

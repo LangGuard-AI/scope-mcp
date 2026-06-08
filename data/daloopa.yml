@@ -1,0 +1,97 @@
+schema_version: "1.1"
+platform: daloopa
+display_name: Daloopa
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.daloopa.com/docs/mcp-prompts
+actions:
+  # ---------- Data Access ----------
+  - id: daloopa.discover_companies
+    object: Company
+    action: discover_companies
+    description: "Locates companies in the Daloopa database by ticker symbol or company name, returning ticker, name, company ID, and latest available quarter."
+    reference: https://docs.daloopa.com/docs/mcp-prompts#discover_companies
+    category: Data Access
+    risk: low
+    business_impact: "Read-only lookup of public-company identifiers; no state change and no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: daloopa.discover_company_series
+    object: MetricSeries
+    action: discover_company_series
+    description: "Retrieves the catalog of available financial metrics and data series for a specified company, with metric names and IDs."
+    reference: https://docs.daloopa.com/docs/mcp-prompts#discover_company_series
+    category: Data Access
+    risk: low
+    business_impact: "Read-only enumeration of available public financial metrics for a company; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: daloopa.discover_company_documents
+    object: Document
+    action: discover_company_documents
+    description: "Lists financial documents Daloopa holds for a company across selected quarters (10-Ks, 10-Qs, 8-Ks, presentations) with filing identifiers and dates."
+    reference: https://docs.daloopa.com/docs/mcp-prompts#discover_company_documents
+    category: Data Access
+    risk: low
+    business_impact: "Read-only index of public filings and presentations for a company; no state change and no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: daloopa.get_company_fundamentals
+    object: Fundamentals
+    action: get_company_fundamentals
+    description: "Extracts financial fundamentals across selected periods and metric series from income statements, balance sheets, cash-flow statements, and ratios."
+    category: Data Access
+    risk: low
+    business_impact: "Read-only retrieval of public-company fundamental financials; no state change and no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: daloopa.get_stock_prices
+    object: StockPrice
+    action: get_stock_prices
+    description: "Retrieves daily OHLCV stock price data for one or more companies by date or date range."
+    reference: https://docs.daloopa.com/docs/mcp-prompts#get_stock_prices
+    category: Data Access
+    risk: low
+    business_impact: "Read-only retrieval of public market price data; no state change and no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: daloopa.search_documents
+    object: Document
+    action: search_documents
+    description: "Searches financial filings and earnings transcripts by keyword to extract qualitative insights such as management commentary, guidance, and risk factors."
+    reference: https://docs.daloopa.com/docs/mcp-prompts#search_documents
+    category: Data Access
+    risk: low
+    business_impact: "Read-only keyword search over public filings and transcripts; no state change and no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: daloopa.get_document_content
+    object: Document
+    action: get_document_content
+    description: "Retrieves full text of a Daloopa-indexed filing or presentation with section-level breakdown for large documents."
+    reference: https://docs.daloopa.com/docs/mcp-prompts#get_document_content
+    category: Data Access
+    risk: low
+    business_impact: "Read-only retrieval of a public filing or presentation's full text; no state change and no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

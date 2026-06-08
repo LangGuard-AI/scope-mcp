@@ -1,0 +1,79 @@
+schema_version: "1.1"
+platform: uber
+display_name: Uber
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/connectors/uber
+# PROVENANCE: The official Uber connector's MCP server
+# (https://mcp.uber.com/claude/rides-3p/mcp) is OAuth-gated AND the host returns
+# a blanket 403 ("access denied") to every anonymous probe (tools/list POST,
+# /tools catalog paths, .well-known/* metadata), so live tools/list introspection
+# could not be retrieved (mcp-introspect.py exit 2). The connector is not mounted
+# live in this session. No vendor MCP docs page publishes verbatim tool ids for
+# the official "rides-3p" surface. The official connector page publishes only
+# plain-language capability labels (under the coarse "Read" and "Interactive"
+# permission badges). Per Step 3 of the curator spec these are recorded via the
+# capability-form fallback (id_form: capability) with the verbatim labels in
+# `description`; ids are intent-level slugs, NOT verbatim MCP identifiers, so
+# every entry is capped at confidence: medium.
+#
+# The community server 199-mcp/mcp-uber (tool ids uber_get_price_estimates,
+# uber_request_ride, uber_cancel_ride, uber_get_auth_url, etc.; configured with
+# UBER_CLIENT_ID / UBER_CLIENT_SECRET) was deliberately NOT used as a source — it
+# is a DIFFERENT, full-booking implementation. The official connector is
+# estimate/read-only and explicitly hands ride requests off to the Uber app for
+# completion, so attributing the community server's booking ids here would be
+# fabrication.
+#
+# Surface scope: the connector estimates fares/ETAs and compares ride products in
+# the United States, then hands off booking to the official Uber app — no money
+# moves through and nothing is charged or persisted on this surface. Therefore no
+# financial regime (PCI/SOX/COSO/GLBA/PSD2) applies; payment-card and transaction
+# data are out of scope of the connector. The one genuine privacy hook is precise
+# pickup/dropoff geolocation (sensitive personal information under CPRA); the
+# connector is explicitly US-only, so the strongest-fit privacy regime (CCPA) is
+# tagged on the geolocation-bearing read rather than the full global privacy stack.
+actions:
+  # ---------- Data Access ----------
+  - id: uber.estimate_fare
+    object: FareEstimate
+    action: estimate_fare
+    id_form: capability
+    description: "Check up-to-the-minute fare estimates for on-demand (immediate) trips"
+    reference: https://claude.com/connectors/uber
+    category: Data Access
+    risk: low
+    business_impact: "Returns real-time price ranges and ETAs for a requested ride between a supplied pickup and dropoff in the US; read-only, books nothing, and exposes the rider's precise geolocation to the query (sensitive personal information under CPRA)."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: uber.compare_ride_options
+    object: Product
+    action: compare_ride_options
+    id_form: capability
+    description: "Compare ride options across Uber products"
+    reference: https://claude.com/connectors/uber
+    category: Data Access
+    risk: low
+    business_impact: "Returns pricing ranges, ETAs, and product features across Uber products (UberX, XL, Comfort, Black, etc.) for a route; read-only comparison that exposes the rider's precise pickup/dropoff geolocation to the query."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: uber.book_in_uber_app
+    object: Trip
+    action: book_in_uber_app
+    id_form: capability
+    description: "Jump directly into booking your trip in the Uber app"
+    reference: https://claude.com/connectors/uber
+    category: Operations
+    risk: low
+    business_impact: "Hands the selected ride request off to the official Uber app for the rider to complete; the connector initiates no ride and charges nothing itself, so the booking and payment occur outside this surface."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

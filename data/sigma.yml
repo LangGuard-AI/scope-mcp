@@ -1,63 +1,76 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: sigma
-display_name: Sigma
+display_name: Sigma Computing
 source: langguard-editorial
-updated: "2026-05"
-# NOTE: Sigma's MCP server, per Sigma docs, is documentation-oriented and exposes
-# search/fetch primitives plus API-reference helpers. It is read-only.
+updated: "2026-06"
+reference: https://help.sigmacomputing.com/docs/use-sigma-mcp-server
+# ---------------------------------------------------------------------------
+# PROVENANCE NOTE (capability-form fallback):
+# The claude.com/connectors/sigma connector is the Sigma MCP Server
+# (help.sigmacomputing.com/docs/use-sigma-mcp-server) for querying YOUR OWN
+# Sigma data — "Explore, search, and query your data in Sigma." Its endpoint
+# is per-tenant (each user retrieves their own "MCP URL" from their Sigma
+# profile) and OAuth/token-gated, so no anonymous tools/list introspection is
+# possible. The vendor docs and connector page publish only plain-language
+# capability labels for this read-only surface (Search / Explore / Analyze) —
+# no verbatim tool identifier strings are reachable anywhere. Per the curator
+# spec these entries therefore use id_form: capability, with the verbatim
+# doc-page section labels as descriptions, slugified ids, and confidence
+# capped at medium (intent-level match, not identifier-level).
+#
+# NOTE — this overwrites a prior sigma.yml that had been curated against the
+# WRONG server: Sigma's separate *Documentation* MCP server
+# (docs/use-documentation-mcp-server), whose tools (search, fetch,
+# search-endpoints, list-endpoints, get-endpoint) browse Sigma's help docs and
+# API reference. That is a different connector, not claude.com/connectors/sigma.
+#
+# EXCLUDED: the 44-tool title-case list on third-party catalog sites
+# (mcpbundles.com) is a Pipedream-style REST wrapper, NOT Sigma's hosted MCP
+# server, and contradicts the read-only official connector. A roadmap "Build"
+# capability (generate workbooks/dashboards/data models) appears only in vendor
+# blog posts as forthcoming; it is not on the connector page, the docs, or the
+# 2026-04-17 changelog tool surface, so it is not included.
+# ---------------------------------------------------------------------------
 actions:
-  # ---------- Operations ----------
-  - id: sigma.search
-    object: Documentation
-    action: search
-    category: Operations
-    risk: low
-    business_impact: "Searches Sigma's public help documentation by term."
-    compliance: []
+  # ---------- Data Access ----------
+  - id: sigma.analyze_data
+    object: Dataset
+    action: analyze_data
+    id_form: capability
+    description: "Analyzing your data"
+    reference: https://help.sigmacomputing.com/docs/use-sigma-mcp-server#analyzing-your-data
+    category: Data Access
+    risk: medium
+    business_impact: "Runs natural-language queries against the connected data warehouse and returns result rows to the agent; can surface PII or financial data at meaningful volume depending on the warehouse, though scoped to the caller's permissions."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
     confidence: medium
     access_methods: [REST, MCP]
 
-  - id: sigma.fetch
-    object: Documentation
-    action: fetch
-    category: Operations
+  - id: sigma.explore_data_sources
+    object: DataSource
+    action: explore_data_sources
+    id_form: capability
+    description: "Exploring data sources and documents"
+    reference: https://help.sigmacomputing.com/docs/use-sigma-mcp-server#exploring-data-sources-and-documents
+    category: Data Access
     risk: low
-    business_impact: "Retrieves a documentation page by ID."
-    compliance: []
+    business_impact: "Reads metadata about data sources and documents — column names, definitions, and data types — exposing schema and structure but not bulk row data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: medium
     access_methods: [REST, MCP]
 
-  - id: sigma.search-endpoints
-    object: APIEndpoint
-    action: search-endpoints
-    category: Operations
+  - id: sigma.search_data
+    object: DataSource
+    action: search_data
+    id_form: capability
+    description: "Searching for data in your organization"
+    reference: https://help.sigmacomputing.com/docs/use-sigma-mcp-server#searching-for-data-in-your-organization
+    category: Data Access
     risk: low
-    business_impact: "Searches the Sigma API reference for matching endpoints."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: sigma.list-endpoints
-    object: APIEndpoint
-    action: list-endpoints
-    category: Operations
-    risk: low
-    business_impact: "Lists all API paths and methods exposed by Sigma."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: sigma.get-endpoint
-    object: APIEndpoint
-    action: get-endpoint
-    category: Operations
-    risk: low
-    business_impact: "Returns full API-reference details for one endpoint."
-    compliance: []
+    business_impact: "Locates documents and data sources across the organization by name, type, owner, or connection; returns asset listings and owner identities scoped to the caller's permissions."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: medium
     access_methods: [REST, MCP]

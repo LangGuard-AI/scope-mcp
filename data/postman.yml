@@ -1,0 +1,1000 @@
+schema_version: "1.1"
+platform: postman
+display_name: Postman
+source: langguard-editorial
+updated: "2026-06"
+reference: https://github.com/postmanlabs/postman-mcp-server
+# Tool ids are verbatim from the Postman MCP server's "full" toolset
+# (https://mcp.postman.com/mcp), enumerated from the vendor's open-source
+# registrations in src/enabledResources.ts (const full) and the per-tool
+# `export const method` / `annotations.destructiveHint` declarations.
+# Full surface is 125 tools (70 writes, 55 reads). Every write/destructive tool
+# is retained; 44 routine single-entity reads, AI-context markdown views, and
+# async task-status getters were trimmed (see provenance note in the PR).
+actions:
+  # ---------- Secrets & Variables ----------
+  # Postman environments and global variables are the canonical place teams
+  # store API credentials (bearer tokens, API keys, client secrets). Reads and
+  # writes here are secret-management operations.
+  - id: postman.updateWorkspaceGlobalVariables
+    object: GlobalVariable
+    action: updateWorkspaceGlobalVariables
+    description: "Replaces all of a workspace's global variables with the supplied set."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Replaces every workspace-wide global variable in one call; can overwrite or leak stored API credentials shared across all collections."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.getWorkspaceGlobalVariables
+    object: GlobalVariable
+    action: getWorkspaceGlobalVariables
+    description: "Reads a workspace's global variables, which commonly hold API credentials."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Reads workspace global variables that frequently contain API keys and bearer tokens; a credential-disclosure surface."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.createEnvironment
+    object: Environment
+    action: createEnvironment
+    description: "Creates an environment (a named set of variables, often secrets)."
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Creates an environment that may store API credentials and connection settings used at request time; reversible."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.putEnvironment
+    object: Environment
+    action: putEnvironment
+    description: "Replaces all contents of an environment with the supplied data."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Overwrites an entire environment including any stored credentials; can leak or clobber secrets used by every request that references it."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.patchEnvironment
+    object: Environment
+    action: patchEnvironment
+    description: "Updates specific environment properties such as its name and variables."
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Modifies environment variables that may hold API credentials; reversible per-key change."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access (Private API Network governance) ----------
+  - id: postman.respondPrivateNetworkAddRequest
+    object: PrivateNetworkRequest
+    action: respondPrivateNetworkAddRequest
+    description: "Approves or denies a request to add a workspace to the team's Private API Network (managers only)."
+    category: Identity & Access
+    risk: high
+    business_impact: "Single-actor approval that adds a workspace to the org-wide internal API catalog; bypasses two-person review of what internal APIs become discoverable."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.addWorkspaceToPrivateNetwork
+    object: PrivateNetworkWorkspace
+    action: addWorkspaceToPrivateNetwork
+    description: "Publishes a workspace to the team's Private API Network."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Exposes a workspace's APIs to the entire team's Private API Network catalog; reversible by removal."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.removeWorkspaceFromPrivateNetwork
+    object: PrivateNetworkWorkspace
+    action: removeWorkspaceFromPrivateNetwork
+    description: "Removes a workspace from the team's Private API Network."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Withdraws a workspace from the internal API catalog; reversible but disrupts discoverability for the whole team."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.listPrivateNetworkWorkspaces
+    object: PrivateNetworkWorkspace
+    action: listPrivateNetworkWorkspaces
+    description: "Lists workspaces added to the team's Private API Network."
+    category: Identity & Access
+    risk: low
+    business_impact: "Enumerates the org's internal API catalog; informational read of access-controlled inventory."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.listPrivateNetworkAddRequests
+    object: PrivateNetworkRequest
+    action: listPrivateNetworkAddRequests
+    description: "Lists pending requests to add workspaces to the Private API Network."
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads the queue of pending internal-API-catalog access requests; informational."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Exposure (public publishing & visibility) ----------
+  - id: postman.publishMock
+    object: Mock
+    action: publishMock
+    description: "Publishes a mock server, setting its access control to public."
+    category: Data Access
+    risk: high
+    business_impact: "Sets a mock server's access control to public, exposing its endpoints and any embedded example data to anyone with the link."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.publishDocumentation
+    object: Documentation
+    action: publishDocumentation
+    description: "Publishes a collection's documentation, making it publicly available to anyone with the link."
+    category: Data Access
+    risk: high
+    business_impact: "Makes a collection's documentation publicly available, potentially exposing internal API structure, endpoints, and example payloads to the open internet."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.unpublishMock
+    object: Mock
+    action: unpublishMock
+    description: "Unpublishes a mock server, setting its access control to private."
+    category: Data Access
+    risk: medium
+    business_impact: "Reverts a mock server to private; removes public access and breaks any consumer relying on the published URL."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.unpublishDocumentation
+    object: Documentation
+    action: unpublishDocumentation
+    description: "Unpublishes a collection's documentation."
+    category: Data Access
+    risk: medium
+    business_impact: "Removes public documentation; reversible but breaks external links relying on it."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.updateWorkspace
+    object: Workspace
+    action: updateWorkspace
+    description: "Updates a workspace's properties such as its name or visibility."
+    category: Data Access
+    risk: high
+    business_impact: "Can change a workspace's visibility (e.g. private to public), exposing all of its collections, environments, and APIs beyond the team."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.createWorkspace
+    object: Workspace
+    action: createWorkspace
+    description: "Creates a new workspace."
+    category: Data Access
+    risk: low
+    business_impact: "Creates an empty workspace; reversible and low-impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Destructive ----------
+  - id: postman.deleteWorkspace
+    object: Workspace
+    action: deleteWorkspace
+    description: "Deletes an existing workspace."
+    category: Data Access
+    risk: critical
+    business_impact: "Destroys a workspace and every collection, environment, mock, and monitor inside it; not individually recoverable."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.deleteCollection
+    object: Collection
+    action: deleteCollection
+    description: "Deletes a collection."
+    category: Collections
+    risk: critical
+    business_impact: "Destroys a collection and all of its requests, responses, and folders; not individually recoverable."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.deleteEnvironment
+    object: Environment
+    action: deleteEnvironment
+    description: "Deletes an environment."
+    category: Secrets & Workflows
+    risk: critical
+    business_impact: "Destroys an environment and its stored variables, which may include credentials referenced by many requests; not individually recoverable."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.deleteMock
+    object: Mock
+    action: deleteMock
+    description: "Deletes a mock server."
+    category: Operations
+    risk: medium
+    business_impact: "Destroys a mock server; breaks any consumer pointed at its URL."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.deleteMonitor
+    object: Monitor
+    action: deleteMonitor
+    description: "Deletes a monitor."
+    category: Operations
+    risk: medium
+    business_impact: "Destroys a scheduled monitor; silently removes a health/uptime check without alerting."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.deleteSpec
+    object: Spec
+    action: deleteSpec
+    description: "Deletes an API specification."
+    category: Collections
+    risk: critical
+    business_impact: "Destroys an API specification in Spec Hub and its generated linkage; not individually recoverable."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.deleteSpecFile
+    object: SpecFile
+    action: deleteSpecFile
+    description: "Deletes a file within an API specification."
+    category: Collections
+    risk: medium
+    business_impact: "Removes a file from an API specification; alters the spec definition irreversibly per-file."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.deleteCollectionFolder
+    object: Folder
+    action: deleteCollectionFolder
+    description: "Deletes a folder in a collection."
+    category: Collections
+    risk: medium
+    business_impact: "Destroys a folder and the requests and responses nested under it."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.deleteCollectionRequest
+    object: Request
+    action: deleteCollectionRequest
+    description: "Deletes a request in a collection."
+    category: Collections
+    risk: medium
+    business_impact: "Destroys a saved request including its URL, auth config, and any embedded credentials."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.deleteCollectionResponse
+    object: Response
+    action: deleteCollectionResponse
+    description: "Deletes a saved response in a collection."
+    category: Collections
+    risk: medium
+    business_impact: "Destroys a saved example response, which may contain captured payload data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.deleteCollectionComment
+    object: Comment
+    action: deleteCollectionComment
+    description: "Deletes a comment from a collection."
+    category: Collections
+    risk: low
+    business_impact: "Removes a collaboration comment from a collection; minor, reversible by re-posting."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.deleteApiCollectionComment
+    object: Comment
+    action: deleteApiCollectionComment
+    description: "Deletes a comment from an API's collection."
+    category: Collections
+    risk: low
+    business_impact: "Removes a collaboration comment from an API's collection; minor."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.deleteFolderComment
+    object: Comment
+    action: deleteFolderComment
+    description: "Deletes a comment from a folder."
+    category: Collections
+    risk: low
+    business_impact: "Removes a collaboration comment from a folder; minor."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.deleteRequestComment
+    object: Comment
+    action: deleteRequestComment
+    description: "Deletes a comment from a request."
+    category: Collections
+    risk: low
+    business_impact: "Removes a collaboration comment from a request; minor."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.deleteResponseComment
+    object: Comment
+    action: deleteResponseComment
+    description: "Deletes a comment from a response."
+    category: Collections
+    risk: low
+    business_impact: "Removes a collaboration comment from a response; minor."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Execution ----------
+  - id: postman.runCollection
+    object: Collection
+    action: runCollection
+    description: "Runs a Postman collection by ID with test results and execution statistics."
+    category: Operations
+    risk: medium
+    business_impact: "Executes every request in a collection against live target systems using a selected environment's credentials; performs real, potentially state-changing API calls."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.runMonitor
+    object: Monitor
+    action: runMonitor
+    description: "Runs a monitor on demand and returns its results."
+    category: Operations
+    risk: medium
+    business_impact: "Triggers an on-demand monitor run, executing its collection against live targets outside the normal schedule."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.createMonitor
+    object: Monitor
+    action: createMonitor
+    description: "Creates a scheduled monitor for a collection."
+    category: Operations
+    risk: medium
+    business_impact: "Creates a scheduled job that repeatedly runs a collection against live systems on a recurring basis."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.updateMonitor
+    object: Monitor
+    action: updateMonitor
+    description: "Updates a monitor's configuration."
+    category: Operations
+    risk: medium
+    business_impact: "Changes a monitor's schedule or target configuration; alters automated execution against live systems."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.createMock
+    object: Mock
+    action: createMock
+    description: "Creates a mock server from a collection."
+    category: Operations
+    risk: low
+    business_impact: "Stands up a mock server backed by a collection; private by default and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.updateMock
+    object: Mock
+    action: updateMock
+    description: "Updates a mock server's configuration."
+    category: Operations
+    risk: low
+    business_impact: "Changes a mock server's settings; reversible and low-impact while private."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Collections & Requests (definition writes) ----------
+  # Collections, requests, and responses embed URLs, auth configuration, and
+  # often hard-coded credentials, so create/replace operations here are
+  # security-relevant change-management actions.
+  - id: postman.createCollection
+    object: Collection
+    action: createCollection
+    description: "Creates a collection using the Postman Collection v2.1.0 schema."
+    category: Collections
+    risk: medium
+    business_impact: "Creates a collection that can embed request URLs, auth config, and credentials; reversible."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.putCollection
+    object: Collection
+    action: putCollection
+    description: "Replaces the entire contents of a collection."
+    category: Collections
+    risk: high
+    business_impact: "Overwrites a collection wholesale including all requests, auth config, and embedded credentials; can clobber shared team definitions."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.patchCollection
+    object: Collection
+    action: patchCollection
+    description: "Updates specific collection properties such as name, events, or auth."
+    category: Collections
+    risk: medium
+    business_impact: "Modifies a collection's properties including pre-request scripts and auth; reversible per-field change."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.duplicateCollection
+    object: Collection
+    action: duplicateCollection
+    description: "Creates a duplicate of a collection in another workspace."
+    category: Collections
+    risk: medium
+    business_impact: "Copies a collection (including any embedded credentials) into another workspace, potentially crossing a visibility or access boundary."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: postman.createCollectionFork
+    object: Collection
+    action: createCollectionFork
+    description: "Creates a fork of a collection."
+    category: Collections
+    risk: low
+    business_impact: "Forks a collection into a workspace; reversible and additive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.mergeCollectionFork
+    object: Collection
+    action: mergeCollectionFork
+    description: "Merges a forked collection back into its parent (deprecated)."
+    category: Collections
+    risk: medium
+    business_impact: "Merges forked changes into the parent collection, overwriting shared team definitions."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: postman.pullCollectionChanges
+    object: Collection
+    action: pullCollectionChanges
+    description: "Pulls changes from a parent collection into a fork."
+    category: Collections
+    risk: low
+    business_impact: "Pulls upstream changes into a forked collection; reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.createCollectionFolder
+    object: Folder
+    action: createCollectionFolder
+    description: "Creates a folder in a collection."
+    category: Collections
+    risk: low
+    business_impact: "Adds an organizational folder to a collection; reversible and low-impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.updateCollectionFolder
+    object: Folder
+    action: updateCollectionFolder
+    description: "Updates a folder in a collection."
+    category: Collections
+    risk: low
+    business_impact: "Renames or reconfigures a collection folder; reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.transferCollectionFolders
+    object: Folder
+    action: transferCollectionFolders
+    description: "Copies or moves folders into a collection or folder."
+    category: Collections
+    risk: low
+    business_impact: "Reorganizes folders across collections; reversible."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: postman.createCollectionRequest
+    object: Request
+    action: createCollectionRequest
+    description: "Creates a request in a collection."
+    category: Collections
+    risk: medium
+    business_impact: "Adds a request that can embed a target URL, auth config, and credentials; reversible."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.updateCollectionRequest
+    object: Request
+    action: updateCollectionRequest
+    description: "Updates a request in a collection."
+    category: Collections
+    risk: medium
+    business_impact: "Modifies a request's URL, auth, or body; can repoint a request at a different target or alter its credentials."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.transferCollectionRequests
+    object: Request
+    action: transferCollectionRequests
+    description: "Copies or moves requests into a collection or folder."
+    category: Collections
+    risk: low
+    business_impact: "Reorganizes requests across collections; reversible."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: postman.createCollectionResponse
+    object: Response
+    action: createCollectionResponse
+    description: "Creates a saved example response in a collection."
+    category: Collections
+    risk: low
+    business_impact: "Saves an example response that may capture payload data; reversible."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: postman.updateCollectionResponse
+    object: Response
+    action: updateCollectionResponse
+    description: "Updates a saved example response in a collection."
+    category: Collections
+    risk: low
+    business_impact: "Modifies a saved example response; reversible."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: postman.transferCollectionResponses
+    object: Response
+    action: transferCollectionResponses
+    description: "Copies or moves responses into a request."
+    category: Collections
+    risk: low
+    business_impact: "Reorganizes saved responses; reversible."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: postman.updateCollectionTags
+    object: Tag
+    action: updateCollectionTags
+    description: "Replaces all tags associated with a collection."
+    category: Collections
+    risk: low
+    business_impact: "Replaces a collection's tags; metadata-only and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.updateWorkspaceTags
+    object: Tag
+    action: updateWorkspaceTags
+    description: "Replaces all tags associated with a workspace."
+    category: Collections
+    risk: low
+    business_impact: "Replaces a workspace's tags; metadata-only and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- API Specifications ----------
+  - id: postman.createSpec
+    object: Spec
+    action: createSpec
+    description: "Creates an API specification in Spec Hub."
+    category: Collections
+    risk: low
+    business_impact: "Creates an API specification; reversible and additive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.createSpecFile
+    object: SpecFile
+    action: createSpecFile
+    description: "Creates a file within an API specification."
+    category: Collections
+    risk: low
+    business_impact: "Adds a file to an API specification; reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.updateSpecFile
+    object: SpecFile
+    action: updateSpecFile
+    description: "Updates a file within an API specification."
+    category: Collections
+    risk: low
+    business_impact: "Modifies an API specification file; reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.updateSpecProperties
+    object: Spec
+    action: updateSpecProperties
+    description: "Updates an API specification's properties such as its name."
+    category: Collections
+    risk: low
+    business_impact: "Changes spec metadata such as its name; reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.generateCollection
+    object: Collection
+    action: generateCollection
+    description: "Creates a collection from an API specification."
+    category: Collections
+    risk: low
+    business_impact: "Generates a collection from a spec; additive and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.generateSpecFromCollection
+    object: Spec
+    action: generateSpecFromCollection
+    description: "Generates an API specification from a collection."
+    category: Collections
+    risk: low
+    business_impact: "Generates a spec from a collection; additive and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.syncCollectionWithSpec
+    object: Collection
+    action: syncCollectionWithSpec
+    description: "Syncs a collection generated from an API specification."
+    category: Collections
+    risk: medium
+    business_impact: "Overwrites a generated collection to match its spec; can clobber manual edits."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: postman.syncSpecWithCollection
+    object: Spec
+    action: syncSpecWithCollection
+    description: "Syncs an API specification linked to a collection."
+    category: Collections
+    risk: medium
+    business_impact: "Overwrites a spec to match its linked collection; can clobber manual spec edits."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Comments (collaboration) ----------
+  - id: postman.createCollectionComment
+    object: Comment
+    action: createCollectionComment
+    description: "Creates a comment on a collection."
+    category: Collections
+    risk: low
+    business_impact: "Posts a collaboration comment on a collection; visible to collaborators and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.updateCollectionComment
+    object: Comment
+    action: updateCollectionComment
+    description: "Updates a comment on a collection."
+    category: Collections
+    risk: low
+    business_impact: "Edits a collaboration comment on a collection; reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.updateApiCollectionComment
+    object: Comment
+    action: updateApiCollectionComment
+    description: "Updates a comment on an API's collection."
+    category: Collections
+    risk: low
+    business_impact: "Edits a collaboration comment on an API's collection; reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.createFolderComment
+    object: Comment
+    action: createFolderComment
+    description: "Creates a comment on a folder."
+    category: Collections
+    risk: low
+    business_impact: "Posts a collaboration comment on a folder; reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.updateFolderComment
+    object: Comment
+    action: updateFolderComment
+    description: "Updates a comment on a folder."
+    category: Collections
+    risk: low
+    business_impact: "Edits a collaboration comment on a folder; reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.createRequestComment
+    object: Comment
+    action: createRequestComment
+    description: "Creates a comment on a request."
+    category: Collections
+    risk: low
+    business_impact: "Posts a collaboration comment on a request; reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.updateRequestComment
+    object: Comment
+    action: updateRequestComment
+    description: "Updates a comment on a request."
+    category: Collections
+    risk: low
+    business_impact: "Edits a collaboration comment on a request; reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.createResponseComment
+    object: Comment
+    action: createResponseComment
+    description: "Creates a comment on a response."
+    category: Collections
+    risk: low
+    business_impact: "Posts a collaboration comment on a response; reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.updateResponseComment
+    object: Comment
+    action: updateResponseComment
+    description: "Updates a comment on a response."
+    category: Collections
+    risk: low
+    business_impact: "Edits a collaboration comment on a response; reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.resolveCommentThread
+    object: Comment
+    action: resolveCommentThread
+    description: "Resolves a comment and its associated replies."
+    category: Collections
+    risk: low
+    business_impact: "Marks a comment thread resolved; reversible collaboration state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Sensitive Reads ----------
+  - id: postman.getAnalyticsData
+    object: Analytics
+    action: getAnalyticsData
+    description: "Returns analytics data for a resource, metrics, and time range."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns team-wide usage analytics that can reveal individual members' activity patterns across the org."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: postman.getAnalyticsMetadata
+    object: Analytics
+    action: getAnalyticsMetadata
+    description: "Returns the catalog of available analytics resources and metrics."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the catalog of analytics dimensions; metadata only, no individual data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.getAuthenticatedUser
+    object: User
+    action: getAuthenticatedUser
+    description: "Returns information about the authenticated user."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the calling user's profile and team identity; single-record personal data read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.getSpecDefinition
+    object: Spec
+    action: getSpecDefinition
+    description: "Returns the complete contents of an API specification's definition."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the full definition of an API specification, exposing the complete internal API surface and schema."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: postman.searchPostmanElements
+    object: "*"
+    action: searchPostmanElements
+    description: "Searches across Postman entities (requests, collections, workspaces, specs, and more)."
+    category: Data Access
+    risk: medium
+    business_impact: "Searches across all accessible Postman entities, enabling broad discovery of collections, requests, and any data embedded in them."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: postman.getWorkspaces
+    object: Workspace
+    action: getWorkspaces
+    description: "Lists all workspaces the user has access to."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates all accessible workspaces; informational inventory read."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.getCollections
+    object: Collection
+    action: getCollections
+    description: "Lists collections, scoped by workspace."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates collections within a workspace; informational inventory read."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: postman.getEnabledTools
+    object: Tool
+    action: getEnabledTools
+    description: "Lists the tools currently enabled on the MCP server."
+    category: Data Access
+    risk: low
+    business_impact: "Reports which MCP tools are available in the current configuration; metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

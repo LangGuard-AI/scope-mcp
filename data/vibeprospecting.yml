@@ -1,0 +1,141 @@
+schema_version: "1.1"
+platform: vibeprospecting
+display_name: Vibe Prospecting
+source: langguard-editorial
+updated: "2026-06"
+reference: https://developers.explorium.ai/mcp-docs/vibeprospecting
+actions:
+  # ---------- Prospect Data (personal data) ----------
+  - id: vibeprospecting.fetch-prospects
+    object: Prospect
+    action: fetch-prospects
+    description: "Fetch employees from companies using detailed filters including job level, department, location, experience, and company characteristics."
+    category: Data Access
+    risk: high
+    business_impact: "Bulk retrieval of identifiable professionals from a third-party data store; brings external personal data into the org's processing scope as a controller."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: vibeprospecting.enrich-prospects
+    object: Prospect
+    action: enrich-prospects
+    description: "Enrich prospects with additional attributes including contact information such as work emails and phone numbers."
+    category: Data Access
+    risk: high
+    business_impact: "Resolves identifiable individuals to direct contact details (email, phone); acquisition of sensitive personal data subject to consent and processing-basis rules."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: vibeprospecting.match-prospects
+    object: Prospect
+    action: match-prospects
+    description: "Match specific individuals to get their Explorium prospect IDs from verified professional and contact data."
+    category: Data Access
+    risk: high
+    business_impact: "Resolves named individuals to a persistent third-party identifier; processes personal data of identifiable people."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: vibeprospecting.fetch-prospects-events
+    object: Prospect
+    action: fetch-prospects-events
+    description: "Retrieves prospect-related events including role changes, company changes, and job anniversaries."
+    category: Data Access
+    risk: high
+    business_impact: "Returns timeline data on identifiable individuals (job moves, anniversaries); processing of personal data for profiling-adjacent outreach."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: vibeprospecting.fetch-prospects-statistics
+    object: Prospect
+    action: fetch-prospects-statistics
+    description: "Fetch aggregated insights into prospects by department and geographic distribution."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns aggregated, non-individual prospect counts by department and geography; lower re-identification risk than record-level pulls but small cohorts can be identifying."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Company Data (firmographic, company-level) ----------
+  - id: vibeprospecting.fetch-businesses
+    object: Business
+    action: fetch-businesses
+    description: "Fetch businesses from the Explorium API using filters such as revenue, company size, age, location, industry categories, and technology stack."
+    category: Data Access
+    risk: low
+    business_impact: "Returns company-level firmographic and technographic records; no personal data, reversible read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: vibeprospecting.match-business
+    object: Business
+    action: match-business
+    description: "Get Explorium business IDs from business name and/or domain in bulk."
+    category: Data Access
+    risk: low
+    business_impact: "Resolves company names/domains to a persistent business identifier; company-level data only, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: vibeprospecting.enrich-business
+    object: Business
+    action: enrich-business
+    description: "Enrich businesses with additional firmographic, technographic, and intelligence attributes."
+    category: Data Access
+    risk: low
+    business_impact: "Adds company-level attributes (firmographics, tech stack, ratings) to a business record; no personal data, reversible read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: vibeprospecting.fetch-businesses-events
+    object: Business
+    action: fetch-businesses-events
+    description: "Retrieves business-related events including funding rounds, office changes, partnerships, awards, and M&A activity."
+    category: Data Access
+    risk: low
+    business_impact: "Returns company-level event history (funding, M&A, office changes); public-company-intelligence data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: vibeprospecting.fetch-businesses-statistics
+    object: Business
+    action: fetch-businesses-statistics
+    description: "Fetch aggregated insights into businesses by industry, revenue, employee count, and geographic distribution."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregated company-level statistics; no personal data, reversible read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Shared ----------
+  - id: vibeprospecting.autocomplete
+    object: FilterValue
+    action: autocomplete
+    description: "Get valid autocomplete values for filter fields (google_category, naics_category, linkedin_category, company_tech_stack_tech, job_title)."
+    category: Data Access
+    risk: low
+    business_impact: "Returns valid filter-value suggestions from controlled vocabularies; metadata helper with no personal or company-record data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

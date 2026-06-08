@@ -1,0 +1,783 @@
+schema_version: "1.1"
+platform: datadog
+display_name: Datadog
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.datadoghq.com/bits_ai/mcp_server/tools/
+# Source: live tools/list was OAuth-gated (HTTP 401); tool ids extracted verbatim from
+# the vendor MCP tools reference page (148 tools across 21 toolsets). This file covers
+# the risk-bearing surface: all writes/deletes, code execution, workflow execution,
+# security-control mutations, and the PII-plausible reads (logs, RUM, traces/spans,
+# error-tracking, cases, security signals, DDSQL). Pure-noise toolsets are trimmed and
+# noted at the bottom of this file.
+actions:
+  # ---------- Code Execution ----------
+  - id: datadog.execute_code
+    object: Sandbox
+    action: execute_code
+    description: "Executes AI agent-authored TypeScript in a Datadog-managed sandbox that can query and modify any Datadog resource the caller's RBAC permits."
+    category: Platform & DevOps
+    risk: critical
+    business_impact: "Runs arbitrary agent-authored code against Datadog APIs under the caller's identity; can read or mutate any resource the user can access, bypassing per-tool review."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Security ----------
+  - id: datadog.create_datadog_security_suppression
+    object: SecuritySuppression
+    action: create_datadog_security_suppression
+    description: "Creates a suppression rule that prevents a detection rule from generating signals for matching conditions."
+    category: Identity & Access
+    risk: critical
+    business_impact: "Suppresses future security detections; a single actor can silence alerting on real threats without a second approver."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datadog.update_datadog_security_suppression
+    object: SecuritySuppression
+    action: update_datadog_security_suppression
+    description: "Updates an existing security suppression rule."
+    category: Identity & Access
+    risk: critical
+    business_impact: "Weakens an active security detection gate; a single actor can widen a suppression to silence future detections, the direct analogue of disabling change-control protection."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datadog.delete_datadog_security_suppression
+    object: SecuritySuppression
+    action: delete_datadog_security_suppression
+    description: "Deletes a security suppression rule."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Removes a suppression rule; reversible by recreating it, but changes the active detection posture."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datadog.update_datadog_security_signals_triage
+    object: SecuritySignal
+    action: update_datadog_security_signals_triage
+    description: "Updates the triage state or assignee of up to 500 security signals in bulk."
+    category: Identity & Access
+    risk: high
+    business_impact: "Bulk-closes or reassigns security signals; a single actor can mark active threats resolved, bypassing incident-review controls."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datadog.datadog_secrets_scan
+    object: Secret
+    action: datadog_secrets_scan
+    description: "Scans code for hardcoded secrets and credentials (AWS keys, API keys, passwords, tokens, private keys, database credentials)."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Surfaces hardcoded secrets and credentials in code; results expose live credential material if mishandled."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datadog.search_datadog_security_signals
+    object: SecuritySignal
+    action: search_datadog_security_signals
+    description: "Searches security signals from Cloud SIEM, App & API Protection, and Workload Protection."
+    category: Operations
+    risk: high
+    business_impact: "Returns security detection signals that can include attacker activity, source IPs, and impacted-user identifiers."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.analyze_datadog_security_signals
+    object: SecuritySignal
+    action: analyze_datadog_security_signals
+    description: "Analyzes security signals using SQL queries for aggregations, grouping, and trend analysis."
+    category: Operations
+    risk: high
+    business_impact: "Runs SQL aggregations over security signals; can extract patterns across signals containing source IPs and user identifiers."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.get_datadog_security_signal
+    object: SecuritySignal
+    action: get_datadog_security_signal
+    description: "Retrieves the full details of a single security signal by ID, including triage state and case correlations."
+    category: Operations
+    risk: medium
+    business_impact: "Returns one security signal's full detail, which may include source IPs and impacted-user identifiers."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.list_datadog_security_detection_rules
+    object: DetectionRule
+    action: list_datadog_security_detection_rules
+    description: "Lists detection rules that define when security signals are generated."
+    category: Operations
+    risk: low
+    business_impact: "Reads the org's security detection-rule definitions; exposes the detection posture but not personal data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datadog.analyze_security_findings
+    object: SecurityFinding
+    action: analyze_security_findings
+    description: "Analyzes security findings using SQL queries over the last 24 hours of live data."
+    category: Operations
+    risk: high
+    business_impact: "Runs SQL over live security/posture findings; surfaces misconfigurations and vulnerable assets across the estate."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.search_security_findings
+    object: SecurityFinding
+    action: search_security_findings
+    description: "Retrieves full security finding details when SQL analysis is insufficient."
+    category: Operations
+    risk: medium
+    business_impact: "Returns full security finding objects describing vulnerable or misconfigured assets."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Logs & Query (PII-bearing data access) ----------
+  - id: datadog.search_datadog_logs
+    object: Log
+    action: search_datadog_logs
+    description: "Searches logs with filters (time, query, service, host, storage tier) and returns log details."
+    category: Data Access
+    risk: high
+    business_impact: "Bulk-reads application logs that commonly contain PII, request payloads, and credentials in plaintext."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.analyze_datadog_logs
+    object: Log
+    action: analyze_datadog_logs
+    description: "Analyzes logs using SQL queries for counting, aggregations, and numerical analysis."
+    category: Data Access
+    risk: high
+    business_impact: "Runs SQL aggregations across the log estate; can extract patterns from logs containing PII at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.ddsql_run_query
+    object: Dataset
+    action: ddsql_run_query
+    description: "Runs a DDSQL query across infrastructure resources, logs, metrics, RUM, and spans."
+    category: Data Access
+    risk: high
+    business_impact: "SQL access across logs, RUM, and spans in one query; a single statement can exfiltrate PII spanning multiple data sources."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.ddsql_create_link
+    object: Dataset
+    action: ddsql_create_link
+    description: "Generates a Datadog UI link to the DDSQL Editor with a given query pre-populated."
+    category: Data Access
+    risk: low
+    business_impact: "Builds a shareable query link; constructs but does not execute a query, surfacing no data directly."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- RUM (real-user monitoring; session/PII data) ----------
+  - id: datadog.search_datadog_rum_events
+    object: RUMEvent
+    action: search_datadog_rum_events
+    description: "Searches Datadog RUM events using advanced query syntax."
+    category: Data Access
+    risk: high
+    business_impact: "Reads real-user-monitoring events containing end-user sessions, IP addresses, geolocation, and behavior data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.get_rum_insight
+    object: RUMApplication
+    action: get_rum_insight
+    description: "Returns aggregated RUM insights: waterfall, long tasks, vital distributions, and tag analysis."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns aggregated real-user-monitoring insights; aggregated but derived from end-user session data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- APM Traces & Spans (may carry PII in tags/payloads) ----------
+  - id: datadog.get_datadog_trace
+    object: Trace
+    action: get_datadog_trace
+    description: "Fetches a complete trace from Datadog APM using a trace ID."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns a full distributed trace whose span tags can embed user identifiers and request payloads."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.search_datadog_spans
+    object: Span
+    action: search_datadog_spans
+    description: "Retrieves spans from APM traces with filters such as service, time, and resource."
+    category: Data Access
+    risk: medium
+    business_impact: "Searches APM spans whose tags can embed user identifiers and request data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.apm_search_spans
+    object: Span
+    action: apm_search_spans
+    description: "Searches for spans using APM query syntax with pagination and tag filtering."
+    category: Data Access
+    risk: medium
+    business_impact: "Searches APM spans whose tags can embed user identifiers and request data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Error Tracking (stack traces / user context may carry PII) ----------
+  - id: datadog.search_datadog_error_tracking_issues
+    object: ErrorTrackingIssue
+    action: search_datadog_error_tracking_issues
+    description: "Searches Error Tracking Issues across RUM, Logs, and Traces."
+    category: Issues
+    risk: medium
+    business_impact: "Searches error issues that may surface stack traces, request data, and user context containing PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.get_datadog_error_tracking_issue
+    object: ErrorTrackingIssue
+    action: get_datadog_error_tracking_issue
+    description: "Retrieves detailed information about a specific Error Tracking Issue."
+    category: Issues
+    risk: medium
+    business_impact: "Returns full error-issue detail including stack traces and user context that may contain PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.update_datadog_error_tracking_issue
+    object: ErrorTrackingIssue
+    action: update_datadog_error_tracking_issue
+    description: "Updates the state or assignee of an Error Tracking Issue."
+    category: Issues
+    risk: low
+    business_impact: "Changes the workflow state or assignee of an error issue; reversible and individually audited."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Cases (case content + user directory PII) ----------
+  - id: datadog.create_datadog_case
+    object: Case
+    action: create_datadog_case
+    description: "Creates a new Case Management case with a title, project, and optional fields."
+    category: Operations
+    risk: low
+    business_impact: "Opens a case-management case; reversible and individually audited, may reference individuals in free-text fields."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.update_datadog_case
+    object: Case
+    action: update_datadog_case
+    description: "Updates an existing case's status, priority, assignee, due date, and custom attributes."
+    category: Operations
+    risk: low
+    business_impact: "Updates case fields; reversible and individually audited, may reference individuals in free-text fields."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.add_comment_to_datadog_case
+    object: Case
+    action: add_comment_to_datadog_case
+    description: "Adds a markdown comment to a case's timeline."
+    category: Operations
+    risk: low
+    business_impact: "Appends a comment to a case timeline; reversible and individually audited."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.link_jira_issue_to_datadog_case
+    object: Case
+    action: link_jira_issue_to_datadog_case
+    description: "Links a Jira issue to a Datadog case."
+    category: Operations
+    risk: low
+    business_impact: "Associates a Jira issue with a case; reversible cross-system link, no data destruction."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datadog.search_datadog_cases
+    object: Case
+    action: search_datadog_cases
+    description: "Searches Case Management cases with filters including status, priority, project, and assignee."
+    category: Operations
+    risk: medium
+    business_impact: "Searches cases whose content and assignees may identify individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.get_datadog_case
+    object: Case
+    action: get_datadog_case
+    description: "Retrieves a specific case including title, status, assignee, timeline activity, and custom attributes."
+    category: Operations
+    risk: medium
+    business_impact: "Returns full case detail including timeline comments that may identify individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.search_datadog_users
+    object: User
+    action: search_datadog_users
+    description: "Searches for Datadog users by email, name, or handle."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Reads the organization's user directory (emails, names, handles), exposing employee PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Incidents ----------
+  - id: datadog.get_datadog_incident
+    object: Incident
+    action: get_datadog_incident
+    description: "Retrieves detailed information about an incident."
+    category: Operations
+    risk: medium
+    business_impact: "Returns full incident detail including responder identities and free-text notes that may contain PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.search_datadog_incidents
+    object: Incident
+    action: search_datadog_incidents
+    description: "Retrieves a list of Datadog incidents, including state, severity, and metadata."
+    category: Operations
+    risk: low
+    business_impact: "Lists incidents with state and severity metadata; reveals operational posture but limited personal data."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Monitors & Alerting ----------
+  - id: datadog.create_datadog_monitor
+    object: Monitor
+    action: create_datadog_monitor
+    description: "Creates a Datadog monitor in draft mode (no notifications, priority 5)."
+    category: Operations
+    risk: medium
+    business_impact: "Creates an alerting monitor; reversible and gated to draft mode, but shapes what the org is alerted on."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datadog.search_datadog_monitors
+    object: Monitor
+    action: search_datadog_monitors
+    description: "Retrieves information about Datadog monitors, including statuses, thresholds, and alert conditions."
+    category: Operations
+    risk: low
+    business_impact: "Reads monitor configuration and status; reveals alerting posture but no personal data."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Dashboards & Notebooks ----------
+  - id: datadog.upsert_datadog_dashboard
+    object: Dashboard
+    action: upsert_datadog_dashboard
+    description: "Creates or updates a Datadog dashboard."
+    category: Operations
+    risk: medium
+    business_impact: "Creates or overwrites a dashboard; reversible business write affecting shared observability views."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datadog.delete_datadog_dashboard
+    object: Dashboard
+    action: delete_datadog_dashboard
+    description: "Permanently deletes a Datadog dashboard by ID; cannot be undone."
+    category: Operations
+    risk: high
+    business_impact: "Permanently deletes a dashboard with no recovery; a single actor removes a shared observability artifact irreversibly."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datadog.create_datadog_notebook
+    object: Notebook
+    action: create_datadog_notebook
+    description: "Creates a new Datadog notebook."
+    category: Operations
+    risk: low
+    business_impact: "Creates a notebook; reversible and individually audited."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datadog.edit_datadog_notebook
+    object: Notebook
+    action: edit_datadog_notebook
+    description: "Edits an existing Datadog notebook."
+    category: Operations
+    risk: low
+    business_impact: "Edits notebook content; reversible business write to a shared artifact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Feature Flags (production behavior control) ----------
+  - id: datadog.create_datadog_feature_flag
+    object: FeatureFlag
+    action: create_datadog_feature_flag
+    description: "Creates a new feature flag."
+    category: Operations
+    risk: medium
+    business_impact: "Creates a feature flag that can gate production behavior; reversible but affects what users experience."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datadog.update_datadog_feature_flag_environment
+    object: FeatureFlag
+    action: update_datadog_feature_flag_environment
+    description: "Updates a feature flag configuration in a specific environment."
+    category: Operations
+    risk: high
+    business_impact: "Changes a feature flag's production rollout; can unilaterally enable or disable functionality for live users without a change-review gate."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datadog.sync_datadog_feature_flag_allocations
+    object: FeatureFlag
+    action: sync_datadog_feature_flag_allocations
+    description: "Syncs feature flag allocations for a specific environment."
+    category: Operations
+    risk: high
+    business_impact: "Pushes feature-flag allocations live in an environment; alters production user targeting without staged review."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Workflow Automation (execution) ----------
+  - id: datadog.execute_datadog_workflow
+    object: Workflow
+    action: execute_datadog_workflow
+    description: "Executes a published workflow that has an agent trigger, with optional input parameters."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Triggers an automation workflow that can take arbitrary side-effecting actions across integrated systems."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.update_datadog_workflow_with_agent_trigger
+    object: Workflow
+    action: update_datadog_workflow_with_agent_trigger
+    description: "Adds an agent trigger to a workflow and publishes it, enabling agent execution."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Publishes a workflow with an agent trigger; expands what an AI agent can execute autonomously without a change-review gate."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Test Optimization (CI suppression) ----------
+  - id: datadog.update_datadog_flaky_test_states
+    object: FlakyTest
+    action: update_datadog_flaky_test_states
+    description: "Sets flaky tests to quarantined, disabled, fixed, or active; reversible write requiring explicit user approval."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Quarantines or disables CI tests, suppressing failures; can mask real regressions in the delivery pipeline though changes are reversible."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Synthetics ----------
+  - id: datadog.edit_synthetics_tests
+    object: SyntheticsTest
+    action: edit_synthetics_tests
+    description: "Edits Datadog Synthetic HTTP API tests."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Modifies synthetic uptime tests; can disable or alter monitoring that gates production health checks."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.synthetics_test_wizard
+    object: SyntheticsTest
+    action: synthetics_test_wizard
+    description: "Previews and creates Datadog Synthetics HTTP API tests."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Creates synthetic HTTP tests that issue outbound requests to configured endpoints; reversible business write."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Reference Tables ----------
+  - id: datadog.create_reference_table
+    object: ReferenceTable
+    action: create_reference_table
+    description: "Creates a new reference table backed by a CSV file in S3, GCS, or Azure Blob Storage."
+    category: Data Access
+    risk: medium
+    business_impact: "Creates a reference table from a customer-supplied CSV that may contain enrichment data including PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.append_reference_table_rows
+    object: ReferenceTable
+    action: append_reference_table_rows
+    description: "Appends new rows to an existing reference table; add-only, no modification or deletion."
+    category: Data Access
+    risk: low
+    business_impact: "Adds rows to a reference table; add-only and reversible, may introduce enrichment data containing PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.get_reference_table_rows
+    object: ReferenceTable
+    action: get_reference_table_rows
+    description: "Retrieves specific rows from a reference table by primary key."
+    category: Data Access
+    risk: low
+    business_impact: "Reads reference-table rows that may contain enrichment data including PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Database Monitoring (query text may embed PII literals) ----------
+  - id: datadog.get_datadog_database_query_statement
+    object: DatabaseQuery
+    action: get_datadog_database_query_statement
+    description: "Retrieves the SQL statement text for a given query signature."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns raw SQL statement text whose literals can embed personal data and credentials."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.search_datadog_database_samples
+    object: DatabaseQuery
+    action: search_datadog_database_samples
+    description: "Searches Database Monitoring query samples representing individual query executions with performance metrics."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns sampled query executions whose statement text can embed personal data literals."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.get_datadog_database_schemas
+    object: DatabaseSchema
+    action: get_datadog_database_schemas
+    description: "Fetches schema definitions (columns, indexes, foreign keys, partitions) for database objects."
+    category: Data Access
+    risk: low
+    business_impact: "Reads database schema metadata; reveals data model structure but not row-level data."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Infrastructure Reads (telemetry, no personal data) ----------
+  - id: datadog.search_datadog_events
+    object: Event
+    action: search_datadog_events
+    description: "Searches events like monitor alerts, deployment notifications, infrastructure changes, and security findings."
+    category: Operations
+    risk: low
+    business_impact: "Reads operational event stream; reveals deployment and alerting activity but not personal data."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datadog.get_datadog_metric
+    object: Metric
+    action: get_datadog_metric
+    description: "Queries and analyzes historical or real-time metric data with custom queries and aggregations."
+    category: Operations
+    risk: low
+    business_impact: "Reads infrastructure metric timeseries; numeric telemetry with no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datadog.search_datadog_hosts
+    object: Host
+    action: search_datadog_hosts
+    description: "Lists and provides information about monitored hosts, supporting filtering and searching."
+    category: Operations
+    risk: low
+    business_impact: "Lists monitored hosts and their metadata; infrastructure inventory with no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datadog.search_datadog_services
+    object: Service
+    action: search_datadog_services
+    description: "Lists services in Datadog's Catalog with details and team information."
+    category: Operations
+    risk: low
+    business_impact: "Reads the service catalog including owning-team metadata; operational inventory data."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datadog.search_datadog_k8s_resources
+    object: KubernetesResource
+    action: search_datadog_k8s_resources
+    description: "Searches Kubernetes resources across all clusters without local cluster access."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Reads Kubernetes resource state across clusters; infrastructure metadata with no personal data."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datadog.get_datadog_k8s_manifest
+    object: KubernetesResource
+    action: get_datadog_k8s_manifest
+    description: "Retrieves the YAML manifest for a specific Kubernetes resource."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Returns a Kubernetes manifest whose env vars and annotations can expose configuration secrets."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datadog.search_dora_deployments
+    object: Deployment
+    action: search_dora_deployments
+    description: "Searches DORA deployment events with filters, or fetches a single deployment by ID."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Reads deployment events and DORA delivery data; CI/CD metadata with no personal data."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datadog.search_datadog_ci_pipeline_events
+    object: PipelineEvent
+    action: search_datadog_ci_pipeline_events
+    description: "Searches CI pipeline events with filters and returns details."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Reads CI pipeline execution events; build/delivery metadata with no personal data."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Trimmed toolsets (read-only helpers / no-data utilities, omitted) ----------
+  # The Datadog MCP server exposes 148 verbatim tools across 21 toolsets. This file
+  # curates the 61 risk-bearing tools (every create/update/delete/edit/upsert/execute/
+  # sync/append write, plus the PII-plausible reads: logs, RUM, traces/spans, error
+  # tracking, cases, security signals, DDSQL, reference tables, DB query text). Both
+  # destructive deletes (delete_datadog_dashboard, delete_datadog_security_suppression)
+  # are included.
+  #
+  # The 87 omitted tools are non-risk-bearing and an audit does not need to gate them:
+  #   - Onboarding toolset (7): guided setup walkthroughs, no data access.
+  #   - Widget/notebook helpers: get_widget, get_widget_reference[_compressed],
+  #     validate_dashboard_widget, validate_notebook_cell[s], verify_widget_data,
+  #     visualize_tabular_data, swap_widget_type, search_datadog_widgets, ask_widget_expert.
+  #   - Schema/spec getters: ddsql_get_spec, ddsql_schema_*, *_schema getters for security
+  #     signals / detection rules / findings.
+  #   - Infra-telemetry reads (metrics, hosts, service deps, APM analysis, watchdog,
+  #     change/recommendation stories, monitor/SLO/dashboard/notebook reads, DBM diagnostic
+  #     reads, network/NDM reads, RUM aggregate reads, list/get reads on cases/flags/
+  #     workflows/synthetics, CI/test/coverage/DORA aggregate reads, describe_k8s_resource).
+  #   - These carry no personal data beyond what their write/PII-bearing counterparts above
+  #     already represent, so they are intentionally not enumerated as separate actions.

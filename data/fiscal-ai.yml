@@ -1,0 +1,238 @@
+schema_version: "1.1"
+platform: fiscal-ai
+display_name: Fiscal.ai
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.fiscal.ai/docs/guides/mcp-integration
+# Provenance note (curator): Fiscal.ai's MCP endpoint (https://api.fiscal.ai/mcp,
+# streamable-http; legacy SSE at https://api.fiscal.ai/mcp/sse) gates tools/list
+# behind OAuth, so the full verbatim tool set could not be introspected. The vendor
+# docs name exactly ONE MCP tool verbatim — `company_profile` (Quick Test section) —
+# captured below as a verbatim entry. The remaining read surface is documented only as
+# plain-language capability labels (introduction page), captured below as
+# id_form: capability entries: each entry's `id` is the snake_case slug of its own
+# verbatim `description` label, and confidence is capped at medium.
+# The REST operationIds in the OpenAPI spec (get_CompanyProfile, get_CompaniesList, …)
+# were deliberately NOT used as tool ids: they are REST PascalCase and demonstrably
+# differ from the published MCP name `company_profile` (snake_case), so deriving MCP
+# ids from them would be fabrication. Reference/catalog endpoints that exist ONLY as
+# REST operations with no matching vendor capability label (companies-list,
+# standardized-metrics-list, ratios-list, earnings-calendar, top-news) were omitted
+# rather than invented. The entire surface is READ-ONLY institutional financial data on
+# public companies (SEC filings, market quotes, fundamentals) — no writes, no PII, no
+# payment/health data.
+actions:
+  # ---------- Reference Data ----------
+  - id: fiscal-ai.company_profile
+    object: Company
+    action: company_profile
+    description: "Get the company profile for a single company (the MCP tool named verbatim in the vendor Quick Test)."
+    reference: https://docs.fiscal.ai/docs/guides/mcp-integration
+    category: Data Access
+    risk: low
+    business_impact: "Reads a single public company's profile; non-sensitive public reference data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: fiscal-ai.company_logo
+    object: Company
+    action: company_logo
+    id_form: capability
+    description: "Company Logo"
+    category: Data Access
+    risk: low
+    business_impact: "Returns a published company logo asset; non-sensitive public brand data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Financial Statements ----------
+  - id: fiscal-ai.financials_as_reported
+    object: FinancialStatement
+    action: financials_as_reported
+    id_form: capability
+    description: "Financials As Reported"
+    category: Financial
+    risk: low
+    business_impact: "Reads a public company's as-reported income statement, balance sheet, or cash-flow statement; public issuer-filed financial data ingested for analysis, not written to the consumer's ledger."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: fiscal-ai.financials_standardized
+    object: FinancialStatement
+    action: financials_standardized
+    id_form: capability
+    description: "Financials Standardized"
+    category: Financial
+    risk: low
+    business_impact: "Reads a public company's standardized (vendor-normalized) financial statements; public issuer financial data ingested for analysis."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: fiscal-ai.adjusted_metrics
+    object: Metric
+    action: adjusted_metrics
+    id_form: capability
+    description: "Adjusted Metrics"
+    category: Financial
+    risk: low
+    business_impact: "Reads a public company's latest vendor-adjusted metrics; public issuer financial data ingested for analysis."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: fiscal-ai.shares_outstanding
+    object: Company
+    action: shares_outstanding
+    id_form: capability
+    description: "Shares Outstanding"
+    category: Financial
+    risk: low
+    business_impact: "Reads a public company's latest shares-outstanding figure; non-sensitive public market data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Ratios ----------
+  - id: fiscal-ai.company_ratios
+    object: Ratio
+    action: company_ratios
+    id_form: capability
+    description: "Company Ratios"
+    category: Financial
+    risk: low
+    business_impact: "Reads all financial-ratio time series for a public company; derived public market data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: fiscal-ai.daily_ratios
+    object: Ratio
+    action: daily_ratios
+    id_form: capability
+    description: "Daily Ratios"
+    category: Financial
+    risk: low
+    business_impact: "Reads a public company's daily ratio time series; derived public market data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Segments & KPIs ----------
+  - id: fiscal-ai.segments_and_kpis
+    object: Segment
+    action: segments_and_kpis
+    id_form: capability
+    description: "Segments and KPIs"
+    category: Financial
+    risk: low
+    business_impact: "Reads a public company's revenue segments and company-specific KPIs; public disclosed business data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Market Data ----------
+  - id: fiscal-ai.stock_prices
+    object: StockPrice
+    action: stock_prices
+    id_form: capability
+    description: "Stock Prices"
+    category: Data Access
+    risk: low
+    business_impact: "Reads a public company's historical stock prices; non-sensitive public market quotes."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: fiscal-ai.intraday_stock_prices
+    object: StockPrice
+    action: intraday_stock_prices
+    id_form: capability
+    description: "Intraday Stock Prices"
+    category: Data Access
+    risk: low
+    business_impact: "Reads a public company's intraday stock prices; non-sensitive public market quotes."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: fiscal-ai.stock_splits
+    object: StockSplit
+    action: stock_splits
+    id_form: capability
+    description: "Stock Splits"
+    category: Data Access
+    risk: low
+    business_impact: "Reads a public company's stock-split history; non-sensitive public corporate-action data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Filings ----------
+  - id: fiscal-ai.company_filings
+    object: Filing
+    action: company_filings
+    id_form: capability
+    description: "Company Filings"
+    category: Data Access
+    risk: low
+    business_impact: "Reads the list of a public company's regulatory filings; non-sensitive public SEC filing metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: fiscal-ai.filing_image
+    object: Filing
+    action: filing_image
+    id_form: capability
+    description: "Filing Image (by page)"
+    category: Data Access
+    risk: low
+    business_impact: "Reads an image of a single page of a public regulatory filing; non-sensitive public document content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: fiscal-ai.filing_pdf
+    object: Filing
+    action: filing_pdf
+    id_form: capability
+    description: "Filing PDF"
+    category: Data Access
+    risk: low
+    business_impact: "Reads the full PDF of a public regulatory filing; non-sensitive public document content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- News ----------
+  - id: fiscal-ai.company_news
+    object: NewsArticle
+    action: company_news
+    id_form: capability
+    description: "Company News"
+    category: Data Access
+    risk: low
+    business_impact: "Reads news articles for a single public company; non-sensitive public news data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

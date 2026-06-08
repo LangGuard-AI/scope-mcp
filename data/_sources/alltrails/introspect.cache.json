@@ -1,0 +1,4931 @@
+{
+  "schema_version": "1.0",
+  "server_url": "https://www.alltrails.com/mcp",
+  "transport": "streamable-http",
+  "fetched_at": "2026-06-04T15:30:12Z",
+  "auth": "anonymous (no bearer token; initialize + tools/list succeeded unauthenticated)",
+  "serverInfo": {
+    "name": "AllTrails MCP Server",
+    "version": "1.27.0"
+  },
+  "tools": [
+    {
+      "name": "find_trails_near_location",
+      "title": "Find trails near a location",
+      "description": "Find hiking, running, biking, backpacking or other trails for outdoor activities near a set of coordinates within an optional specified maximum radius (meters).\n\nUse this tool when the user:\n* Requests trails near a specific point of interest or landmark.\n* Requests trails near a named location within a specified radius or accessible within a specified time constraint.\n* Provides specific latitude and longitude coordinates.\n\nFor most named places, use the \"search within bounding box\" tool if possible. Use this tool as a fallback when the bounding box of the named place is unknown.\n\nUsers can specify filters related to appropriate activities, attractions, suitability, and more. Numeric range filters related to distance, elevation, and length are also available. These filter values MUST be specified in meters.\n\nIn the response, length and distance values are returned both in meters and imperial units. These MUST be displayed to the user in the units most appropriate for the user's locale, e.g. feet or miles for US English users.\n",
+      "inputSchema": {
+        "$defs": {
+          "RangeFilter": {
+            "properties": {
+              "min": {
+                "description": "Minimum value for the range",
+                "title": "Min",
+                "type": "number"
+              },
+              "max": {
+                "description": "Maximum value for the range",
+                "title": "Max",
+                "type": "number"
+              }
+            },
+            "required": [
+              "min",
+              "max"
+            ],
+            "title": "RangeFilter",
+            "type": "object"
+          },
+          "SearchFilters": {
+            "properties": {
+              "min_rating": {
+                "anyOf": [
+                  {
+                    "maximum": 5,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "The minimum rating of the trail from 0 to 5. This filter can be used to find trails that have a certain minimum rating. For example, if you want to find trails that have a rating of at least 4 stars, you would use the `minRating` filter with `min: 4` as the value.",
+                "title": "Min Rating"
+              },
+              "elevation_gain": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "min": {
+                        "description": "Minimum value for the range",
+                        "title": "Min",
+                        "type": "number"
+                      },
+                      "max": {
+                        "description": "Maximum value for the range",
+                        "title": "Max",
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "title": "RangeFilter",
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "The elevation gain of the trail in meters. This filter can be used to find trails that are within a certain elevation gain range. For example, if you want to find trails that have an elevation gain of between 500 and 1000 meters, you would use the `elevationGain` filter with `min: 500` and `max: 1000` as values. IMPORTANT: If the user specifies elevation gain in feet (ft), convert to meters using the conversion factor of 1 foot = 0.3048 meters. For example: '1000 ft elevation gain' → 304.8 meters, '2000-3000 ft elevation gain' → 609.6-914.4 meters, 'trails with 500 ft of climbing' → 152.4 meters. Always convert feet to meters before setting the filter values."
+              },
+              "highest_point": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "min": {
+                        "description": "Minimum value for the range",
+                        "title": "Min",
+                        "type": "number"
+                      },
+                      "max": {
+                        "description": "Maximum value for the range",
+                        "title": "Max",
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "title": "RangeFilter",
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "The highest point on the trail in meters. This filter can be used to find trails that are within a certain elevation range. For example, if you want to find trails that are between 1000 and 2000 meters high, you would use the `highestPoint` filter with `min: 1000` and `max: 2000` as values."
+              },
+              "length": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "min": {
+                        "description": "Minimum value for the range",
+                        "title": "Min",
+                        "type": "number"
+                      },
+                      "max": {
+                        "description": "Maximum value for the range",
+                        "title": "Max",
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "title": "RangeFilter",
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "The length of the trail in meters. This filter can be used to find trails that are within a certain distance range. For example, if you want to find trails that are between 5 and 10 kilometers long, you would use the `length` filter with `min: 5000` and `max: 10000` as values."
+              },
+              "duration": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "min": {
+                        "description": "Minimum value for the range",
+                        "title": "Min",
+                        "type": "number"
+                      },
+                      "max": {
+                        "description": "Maximum value for the range",
+                        "title": "Max",
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "title": "RangeFilter",
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Estimated time to complete the trail in minutes. This filter can be used to find trails that are within a certain duration range. For example, if you want to find trails that take between 1 and 2 hours to complete, you would use the `duration` filter with `min: 60` and `max: 120` as values."
+              },
+              "difficulty": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "enum": [
+                        "easy",
+                        "moderate",
+                        "hard"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "The difficulty level of the trail. Union filter. There should be no duplicates in the difficulty array.",
+                "title": "Difficulty"
+              },
+              "activity": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "enum": [
+                        "birding",
+                        "camping",
+                        "cross-country-skiing",
+                        "fishing",
+                        "hiking",
+                        "mountain-biking",
+                        "off-road-driving",
+                        "road-biking",
+                        "rock-climbing",
+                        "scenic-driving",
+                        "skiing",
+                        "snowshoeing",
+                        "trail-running",
+                        "walking",
+                        "horseback-riding",
+                        "backpacking",
+                        "paddle-sports",
+                        "bike-touring",
+                        "via-ferrata"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "The type of activity that can be done on the trail. Intersection filter. For example, if you want to find trails that are suitable for both hiking and biking, you would use the `activity` filter with both `hiking` and `biking` as values. There should be no duplicates in the activity array. Activity types include: birding (Birdwatching), camping (staying overnight), off-road-driving (4x4 vehicles), via-ferrata (climbing with fixed anchors), paddle-sports (kayaking, canoeing, paddleboarding), scenic-driving (beautiful scenic routes).",
+                "title": "Activity"
+              },
+              "attractions": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "enum": [
+                        "beach",
+                        "cave",
+                        "forest",
+                        "lake",
+                        "hot-springs",
+                        "river",
+                        "views",
+                        "waterfall",
+                        "wild-flowers",
+                        "wildlife",
+                        "rails-trails",
+                        "city-walk",
+                        "historic-site",
+                        "pub-crawl",
+                        "event"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "The type of attraction that can be found on the trail. Intersection filter. There should be no duplicates in the attractions array. Attraction types include: CityWalk (urban trails with city features), HistoricSite (historic sites and landmarks), PubCrawl (urban trails featuring pubs and breweries), Event (trails created for specific events like marathons), RailsTrails (converted railway lines, often flat and straight), Views (scenic views of natural features), Waterfall (trails featuring waterfalls), WildFlowers (trails with wildflowers - no guarantee of bloom timing), Wildlife (trails where wildlife can be seen - no guarantee of sightings).",
+                "title": "Attractions"
+              },
+              "suitability": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "enum": [
+                        "dogs",
+                        "dogs-leash",
+                        "dogs-no",
+                        "kids",
+                        "ada",
+                        "strollers",
+                        "paved",
+                        "partially-paved"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "The type of suitability that can be found on the trail. Intersection filter. For example, if you want to find trails that are suitable for both dogs and kids, you would use the `suitability` filter with both `dogs` and `kids` as values. There should be no duplicates in the suitability array. Suitability types include: Ada (Americans with Disabilities Act compliant, accessible to people with disabilities), Dogs (dogs allowed), DogsLeash (dogs allowed but must be leashed), DogsNo (dogs not allowed), Strollers (suitable for strollers), Paved (paved trail), PartiallyPaved (partially paved trail).",
+                "title": "Suitability"
+              },
+              "route_type": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "enum": [
+                        "O",
+                        "L",
+                        "P"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "The type of the route. Union filter. There should be no duplicates in the route type array. Route types: O (Out and back route - goes to a point and returns to start), L (Loop route - starts and ends at the same point), P (Point to point route - starts at one point and ends at another).",
+                "title": "Route Type"
+              },
+              "trail_traffic": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "enum": [
+                        "light",
+                        "moderate",
+                        "heavy"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "The amount of traffic on the trail. Union filter. This is an average, an approximation, drawn from internal activity tracking data. It is not a guarantee of how many people will be on the trail at any given time. Traffic levels: light (light traffic), moderate (moderate traffic), heavy (heavy traffic).",
+                "title": "Trail Traffic"
+              }
+            },
+            "title": "SearchFilters",
+            "type": "object"
+          },
+          "TrailCenterSearchInput": {
+            "properties": {
+              "filters": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "min_rating": {
+                        "anyOf": [
+                          {
+                            "maximum": 5,
+                            "minimum": 1,
+                            "type": "integer"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The minimum rating of the trail from 0 to 5. This filter can be used to find trails that have a certain minimum rating. For example, if you want to find trails that have a rating of at least 4 stars, you would use the `minRating` filter with `min: 4` as the value.",
+                        "title": "Min Rating"
+                      },
+                      "elevation_gain": {
+                        "anyOf": [
+                          {
+                            "properties": {
+                              "min": {
+                                "description": "Minimum value for the range",
+                                "title": "Min",
+                                "type": "number"
+                              },
+                              "max": {
+                                "description": "Maximum value for the range",
+                                "title": "Max",
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "title": "RangeFilter",
+                            "type": "object"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The elevation gain of the trail in meters. This filter can be used to find trails that are within a certain elevation gain range. For example, if you want to find trails that have an elevation gain of between 500 and 1000 meters, you would use the `elevationGain` filter with `min: 500` and `max: 1000` as values. IMPORTANT: If the user specifies elevation gain in feet (ft), convert to meters using the conversion factor of 1 foot = 0.3048 meters. For example: '1000 ft elevation gain' → 304.8 meters, '2000-3000 ft elevation gain' → 609.6-914.4 meters, 'trails with 500 ft of climbing' → 152.4 meters. Always convert feet to meters before setting the filter values."
+                      },
+                      "highest_point": {
+                        "anyOf": [
+                          {
+                            "properties": {
+                              "min": {
+                                "description": "Minimum value for the range",
+                                "title": "Min",
+                                "type": "number"
+                              },
+                              "max": {
+                                "description": "Maximum value for the range",
+                                "title": "Max",
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "title": "RangeFilter",
+                            "type": "object"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The highest point on the trail in meters. This filter can be used to find trails that are within a certain elevation range. For example, if you want to find trails that are between 1000 and 2000 meters high, you would use the `highestPoint` filter with `min: 1000` and `max: 2000` as values."
+                      },
+                      "length": {
+                        "anyOf": [
+                          {
+                            "properties": {
+                              "min": {
+                                "description": "Minimum value for the range",
+                                "title": "Min",
+                                "type": "number"
+                              },
+                              "max": {
+                                "description": "Maximum value for the range",
+                                "title": "Max",
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "title": "RangeFilter",
+                            "type": "object"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The length of the trail in meters. This filter can be used to find trails that are within a certain distance range. For example, if you want to find trails that are between 5 and 10 kilometers long, you would use the `length` filter with `min: 5000` and `max: 10000` as values."
+                      },
+                      "duration": {
+                        "anyOf": [
+                          {
+                            "properties": {
+                              "min": {
+                                "description": "Minimum value for the range",
+                                "title": "Min",
+                                "type": "number"
+                              },
+                              "max": {
+                                "description": "Maximum value for the range",
+                                "title": "Max",
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "title": "RangeFilter",
+                            "type": "object"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "Estimated time to complete the trail in minutes. This filter can be used to find trails that are within a certain duration range. For example, if you want to find trails that take between 1 and 2 hours to complete, you would use the `duration` filter with `min: 60` and `max: 120` as values."
+                      },
+                      "difficulty": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "easy",
+                                "moderate",
+                                "hard"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The difficulty level of the trail. Union filter. There should be no duplicates in the difficulty array.",
+                        "title": "Difficulty"
+                      },
+                      "activity": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "birding",
+                                "camping",
+                                "cross-country-skiing",
+                                "fishing",
+                                "hiking",
+                                "mountain-biking",
+                                "off-road-driving",
+                                "road-biking",
+                                "rock-climbing",
+                                "scenic-driving",
+                                "skiing",
+                                "snowshoeing",
+                                "trail-running",
+                                "walking",
+                                "horseback-riding",
+                                "backpacking",
+                                "paddle-sports",
+                                "bike-touring",
+                                "via-ferrata"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The type of activity that can be done on the trail. Intersection filter. For example, if you want to find trails that are suitable for both hiking and biking, you would use the `activity` filter with both `hiking` and `biking` as values. There should be no duplicates in the activity array. Activity types include: birding (Birdwatching), camping (staying overnight), off-road-driving (4x4 vehicles), via-ferrata (climbing with fixed anchors), paddle-sports (kayaking, canoeing, paddleboarding), scenic-driving (beautiful scenic routes).",
+                        "title": "Activity"
+                      },
+                      "attractions": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "beach",
+                                "cave",
+                                "forest",
+                                "lake",
+                                "hot-springs",
+                                "river",
+                                "views",
+                                "waterfall",
+                                "wild-flowers",
+                                "wildlife",
+                                "rails-trails",
+                                "city-walk",
+                                "historic-site",
+                                "pub-crawl",
+                                "event"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The type of attraction that can be found on the trail. Intersection filter. There should be no duplicates in the attractions array. Attraction types include: CityWalk (urban trails with city features), HistoricSite (historic sites and landmarks), PubCrawl (urban trails featuring pubs and breweries), Event (trails created for specific events like marathons), RailsTrails (converted railway lines, often flat and straight), Views (scenic views of natural features), Waterfall (trails featuring waterfalls), WildFlowers (trails with wildflowers - no guarantee of bloom timing), Wildlife (trails where wildlife can be seen - no guarantee of sightings).",
+                        "title": "Attractions"
+                      },
+                      "suitability": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "dogs",
+                                "dogs-leash",
+                                "dogs-no",
+                                "kids",
+                                "ada",
+                                "strollers",
+                                "paved",
+                                "partially-paved"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The type of suitability that can be found on the trail. Intersection filter. For example, if you want to find trails that are suitable for both dogs and kids, you would use the `suitability` filter with both `dogs` and `kids` as values. There should be no duplicates in the suitability array. Suitability types include: Ada (Americans with Disabilities Act compliant, accessible to people with disabilities), Dogs (dogs allowed), DogsLeash (dogs allowed but must be leashed), DogsNo (dogs not allowed), Strollers (suitable for strollers), Paved (paved trail), PartiallyPaved (partially paved trail).",
+                        "title": "Suitability"
+                      },
+                      "route_type": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "O",
+                                "L",
+                                "P"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The type of the route. Union filter. There should be no duplicates in the route type array. Route types: O (Out and back route - goes to a point and returns to start), L (Loop route - starts and ends at the same point), P (Point to point route - starts at one point and ends at another).",
+                        "title": "Route Type"
+                      },
+                      "trail_traffic": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "light",
+                                "moderate",
+                                "heavy"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The amount of traffic on the trail. Union filter. This is an average, an approximation, drawn from internal activity tracking data. It is not a guarantee of how many people will be on the trail at any given time. Traffic levels: light (light traffic), moderate (moderate traffic), heavy (heavy traffic).",
+                        "title": "Trail Traffic"
+                      }
+                    },
+                    "title": "SearchFilters",
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Search filters to apply"
+              },
+              "limit": {
+                "default": 20,
+                "description": "Maximum number of results",
+                "maximum": 20,
+                "minimum": 1,
+                "title": "Limit",
+                "type": "integer"
+              },
+              "sort": {
+                "anyOf": [
+                  {
+                    "enum": [
+                      "seasonal",
+                      "closest",
+                      "newly_added",
+                      "month_1",
+                      "month_2",
+                      "month_3",
+                      "month_4",
+                      "month_5",
+                      "month_6",
+                      "month_7",
+                      "month_8",
+                      "month_9",
+                      "month_10",
+                      "month_11",
+                      "month_12",
+                      "most_popular"
+                    ],
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "\nAbility to specify a sorting option.\n\nThe default is NONE. CRITICAL: Only extract sort if the query contains EXPLICIT sort keywords:\n- \"best trails\", \"top trails\" → most_popular\n- \"closest trails\", \"nearest trails\" → closest\n- \"new trails\", \"recently added\" → newly_added\n\n\nOnly include a sort option if the user's query explicitly indicates a particular sort order.\nIf no sort preference is indicated, omit the `sort` property entirely.\n\nAvailable sort options:\n- `closest`: Sort by distance from the user's location. Use when the query asks for\n\"closest trails\" or \"trails nearest to\" a location.\n- `most_popular`: Sort by overall popularity.\n- `newly_added`: Sort by date added. Use for queries like \"new hiking trails\".\n- `seasonal`: Sort by popularity at the current time of year. Use when the query asks for trails\n\"at this time of year\", \"this season\", \"right now\", or similar seasonal phrasing.\n- `month_1` through `month_12`: Sort by popularity in a specific month.\nUse when the query mentions a specific month, e.g., \"hiking trails in July\" → `month_7`.\n",
+                "title": "Sort"
+              },
+              "locale": {
+                "anyOf": [
+                  {
+                    "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "A BCP 47 locale string (e.g. 'en-US', 'es-ES', 'de-DE'). Should be set to the user's device/browser locale or the language of the current conversation. Used for localizing trail names and descriptions, difficulty labels, and URLs. Falls back to request metadata if not provided.",
+                "title": "Locale"
+              },
+              "latitude": {
+                "description": "Latitude in decimal degrees",
+                "title": "Latitude",
+                "type": "number"
+              },
+              "longitude": {
+                "description": "Longitude in decimal degrees",
+                "title": "Longitude",
+                "type": "number"
+              },
+              "max_radius_meters": {
+                "anyOf": [
+                  {
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Maximum search radius in meters. \n\nSpecify this value if the user:\n* Indicates they are looking for nearby trails within a specific distance.\n* Mentions a specific distance around a named location\n* Mentions a time constraint to reach a location. If the user mentions a time constraint, but does not mention the mode of transport, assume they are traveling by car. Generate the maximum radius based on a typical travel speed for the mode of transport.\n* Requests a point of interest or landmark. Generate an appropriate maximum radius between 1000 and 5000 meters.\n* If a bounding box is unknown for a named location. (If a bounding box is known, use the \"search within bounding box\" tool instead.) Supply this value to ensure the search is performed within a reasonable area for the kind of location the user is referring to. Example values:\n  * country: 500000m radius\n  * state/province/official region: 200000m radius\n  * county/administrative area/unofficial region: 25000m radius\n  * city/town: 10000m radius\n  * neighborhood/district: 2000m radius\n",
+                "title": "Max Radius Meters"
+              }
+            },
+            "required": [
+              "latitude",
+              "longitude"
+            ],
+            "title": "TrailCenterSearchInput",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "input": {
+            "properties": {
+              "filters": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "min_rating": {
+                        "anyOf": [
+                          {
+                            "maximum": 5,
+                            "minimum": 1,
+                            "type": "integer"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The minimum rating of the trail from 0 to 5. This filter can be used to find trails that have a certain minimum rating. For example, if you want to find trails that have a rating of at least 4 stars, you would use the `minRating` filter with `min: 4` as the value.",
+                        "title": "Min Rating"
+                      },
+                      "elevation_gain": {
+                        "anyOf": [
+                          {
+                            "properties": {
+                              "min": {
+                                "description": "Minimum value for the range",
+                                "title": "Min",
+                                "type": "number"
+                              },
+                              "max": {
+                                "description": "Maximum value for the range",
+                                "title": "Max",
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "title": "RangeFilter",
+                            "type": "object"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The elevation gain of the trail in meters. This filter can be used to find trails that are within a certain elevation gain range. For example, if you want to find trails that have an elevation gain of between 500 and 1000 meters, you would use the `elevationGain` filter with `min: 500` and `max: 1000` as values. IMPORTANT: If the user specifies elevation gain in feet (ft), convert to meters using the conversion factor of 1 foot = 0.3048 meters. For example: '1000 ft elevation gain' → 304.8 meters, '2000-3000 ft elevation gain' → 609.6-914.4 meters, 'trails with 500 ft of climbing' → 152.4 meters. Always convert feet to meters before setting the filter values."
+                      },
+                      "highest_point": {
+                        "anyOf": [
+                          {
+                            "properties": {
+                              "min": {
+                                "description": "Minimum value for the range",
+                                "title": "Min",
+                                "type": "number"
+                              },
+                              "max": {
+                                "description": "Maximum value for the range",
+                                "title": "Max",
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "title": "RangeFilter",
+                            "type": "object"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The highest point on the trail in meters. This filter can be used to find trails that are within a certain elevation range. For example, if you want to find trails that are between 1000 and 2000 meters high, you would use the `highestPoint` filter with `min: 1000` and `max: 2000` as values."
+                      },
+                      "length": {
+                        "anyOf": [
+                          {
+                            "properties": {
+                              "min": {
+                                "description": "Minimum value for the range",
+                                "title": "Min",
+                                "type": "number"
+                              },
+                              "max": {
+                                "description": "Maximum value for the range",
+                                "title": "Max",
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "title": "RangeFilter",
+                            "type": "object"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The length of the trail in meters. This filter can be used to find trails that are within a certain distance range. For example, if you want to find trails that are between 5 and 10 kilometers long, you would use the `length` filter with `min: 5000` and `max: 10000` as values."
+                      },
+                      "duration": {
+                        "anyOf": [
+                          {
+                            "properties": {
+                              "min": {
+                                "description": "Minimum value for the range",
+                                "title": "Min",
+                                "type": "number"
+                              },
+                              "max": {
+                                "description": "Maximum value for the range",
+                                "title": "Max",
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "title": "RangeFilter",
+                            "type": "object"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "Estimated time to complete the trail in minutes. This filter can be used to find trails that are within a certain duration range. For example, if you want to find trails that take between 1 and 2 hours to complete, you would use the `duration` filter with `min: 60` and `max: 120` as values."
+                      },
+                      "difficulty": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "easy",
+                                "moderate",
+                                "hard"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The difficulty level of the trail. Union filter. There should be no duplicates in the difficulty array.",
+                        "title": "Difficulty"
+                      },
+                      "activity": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "birding",
+                                "camping",
+                                "cross-country-skiing",
+                                "fishing",
+                                "hiking",
+                                "mountain-biking",
+                                "off-road-driving",
+                                "road-biking",
+                                "rock-climbing",
+                                "scenic-driving",
+                                "skiing",
+                                "snowshoeing",
+                                "trail-running",
+                                "walking",
+                                "horseback-riding",
+                                "backpacking",
+                                "paddle-sports",
+                                "bike-touring",
+                                "via-ferrata"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The type of activity that can be done on the trail. Intersection filter. For example, if you want to find trails that are suitable for both hiking and biking, you would use the `activity` filter with both `hiking` and `biking` as values. There should be no duplicates in the activity array. Activity types include: birding (Birdwatching), camping (staying overnight), off-road-driving (4x4 vehicles), via-ferrata (climbing with fixed anchors), paddle-sports (kayaking, canoeing, paddleboarding), scenic-driving (beautiful scenic routes).",
+                        "title": "Activity"
+                      },
+                      "attractions": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "beach",
+                                "cave",
+                                "forest",
+                                "lake",
+                                "hot-springs",
+                                "river",
+                                "views",
+                                "waterfall",
+                                "wild-flowers",
+                                "wildlife",
+                                "rails-trails",
+                                "city-walk",
+                                "historic-site",
+                                "pub-crawl",
+                                "event"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The type of attraction that can be found on the trail. Intersection filter. There should be no duplicates in the attractions array. Attraction types include: CityWalk (urban trails with city features), HistoricSite (historic sites and landmarks), PubCrawl (urban trails featuring pubs and breweries), Event (trails created for specific events like marathons), RailsTrails (converted railway lines, often flat and straight), Views (scenic views of natural features), Waterfall (trails featuring waterfalls), WildFlowers (trails with wildflowers - no guarantee of bloom timing), Wildlife (trails where wildlife can be seen - no guarantee of sightings).",
+                        "title": "Attractions"
+                      },
+                      "suitability": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "dogs",
+                                "dogs-leash",
+                                "dogs-no",
+                                "kids",
+                                "ada",
+                                "strollers",
+                                "paved",
+                                "partially-paved"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The type of suitability that can be found on the trail. Intersection filter. For example, if you want to find trails that are suitable for both dogs and kids, you would use the `suitability` filter with both `dogs` and `kids` as values. There should be no duplicates in the suitability array. Suitability types include: Ada (Americans with Disabilities Act compliant, accessible to people with disabilities), Dogs (dogs allowed), DogsLeash (dogs allowed but must be leashed), DogsNo (dogs not allowed), Strollers (suitable for strollers), Paved (paved trail), PartiallyPaved (partially paved trail).",
+                        "title": "Suitability"
+                      },
+                      "route_type": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "O",
+                                "L",
+                                "P"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The type of the route. Union filter. There should be no duplicates in the route type array. Route types: O (Out and back route - goes to a point and returns to start), L (Loop route - starts and ends at the same point), P (Point to point route - starts at one point and ends at another).",
+                        "title": "Route Type"
+                      },
+                      "trail_traffic": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "light",
+                                "moderate",
+                                "heavy"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The amount of traffic on the trail. Union filter. This is an average, an approximation, drawn from internal activity tracking data. It is not a guarantee of how many people will be on the trail at any given time. Traffic levels: light (light traffic), moderate (moderate traffic), heavy (heavy traffic).",
+                        "title": "Trail Traffic"
+                      }
+                    },
+                    "title": "SearchFilters",
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Search filters to apply"
+              },
+              "limit": {
+                "default": 20,
+                "description": "Maximum number of results",
+                "maximum": 20,
+                "minimum": 1,
+                "title": "Limit",
+                "type": "integer"
+              },
+              "sort": {
+                "anyOf": [
+                  {
+                    "enum": [
+                      "seasonal",
+                      "closest",
+                      "newly_added",
+                      "month_1",
+                      "month_2",
+                      "month_3",
+                      "month_4",
+                      "month_5",
+                      "month_6",
+                      "month_7",
+                      "month_8",
+                      "month_9",
+                      "month_10",
+                      "month_11",
+                      "month_12",
+                      "most_popular"
+                    ],
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "\nAbility to specify a sorting option.\n\nThe default is NONE. CRITICAL: Only extract sort if the query contains EXPLICIT sort keywords:\n- \"best trails\", \"top trails\" → most_popular\n- \"closest trails\", \"nearest trails\" → closest\n- \"new trails\", \"recently added\" → newly_added\n\n\nOnly include a sort option if the user's query explicitly indicates a particular sort order.\nIf no sort preference is indicated, omit the `sort` property entirely.\n\nAvailable sort options:\n- `closest`: Sort by distance from the user's location. Use when the query asks for\n\"closest trails\" or \"trails nearest to\" a location.\n- `most_popular`: Sort by overall popularity.\n- `newly_added`: Sort by date added. Use for queries like \"new hiking trails\".\n- `seasonal`: Sort by popularity at the current time of year. Use when the query asks for trails\n\"at this time of year\", \"this season\", \"right now\", or similar seasonal phrasing.\n- `month_1` through `month_12`: Sort by popularity in a specific month.\nUse when the query mentions a specific month, e.g., \"hiking trails in July\" → `month_7`.\n",
+                "title": "Sort"
+              },
+              "locale": {
+                "anyOf": [
+                  {
+                    "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "A BCP 47 locale string (e.g. 'en-US', 'es-ES', 'de-DE'). Should be set to the user's device/browser locale or the language of the current conversation. Used for localizing trail names and descriptions, difficulty labels, and URLs. Falls back to request metadata if not provided.",
+                "title": "Locale"
+              },
+              "latitude": {
+                "description": "Latitude in decimal degrees",
+                "title": "Latitude",
+                "type": "number"
+              },
+              "longitude": {
+                "description": "Longitude in decimal degrees",
+                "title": "Longitude",
+                "type": "number"
+              },
+              "max_radius_meters": {
+                "anyOf": [
+                  {
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Maximum search radius in meters. \n\nSpecify this value if the user:\n* Indicates they are looking for nearby trails within a specific distance.\n* Mentions a specific distance around a named location\n* Mentions a time constraint to reach a location. If the user mentions a time constraint, but does not mention the mode of transport, assume they are traveling by car. Generate the maximum radius based on a typical travel speed for the mode of transport.\n* Requests a point of interest or landmark. Generate an appropriate maximum radius between 1000 and 5000 meters.\n* If a bounding box is unknown for a named location. (If a bounding box is known, use the \"search within bounding box\" tool instead.) Supply this value to ensure the search is performed within a reasonable area for the kind of location the user is referring to. Example values:\n  * country: 500000m radius\n  * state/province/official region: 200000m radius\n  * county/administrative area/unofficial region: 25000m radius\n  * city/town: 10000m radius\n  * neighborhood/district: 2000m radius\n",
+                "title": "Max Radius Meters"
+              }
+            },
+            "required": [
+              "latitude",
+              "longitude"
+            ],
+            "title": "TrailCenterSearchInput",
+            "type": "object"
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "title": "find_trails_near_locationArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "TrailSearchItem": {
+            "properties": {
+              "id": {
+                "title": "Id",
+                "type": "integer"
+              },
+              "name": {
+                "title": "Name",
+                "type": "string"
+              },
+              "slug": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Slug"
+              },
+              "alltrails_web_url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Alltrails Web Url"
+              },
+              "has_profile_photo": {
+                "title": "Has Profile Photo",
+                "type": "boolean"
+              },
+              "profile_photo_url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Profile Photo Url"
+              },
+              "avg_rating": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Avg Rating"
+              },
+              "duration_minutes": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Duration Minutes"
+              },
+              "elevation_gain_meters": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Elevation Gain Meters"
+              },
+              "elevation_gain_feet": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Elevation Gain Feet"
+              },
+              "length_meters": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Length Meters"
+              },
+              "length_miles": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Length Miles"
+              },
+              "features": {
+                "default": [],
+                "items": {
+                  "type": "string"
+                },
+                "title": "Features",
+                "type": "array"
+              },
+              "activities": {
+                "default": [],
+                "items": {
+                  "type": "string"
+                },
+                "title": "Activities",
+                "type": "array"
+              },
+              "location_label": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Location Label"
+              },
+              "trail_head_distance_meters": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Trail Head Distance Meters"
+              },
+              "trail_head_distance_miles": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Trail Head Distance Miles"
+              },
+              "difficulty": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Difficulty"
+              },
+              "route_type": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Route Type"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "has_profile_photo"
+            ],
+            "title": "TrailSearchItem",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "trails": {
+            "items": {
+              "properties": {
+                "id": {
+                  "title": "Id",
+                  "type": "integer"
+                },
+                "name": {
+                  "title": "Name",
+                  "type": "string"
+                },
+                "slug": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Slug"
+                },
+                "alltrails_web_url": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Alltrails Web Url"
+                },
+                "has_profile_photo": {
+                  "title": "Has Profile Photo",
+                  "type": "boolean"
+                },
+                "profile_photo_url": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Profile Photo Url"
+                },
+                "avg_rating": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Avg Rating"
+                },
+                "duration_minutes": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Duration Minutes"
+                },
+                "elevation_gain_meters": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Elevation Gain Meters"
+                },
+                "elevation_gain_feet": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Elevation Gain Feet"
+                },
+                "length_meters": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Length Meters"
+                },
+                "length_miles": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Length Miles"
+                },
+                "features": {
+                  "default": [],
+                  "items": {
+                    "type": "string"
+                  },
+                  "title": "Features",
+                  "type": "array"
+                },
+                "activities": {
+                  "default": [],
+                  "items": {
+                    "type": "string"
+                  },
+                  "title": "Activities",
+                  "type": "array"
+                },
+                "location_label": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Location Label"
+                },
+                "trail_head_distance_meters": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Trail Head Distance Meters"
+                },
+                "trail_head_distance_miles": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Trail Head Distance Miles"
+                },
+                "difficulty": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Difficulty"
+                },
+                "route_type": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Route Type"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "has_profile_photo"
+              ],
+              "title": "TrailSearchItem",
+              "type": "object"
+            },
+            "title": "Trails",
+            "type": "array"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Message"
+          }
+        },
+        "required": [
+          "trails"
+        ],
+        "title": "TrailsSearchOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Find trails near a location",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://widget/trails_search_map.html",
+          "visibility": [
+            "model"
+          ]
+        },
+        "openai/toolInvocation/invoking": "Searching for trails",
+        "openai/toolInvocation/invoked": "Searched for trails"
+      }
+    },
+    {
+      "name": "find_trails_within_bounds",
+      "title": "Find trails within bounds",
+      "description": "Find hiking, running, biking, backpacking or other trails for outdoor activities within a specified bounding box defined by southwest and northeast coordinates.\n\nUse this tool when the user:\n* Requests trails within specific geographic boundaries or coordinates.\n* Requests trails near a named geographic or political place, such as a continent, country, state, province, region, city, town, or neighborhood and you know the bounding box for that place.\n* Requests trails within a national, state or local park or other protected area and you know the bounding box for that park.\n\nIf the bounding box for the named place is not known, use the \"find trails near a location\" tool instead to find trails around a center point.\n\nUsers can specify filters related to appropriate activities, attractions, suitability, and more. Numeric range filters related to distance, elevation, and length are also available. These filter values MUST be specified in meters.\n\nIn the response, length and distance values are returned both in meters and imperial units. These MUST be displayed to the user in the units most appropriate for the user's locale, e.g. feet or miles for US English users.\n",
+      "inputSchema": {
+        "$defs": {
+          "Point": {
+            "properties": {
+              "latitude": {
+                "description": "Latitude in decimal degrees",
+                "title": "Latitude",
+                "type": "number"
+              },
+              "longitude": {
+                "description": "Longitude in decimal degrees",
+                "title": "Longitude",
+                "type": "number"
+              }
+            },
+            "required": [
+              "latitude",
+              "longitude"
+            ],
+            "title": "Point",
+            "type": "object"
+          },
+          "RangeFilter": {
+            "properties": {
+              "min": {
+                "description": "Minimum value for the range",
+                "title": "Min",
+                "type": "number"
+              },
+              "max": {
+                "description": "Maximum value for the range",
+                "title": "Max",
+                "type": "number"
+              }
+            },
+            "required": [
+              "min",
+              "max"
+            ],
+            "title": "RangeFilter",
+            "type": "object"
+          },
+          "SearchFilters": {
+            "properties": {
+              "min_rating": {
+                "anyOf": [
+                  {
+                    "maximum": 5,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "The minimum rating of the trail from 0 to 5. This filter can be used to find trails that have a certain minimum rating. For example, if you want to find trails that have a rating of at least 4 stars, you would use the `minRating` filter with `min: 4` as the value.",
+                "title": "Min Rating"
+              },
+              "elevation_gain": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "min": {
+                        "description": "Minimum value for the range",
+                        "title": "Min",
+                        "type": "number"
+                      },
+                      "max": {
+                        "description": "Maximum value for the range",
+                        "title": "Max",
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "title": "RangeFilter",
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "The elevation gain of the trail in meters. This filter can be used to find trails that are within a certain elevation gain range. For example, if you want to find trails that have an elevation gain of between 500 and 1000 meters, you would use the `elevationGain` filter with `min: 500` and `max: 1000` as values. IMPORTANT: If the user specifies elevation gain in feet (ft), convert to meters using the conversion factor of 1 foot = 0.3048 meters. For example: '1000 ft elevation gain' → 304.8 meters, '2000-3000 ft elevation gain' → 609.6-914.4 meters, 'trails with 500 ft of climbing' → 152.4 meters. Always convert feet to meters before setting the filter values."
+              },
+              "highest_point": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "min": {
+                        "description": "Minimum value for the range",
+                        "title": "Min",
+                        "type": "number"
+                      },
+                      "max": {
+                        "description": "Maximum value for the range",
+                        "title": "Max",
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "title": "RangeFilter",
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "The highest point on the trail in meters. This filter can be used to find trails that are within a certain elevation range. For example, if you want to find trails that are between 1000 and 2000 meters high, you would use the `highestPoint` filter with `min: 1000` and `max: 2000` as values."
+              },
+              "length": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "min": {
+                        "description": "Minimum value for the range",
+                        "title": "Min",
+                        "type": "number"
+                      },
+                      "max": {
+                        "description": "Maximum value for the range",
+                        "title": "Max",
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "title": "RangeFilter",
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "The length of the trail in meters. This filter can be used to find trails that are within a certain distance range. For example, if you want to find trails that are between 5 and 10 kilometers long, you would use the `length` filter with `min: 5000` and `max: 10000` as values."
+              },
+              "duration": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "min": {
+                        "description": "Minimum value for the range",
+                        "title": "Min",
+                        "type": "number"
+                      },
+                      "max": {
+                        "description": "Maximum value for the range",
+                        "title": "Max",
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "title": "RangeFilter",
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Estimated time to complete the trail in minutes. This filter can be used to find trails that are within a certain duration range. For example, if you want to find trails that take between 1 and 2 hours to complete, you would use the `duration` filter with `min: 60` and `max: 120` as values."
+              },
+              "difficulty": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "enum": [
+                        "easy",
+                        "moderate",
+                        "hard"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "The difficulty level of the trail. Union filter. There should be no duplicates in the difficulty array.",
+                "title": "Difficulty"
+              },
+              "activity": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "enum": [
+                        "birding",
+                        "camping",
+                        "cross-country-skiing",
+                        "fishing",
+                        "hiking",
+                        "mountain-biking",
+                        "off-road-driving",
+                        "road-biking",
+                        "rock-climbing",
+                        "scenic-driving",
+                        "skiing",
+                        "snowshoeing",
+                        "trail-running",
+                        "walking",
+                        "horseback-riding",
+                        "backpacking",
+                        "paddle-sports",
+                        "bike-touring",
+                        "via-ferrata"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "The type of activity that can be done on the trail. Intersection filter. For example, if you want to find trails that are suitable for both hiking and biking, you would use the `activity` filter with both `hiking` and `biking` as values. There should be no duplicates in the activity array. Activity types include: birding (Birdwatching), camping (staying overnight), off-road-driving (4x4 vehicles), via-ferrata (climbing with fixed anchors), paddle-sports (kayaking, canoeing, paddleboarding), scenic-driving (beautiful scenic routes).",
+                "title": "Activity"
+              },
+              "attractions": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "enum": [
+                        "beach",
+                        "cave",
+                        "forest",
+                        "lake",
+                        "hot-springs",
+                        "river",
+                        "views",
+                        "waterfall",
+                        "wild-flowers",
+                        "wildlife",
+                        "rails-trails",
+                        "city-walk",
+                        "historic-site",
+                        "pub-crawl",
+                        "event"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "The type of attraction that can be found on the trail. Intersection filter. There should be no duplicates in the attractions array. Attraction types include: CityWalk (urban trails with city features), HistoricSite (historic sites and landmarks), PubCrawl (urban trails featuring pubs and breweries), Event (trails created for specific events like marathons), RailsTrails (converted railway lines, often flat and straight), Views (scenic views of natural features), Waterfall (trails featuring waterfalls), WildFlowers (trails with wildflowers - no guarantee of bloom timing), Wildlife (trails where wildlife can be seen - no guarantee of sightings).",
+                "title": "Attractions"
+              },
+              "suitability": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "enum": [
+                        "dogs",
+                        "dogs-leash",
+                        "dogs-no",
+                        "kids",
+                        "ada",
+                        "strollers",
+                        "paved",
+                        "partially-paved"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "The type of suitability that can be found on the trail. Intersection filter. For example, if you want to find trails that are suitable for both dogs and kids, you would use the `suitability` filter with both `dogs` and `kids` as values. There should be no duplicates in the suitability array. Suitability types include: Ada (Americans with Disabilities Act compliant, accessible to people with disabilities), Dogs (dogs allowed), DogsLeash (dogs allowed but must be leashed), DogsNo (dogs not allowed), Strollers (suitable for strollers), Paved (paved trail), PartiallyPaved (partially paved trail).",
+                "title": "Suitability"
+              },
+              "route_type": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "enum": [
+                        "O",
+                        "L",
+                        "P"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "The type of the route. Union filter. There should be no duplicates in the route type array. Route types: O (Out and back route - goes to a point and returns to start), L (Loop route - starts and ends at the same point), P (Point to point route - starts at one point and ends at another).",
+                "title": "Route Type"
+              },
+              "trail_traffic": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "enum": [
+                        "light",
+                        "moderate",
+                        "heavy"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "The amount of traffic on the trail. Union filter. This is an average, an approximation, drawn from internal activity tracking data. It is not a guarantee of how many people will be on the trail at any given time. Traffic levels: light (light traffic), moderate (moderate traffic), heavy (heavy traffic).",
+                "title": "Trail Traffic"
+              }
+            },
+            "title": "SearchFilters",
+            "type": "object"
+          },
+          "TrailBoundsSearchInput": {
+            "properties": {
+              "filters": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "min_rating": {
+                        "anyOf": [
+                          {
+                            "maximum": 5,
+                            "minimum": 1,
+                            "type": "integer"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The minimum rating of the trail from 0 to 5. This filter can be used to find trails that have a certain minimum rating. For example, if you want to find trails that have a rating of at least 4 stars, you would use the `minRating` filter with `min: 4` as the value.",
+                        "title": "Min Rating"
+                      },
+                      "elevation_gain": {
+                        "anyOf": [
+                          {
+                            "properties": {
+                              "min": {
+                                "description": "Minimum value for the range",
+                                "title": "Min",
+                                "type": "number"
+                              },
+                              "max": {
+                                "description": "Maximum value for the range",
+                                "title": "Max",
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "title": "RangeFilter",
+                            "type": "object"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The elevation gain of the trail in meters. This filter can be used to find trails that are within a certain elevation gain range. For example, if you want to find trails that have an elevation gain of between 500 and 1000 meters, you would use the `elevationGain` filter with `min: 500` and `max: 1000` as values. IMPORTANT: If the user specifies elevation gain in feet (ft), convert to meters using the conversion factor of 1 foot = 0.3048 meters. For example: '1000 ft elevation gain' → 304.8 meters, '2000-3000 ft elevation gain' → 609.6-914.4 meters, 'trails with 500 ft of climbing' → 152.4 meters. Always convert feet to meters before setting the filter values."
+                      },
+                      "highest_point": {
+                        "anyOf": [
+                          {
+                            "properties": {
+                              "min": {
+                                "description": "Minimum value for the range",
+                                "title": "Min",
+                                "type": "number"
+                              },
+                              "max": {
+                                "description": "Maximum value for the range",
+                                "title": "Max",
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "title": "RangeFilter",
+                            "type": "object"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The highest point on the trail in meters. This filter can be used to find trails that are within a certain elevation range. For example, if you want to find trails that are between 1000 and 2000 meters high, you would use the `highestPoint` filter with `min: 1000` and `max: 2000` as values."
+                      },
+                      "length": {
+                        "anyOf": [
+                          {
+                            "properties": {
+                              "min": {
+                                "description": "Minimum value for the range",
+                                "title": "Min",
+                                "type": "number"
+                              },
+                              "max": {
+                                "description": "Maximum value for the range",
+                                "title": "Max",
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "title": "RangeFilter",
+                            "type": "object"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The length of the trail in meters. This filter can be used to find trails that are within a certain distance range. For example, if you want to find trails that are between 5 and 10 kilometers long, you would use the `length` filter with `min: 5000` and `max: 10000` as values."
+                      },
+                      "duration": {
+                        "anyOf": [
+                          {
+                            "properties": {
+                              "min": {
+                                "description": "Minimum value for the range",
+                                "title": "Min",
+                                "type": "number"
+                              },
+                              "max": {
+                                "description": "Maximum value for the range",
+                                "title": "Max",
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "title": "RangeFilter",
+                            "type": "object"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "Estimated time to complete the trail in minutes. This filter can be used to find trails that are within a certain duration range. For example, if you want to find trails that take between 1 and 2 hours to complete, you would use the `duration` filter with `min: 60` and `max: 120` as values."
+                      },
+                      "difficulty": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "easy",
+                                "moderate",
+                                "hard"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The difficulty level of the trail. Union filter. There should be no duplicates in the difficulty array.",
+                        "title": "Difficulty"
+                      },
+                      "activity": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "birding",
+                                "camping",
+                                "cross-country-skiing",
+                                "fishing",
+                                "hiking",
+                                "mountain-biking",
+                                "off-road-driving",
+                                "road-biking",
+                                "rock-climbing",
+                                "scenic-driving",
+                                "skiing",
+                                "snowshoeing",
+                                "trail-running",
+                                "walking",
+                                "horseback-riding",
+                                "backpacking",
+                                "paddle-sports",
+                                "bike-touring",
+                                "via-ferrata"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The type of activity that can be done on the trail. Intersection filter. For example, if you want to find trails that are suitable for both hiking and biking, you would use the `activity` filter with both `hiking` and `biking` as values. There should be no duplicates in the activity array. Activity types include: birding (Birdwatching), camping (staying overnight), off-road-driving (4x4 vehicles), via-ferrata (climbing with fixed anchors), paddle-sports (kayaking, canoeing, paddleboarding), scenic-driving (beautiful scenic routes).",
+                        "title": "Activity"
+                      },
+                      "attractions": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "beach",
+                                "cave",
+                                "forest",
+                                "lake",
+                                "hot-springs",
+                                "river",
+                                "views",
+                                "waterfall",
+                                "wild-flowers",
+                                "wildlife",
+                                "rails-trails",
+                                "city-walk",
+                                "historic-site",
+                                "pub-crawl",
+                                "event"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The type of attraction that can be found on the trail. Intersection filter. There should be no duplicates in the attractions array. Attraction types include: CityWalk (urban trails with city features), HistoricSite (historic sites and landmarks), PubCrawl (urban trails featuring pubs and breweries), Event (trails created for specific events like marathons), RailsTrails (converted railway lines, often flat and straight), Views (scenic views of natural features), Waterfall (trails featuring waterfalls), WildFlowers (trails with wildflowers - no guarantee of bloom timing), Wildlife (trails where wildlife can be seen - no guarantee of sightings).",
+                        "title": "Attractions"
+                      },
+                      "suitability": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "dogs",
+                                "dogs-leash",
+                                "dogs-no",
+                                "kids",
+                                "ada",
+                                "strollers",
+                                "paved",
+                                "partially-paved"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The type of suitability that can be found on the trail. Intersection filter. For example, if you want to find trails that are suitable for both dogs and kids, you would use the `suitability` filter with both `dogs` and `kids` as values. There should be no duplicates in the suitability array. Suitability types include: Ada (Americans with Disabilities Act compliant, accessible to people with disabilities), Dogs (dogs allowed), DogsLeash (dogs allowed but must be leashed), DogsNo (dogs not allowed), Strollers (suitable for strollers), Paved (paved trail), PartiallyPaved (partially paved trail).",
+                        "title": "Suitability"
+                      },
+                      "route_type": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "O",
+                                "L",
+                                "P"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The type of the route. Union filter. There should be no duplicates in the route type array. Route types: O (Out and back route - goes to a point and returns to start), L (Loop route - starts and ends at the same point), P (Point to point route - starts at one point and ends at another).",
+                        "title": "Route Type"
+                      },
+                      "trail_traffic": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "light",
+                                "moderate",
+                                "heavy"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The amount of traffic on the trail. Union filter. This is an average, an approximation, drawn from internal activity tracking data. It is not a guarantee of how many people will be on the trail at any given time. Traffic levels: light (light traffic), moderate (moderate traffic), heavy (heavy traffic).",
+                        "title": "Trail Traffic"
+                      }
+                    },
+                    "title": "SearchFilters",
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Search filters to apply"
+              },
+              "limit": {
+                "default": 20,
+                "description": "Maximum number of results",
+                "maximum": 20,
+                "minimum": 1,
+                "title": "Limit",
+                "type": "integer"
+              },
+              "sort": {
+                "anyOf": [
+                  {
+                    "enum": [
+                      "seasonal",
+                      "closest",
+                      "newly_added",
+                      "month_1",
+                      "month_2",
+                      "month_3",
+                      "month_4",
+                      "month_5",
+                      "month_6",
+                      "month_7",
+                      "month_8",
+                      "month_9",
+                      "month_10",
+                      "month_11",
+                      "month_12",
+                      "most_popular"
+                    ],
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "\nAbility to specify a sorting option.\n\nThe default is NONE. CRITICAL: Only extract sort if the query contains EXPLICIT sort keywords:\n- \"best trails\", \"top trails\" → most_popular\n- \"closest trails\", \"nearest trails\" → closest\n- \"new trails\", \"recently added\" → newly_added\n\n\nOnly include a sort option if the user's query explicitly indicates a particular sort order.\nIf no sort preference is indicated, omit the `sort` property entirely.\n\nAvailable sort options:\n- `closest`: Sort by distance from the user's location. Use when the query asks for\n\"closest trails\" or \"trails nearest to\" a location.\n- `most_popular`: Sort by overall popularity.\n- `newly_added`: Sort by date added. Use for queries like \"new hiking trails\".\n- `seasonal`: Sort by popularity at the current time of year. Use when the query asks for trails\n\"at this time of year\", \"this season\", \"right now\", or similar seasonal phrasing.\n- `month_1` through `month_12`: Sort by popularity in a specific month.\nUse when the query mentions a specific month, e.g., \"hiking trails in July\" → `month_7`.\n",
+                "title": "Sort"
+              },
+              "locale": {
+                "anyOf": [
+                  {
+                    "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "A BCP 47 locale string (e.g. 'en-US', 'es-ES', 'de-DE'). Should be set to the user's device/browser locale or the language of the current conversation. Used for localizing trail names and descriptions, difficulty labels, and URLs. Falls back to request metadata if not provided.",
+                "title": "Locale"
+              },
+              "southwest_bounds": {
+                "properties": {
+                  "latitude": {
+                    "description": "Latitude in decimal degrees",
+                    "title": "Latitude",
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "description": "Longitude in decimal degrees",
+                    "title": "Longitude",
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "latitude",
+                  "longitude"
+                ],
+                "title": "Point",
+                "type": "object"
+              },
+              "northeast_bounds": {
+                "properties": {
+                  "latitude": {
+                    "description": "Latitude in decimal degrees",
+                    "title": "Latitude",
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "description": "Longitude in decimal degrees",
+                    "title": "Longitude",
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "latitude",
+                  "longitude"
+                ],
+                "title": "Point",
+                "type": "object"
+              }
+            },
+            "required": [
+              "southwest_bounds",
+              "northeast_bounds"
+            ],
+            "title": "TrailBoundsSearchInput",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "input": {
+            "properties": {
+              "filters": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "min_rating": {
+                        "anyOf": [
+                          {
+                            "maximum": 5,
+                            "minimum": 1,
+                            "type": "integer"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The minimum rating of the trail from 0 to 5. This filter can be used to find trails that have a certain minimum rating. For example, if you want to find trails that have a rating of at least 4 stars, you would use the `minRating` filter with `min: 4` as the value.",
+                        "title": "Min Rating"
+                      },
+                      "elevation_gain": {
+                        "anyOf": [
+                          {
+                            "properties": {
+                              "min": {
+                                "description": "Minimum value for the range",
+                                "title": "Min",
+                                "type": "number"
+                              },
+                              "max": {
+                                "description": "Maximum value for the range",
+                                "title": "Max",
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "title": "RangeFilter",
+                            "type": "object"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The elevation gain of the trail in meters. This filter can be used to find trails that are within a certain elevation gain range. For example, if you want to find trails that have an elevation gain of between 500 and 1000 meters, you would use the `elevationGain` filter with `min: 500` and `max: 1000` as values. IMPORTANT: If the user specifies elevation gain in feet (ft), convert to meters using the conversion factor of 1 foot = 0.3048 meters. For example: '1000 ft elevation gain' → 304.8 meters, '2000-3000 ft elevation gain' → 609.6-914.4 meters, 'trails with 500 ft of climbing' → 152.4 meters. Always convert feet to meters before setting the filter values."
+                      },
+                      "highest_point": {
+                        "anyOf": [
+                          {
+                            "properties": {
+                              "min": {
+                                "description": "Minimum value for the range",
+                                "title": "Min",
+                                "type": "number"
+                              },
+                              "max": {
+                                "description": "Maximum value for the range",
+                                "title": "Max",
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "title": "RangeFilter",
+                            "type": "object"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The highest point on the trail in meters. This filter can be used to find trails that are within a certain elevation range. For example, if you want to find trails that are between 1000 and 2000 meters high, you would use the `highestPoint` filter with `min: 1000` and `max: 2000` as values."
+                      },
+                      "length": {
+                        "anyOf": [
+                          {
+                            "properties": {
+                              "min": {
+                                "description": "Minimum value for the range",
+                                "title": "Min",
+                                "type": "number"
+                              },
+                              "max": {
+                                "description": "Maximum value for the range",
+                                "title": "Max",
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "title": "RangeFilter",
+                            "type": "object"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The length of the trail in meters. This filter can be used to find trails that are within a certain distance range. For example, if you want to find trails that are between 5 and 10 kilometers long, you would use the `length` filter with `min: 5000` and `max: 10000` as values."
+                      },
+                      "duration": {
+                        "anyOf": [
+                          {
+                            "properties": {
+                              "min": {
+                                "description": "Minimum value for the range",
+                                "title": "Min",
+                                "type": "number"
+                              },
+                              "max": {
+                                "description": "Maximum value for the range",
+                                "title": "Max",
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "title": "RangeFilter",
+                            "type": "object"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "Estimated time to complete the trail in minutes. This filter can be used to find trails that are within a certain duration range. For example, if you want to find trails that take between 1 and 2 hours to complete, you would use the `duration` filter with `min: 60` and `max: 120` as values."
+                      },
+                      "difficulty": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "easy",
+                                "moderate",
+                                "hard"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The difficulty level of the trail. Union filter. There should be no duplicates in the difficulty array.",
+                        "title": "Difficulty"
+                      },
+                      "activity": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "birding",
+                                "camping",
+                                "cross-country-skiing",
+                                "fishing",
+                                "hiking",
+                                "mountain-biking",
+                                "off-road-driving",
+                                "road-biking",
+                                "rock-climbing",
+                                "scenic-driving",
+                                "skiing",
+                                "snowshoeing",
+                                "trail-running",
+                                "walking",
+                                "horseback-riding",
+                                "backpacking",
+                                "paddle-sports",
+                                "bike-touring",
+                                "via-ferrata"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The type of activity that can be done on the trail. Intersection filter. For example, if you want to find trails that are suitable for both hiking and biking, you would use the `activity` filter with both `hiking` and `biking` as values. There should be no duplicates in the activity array. Activity types include: birding (Birdwatching), camping (staying overnight), off-road-driving (4x4 vehicles), via-ferrata (climbing with fixed anchors), paddle-sports (kayaking, canoeing, paddleboarding), scenic-driving (beautiful scenic routes).",
+                        "title": "Activity"
+                      },
+                      "attractions": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "beach",
+                                "cave",
+                                "forest",
+                                "lake",
+                                "hot-springs",
+                                "river",
+                                "views",
+                                "waterfall",
+                                "wild-flowers",
+                                "wildlife",
+                                "rails-trails",
+                                "city-walk",
+                                "historic-site",
+                                "pub-crawl",
+                                "event"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The type of attraction that can be found on the trail. Intersection filter. There should be no duplicates in the attractions array. Attraction types include: CityWalk (urban trails with city features), HistoricSite (historic sites and landmarks), PubCrawl (urban trails featuring pubs and breweries), Event (trails created for specific events like marathons), RailsTrails (converted railway lines, often flat and straight), Views (scenic views of natural features), Waterfall (trails featuring waterfalls), WildFlowers (trails with wildflowers - no guarantee of bloom timing), Wildlife (trails where wildlife can be seen - no guarantee of sightings).",
+                        "title": "Attractions"
+                      },
+                      "suitability": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "dogs",
+                                "dogs-leash",
+                                "dogs-no",
+                                "kids",
+                                "ada",
+                                "strollers",
+                                "paved",
+                                "partially-paved"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The type of suitability that can be found on the trail. Intersection filter. For example, if you want to find trails that are suitable for both dogs and kids, you would use the `suitability` filter with both `dogs` and `kids` as values. There should be no duplicates in the suitability array. Suitability types include: Ada (Americans with Disabilities Act compliant, accessible to people with disabilities), Dogs (dogs allowed), DogsLeash (dogs allowed but must be leashed), DogsNo (dogs not allowed), Strollers (suitable for strollers), Paved (paved trail), PartiallyPaved (partially paved trail).",
+                        "title": "Suitability"
+                      },
+                      "route_type": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "O",
+                                "L",
+                                "P"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The type of the route. Union filter. There should be no duplicates in the route type array. Route types: O (Out and back route - goes to a point and returns to start), L (Loop route - starts and ends at the same point), P (Point to point route - starts at one point and ends at another).",
+                        "title": "Route Type"
+                      },
+                      "trail_traffic": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "enum": [
+                                "light",
+                                "moderate",
+                                "heavy"
+                              ],
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "The amount of traffic on the trail. Union filter. This is an average, an approximation, drawn from internal activity tracking data. It is not a guarantee of how many people will be on the trail at any given time. Traffic levels: light (light traffic), moderate (moderate traffic), heavy (heavy traffic).",
+                        "title": "Trail Traffic"
+                      }
+                    },
+                    "title": "SearchFilters",
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Search filters to apply"
+              },
+              "limit": {
+                "default": 20,
+                "description": "Maximum number of results",
+                "maximum": 20,
+                "minimum": 1,
+                "title": "Limit",
+                "type": "integer"
+              },
+              "sort": {
+                "anyOf": [
+                  {
+                    "enum": [
+                      "seasonal",
+                      "closest",
+                      "newly_added",
+                      "month_1",
+                      "month_2",
+                      "month_3",
+                      "month_4",
+                      "month_5",
+                      "month_6",
+                      "month_7",
+                      "month_8",
+                      "month_9",
+                      "month_10",
+                      "month_11",
+                      "month_12",
+                      "most_popular"
+                    ],
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "\nAbility to specify a sorting option.\n\nThe default is NONE. CRITICAL: Only extract sort if the query contains EXPLICIT sort keywords:\n- \"best trails\", \"top trails\" → most_popular\n- \"closest trails\", \"nearest trails\" → closest\n- \"new trails\", \"recently added\" → newly_added\n\n\nOnly include a sort option if the user's query explicitly indicates a particular sort order.\nIf no sort preference is indicated, omit the `sort` property entirely.\n\nAvailable sort options:\n- `closest`: Sort by distance from the user's location. Use when the query asks for\n\"closest trails\" or \"trails nearest to\" a location.\n- `most_popular`: Sort by overall popularity.\n- `newly_added`: Sort by date added. Use for queries like \"new hiking trails\".\n- `seasonal`: Sort by popularity at the current time of year. Use when the query asks for trails\n\"at this time of year\", \"this season\", \"right now\", or similar seasonal phrasing.\n- `month_1` through `month_12`: Sort by popularity in a specific month.\nUse when the query mentions a specific month, e.g., \"hiking trails in July\" → `month_7`.\n",
+                "title": "Sort"
+              },
+              "locale": {
+                "anyOf": [
+                  {
+                    "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "A BCP 47 locale string (e.g. 'en-US', 'es-ES', 'de-DE'). Should be set to the user's device/browser locale or the language of the current conversation. Used for localizing trail names and descriptions, difficulty labels, and URLs. Falls back to request metadata if not provided.",
+                "title": "Locale"
+              },
+              "southwest_bounds": {
+                "properties": {
+                  "latitude": {
+                    "description": "Latitude in decimal degrees",
+                    "title": "Latitude",
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "description": "Longitude in decimal degrees",
+                    "title": "Longitude",
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "latitude",
+                  "longitude"
+                ],
+                "title": "Point",
+                "type": "object"
+              },
+              "northeast_bounds": {
+                "properties": {
+                  "latitude": {
+                    "description": "Latitude in decimal degrees",
+                    "title": "Latitude",
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "description": "Longitude in decimal degrees",
+                    "title": "Longitude",
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "latitude",
+                  "longitude"
+                ],
+                "title": "Point",
+                "type": "object"
+              }
+            },
+            "required": [
+              "southwest_bounds",
+              "northeast_bounds"
+            ],
+            "title": "TrailBoundsSearchInput",
+            "type": "object"
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "title": "find_trails_within_boundsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "TrailSearchItem": {
+            "properties": {
+              "id": {
+                "title": "Id",
+                "type": "integer"
+              },
+              "name": {
+                "title": "Name",
+                "type": "string"
+              },
+              "slug": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Slug"
+              },
+              "alltrails_web_url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Alltrails Web Url"
+              },
+              "has_profile_photo": {
+                "title": "Has Profile Photo",
+                "type": "boolean"
+              },
+              "profile_photo_url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Profile Photo Url"
+              },
+              "avg_rating": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Avg Rating"
+              },
+              "duration_minutes": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Duration Minutes"
+              },
+              "elevation_gain_meters": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Elevation Gain Meters"
+              },
+              "elevation_gain_feet": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Elevation Gain Feet"
+              },
+              "length_meters": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Length Meters"
+              },
+              "length_miles": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Length Miles"
+              },
+              "features": {
+                "default": [],
+                "items": {
+                  "type": "string"
+                },
+                "title": "Features",
+                "type": "array"
+              },
+              "activities": {
+                "default": [],
+                "items": {
+                  "type": "string"
+                },
+                "title": "Activities",
+                "type": "array"
+              },
+              "location_label": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Location Label"
+              },
+              "trail_head_distance_meters": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Trail Head Distance Meters"
+              },
+              "trail_head_distance_miles": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Trail Head Distance Miles"
+              },
+              "difficulty": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Difficulty"
+              },
+              "route_type": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Route Type"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "has_profile_photo"
+            ],
+            "title": "TrailSearchItem",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "trails": {
+            "items": {
+              "properties": {
+                "id": {
+                  "title": "Id",
+                  "type": "integer"
+                },
+                "name": {
+                  "title": "Name",
+                  "type": "string"
+                },
+                "slug": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Slug"
+                },
+                "alltrails_web_url": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Alltrails Web Url"
+                },
+                "has_profile_photo": {
+                  "title": "Has Profile Photo",
+                  "type": "boolean"
+                },
+                "profile_photo_url": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Profile Photo Url"
+                },
+                "avg_rating": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Avg Rating"
+                },
+                "duration_minutes": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Duration Minutes"
+                },
+                "elevation_gain_meters": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Elevation Gain Meters"
+                },
+                "elevation_gain_feet": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Elevation Gain Feet"
+                },
+                "length_meters": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Length Meters"
+                },
+                "length_miles": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Length Miles"
+                },
+                "features": {
+                  "default": [],
+                  "items": {
+                    "type": "string"
+                  },
+                  "title": "Features",
+                  "type": "array"
+                },
+                "activities": {
+                  "default": [],
+                  "items": {
+                    "type": "string"
+                  },
+                  "title": "Activities",
+                  "type": "array"
+                },
+                "location_label": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Location Label"
+                },
+                "trail_head_distance_meters": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Trail Head Distance Meters"
+                },
+                "trail_head_distance_miles": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Trail Head Distance Miles"
+                },
+                "difficulty": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Difficulty"
+                },
+                "route_type": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Route Type"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "has_profile_photo"
+              ],
+              "title": "TrailSearchItem",
+              "type": "object"
+            },
+            "title": "Trails",
+            "type": "array"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Message"
+          }
+        },
+        "required": [
+          "trails"
+        ],
+        "title": "TrailsSearchOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Find trails within bounds",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://widget/trails_search_map.html",
+          "visibility": [
+            "model"
+          ]
+        },
+        "openai/toolInvocation/invoking": "Searching for trails",
+        "openai/toolInvocation/invoked": "Searched for trails"
+      }
+    },
+    {
+      "name": "search_trails_by_name",
+      "title": "Search trails by name",
+      "description": "Search for hiking, running, biking, backpacking or other trails by full or partial name match.\n\nUse this tool when the user:\n* Requests a specific trail by name (e.g., \"Avalanche Lake Trail\", \"Half Dome\")\n* Searches for trails with specific keywords in the name\n\nThe search can biased towards results near the provided coordinates if they are provided explicitly or available from the request metadata.\n\nIf there is a clear match to the user's query, the model should automatically make a subsequent call to the `get_trail_details` tool to present the user with complete details for the matching trail.\n\nIn the response, length and distance values are returned both in meters and imperial units. These MUST be displayed to the user in the units most appropriate for the user's locale, e.g. feet or miles for US English users.\n",
+      "inputSchema": {
+        "$defs": {
+          "TrailNameSearchInput": {
+            "properties": {
+              "search_query": {
+                "description": "The trail name or search query to look for",
+                "title": "Search Query",
+                "type": "string"
+              },
+              "latitude": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Optional latitude in decimal degrees for search that specifies a location",
+                "title": "Latitude"
+              },
+              "longitude": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Optional longitude in decimal degrees for search that specifies a location",
+                "title": "Longitude"
+              },
+              "limit": {
+                "default": 5,
+                "description": "Maximum number of matching trail candidates to return",
+                "maximum": 10,
+                "minimum": 1,
+                "title": "Limit",
+                "type": "integer"
+              },
+              "locale": {
+                "anyOf": [
+                  {
+                    "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "A BCP 47 locale string (e.g. 'en-US', 'es-ES', 'de-DE'). Should be set to the user's device/browser locale or the language of the current conversation. Used for localizing trail names and descriptions, difficulty labels, and URLs. Falls back to request metadata if not provided.",
+                "title": "Locale"
+              }
+            },
+            "required": [
+              "search_query"
+            ],
+            "title": "TrailNameSearchInput",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "input": {
+            "properties": {
+              "search_query": {
+                "description": "The trail name or search query to look for",
+                "title": "Search Query",
+                "type": "string"
+              },
+              "latitude": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Optional latitude in decimal degrees for search that specifies a location",
+                "title": "Latitude"
+              },
+              "longitude": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Optional longitude in decimal degrees for search that specifies a location",
+                "title": "Longitude"
+              },
+              "limit": {
+                "default": 5,
+                "description": "Maximum number of matching trail candidates to return",
+                "maximum": 10,
+                "minimum": 1,
+                "title": "Limit",
+                "type": "integer"
+              },
+              "locale": {
+                "anyOf": [
+                  {
+                    "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "A BCP 47 locale string (e.g. 'en-US', 'es-ES', 'de-DE'). Should be set to the user's device/browser locale or the language of the current conversation. Used for localizing trail names and descriptions, difficulty labels, and URLs. Falls back to request metadata if not provided.",
+                "title": "Locale"
+              }
+            },
+            "required": [
+              "search_query"
+            ],
+            "title": "TrailNameSearchInput",
+            "type": "object"
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "title": "search_trails_by_nameArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "TrailSearchItem": {
+            "properties": {
+              "id": {
+                "title": "Id",
+                "type": "integer"
+              },
+              "name": {
+                "title": "Name",
+                "type": "string"
+              },
+              "slug": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Slug"
+              },
+              "alltrails_web_url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Alltrails Web Url"
+              },
+              "has_profile_photo": {
+                "title": "Has Profile Photo",
+                "type": "boolean"
+              },
+              "profile_photo_url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Profile Photo Url"
+              },
+              "avg_rating": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Avg Rating"
+              },
+              "duration_minutes": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Duration Minutes"
+              },
+              "elevation_gain_meters": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Elevation Gain Meters"
+              },
+              "elevation_gain_feet": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Elevation Gain Feet"
+              },
+              "length_meters": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Length Meters"
+              },
+              "length_miles": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Length Miles"
+              },
+              "features": {
+                "default": [],
+                "items": {
+                  "type": "string"
+                },
+                "title": "Features",
+                "type": "array"
+              },
+              "activities": {
+                "default": [],
+                "items": {
+                  "type": "string"
+                },
+                "title": "Activities",
+                "type": "array"
+              },
+              "location_label": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Location Label"
+              },
+              "trail_head_distance_meters": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Trail Head Distance Meters"
+              },
+              "trail_head_distance_miles": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Trail Head Distance Miles"
+              },
+              "difficulty": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Difficulty"
+              },
+              "route_type": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Route Type"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "has_profile_photo"
+            ],
+            "title": "TrailSearchItem",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "trails": {
+            "items": {
+              "properties": {
+                "id": {
+                  "title": "Id",
+                  "type": "integer"
+                },
+                "name": {
+                  "title": "Name",
+                  "type": "string"
+                },
+                "slug": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Slug"
+                },
+                "alltrails_web_url": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Alltrails Web Url"
+                },
+                "has_profile_photo": {
+                  "title": "Has Profile Photo",
+                  "type": "boolean"
+                },
+                "profile_photo_url": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Profile Photo Url"
+                },
+                "avg_rating": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Avg Rating"
+                },
+                "duration_minutes": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Duration Minutes"
+                },
+                "elevation_gain_meters": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Elevation Gain Meters"
+                },
+                "elevation_gain_feet": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Elevation Gain Feet"
+                },
+                "length_meters": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Length Meters"
+                },
+                "length_miles": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Length Miles"
+                },
+                "features": {
+                  "default": [],
+                  "items": {
+                    "type": "string"
+                  },
+                  "title": "Features",
+                  "type": "array"
+                },
+                "activities": {
+                  "default": [],
+                  "items": {
+                    "type": "string"
+                  },
+                  "title": "Activities",
+                  "type": "array"
+                },
+                "location_label": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Location Label"
+                },
+                "trail_head_distance_meters": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Trail Head Distance Meters"
+                },
+                "trail_head_distance_miles": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Trail Head Distance Miles"
+                },
+                "difficulty": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Difficulty"
+                },
+                "route_type": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Route Type"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "has_profile_photo"
+              ],
+              "title": "TrailSearchItem",
+              "type": "object"
+            },
+            "title": "Trails",
+            "type": "array"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Message"
+          }
+        },
+        "required": [
+          "trails"
+        ],
+        "title": "TrailsSearchOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Search trails by name",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "ui": {
+          "visibility": [
+            "model"
+          ]
+        },
+        "openai/toolInvocation/invoking": "Searching for trails",
+        "openai/toolInvocation/invoked": "Searched for trails"
+      }
+    },
+    {
+      "name": "get_trail_details",
+      "title": "Show trail details",
+      "description": "Find detailed information about a trail from AllTrails.\n\nGet descriptive overviews and specific accessibility information. Includes structured data about suitable activities, and feature highlights along the trail.\n\nGet stats about the trail geography and length, and stats about associated user-generated content.\n\nIn the response, length and distance values are returned both in meters and imperial units. These MUST be displayed to the user in the units most appropriate for the user's locale, e.g. feet or miles for US English users.\n\nRecent reviews are summarized in the `review_summary` field. If the user wants information that might be found in specific reviews, direct the user to the AllTrails web URL for the trail.\n",
+      "inputSchema": {
+        "$defs": {
+          "TrailIdInput": {
+            "properties": {
+              "trail_id": {
+                "title": "Trail Id",
+                "type": "integer"
+              },
+              "locale": {
+                "anyOf": [
+                  {
+                    "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "A BCP 47 locale string (e.g. 'en-US', 'es-ES', 'de-DE'). Should be set to the user's device/browser locale or the language of the current conversation. Used for localizing trail names and descriptions, difficulty labels, and URLs. Falls back to request metadata if not provided.",
+                "title": "Locale"
+              }
+            },
+            "required": [
+              "trail_id"
+            ],
+            "title": "TrailIdInput",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "input": {
+            "properties": {
+              "trail_id": {
+                "title": "Trail Id",
+                "type": "integer"
+              },
+              "locale": {
+                "anyOf": [
+                  {
+                    "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "A BCP 47 locale string (e.g. 'en-US', 'es-ES', 'de-DE'). Should be set to the user's device/browser locale or the language of the current conversation. Used for localizing trail names and descriptions, difficulty labels, and URLs. Falls back to request metadata if not provided.",
+                "title": "Locale"
+              }
+            },
+            "required": [
+              "trail_id"
+            ],
+            "title": "TrailIdInput",
+            "type": "object"
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "title": "get_trail_detailsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "Park": {
+            "properties": {
+              "id": {
+                "title": "Id",
+                "type": "integer"
+              },
+              "name": {
+                "title": "Name",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ],
+            "title": "Park",
+            "type": "object"
+          },
+          "TrailDetails": {
+            "properties": {
+              "id": {
+                "title": "Id",
+                "type": "integer"
+              },
+              "name": {
+                "title": "Name",
+                "type": "string"
+              },
+              "slug": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Slug"
+              },
+              "curated_description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Curated Description"
+              },
+              "seo_overview": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Seo Overview"
+              },
+              "getting_there": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Getting There"
+              },
+              "parking_facilities": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Parking Facilities"
+              },
+              "contact_info": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Contact Info"
+              },
+              "tips": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Tips"
+              },
+              "accessibility": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Accessibility"
+              },
+              "alltrails_web_url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Alltrails Web Url"
+              },
+              "profile_photo_url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Profile Photo Url"
+              },
+              "location": {
+                "properties": {
+                  "city": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "City"
+                  },
+                  "region": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Region"
+                  },
+                  "country": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Country"
+                  }
+                },
+                "title": "TrailLocation",
+                "type": "object"
+              },
+              "trail_geo_stats": {
+                "properties": {
+                  "length_meters": {
+                    "title": "Length Meters",
+                    "type": "number"
+                  },
+                  "length_miles": {
+                    "title": "Length Miles",
+                    "type": "number"
+                  },
+                  "elevation_gain_meters": {
+                    "title": "Elevation Gain Meters",
+                    "type": "number"
+                  },
+                  "elevation_gain_feet": {
+                    "title": "Elevation Gain Feet",
+                    "type": "number"
+                  },
+                  "elevation_max_meters": {
+                    "title": "Elevation Max Meters",
+                    "type": "number"
+                  },
+                  "elevation_max_feet": {
+                    "title": "Elevation Max Feet",
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "length_meters",
+                  "length_miles",
+                  "elevation_gain_meters",
+                  "elevation_gain_feet",
+                  "elevation_max_meters",
+                  "elevation_max_feet"
+                ],
+                "title": "TrailGeoStats",
+                "type": "object"
+              },
+              "average_time_to_complete": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "value": {
+                        "title": "Value",
+                        "type": "string"
+                      },
+                      "unit": {
+                        "title": "Unit",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value",
+                      "unit"
+                    ],
+                    "title": "ValueUnit",
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "difficulty": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Difficulty"
+              },
+              "route_type": {
+                "title": "Route Type",
+                "type": "string"
+              },
+              "route_type_enum": {
+                "title": "Route Type Enum",
+                "type": "string"
+              },
+              "avg_rating": {
+                "title": "Avg Rating",
+                "type": "number"
+              },
+              "total_user_content_stats": {
+                "properties": {
+                  "reviews_count": {
+                    "title": "Reviews Count",
+                    "type": "integer"
+                  },
+                  "photos_count": {
+                    "title": "Photos Count",
+                    "type": "integer"
+                  },
+                  "completed_hikes_count": {
+                    "title": "Completed Hikes Count",
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "reviews_count",
+                  "photos_count",
+                  "completed_hikes_count"
+                ],
+                "title": "UGCStats",
+                "type": "object"
+              },
+              "activities": {
+                "default": [],
+                "items": {
+                  "type": "string"
+                },
+                "title": "Activities",
+                "type": "array"
+              },
+              "features": {
+                "default": [],
+                "items": {
+                  "type": "string"
+                },
+                "title": "Features",
+                "type": "array"
+              },
+              "park": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "id": {
+                        "title": "Id",
+                        "type": "integer"
+                      },
+                      "name": {
+                        "title": "Name",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name"
+                    ],
+                    "title": "Park",
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "review_summary": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Review Summary"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "location",
+              "trail_geo_stats",
+              "route_type",
+              "route_type_enum",
+              "avg_rating",
+              "total_user_content_stats"
+            ],
+            "title": "TrailDetails",
+            "type": "object"
+          },
+          "TrailGeoStats": {
+            "properties": {
+              "length_meters": {
+                "title": "Length Meters",
+                "type": "number"
+              },
+              "length_miles": {
+                "title": "Length Miles",
+                "type": "number"
+              },
+              "elevation_gain_meters": {
+                "title": "Elevation Gain Meters",
+                "type": "number"
+              },
+              "elevation_gain_feet": {
+                "title": "Elevation Gain Feet",
+                "type": "number"
+              },
+              "elevation_max_meters": {
+                "title": "Elevation Max Meters",
+                "type": "number"
+              },
+              "elevation_max_feet": {
+                "title": "Elevation Max Feet",
+                "type": "number"
+              }
+            },
+            "required": [
+              "length_meters",
+              "length_miles",
+              "elevation_gain_meters",
+              "elevation_gain_feet",
+              "elevation_max_meters",
+              "elevation_max_feet"
+            ],
+            "title": "TrailGeoStats",
+            "type": "object"
+          },
+          "TrailLocation": {
+            "properties": {
+              "city": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "City"
+              },
+              "region": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Region"
+              },
+              "country": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Country"
+              }
+            },
+            "title": "TrailLocation",
+            "type": "object"
+          },
+          "UGCStats": {
+            "properties": {
+              "reviews_count": {
+                "title": "Reviews Count",
+                "type": "integer"
+              },
+              "photos_count": {
+                "title": "Photos Count",
+                "type": "integer"
+              },
+              "completed_hikes_count": {
+                "title": "Completed Hikes Count",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "reviews_count",
+              "photos_count",
+              "completed_hikes_count"
+            ],
+            "title": "UGCStats",
+            "type": "object"
+          },
+          "ValueUnit": {
+            "properties": {
+              "value": {
+                "title": "Value",
+                "type": "string"
+              },
+              "unit": {
+                "title": "Unit",
+                "type": "string"
+              }
+            },
+            "required": [
+              "value",
+              "unit"
+            ],
+            "title": "ValueUnit",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "trail": {
+            "properties": {
+              "id": {
+                "title": "Id",
+                "type": "integer"
+              },
+              "name": {
+                "title": "Name",
+                "type": "string"
+              },
+              "slug": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Slug"
+              },
+              "curated_description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Curated Description"
+              },
+              "seo_overview": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Seo Overview"
+              },
+              "getting_there": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Getting There"
+              },
+              "parking_facilities": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Parking Facilities"
+              },
+              "contact_info": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Contact Info"
+              },
+              "tips": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Tips"
+              },
+              "accessibility": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Accessibility"
+              },
+              "alltrails_web_url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Alltrails Web Url"
+              },
+              "profile_photo_url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Profile Photo Url"
+              },
+              "location": {
+                "properties": {
+                  "city": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "City"
+                  },
+                  "region": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Region"
+                  },
+                  "country": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Country"
+                  }
+                },
+                "title": "TrailLocation",
+                "type": "object"
+              },
+              "trail_geo_stats": {
+                "properties": {
+                  "length_meters": {
+                    "title": "Length Meters",
+                    "type": "number"
+                  },
+                  "length_miles": {
+                    "title": "Length Miles",
+                    "type": "number"
+                  },
+                  "elevation_gain_meters": {
+                    "title": "Elevation Gain Meters",
+                    "type": "number"
+                  },
+                  "elevation_gain_feet": {
+                    "title": "Elevation Gain Feet",
+                    "type": "number"
+                  },
+                  "elevation_max_meters": {
+                    "title": "Elevation Max Meters",
+                    "type": "number"
+                  },
+                  "elevation_max_feet": {
+                    "title": "Elevation Max Feet",
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "length_meters",
+                  "length_miles",
+                  "elevation_gain_meters",
+                  "elevation_gain_feet",
+                  "elevation_max_meters",
+                  "elevation_max_feet"
+                ],
+                "title": "TrailGeoStats",
+                "type": "object"
+              },
+              "average_time_to_complete": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "value": {
+                        "title": "Value",
+                        "type": "string"
+                      },
+                      "unit": {
+                        "title": "Unit",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value",
+                      "unit"
+                    ],
+                    "title": "ValueUnit",
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "difficulty": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Difficulty"
+              },
+              "route_type": {
+                "title": "Route Type",
+                "type": "string"
+              },
+              "route_type_enum": {
+                "title": "Route Type Enum",
+                "type": "string"
+              },
+              "avg_rating": {
+                "title": "Avg Rating",
+                "type": "number"
+              },
+              "total_user_content_stats": {
+                "properties": {
+                  "reviews_count": {
+                    "title": "Reviews Count",
+                    "type": "integer"
+                  },
+                  "photos_count": {
+                    "title": "Photos Count",
+                    "type": "integer"
+                  },
+                  "completed_hikes_count": {
+                    "title": "Completed Hikes Count",
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "reviews_count",
+                  "photos_count",
+                  "completed_hikes_count"
+                ],
+                "title": "UGCStats",
+                "type": "object"
+              },
+              "activities": {
+                "default": [],
+                "items": {
+                  "type": "string"
+                },
+                "title": "Activities",
+                "type": "array"
+              },
+              "features": {
+                "default": [],
+                "items": {
+                  "type": "string"
+                },
+                "title": "Features",
+                "type": "array"
+              },
+              "park": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "id": {
+                        "title": "Id",
+                        "type": "integer"
+                      },
+                      "name": {
+                        "title": "Name",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name"
+                    ],
+                    "title": "Park",
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "review_summary": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Review Summary"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "location",
+              "trail_geo_stats",
+              "route_type",
+              "route_type_enum",
+              "avg_rating",
+              "total_user_content_stats"
+            ],
+            "title": "TrailDetails",
+            "type": "object"
+          }
+        },
+        "required": [
+          "trail"
+        ],
+        "title": "TrailDetailsOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Show trail details",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://widget/trail_details.html",
+          "visibility": [
+            "app",
+            "model"
+          ]
+        },
+        "openai/toolInvocation/invoking": "Fetching trail details",
+        "openai/toolInvocation/invoked": "Fetched trail details"
+      }
+    },
+    {
+      "name": "get_trail_weather_overview",
+      "title": "Get trail's weather forecast",
+      "description": "Get 7-day forecast for a trail at its trailhead, including high/low temperatures.\n\nFor more detailed weather information, including current conditions, sunrise/sunset times, and weather alerts, direct the user to the AllTrails web URL for the trail (available in the `get_trail_details` tool response).\n",
+      "inputSchema": {
+        "$defs": {
+          "WeatherInput": {
+            "properties": {
+              "trail_id": {
+                "description": "The ID of the trail to get weather for",
+                "title": "Trail Id",
+                "type": "integer"
+              },
+              "units": {
+                "default": "i",
+                "description": "Units for temperature: 'i' for imperial (Fahrenheit), 'm' for metric (Celsius)\n\nProvide the unit most appropriate for the user's current locale.\n",
+                "enum": [
+                  "i",
+                  "m"
+                ],
+                "title": "Units",
+                "type": "string"
+              },
+              "locale": {
+                "anyOf": [
+                  {
+                    "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "A BCP 47 locale string (e.g. 'en-US', 'es-ES', 'de-DE'). Should be set to the user's device/browser locale or the language of the current conversation. Used for localizing trail names and descriptions, difficulty labels, and URLs. Falls back to request metadata if not provided.",
+                "title": "Locale"
+              }
+            },
+            "required": [
+              "trail_id"
+            ],
+            "title": "WeatherInput",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "input": {
+            "properties": {
+              "trail_id": {
+                "description": "The ID of the trail to get weather for",
+                "title": "Trail Id",
+                "type": "integer"
+              },
+              "units": {
+                "default": "i",
+                "description": "Units for temperature: 'i' for imperial (Fahrenheit), 'm' for metric (Celsius)\n\nProvide the unit most appropriate for the user's current locale.\n",
+                "enum": [
+                  "i",
+                  "m"
+                ],
+                "title": "Units",
+                "type": "string"
+              },
+              "locale": {
+                "anyOf": [
+                  {
+                    "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "A BCP 47 locale string (e.g. 'en-US', 'es-ES', 'de-DE'). Should be set to the user's device/browser locale or the language of the current conversation. Used for localizing trail names and descriptions, difficulty labels, and URLs. Falls back to request metadata if not provided.",
+                "title": "Locale"
+              }
+            },
+            "required": [
+              "trail_id"
+            ],
+            "title": "WeatherInput",
+            "type": "object"
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "title": "get_trail_weather_overviewArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "DailyForecast": {
+            "properties": {
+              "day_of_week": {
+                "title": "Day Of Week",
+                "type": "string"
+              },
+              "high_temperature": {
+                "title": "High Temperature",
+                "type": "number"
+              },
+              "low_temperature": {
+                "title": "Low Temperature",
+                "type": "number"
+              }
+            },
+            "required": [
+              "day_of_week",
+              "high_temperature",
+              "low_temperature"
+            ],
+            "title": "DailyForecast",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "trail_id": {
+            "title": "Trail Id",
+            "type": "integer"
+          },
+          "weather_alert_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Weather Alert Text"
+          },
+          "daily_forecasts": {
+            "items": {
+              "properties": {
+                "day_of_week": {
+                  "title": "Day Of Week",
+                  "type": "string"
+                },
+                "high_temperature": {
+                  "title": "High Temperature",
+                  "type": "number"
+                },
+                "low_temperature": {
+                  "title": "Low Temperature",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "day_of_week",
+                "high_temperature",
+                "low_temperature"
+              ],
+              "title": "DailyForecast",
+              "type": "object"
+            },
+            "title": "Daily Forecasts",
+            "type": "array"
+          }
+        },
+        "required": [
+          "trail_id",
+          "daily_forecasts"
+        ],
+        "title": "WeatherForecastOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Get trail's weather forecast",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "ui": {
+          "visibility": [
+            "model"
+          ]
+        },
+        "openai/toolInvocation/invoking": "Fetching weather forecast at trailhead",
+        "openai/toolInvocation/invoked": "Fetched weather forecast at trailhead"
+      }
+    }
+  ]
+}

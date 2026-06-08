@@ -1,0 +1,128 @@
+schema_version: "1.1"
+platform: kindora-funder-discovery
+display_name: Kindora Funder Discovery
+source: langguard-editorial
+updated: "2026-06"
+reference: https://kindora.co/mcp
+actions:
+  # ---------- Data Access ----------
+  - id: kindora-funder-discovery.search_funders
+    object: Funder
+    action: search_funders
+    description: "Look up grantmaking organizations by name, topic, location, NTEE code, or asset size across 174K+ IRS-derived funders."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a filtered list from the public IRS-derived grantmaker corpus; read-only org-level intelligence query."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: kindora-funder-discovery.search_open_grants
+    object: Grant
+    action: search_open_grants
+    description: "Search open grant opportunities from private foundation programs and federal Grants.gov listings via full-text query."
+    category: Data Access
+    risk: low
+    business_impact: "Returns matching open-grant opportunities from a public foundation-program and federal-grants corpus; read-only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: kindora-funder-discovery.get_funder_profile
+    object: Funder
+    action: get_funder_profile
+    description: "Get a detailed foundation profile by EIN, including leadership, financials, and classification."
+    category: Data Access
+    risk: low
+    business_impact: "Returns one foundation's public 990-derived profile, including publicly-disclosed officer/director names and compensation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: kindora-funder-discovery.get_990_summary
+    object: Filing
+    action: get_990_summary
+    description: "Retrieve an IRS Form 990 / 990-PF filing summary and year-over-year financial trends for a foundation by EIN."
+    category: Data Access
+    risk: low
+    business_impact: "Returns one foundation's public IRS 990 filing financials and trends; read-only public-record query."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: kindora-funder-discovery.get_foundation_grants
+    object: Grant
+    action: get_foundation_grants
+    description: "View individual grants a foundation made from its IRS 990-PF filings, with recipient, amount, and purpose."
+    category: Data Access
+    risk: low
+    business_impact: "Returns one foundation's individual grant records from public 990-PF data; read-only org-to-org grant history."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: kindora-funder-discovery.get_funder_stats
+    object: Funder
+    action: get_funder_stats
+    description: "Get aggregate giving statistics for a foundation: lifetime totals, focus areas, geographic distribution, and trends."
+    category: Data Access
+    risk: low
+    business_impact: "Returns computed giving statistics for one foundation from public 990-PF data; read-only aggregate query."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: kindora-funder-discovery.get_ntee_codes
+    object: NTEECode
+    action: get_ntee_codes
+    description: "Browse NTEE (National Taxonomy of Exempt Entities) classification codes for nonprofit categories."
+    category: Data Access
+    risk: low
+    business_impact: "Returns reference NTEE classification codes; read-only lookup of a public taxonomy with no entity data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: kindora-funder-discovery.search_funder_jobs
+    object: JobPosting
+    action: search_funder_jobs
+    description: "Search open philanthropy jobs at grantmaking foundations, scraped weekly from funder careers pages and classified into a taxonomy."
+    category: Data Access
+    risk: low
+    business_impact: "Returns matching philanthropy job postings scraped from public funder careers pages; read-only listing search that may surface named contacts."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: kindora-funder-discovery.list_tools
+    object: Tool
+    action: list_tools
+    description: "List available MCP tools and return detailed help, parameters, and examples for discovery."
+    category: Operations
+    risk: low
+    business_impact: "Enumerates the server's own tool catalog and help text; read-only introspection with no business data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: kindora-funder-discovery.health_check
+    object: Server
+    action: health_check
+    description: "Check server health and connectivity, returning status, version, and environment."
+    category: Operations
+    risk: low
+    business_impact: "Returns server health, version, and environment; read-only diagnostic with no business data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

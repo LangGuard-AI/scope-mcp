@@ -1,0 +1,509 @@
+schema_version: "1.1"
+platform: quartr
+display_name: Quartr
+source: langguard-editorial
+updated: "2026-06"
+reference: https://mcp.quartr.com/docs
+actions:
+  # ---------- Watchlists ----------
+  - id: quartr.create_watchlist
+    object: Watchlist
+    action: create_watchlist
+    description: "Create a new watchlist"
+    category: Data Access
+    risk: low
+    business_impact: "Creates a personal watchlist of tracked tickers; user-scoped organizational state, fully reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.rename_watchlist
+    object: Watchlist
+    action: rename_watchlist
+    description: "Rename an existing watchlist"
+    category: Data Access
+    risk: low
+    business_impact: "Renames the user's own watchlist; cosmetic change to personal organizational state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.delete_watchlist
+    object: Watchlist
+    action: delete_watchlist
+    description: "Delete a watchlist"
+    category: Data Access
+    risk: low
+    business_impact: "Deletes one of the user's own watchlists; removes personal organizational state with no shared-data impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.add_to_watchlist
+    object: Watchlist
+    action: add_to_watchlist
+    description: "Add companies to a watchlist"
+    category: Data Access
+    risk: low
+    business_impact: "Adds companies to a personal watchlist; reversible user-scoped change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.remove_from_watchlist
+    object: Watchlist
+    action: remove_from_watchlist
+    description: "Remove companies from a watchlist"
+    category: Data Access
+    risk: low
+    business_impact: "Removes companies from a personal watchlist; reversible user-scoped change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Keyword Alerts ----------
+  - id: quartr.create_keyword
+    object: Keyword
+    action: create_keyword
+    description: "Create a keyword alert for transcript and document monitoring"
+    category: Data Access
+    risk: low
+    business_impact: "Creates a personal keyword alert for transcript and document monitoring; user-scoped, reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.update_keyword
+    object: Keyword
+    action: update_keyword
+    description: "Update an existing keyword alert"
+    category: Data Access
+    risk: low
+    business_impact: "Updates the user's own keyword alert; reversible change to personal monitoring config."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.delete_keyword
+    object: Keyword
+    action: delete_keyword
+    description: "Delete a keyword alert"
+    category: Data Access
+    risk: low
+    business_impact: "Deletes one of the user's own keyword alerts; removes personal monitoring config."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Folders ----------
+  - id: quartr.create_folder
+    object: Folder
+    action: create_folder
+    description: "Create a new folder for saving content"
+    category: Data Access
+    risk: low
+    business_impact: "Creates a personal folder for saved content; user-scoped organizational state, reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.rename_folder
+    object: Folder
+    action: rename_folder
+    description: "Rename a folder"
+    category: Data Access
+    risk: low
+    business_impact: "Renames the user's own folder; cosmetic change to personal organizational state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.delete_folder
+    object: Folder
+    action: delete_folder
+    description: "Delete a folder"
+    category: Data Access
+    risk: low
+    business_impact: "Deletes one of the user's own folders and its saved-content references; user-scoped, no shared-data impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Workspaces ----------
+  - id: quartr.create_workspace
+    object: Workspace
+    action: create_workspace
+    description: "Create a new workspace"
+    category: Data Access
+    risk: low
+    business_impact: "Creates a new content workspace; reversible organizational container with no underlying-data impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.delete_workspace
+    object: Workspace
+    action: delete_workspace
+    description: "Delete a workspace"
+    category: Data Access
+    risk: medium
+    business_impact: "Deletes a workspace and its company tags; a workspace may be a shared collaboration container, giving this a broader blast radius than personal folders."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: quartr.tag_company_to_workspace
+    object: Workspace
+    action: tag_company_to_workspace
+    description: "Tag a company to a workspace"
+    category: Data Access
+    risk: low
+    business_impact: "Tags a company into a workspace; reversible organizational change over public-company references."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.untag_company_from_workspace
+    object: Workspace
+    action: untag_company_from_workspace
+    description: "Remove a company from a workspace"
+    category: Data Access
+    risk: low
+    business_impact: "Removes a company tag from a workspace; reversible organizational change over public-company references."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Search Filters ----------
+  - id: quartr.create_search_filter
+    object: SearchFilter
+    action: create_search_filter
+    description: "Create a saved filter with GICS, country, event type, and market cap criteria"
+    category: Data Access
+    risk: low
+    business_impact: "Saves a personal search filter; user-scoped query preset, fully reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.delete_search_filter
+    object: SearchFilter
+    action: delete_search_filter
+    description: "Delete a saved search filter"
+    category: Data Access
+    risk: low
+    business_impact: "Deletes one of the user's own saved search filters; removes a personal query preset."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Companies ----------
+  - id: quartr.search_companies
+    object: Company
+    action: search_companies
+    description: "Search for companies by name or ticker symbol"
+    category: Data Access
+    risk: low
+    business_impact: "Searches the universe of covered public companies by name or ticker; non-personal reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.get_company
+    object: Company
+    action: get_company
+    description: "Get a company's full profile including ticker, GICS, market cap, and status"
+    category: Data Access
+    risk: low
+    business_impact: "Reads a public company's profile including ticker, GICS, and market cap; published market reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.list_companies
+    object: Company
+    action: list_companies
+    description: "List companies filtered by GICS sector, country, status, or market cap size"
+    category: Data Access
+    risk: low
+    business_impact: "Lists public companies filtered by sector, country, or market cap; paginated read of non-personal reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.list_related_companies
+    object: Company
+    action: list_related_companies
+    description: "Find peers and competitors for a given company"
+    category: Data Access
+    risk: low
+    business_impact: "Returns peers and competitors for a public company; non-personal market reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Events & Documents ----------
+  - id: quartr.list_events
+    object: Event
+    action: list_events
+    description: "List events (earnings calls, investor days) for a company or watchlist"
+    category: Data Access
+    risk: low
+    business_impact: "Lists corporate events such as earnings calls and investor days; published market-event metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.get_event
+    object: Event
+    action: get_event
+    description: "Retrieve detailed information about a specific event"
+    category: Data Access
+    risk: low
+    business_impact: "Reads one corporate event's details; published market-event metadata, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.list_event_types
+    object: EventType
+    action: list_event_types
+    description: "List all event types with hierarchical classification"
+    category: Data Access
+    risk: low
+    business_impact: "Lists the event-type taxonomy; non-personal reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.list_documents
+    object: Document
+    action: list_documents
+    description: "List documents (transcripts, reports, filings) for a company"
+    category: Data Access
+    risk: low
+    business_impact: "Lists transcripts, reports, and filings for a public company; published-document metadata, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.read_document
+    object: Document
+    action: read_document
+    description: "Read the full text content of a document page by page"
+    category: Data Access
+    risk: low
+    business_impact: "Reads the full text of a published document such as a transcript or filing; public corporate disclosure, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.read_live_transcript
+    object: Transcript
+    action: read_live_transcript
+    description: "Read the live transcript for an ongoing or recently completed event"
+    category: Data Access
+    risk: low
+    business_impact: "Reads the live transcript of an ongoing or recent public earnings event; published market communication."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.search_documents
+    object: Document
+    action: search_documents
+    description: "Full-text search across transcripts, slides, and reports with highlighted snippets"
+    category: Data Access
+    risk: low
+    business_impact: "Full-text search across published transcripts, slides, and reports; corpus is non-personal market data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Conferences ----------
+  - id: quartr.list_conferences
+    object: Conference
+    action: list_conferences
+    description: "List investor and industry conferences with optional date, organizer, and title filters"
+    category: Data Access
+    risk: low
+    business_impact: "Lists investor and industry conferences; published event-listing data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.get_conference
+    object: Conference
+    action: get_conference
+    description: "Get a conference and its events, each with company, date, and a one-line summary"
+    category: Data Access
+    risk: low
+    business_impact: "Reads one conference and its events; published event-listing data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Financials & Summaries ----------
+  - id: quartr.get_financials
+    object: Financials
+    action: get_financials
+    description: "Retrieve financial statements — income statement, balance sheet, and cash flow"
+    category: Data Access
+    risk: low
+    business_impact: "Returns issuer-reported income statement, balance sheet, and cash flow; published market data, not the customer's own books."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.get_document_summary
+    object: Document
+    action: get_document_summary
+    description: "Get an AI-generated summary for a specific document"
+    category: Data Access
+    risk: low
+    business_impact: "Returns an AI-generated summary of a published document; derived from public corporate disclosure, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.get_event_summary
+    object: Event
+    action: get_event_summary
+    description: "Get an AI-generated summary for a specific event"
+    category: Data Access
+    risk: low
+    business_impact: "Returns an AI-generated summary of a public corporate event; derived from published market data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Watchlist Reads ----------
+  - id: quartr.list_watchlists
+    object: Watchlist
+    action: list_watchlists
+    description: "List the user's watchlists"
+    category: Data Access
+    risk: low
+    business_impact: "Lists the user's own watchlists; reveals which tickers the user tracks but no personal data of third parties."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.get_watchlist
+    object: Watchlist
+    action: get_watchlist
+    description: "Get a watchlist with its companies"
+    category: Data Access
+    risk: low
+    business_impact: "Reads one of the user's watchlists and its companies; user-scoped tracked-ticker data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.list_keywords
+    object: Keyword
+    action: list_keywords
+    description: "List the user's keyword alerts"
+    category: Data Access
+    risk: low
+    business_impact: "Lists the user's own keyword alerts; user-scoped monitoring config, no third-party personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.list_folders
+    object: Folder
+    action: list_folders
+    description: "List the user's saved content folders"
+    category: Data Access
+    risk: low
+    business_impact: "Lists the user's own saved-content folders; user-scoped organizational state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.list_workspaces
+    object: Workspace
+    action: list_workspaces
+    description: "List the user's workspaces"
+    category: Data Access
+    risk: low
+    business_impact: "Lists the user's workspaces; organizational containers over public-company references."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.list_search_filters
+    object: SearchFilter
+    action: list_search_filters
+    description: "List saved search filters"
+    category: Data Access
+    risk: low
+    business_impact: "Lists the user's saved search filters; user-scoped query presets."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quartr.list_gics
+    object: GICS
+    action: list_gics
+    description: "List GICS industry classifications (4-level hierarchy)"
+    category: Data Access
+    risk: low
+    business_impact: "Lists the GICS industry-classification hierarchy; non-personal reference taxonomy."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Account ----------
+  - id: quartr.get_current_user
+    object: User
+    action: get_current_user
+    description: "Get the signed-in user's profile and subscription"
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads the signed-in user's own profile and subscription details; returns that individual's personal data only."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

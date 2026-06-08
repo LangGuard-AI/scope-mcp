@@ -1,0 +1,59 @@
+schema_version: "1.1"
+platform: expedia
+display_name: Expedia
+source: langguard-editorial
+updated: "2026-06"
+reference: https://github.com/ExpediaGroup/expedia-travel-recommendations-mcp
+actions:
+  # ---------- Travel Search ----------
+  - id: expedia.get_hotel_recommendations
+    object: HotelRecommendation
+    action: get_hotel_recommendations
+    description: "Returns hotel recommendations for a destination filtered by dates, property type, amenities, guest rating, and sort preferences."
+    reference: https://github.com/ExpediaGroup/expedia-travel-recommendations-mcp
+    category: Data Access
+    risk: low
+    business_impact: "Read-only travel search; returns public hotel inventory and prices and changes no state."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: expedia.get_flight_recommendations
+    object: FlightRecommendation
+    action: get_flight_recommendations
+    description: "Returns flight recommendations between an origin and destination filtered by date, airline, stops, and sort preferences."
+    reference: https://github.com/ExpediaGroup/expedia-travel-recommendations-mcp
+    category: Data Access
+    risk: low
+    business_impact: "Read-only travel search; returns public flight options and fares and changes no state."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: expedia.get_activity_recommendations
+    object: ActivityRecommendation
+    action: get_activity_recommendations
+    description: "Returns activity and tour recommendations for a destination filtered by date, category, duration, and price."
+    reference: https://github.com/ExpediaGroup/expedia-travel-recommendations-mcp
+    category: Data Access
+    risk: low
+    business_impact: "Read-only travel search; returns public activity listings and prices and changes no state."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: expedia.get_car_recommendations
+    object: CarRecommendation
+    action: get_car_recommendations
+    description: "Returns car-rental recommendations for a pickup/dropoff location filtered by date, time, and car class."
+    reference: https://github.com/ExpediaGroup/expedia-travel-recommendations-mcp
+    category: Data Access
+    risk: low
+    business_impact: "Read-only travel search; returns public car-rental options and prices and changes no state."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

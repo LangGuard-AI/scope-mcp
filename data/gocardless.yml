@@ -1,0 +1,147 @@
+schema_version: "1.1"
+platform: gocardless
+display_name: GoCardless
+source: langguard-editorial
+updated: "2026-06"
+reference: https://developer.gocardless.com/developer-tools/mcp/
+# ---------------------------------------------------------------------------
+# PROVENANCE / CURATION NOTE
+# The official GoCardless connector (https://mcp.gocardless.com — the same
+# server wired up by the claude.com/connectors/gocardless install configs) is
+# OAuth-gated: live tools/list returns 401, and no anonymous tools-catalog
+# endpoint exists (/tools, /.well-known/mcp/* all 404; /mcp/tools 401). The
+# vendor's official MCP docs (HTML + raw markdown + llms.txt) publish ONLY
+# plain-language capability prose — NO verbatim tool ids anywhere reachable.
+# Per the curator spec this is the documented capability-form fallback:
+# id_form: capability, verbatim capability label in `description`, snake_case
+# slug ids, confidence capped at medium (set to low here — granularity is
+# inferred from the vendor's per-resource read list, not from identifier
+# strings). The jmceleney/gocardless-mcp GitHub repo is a SEPARATE third-party
+# server and was deliberately NOT used as a source.
+#
+# Capability labels are derived from the vendor's own sentence: "your LLM can
+# look up payments, customers, mandates, subscriptions, payouts, refunds, and
+# events on your behalf" — one entry per enumerated resource, plus the
+# documented "Integration guidance" capability.
+#
+# The server is strictly READ-ONLY: vendor docs state "the MCP cannot create,
+# cancel, or modify any resources." Sensitive customer data (email, phone,
+# bank details) is automatically masked in responses. There is therefore no
+# write/destructive surface — no SOX/COSO change-control exposure and no
+# sod_concern; PCI does not attach (bank debit via Bacs/SEPA, not card data).
+# ---------------------------------------------------------------------------
+actions:
+  # ---------- Financial ----------
+  - id: gocardless.look_up_payments
+    object: Payment
+    action: look_up_payments
+    id_form: capability
+    description: "Look up payments"
+    reference: https://developer.gocardless.com/developer-tools/mcp/#query_your_account_data
+    category: Financial
+    risk: medium
+    business_impact: "Reads the account's payment records (amounts, statuses, dates, linked mandate/subscription), filterable and bulk-capable; financial-transaction data with customer PII masked in responses."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+
+  - id: gocardless.look_up_payouts
+    object: Payout
+    action: look_up_payouts
+    id_form: capability
+    description: "Look up payouts"
+    reference: https://developer.gocardless.com/developer-tools/mcp/#query_your_account_data
+    category: Financial
+    risk: medium
+    business_impact: "Reads payouts settled to the merchant's bank account (amounts, dates, currency), bulk-capable; financial-settlement data."
+    compliance: [GLBA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+
+  - id: gocardless.look_up_refunds
+    object: Refund
+    action: look_up_refunds
+    id_form: capability
+    description: "Look up refunds"
+    reference: https://developer.gocardless.com/developer-tools/mcp/#query_your_account_data
+    category: Financial
+    risk: medium
+    business_impact: "Reads refund records and their related payments, bulk-capable; financial-transaction data with customer PII masked."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+
+  # ---------- Customer ----------
+  - id: gocardless.look_up_customers
+    object: Customer
+    action: look_up_customers
+    id_form: capability
+    description: "Look up customers"
+    reference: https://developer.gocardless.com/developer-tools/mcp/#query_your_account_data
+    category: Customer
+    risk: medium
+    business_impact: "Reads the account's customer directory, bulk-capable; customer PII, mitigated by automatic masking of email, phone, and bank details."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+
+  - id: gocardless.look_up_mandates
+    object: Mandate
+    action: look_up_mandates
+    id_form: capability
+    description: "Look up mandates"
+    reference: https://developer.gocardless.com/developer-tools/mcp/#query_your_account_data
+    category: Customer
+    risk: medium
+    business_impact: "Reads direct-debit mandate records (scheme such as Bacs/SEPA, status, linked customer), bulk-capable; customer banking-relationship data with PII masked."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+
+  - id: gocardless.look_up_subscriptions
+    object: Subscription
+    action: look_up_subscriptions
+    id_form: capability
+    description: "Look up subscriptions"
+    reference: https://developer.gocardless.com/developer-tools/mcp/#query_your_account_data
+    category: Customer
+    risk: medium
+    business_impact: "Reads recurring-payment subscription records (amount, interval, status, linked customer and mandate), bulk-capable; financial and customer data with PII masked."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: gocardless.look_up_events
+    object: Event
+    action: look_up_events
+    id_form: capability
+    description: "Look up events"
+    reference: https://developer.gocardless.com/developer-tools/mcp/#query_your_account_data
+    category: Operations
+    risk: medium
+    business_impact: "Reads the account's event history (payment/mandate submission, confirmation, and failure events), bulk-capable; an audit-trail read across financial activity with PII masked."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+
+  - id: gocardless.integration_guidance
+    object: Documentation
+    action: integration_guidance
+    id_form: capability
+    description: "Integration guidance"
+    reference: https://developer.gocardless.com/developer-tools/mcp/
+    category: Operations
+    risk: low
+    business_impact: "Returns GoCardless API integration guidance, patterns, webhook docs, and code samples; no account data is read or changed."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]

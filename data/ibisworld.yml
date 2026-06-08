@@ -1,0 +1,103 @@
+schema_version: "1.1"
+platform: ibisworld
+display_name: IBISWorld
+source: langguard-editorial
+updated: "2026-06"
+reference: https://help.ibisworld.com/en/articles/14627556-ibisworld-mcp-server-documentation
+actions:
+  # ---------- Data Access ----------
+  - id: ibisworld.fetch_metadata
+    object: Title
+    action: fetch_metadata
+    description: "Use as the first step when working with IBISWorld data; retrieves metadata such as available sections and structure before fetching full titles."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the section structure of a published IBISWorld research title; read-only navigation metadata, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ibisworld.fetch_section
+    object: Title
+    action: fetch_section
+    description: "Use after fetch_metadata to retrieve the full content of specific sections from IBISWorld titles."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the full text of specified sections from a published IBISWorld research title; read-only market-research content, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ibisworld.search_industry
+    object: Industry
+    action: search_industry
+    description: "Pulls key data like market size, growth, drivers, trends, competitive landscape, key players, and outlook by industry."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregate published industry statistics (market size, growth, competitive landscape); read-only market-intelligence query, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ibisworld.search_industry_region
+    object: Industry
+    action: search_industry_region
+    description: "Industry questions scoped to a specific state or region — local market size and geographic performance."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregate published industry statistics scoped to a region; read-only market-intelligence query, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ibisworld.search_company
+    object: Company
+    action: search_company
+    description: "Company-level performance, operations, market position, financials, and strategic activity."
+    category: Data Access
+    risk: low
+    business_impact: "Returns published company-level market intelligence (performance, market position, corporate financials); read-only, corporate not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ibisworld.search_business_environment
+    object: BusinessEnvironment
+    action: search_business_environment
+    description: "Macro-level external factors — economic conditions, demographics, regulation, and technology trends."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregate published macroeconomic and business-environment indicators; read-only market-intelligence query, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ibisworld.search_procurement
+    object: Procurement
+    action: search_procurement
+    description: "Procurement, sourcing, and supply chain — pricing, supplier landscape, and buying strategies."
+    category: Data Access
+    risk: low
+    business_impact: "Returns published procurement and supply-chain intelligence (pricing, supplier landscape); read-only market-intelligence query, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ibisworld.search_segment_benchmark
+    object: Industry
+    action: search_segment_benchmark
+    description: "Operator size segment data — compares performance metrics across small, medium, and large operators."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregate published benchmark data comparing operator size segments; read-only market-intelligence query, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

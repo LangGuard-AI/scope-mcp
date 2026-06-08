@@ -1,0 +1,148 @@
+schema_version: "1.1"
+platform: actively
+display_name: Actively
+source: langguard-editorial
+updated: "2026-06"
+reference: https://app.actively.ai/docs/mcp
+actions:
+  # ---------- Customer ----------
+  # Dossier reads that synthesize CRM data, call transcripts, and emails into an
+  # account "memory" profile; these demonstrably surface personal data of
+  # identifiable individuals (buyers, contacts, names quoted from calls/emails).
+  - id: actively.get_agent_memory
+    object: Account
+    action: get_agent_memory
+    description: "Full research profile for one account."
+    category: Customer
+    risk: medium
+    business_impact: "Returns the complete synthesized research dossier for one account, including contact details and context drawn from CRM records, call transcripts, and emails; a single-record read of personal data about identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: actively.get_agent_memory_sections
+    object: Account
+    action: get_agent_memory_sections
+    description: "Selected memory sections for one account."
+    category: Customer
+    risk: low
+    business_impact: "Returns chosen sections of one account's research dossier; narrower than the full profile but still surfaces personal data drawn from CRM, calls, and emails."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: actively.get_bulk_agent_memory
+    object: Account
+    action: get_bulk_agent_memory
+    description: "Memory profiles for multiple accounts."
+    category: Customer
+    risk: high
+    business_impact: "Returns synthesized research dossiers across multiple accounts in one call; enables bulk extraction of contact PII and internal context (CRM, calls, emails) for a portfolio of accounts."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: actively.search_agent_memory
+    object: Account
+    action: search_agent_memory
+    description: "Semantic search across account memory."
+    category: Customer
+    risk: high
+    business_impact: "Runs semantic search across the account-memory corpus and returns matching passages; enables bulk discovery and extraction of contact PII and internal context spanning many accounts."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: actively.get_recent_account_activity
+    object: Account
+    action: get_recent_account_activity
+    description: "Fetch recent, citation-backed account signals."
+    category: Customer
+    risk: medium
+    business_impact: "Returns recent activity signals for an account synthesized from internal and external sources; citation-backed signals may surface named individuals and personal data depending on the signal type."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: actively.lookup_accounts
+    object: Account
+    action: lookup_accounts
+    description: "Search accounts by name or Salesforce ID."
+    category: Customer
+    risk: low
+    business_impact: "Resolves accounts by company name or Salesforce ID and returns matching account identifiers; primarily firmographic, though enumeration of an organization's account list may incidentally expose associated individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Revenue & Pipeline ----------
+  # Strategic recommendation output ("agent decisions") — next-step and
+  # prioritization guidance for sales accounts, built on the same synthesized
+  # account context, so it likewise carries personal data of individuals.
+  - id: actively.get_agent_decisions
+    object: Account
+    action: get_agent_decisions
+    description: "Full strategic recommendation output for one account."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Returns the complete strategic recommendation and next-step output for one account; sales-prioritization guidance built on synthesized account context that includes personal data of contacts and buyers."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: actively.get_agent_decisions_sections
+    object: Account
+    action: get_agent_decisions_sections
+    description: "Selected decision sections for one account."
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Returns chosen sections of one account's strategic recommendation output; narrower than the full set but still built on synthesized account context containing personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: actively.get_bulk_agent_decisions
+    object: Account
+    action: get_bulk_agent_decisions
+    description: "Decisions for multiple accounts."
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Returns strategic recommendation output across multiple accounts in one call; enables bulk read of prioritization guidance and the underlying contact PII for a portfolio of accounts."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  # Workflow-template discovery — operational metadata only, no account PII.
+  - id: actively.list_workflows
+    object: Workflow
+    action: list_workflows
+    description: "Discover available workflow templates."
+    category: Operations
+    risk: low
+    business_impact: "Lists the available workflow templates exposed to the organization; operational metadata that does not contain personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: actively.get_workflow_instructions
+    object: Workflow
+    action: get_workflow_instructions
+    description: "Fetch instructions for a specific workflow label."
+    category: Operations
+    risk: low
+    business_impact: "Returns the instruction text for a named workflow template; operational metadata that does not contain personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

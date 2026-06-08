@@ -1,0 +1,67 @@
+schema_version: "1.1"
+platform: moodys-analytics
+display_name: Moody's Analytics
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.moodys.com/web/en/us/genai/model-context-protocol.html
+actions:
+  # ---------- Data Access ----------
+  - id: moodys-analytics.findEntity
+    object: Entity
+    action: findEntity
+    description: "Locates entities covered by Moody's by searching with identifiers, names, or related metadata; returns Moody's unique entity ID for deeper data queries."
+    category: Data Access
+    risk: low
+    business_impact: "Resolves a company, sovereign, or instrument name to Moody's unique entity identifier over published reference data; read-only and non-personal."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: moodys-analytics.searchEntityDocuments
+    object: ResearchDocument
+    action: searchEntityDocuments
+    description: "Searches Moody's proprietary research library for research related to a specific entity or topic."
+    category: Data Access
+    risk: low
+    business_impact: "Read-only query against Moody's own proprietary research corpus; returns licensed third-party research about entities, not the customer's own records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: moodys-analytics.getEntityRatings
+    object: Rating
+    action: getEntityRatings
+    description: "Retrieves the current credit rating and outlook for a specified entity, including rating date and relevant Moody's rating details."
+    category: Data Access
+    risk: low
+    business_impact: "Reads a single entity's published credit rating and outlook; non-personal financial reference data used as an input to investment analysis."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: moodys-analytics.getEntityRatingDrivers
+    object: Rating
+    action: getEntityRatingDrivers
+    description: "Identifies the primary drivers behind an entity's credit rating upgrade or downgrade, providing context for rating movements and risk analysis."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the published analytical drivers behind an entity's rating movement; non-personal reference data, fully reversible read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: moodys-analytics.getEntityScorecard
+    object: Scorecard
+    action: getEntityScorecard
+    description: "Returns the Moody's rating scorecard for an entity, including factor weights, scoring components, and overall rating rationale."
+    category: Data Access
+    risk: low
+    business_impact: "Reads a single entity's published rating scorecard (factor weights, scoring components, rationale); non-personal financial reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

@@ -1,0 +1,113 @@
+schema_version: "1.1"
+platform: windsor-ai
+display_name: Windsor.ai
+source: langguard-editorial
+updated: "2026-06"
+reference: https://github.com/windsor-ai/windsor_mcp
+actions:
+  # ---------- Data Access ----------
+  - id: windsor-ai.get_data
+    object: "*"
+    action: get_data
+    description: "Run a query against a connector, returning rows of marketing, CRM, e-commerce, payment, or warehouse data across the connected sources."
+    reference: https://mcp.windsor.ai/llms-full.txt
+    category: Data Access
+    risk: high
+    business_impact: "Extracts data from any connected source (Meta Ads, GA4, HubSpot, Salesforce, Shopify, Stripe, BigQuery, Snowflake and 325+ others); bulk cross-source read that can surface PII and financial records, a data-exfiltration surface regardless of intent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, GLBA, PCI]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: windsor-ai.get_connectors
+    object: Connector
+    action: get_connectors
+    description: "List the user's connected connectors and their accounts, including the write actions each connector supports."
+    reference: https://mcp.windsor.ai/llms-full.txt
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the integration topology — which external data sources are connected and what write verbs they expose; reveals the attack surface but returns no customer records."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: windsor-ai.get_options
+    object: Connector
+    action: get_options
+    description: "List available fields, valid date-filter columns, and connector-specific options for a connector and account set."
+    reference: https://mcp.windsor.ai/llms-full.txt
+    category: Data Access
+    risk: low
+    business_impact: "Returns schema metadata (field and filter-column names) for a connector; no records and no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: windsor-ai.get_fields
+    object: Field
+    action: get_fields
+    description: "Get descriptions, types and tables for specific fields, distinguishing metrics from dimensions."
+    reference: https://mcp.windsor.ai/llms-full.txt
+    category: Data Access
+    risk: low
+    business_impact: "Returns field-level schema metadata (descriptions, types, tables); no records and no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: windsor-ai.execute_action
+    object: "*"
+    action: execute_action
+    description: "Run a write action (e.g. pause/enable a campaign, change a budget, adjust bids, upload offline conversions) against a connected account."
+    reference: https://mcp.windsor.ai/llms-full.txt
+    category: Operations
+    risk: high
+    business_impact: "Modifies live external state on a connected ad/marketing account — pauses or enables campaigns and changes budgets and bids, directly affecting ad spend; flagged as destructive to clients and generally reversible but applied without a second approver."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: windsor-ai.list_actions
+    object: "*"
+    action: list_actions
+    description: "Discover the write actions available for a connector, each with a JSON schema describing its parameters."
+    reference: https://mcp.windsor.ai/llms-full.txt
+    category: Operations
+    risk: low
+    business_impact: "Returns the catalog of write verbs a connector exposes; read-only discovery that changes nothing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: windsor-ai.get_connector_authorization_url
+    object: Connector
+    action: get_connector_authorization_url
+    description: "Get a browser link to connect or authorize a connector via its OAuth or manual credential flow."
+    reference: https://mcp.windsor.ai/llms-full.txt
+    category: Identity & Access
+    risk: medium
+    business_impact: "Initiates connecting or authorizing a new external data source; the entry point to granting the platform standing access to a source's data."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: windsor-ai.get_current_user
+    object: User
+    action: get_current_user
+    description: "Return the authenticated user's own profile (username, email) as an auth sanity check."
+    reference: https://mcp.windsor.ai/llms-full.txt
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads the calling user's own profile (username and email); single-subject self-identity read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

@@ -1,0 +1,33 @@
+schema_version: "1.1"
+platform: godaddy
+display_name: GoDaddy
+source: langguard-editorial
+updated: "2026-06"
+reference: https://developer.godaddy.com/mcp
+actions:
+  # ---------- Data Access ----------
+  - id: godaddy.domains_check_availability
+    object: Domain
+    action: domains_check_availability
+    description: "Check if domain names are available for registration; works with single domains or comma-separated lists and returns availability status plus registration links."
+    reference: https://developer.godaddy.com/mcp
+    category: Data Access
+    risk: low
+    business_impact: "Queries the public domain registry for availability of one or many domains; read-only, no registration, purchase, or DNS change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: godaddy.domains_suggest
+    object: Domain
+    action: domains_suggest
+    description: "Generate domain name suggestions from keywords, a seed domain, or a business description and return clickable registration links."
+    reference: https://developer.godaddy.com/mcp
+    category: Data Access
+    risk: low
+    business_impact: "Returns suggested available domains from public registry data; read-only, no registration, purchase, or DNS change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

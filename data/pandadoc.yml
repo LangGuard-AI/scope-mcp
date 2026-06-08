@@ -1,0 +1,278 @@
+schema_version: "1.1"
+platform: pandadoc
+display_name: PandaDoc
+source: langguard-editorial
+updated: "2026-06"
+reference: https://developers.pandadoc.com/docs/how-to-use-the-pandadoc-mcp-server
+# NOTE: PandaDoc's connector MCP server (https://mcp.pandadoc.com/v1/mcp) is OAuth-gated;
+# live tools/list could not be reached anonymously, and no vendor page or vendor repo
+# publishes verbatim tool identifiers. The vendor documents only plain-language capability
+# labels (connector page + "What You Can Do with PandaDoc MCP"). All entries below therefore
+# use id_form: capability with the verbatim vendor label in `description`; ids are slugified
+# (intent-level, not identifier-level) and confidence is capped at medium. The separate
+# docs/OpenAPI-explorer server at developers.pandadoc.com/mcp (list-endpoints / execute-request
+# tools, from the pandadoc-mcpb bundle) is a DIFFERENT server and is intentionally excluded.
+actions:
+  # ---------- Document Lifecycle (writes) ----------
+  - id: pandadoc.create_document
+    object: Document
+    action: create_document
+    id_form: capability
+    description: "Create a document from a template"
+    category: Document Lifecycle
+    risk: medium
+    business_impact: "Creates a new document containing signer/recipient personal data; reversible while in draft."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pandadoc.create_template
+    object: Template
+    action: create_template
+    id_form: capability
+    description: "Create a reusable template from a PDF"
+    category: Document Lifecycle
+    risk: low
+    business_impact: "Adds a reusable blank template to the workspace; no recipient data and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pandadoc.update_document
+    object: Document
+    action: update_document
+    id_form: capability
+    description: "Update a text block in a draft document"
+    category: Document Lifecycle
+    risk: medium
+    business_impact: "Edits the content of a draft document before it is sent; affects the agreement recipients will sign."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pandadoc.send_document
+    object: Document
+    action: send_document
+    id_form: capability
+    description: "Send for signature"
+    category: Document Lifecycle
+    risk: high
+    business_impact: "Transmits a contract to external recipients for legally binding e-signature; externally visible and not reversible once delivered."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pandadoc.send_approval_workflow
+    object: Document
+    action: send_approval_workflow
+    id_form: capability
+    description: "Send through an approval workflow"
+    category: Document Lifecycle
+    risk: medium
+    business_impact: "Routes a document into the approval workflow; an agent acting unilaterally can advance a document past internal review gates."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: low
+    access_methods: [REST, MCP]
+
+  - id: pandadoc.send_reminder
+    object: Document
+    action: send_reminder
+    id_form: capability
+    description: "Send reminders for unsigned contracts"
+    category: Document Lifecycle
+    risk: low
+    business_impact: "Emails reminders to recipients of unsigned documents; externally visible communication to identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pandadoc.decline_document
+    object: Document
+    action: decline_document
+    id_form: capability
+    description: "Decline a document with a note"
+    category: Document Lifecycle
+    risk: medium
+    business_impact: "Marks a document as declined, terminating its signing flow; affects the legal status of the agreement."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+
+  - id: pandadoc.reassign_document
+    object: Document
+    action: reassign_document
+    id_form: capability
+    description: "Reassign a document to a new sender"
+    category: Document Lifecycle
+    risk: medium
+    business_impact: "Transfers ownership/sender of a document to a different user, changing who controls a contract."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+
+  - id: pandadoc.mark_document_paid
+    object: Document
+    action: mark_document_paid
+    id_form: capability
+    description: "Mark a document as paid"
+    category: Document Lifecycle
+    risk: medium
+    business_impact: "Flags a document's payment status as paid; a status marker that may feed revenue tracking but is not itself a ledger posting."
+    compliance: []
+    sod_concern: true
+    confidence: low
+    access_methods: [REST, MCP]
+
+  - id: pandadoc.expire_document
+    object: Document
+    action: expire_document
+    id_form: capability
+    description: "Expire old drafts"
+    category: Document Lifecycle
+    risk: medium
+    business_impact: "Forces documents into an expired state, ending their validity; affects whether agreements can still be executed."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+
+  - id: pandadoc.archive_document
+    object: Document
+    action: archive_document
+    id_form: capability
+    description: "Archive completed documents from a folder"
+    category: Document Lifecycle
+    risk: medium
+    business_impact: "Moves completed documents out of active view; reversible but can hide executed agreements containing personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+
+  # ---------- Document Access (sensitive reads) ----------
+  - id: pandadoc.extract_document_text
+    object: Document
+    action: extract_document_text
+    id_form: capability
+    description: "Extract document text for analysis"
+    category: Data Access
+    risk: high
+    business_impact: "Extracts the full text of executed/draft contracts; bulk content extraction of agreements containing signer PII and commercial terms."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pandadoc.get_document_details
+    object: Document
+    action: get_document_details
+    id_form: capability
+    description: "Get full document details"
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the full content and field values of a document, including recipient personal data and contract terms."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pandadoc.get_document_audit_trail
+    object: Document
+    action: get_document_audit_trail
+    id_form: capability
+    description: "View the full audit trail for a document"
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the signing audit trail (actors, timestamps, IPs) for a document; exposes activity logs tied to identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pandadoc.get_document_summary
+    object: Document
+    action: get_document_summary
+    id_form: capability
+    description: "Get a detailed AI summary of a document"
+    category: Data Access
+    risk: medium
+    business_impact: "Generates an AI summary over a document's full contents, surfacing contract terms and recipient personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Document Discovery (reads) ----------
+  - id: pandadoc.list_documents
+    object: Document
+    action: list_documents
+    id_form: capability
+    description: "List the 5 most recent documents in my account and show their status."
+    category: Data Access
+    risk: low
+    business_impact: "Lists documents with status and metadata; surfaces recipient names and document subjects across the workspace."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pandadoc.search_documents
+    object: Document
+    action: search_documents
+    id_form: capability
+    description: "Full-text search across documents"
+    category: Data Access
+    risk: medium
+    business_impact: "Full-text search across all documents; can surface contract content and personal data the searcher did not previously know to look for."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pandadoc.get_document_status
+    object: Document
+    action: get_document_status
+    id_form: capability
+    description: "Check if a document has been signed"
+    category: Data Access
+    risk: low
+    business_impact: "Returns the current status of a document (e.g. sent, viewed, signed); low-sensitivity state read."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Templates (reads) ----------
+  - id: pandadoc.list_templates
+    object: Template
+    action: list_templates
+    id_form: capability
+    description: "List all available templates"
+    category: Data Access
+    risk: low
+    business_impact: "Lists available document templates; templates are blank and carry no recipient data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pandadoc.get_template_details
+    object: Template
+    action: get_template_details
+    id_form: capability
+    description: "Inspect a template's fields and roles"
+    category: Data Access
+    risk: low
+    business_impact: "Returns a template's fields, roles, and pricing structure; structural metadata with no recipient personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

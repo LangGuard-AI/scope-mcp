@@ -1,0 +1,416 @@
+schema_version: "1.1"
+platform: adobe-creativity
+display_name: Adobe for Creativity
+source: langguard-editorial
+updated: "2026-06"
+reference: https://developer.adobe.com/adobe-for-creativity/
+# Tool ids verified verbatim from Adobe-authored skill "Tool Reference" tables in
+# github.com/adobe/skills (plugins/creative-cloud/adobe-for-creativity/skills/*/SKILL.md).
+# The hosted MCP endpoint (https://adobe-creativity.adobe.io/mcp) is OAuth-gated (403/401
+# to anonymous tools/list), so live introspection of the full advertised "50+ tool" surface
+# was not possible; the 33 actions below are the subset referenced by the published skills.
+# This is a creative-asset connector: most tools are pure pixel/clip transforms with no PII
+# concern. The compliance surface lives at ingestion, storage, search, and board-sharing,
+# where user-supplied images (often portraits/headshots of identifiable people) are handled.
+actions:
+  # ---------- Asset Management ----------
+  - id: adobe-creativity.asset_add_file
+    object: Asset
+    action: asset_add_file
+    description: "Opens an interactive file picker to ingest a local file or select an asset from Creative Cloud storage."
+    category: Data Access
+    risk: low
+    business_impact: "Ingests a user-supplied file (often photos of identifiable people) into the editing session; content may contain personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.asset_search
+    object: Asset
+    action: asset_search
+    description: "Searches the user's Creative Cloud storage for an asset by name, type, or media filter."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads across the user's Creative Cloud library; surfaces stored assets that may contain personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.asset_initialize_file_upload
+    object: Asset
+    action: asset_initialize_file_upload
+    description: "First call of the two-step egress upload that moves a chat-supplied file into Adobe cloud storage."
+    category: Data Access
+    risk: medium
+    business_impact: "Transfers user-supplied content into Adobe's cloud; the egress of personal-data-bearing files is the compliance event."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.asset_finalize_file_upload
+    object: Asset
+    action: asset_finalize_file_upload
+    description: "Second call of the two-step egress upload; commits the uploaded file and returns a presigned Creative Cloud URL."
+    category: Data Access
+    risk: medium
+    business_impact: "Commits user-supplied content into Adobe cloud storage; finalizes egress of files that may contain personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.asset_inline_preview
+    object: Asset
+    action: asset_inline_preview
+    description: "Inspects a source image inline to determine a crop focus strategy before processing."
+    category: Data Access
+    risk: low
+    business_impact: "Reads and renders a single source image for inspection; the image may depict identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.asset_preview_file
+    object: Asset
+    action: asset_preview_file
+    description: "Renders one or more assets as an in-chat preview grid for review or selection."
+    category: Data Access
+    risk: low
+    business_impact: "Displays processed or source assets in chat; reversible, non-destructive, and scoped to the current session."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.create_firefly_board
+    object: Board
+    action: create_firefly_board
+    description: "Creates a Firefly Board and imports the supplied Adobe-storage assets onto it."
+    category: Data Access
+    risk: medium
+    business_impact: "Aggregates processed assets onto a shareable Firefly Board; collects user content (potentially personal data) into a persistent surface."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Image Editing ----------
+  - id: adobe-creativity.image_select_subject
+    object: Image
+    action: image_select_subject
+    description: "Detects and selects a subject or named body part (e.g. face) within an image."
+    category: Image Editing
+    risk: medium
+    business_impact: "Runs face/subject detection on a user image; operates on facial regions of identifiable people, though it detects rather than identifies."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.image_crop_and_resize
+    object: Image
+    action: image_crop_and_resize
+    description: "Crops and resizes an image to a target ratio or pixel dimensions with optional subject-aware reframing."
+    category: Image Editing
+    risk: low
+    business_impact: "Produces a resized copy of an image; non-destructive to the source and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.image_generative_expand
+    object: Image
+    action: image_generative_expand
+    description: "Uses generative AI to extend an image's canvas beyond its original borders."
+    category: Image Editing
+    risk: low
+    business_impact: "Generates new pixels to expand the canvas of a user image; produces a derivative copy, source unchanged."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.image_auto_straighten
+    object: Image
+    action: image_auto_straighten
+    description: "Automatically straightens an image by correcting tilt and perspective."
+    category: Image Editing
+    risk: low
+    business_impact: "Applies an automatic straighten transform; produces a derivative copy, source unchanged."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.image_apply_auto_tone
+    object: Image
+    action: image_apply_auto_tone
+    description: "Applies an automatic tonal correction (Camera Raw filter) to an image."
+    category: Image Editing
+    risk: low
+    business_impact: "Applies an automatic tone adjustment; produces a derivative copy, source unchanged."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.image_apply_preset
+    object: Image
+    action: image_apply_preset
+    description: "Applies a named adaptive look preset (e.g. Subject Pop, Sky Drama, Whiten Teeth) to an image."
+    category: Image Editing
+    risk: low
+    business_impact: "Applies a stylistic preset to a user image; produces a derivative copy, source unchanged."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.image_adjust_exposure
+    object: Image
+    action: image_adjust_exposure
+    description: "Adjusts the overall exposure (brightness of the full tonal range) of an image."
+    category: Image Editing
+    risk: low
+    business_impact: "Applies an exposure adjustment; produces a derivative copy, source unchanged."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.image_adjust_highlights
+    object: Image
+    action: image_adjust_highlights
+    description: "Adjusts the highlight tones of an image to recover or boost bright areas."
+    category: Image Editing
+    risk: low
+    business_impact: "Applies a highlight adjustment; produces a derivative copy, source unchanged."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.image_adjust_dark_portions
+    object: Image
+    action: image_adjust_dark_portions
+    description: "Adjusts the shadow tones (dark portions) of an image."
+    category: Image Editing
+    risk: low
+    business_impact: "Applies a shadow adjustment; produces a derivative copy, source unchanged."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.image_adjust_light_portions
+    object: Image
+    action: image_adjust_light_portions
+    description: "Adjusts the brighter (light portion) tones of an image."
+    category: Image Editing
+    risk: low
+    business_impact: "Applies a bright-area adjustment; produces a derivative copy, source unchanged."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.image_adjust_brightness_and_contrast
+    object: Image
+    action: image_adjust_brightness_and_contrast
+    description: "Adjusts the brightness and contrast of an image in a single operation."
+    category: Image Editing
+    risk: low
+    business_impact: "Applies a brightness/contrast adjustment; produces a derivative copy, source unchanged."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.image_adjust_vibrance_and_saturation
+    object: Image
+    action: image_adjust_vibrance_and_saturation
+    description: "Adjusts the vibrance and saturation (color intensity) of an image."
+    category: Image Editing
+    risk: low
+    business_impact: "Applies a vibrance/saturation adjustment; produces a derivative copy, source unchanged."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.image_adjust_color_temperature
+    object: Image
+    action: image_adjust_color_temperature
+    description: "Shifts the color temperature and tint of an image along warm/cool and green/magenta axes."
+    category: Image Editing
+    risk: low
+    business_impact: "Applies a color-temperature shift; produces a derivative copy, source unchanged."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.image_apply_gaussian_blur
+    object: Image
+    action: image_apply_gaussian_blur
+    description: "Applies a Gaussian blur to an image, optionally targeting only the background."
+    category: Image Editing
+    risk: low
+    business_impact: "Applies a blur transform; produces a derivative copy, source unchanged."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.image_apply_lens_blur
+    object: Image
+    action: image_apply_lens_blur
+    description: "Applies a depth-aware lens blur to an image (referenced in skill prose; not used by the shipped skill flows)."
+    category: Image Editing
+    risk: low
+    business_impact: "Applies a lens-blur transform; produces a derivative copy, source unchanged."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+
+  # ---------- Document ----------
+  - id: adobe-creativity.document_render_vector
+    object: Document
+    action: document_render_vector
+    description: "Renders a PSD or Illustrator (AI) vector document to a flat raster (JPEG) for downstream processing."
+    category: Image Editing
+    risk: low
+    business_impact: "Flattens a layered design document to a raster image; produces a derivative copy, source unchanged."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Video ----------
+  - id: adobe-creativity.video_resize
+    object: Video
+    action: video_resize
+    description: "Resizes a video to target dimensions with a letterbox, crop, or stretch fit mode."
+    category: Operations
+    risk: low
+    business_impact: "Produces a resized copy of a video; non-destructive to the source and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.resizeVideoPoll
+    object: Video
+    action: resizeVideoPoll
+    description: "Polls the status of an asynchronous video-resize job until completion (deferred tool)."
+    category: Operations
+    risk: low
+    business_impact: "Reads the status of a resize job; no state change beyond returning progress."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.video_create_quick_cut
+    object: Video
+    action: video_create_quick_cut
+    description: "Generates an AI-edited short highlight/sizzle reel from a source video at a target duration and style."
+    category: Operations
+    risk: low
+    business_impact: "Produces a new AI-cut derivative clip from a source video; source unchanged and output is a temporary download."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.quickCutPoll
+    object: Video
+    action: quickCutPoll
+    description: "Polls the status of an asynchronous Quick Cut job until completion (deferred tool)."
+    category: Operations
+    risk: low
+    business_impact: "Reads the status of a Quick Cut job; no state change beyond returning progress."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.media_enhance_speech
+    object: Video
+    action: media_enhance_speech
+    description: "Enhances speech audio in a media clip (referenced in skill prose as a Creative Cloud tool; not exercised by the shipped skill flows)."
+    category: Operations
+    risk: low
+    business_impact: "Produces a derivative clip with cleaned-up speech audio; source unchanged."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+
+  # ---------- Design ----------
+  - id: adobe-creativity.search_design
+    object: Template
+    action: search_design
+    description: "Searches the Adobe Express template library and renders an interactive template picker."
+    category: Data Access
+    risk: low
+    business_impact: "Reads from the public Express template catalog; returns selectable templates, no user data exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.fill_text
+    object: Document
+    action: fill_text
+    description: "Updates the text and copy of an Adobe Express template or document."
+    category: Design
+    risk: low
+    business_impact: "Edits text within a temporary Express document; reversible and scoped to a single design."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.change_background_color
+    object: Document
+    action: change_background_color
+    description: "Changes the background color of an Adobe Express template or document."
+    category: Design
+    risk: low
+    business_impact: "Edits the background color of a temporary Express document; reversible and scoped to a single design."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adobe-creativity.animate_design
+    object: Document
+    action: animate_design
+    description: "Applies animation to an Adobe Express template or document."
+    category: Design
+    risk: low
+    business_impact: "Adds animation to a temporary Express document; reversible and scoped to a single design."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Configuration ----------
+  - id: adobe-creativity.adobe_mandatory_init
+    object: Session
+    action: adobe_mandatory_init
+    description: "Initializes the Adobe connector for a skill run, returning file-handling rules and tool-routing guidance."
+    category: Configuration
+    risk: low
+    business_impact: "Returns session bootstrap guidance; no data access and no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

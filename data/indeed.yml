@@ -1,0 +1,75 @@
+schema_version: "1.1"
+platform: indeed
+display_name: Indeed
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.indeed.com/mcp/
+# NOTE: Indeed ships a read-only hosted MCP connector ("Read" scope only) whose
+# server is reached exclusively through the Claude.ai / Claude Desktop connector
+# OAuth flow — no public MCP endpoint URL is published and tools/list is gated.
+# The vendor docs (https://docs.indeed.com/mcp/ "Available tools") expose ONLY
+# plain-language capability labels in bold prose, with NO verbatim tool
+# identifiers (no monospace/code ids anywhere on the page). Per the curator spec
+# this is the capability-form fallback: id_form=capability, the verbatim vendor
+# label is carried in `description`, ids are slugified best-effort, and every
+# entry is capped at confidence: medium. The full discovered surface is 4 tools
+# and all 4 are written (no trimming; this is a read-only surface with no
+# write/destructive tools to prioritize).
+actions:
+  # ---------- Identity & Admin ----------
+  - id: indeed.get_resume
+    object: Resume
+    action: get_resume
+    id_form: capability
+    description: "Get Resume"
+    reference: https://docs.indeed.com/mcp/#available-tools
+    category: Identity & Admin
+    risk: medium
+    business_impact: "Reads the account holder's own work history and profile data from their Indeed resume; returns identifiable personal data into the agent context."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: indeed.job_search
+    object: Job
+    action: job_search
+    id_form: capability
+    description: "Job Search"
+    reference: https://docs.indeed.com/mcp/#available-tools
+    category: Data Access
+    risk: low
+    business_impact: "Searches Indeed's public job marketplace by title, keywords, location, and employment type; returns public job listings only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: indeed.job_detail
+    object: Job
+    action: job_detail
+    id_form: capability
+    description: "Job Detail"
+    reference: https://docs.indeed.com/mcp/#available-tools
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves the full public posting for a single job by ID, including description, requirements, benefits, and company information."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: indeed.get_company_data
+    object: Company
+    action: get_company_data
+    id_form: capability
+    description: "Get Company Data"
+    reference: https://docs.indeed.com/mcp/#available-tools
+    category: Data Access
+    risk: low
+    business_impact: "Reads aggregate, publicly published employer research data — satisfaction, compensation, culture, management, and reviews — for a company."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

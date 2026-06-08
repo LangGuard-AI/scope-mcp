@@ -1,0 +1,190 @@
+schema_version: "1.1"
+platform: grain
+display_name: Grain
+source: langguard-editorial
+updated: "2026-06"
+reference: https://developers.grain.com/mcp
+actions:
+  # ---------- Meeting Content ----------
+  - id: grain.search_meetings
+    object: Meeting
+    action: search_meetings
+    description: "Semantic search across all meeting transcripts."
+    category: Data Access
+    risk: high
+    business_impact: "Performs a broad semantic read across every meeting transcript in the workspace; surfaces private-conversation content at scale regardless of intent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: grain.fetch_meeting_transcript
+    object: Meeting
+    action: fetch_meeting_transcript
+    description: "Retrieves the full transcript of a specific meeting."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads the full verbatim transcript of a meeting; private-conversation content that may incidentally contain sensitive or regulated information."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: grain.fetch_meeting_notes
+    object: Meeting
+    action: fetch_meeting_notes
+    description: "Gets AI-generated meeting notes (more concise than transcripts)."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads AI-summarized notes for a meeting; condensed private-conversation content derived from the underlying transcript."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: grain.fetch_meeting
+    object: Meeting
+    action: fetch_meeting
+    description: "Gets detailed information about a specific meeting."
+    category: Data Access
+    risk: low
+    business_impact: "Reads metadata and details for a single meeting; includes participant identities and meeting context."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: grain.list_meetings
+    object: Meeting
+    action: list_meetings
+    description: "Gets a filtered list of all accessible meetings."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates accessible meetings with participant and title metadata; exposes who met with whom across the workspace."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: grain.list_attended_meetings
+    object: Meeting
+    action: list_attended_meetings
+    description: "Gets a filtered list of all accessible meetings."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates meetings the caller attended with participant and title metadata; exposes meeting-relationship data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- People & Directory ----------
+  - id: grain.list_workspace_users
+    object: User
+    action: list_workspace_users
+    description: "Gets all users in your Grain workspace."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads the full workspace user directory; bulk PII (names, emails) of every member."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: grain.search_persons
+    object: Person
+    action: search_persons
+    description: "Searches for meeting participants when filtering."
+    category: Data Access
+    risk: medium
+    business_impact: "Searches participants by name or email; returns PII for individuals who appeared in meetings."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: grain.search_companies
+    object: Company
+    action: search_companies
+    description: "Finds companies that participated in meetings when filtering."
+    category: Data Access
+    risk: low
+    business_impact: "Searches companies by name or domain; returns organizational metadata rather than personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: grain.myself
+    object: Account
+    action: myself
+    description: "Gets your Grain account information."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the caller's own Grain account information; no access to other users' data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Sales Coaching ----------
+  - id: grain.list_coaching_feedback
+    object: CoachingFeedback
+    action: list_coaching_feedback
+    description: "Gets AI-generated sales coaching insights."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads AI-generated coaching insights about sales reps' call performance; surfaces individual-level performance evaluation data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: grain.fetch_meeting_coaching_feedback
+    object: CoachingFeedback
+    action: fetch_meeting_coaching_feedback
+    description: "Gets a detailed coaching scorecard for a specific meeting."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads a detailed coaching scorecard for one meeting; individual-level performance evaluation tied to a named rep."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Deal Intelligence ----------
+  - id: grain.list_open_deals
+    object: Deal
+    action: list_open_deals
+    description: "Accesses HubSpot Deal intelligence (open deals)."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Reads open-deal pipeline data sourced from HubSpot; commercially sensitive revenue intelligence including owners and at-risk flags."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: grain.list_all_deals
+    object: Deal
+    action: list_all_deals
+    description: "Accesses HubSpot Deal intelligence (all deals)."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Reads the full deal pipeline sourced from HubSpot; commercially sensitive revenue intelligence across all deals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: grain.fetch_deal
+    object: Deal
+    action: fetch_deal
+    description: "Gets detailed deal information."
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reads detailed information for a single deal; commercially sensitive but scoped to one record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

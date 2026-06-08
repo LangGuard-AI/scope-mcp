@@ -1,0 +1,92 @@
+schema_version: "1.1"
+platform: splice
+display_name: Splice
+source: langguard-editorial
+updated: "2026-06"
+reference: https://support.splice.com/en/articles/14442749-getting-started-with-the-splice-mcp-server-beta
+# NOTE: The Splice MCP server (https://mcp.splice.com/mcp) is OAuth-gated; live
+# tools/list could not be introspected without a token and no verbatim tool ids
+# are published on any vendor page. These entries use the capability-form
+# fallback (id_form: capability): ids are slugified from the vendor's verbatim
+# capability labels (carried in `description`), so matching is intent-level, not
+# identifier-level, and confidence is capped at medium. Source labels are from
+# the "Getting Started with the Splice MCP Server (Beta)" support article.
+actions:
+  # ---------- Sound Library ----------
+  - id: splice.search_by_feel
+    object: Sample
+    action: search_by_feel
+    id_form: capability
+    description: "Search by feel"
+    category: Sound Library
+    risk: low
+    business_impact: "Runs a natural-language search over Splice's royalty-free sample catalog; read-only discovery with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: splice.build_full_stacks
+    object: Stack
+    action: build_full_stacks
+    id_form: capability
+    description: "Build full stacks"
+    category: Sound Library
+    risk: low
+    business_impact: "Generates a multi-layer stack of complementary samples for inspiration; reversible and individually scoped."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: splice.build_stacks_from_a_sample
+    object: Stack
+    action: build_stacks_from_a_sample
+    id_form: capability
+    description: "Build Stacks from a sample"
+    category: Sound Library
+    risk: low
+    business_impact: "Builds a complementary stack seeded from a chosen sample; reversible and individually scoped."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: splice.edit_stacks
+    object: Stack
+    action: edit_stacks
+    id_form: capability
+    description: "Edit stacks"
+    category: Sound Library
+    risk: low
+    business_impact: "Adjusts an existing stack's BPM, name, or layers; reversible edit to user-owned audio."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: splice.share_stacks
+    object: Stack
+    action: share_stacks
+    id_form: capability
+    description: "Share stacks"
+    category: Sound Library
+    risk: low
+    business_impact: "Generates a publicly-accessible share link for a stack of audio samples; the link is openable by anyone without authentication."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: splice.download_samples
+    object: Sample
+    action: download_samples
+    id_form: capability
+    description: "Download samples"
+    category: Sound Library
+    risk: low
+    business_impact: "Downloads a sample to the user's machine; consumes one Splice credit per new sample and requires a paid subscription (re-downloads are free)."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

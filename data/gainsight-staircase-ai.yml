@@ -1,0 +1,162 @@
+schema_version: "1.1"
+platform: gainsight-staircase-ai
+display_name: Gainsight (Staircase AI)
+source: langguard-editorial
+updated: "2026-06"
+# CAPABILITY-FORM file. Staircase AI's MCP server (https://mcp.staircase.ai/mcp)
+# is fully OAuth-gated: live introspection on 2026-06 returned HTTP 401
+# `invalid_token` on `initialize`/`tools/list`, the OAuth metadata advertises only
+# generic scopes (openid/email/profile/offline_access) with no tool-level scopes,
+# and every anonymous catalog probe (/tools, /mcp/tools, /.well-known/mcp,
+# /openapi.json) 404s. The vendor publishes NO verbatim tool identifiers anywhere
+# reachable — the MCP docs, the Security & Compliance page, and the use-case posts
+# describe the surface only in plain-language prose. Per the curator spec's Step 3
+# capability-form fallback, the entries below are NOT a vendor-enumerated tool
+# list: each is a distinct read surface carved from Staircase AI's published
+# capability / use-case / example-query descriptions, with ids slugified from those
+# descriptions and id_form `capability`. Matching is intent-level, not
+# identifier-level, so confidence is capped at medium; surfaces whose exact label
+# could not be confirmed verbatim are marked low. The Anthropic connector page
+# classifies this connector as "Read" (read-only), corroborated by every vendor
+# source — all entries are read/query surfaces, no writes.
+#
+# REGIME TAGGING (repaired 2026-06): privacy regimes are applied ONLY to the
+# surfaces that genuinely return identifiable-individual personal data — the named
+# stakeholder directory, the content of customer communications/feedback, and the
+# cross-conversation engagement aggregation. Account- and company-level aggregate
+# intelligence (health, risk, sentiment, expansion, competitor mentions, portfolio
+# prioritization) is left untagged for privacy, mirroring how the apollo comparator
+# leaves company-level and analytics surfaces at []. This drops the uniform
+# 8-regimes-on-100%-of-actions pattern to 33% privacy coverage, under the project's
+# 60% ceiling. Vendor-stated compliance posture: SOC 2 Type II, GDPR, CCPA;
+# per-user RBAC, queries scoped to the authenticated user's organization.
+reference: https://support.gainsight.com/Staircase_AI/Staircase_AI_Features/Connect_Staircase_AI_to_LLMs_Using_MCP
+actions:
+  # ---------- Data Access (identifiable-individual surfaces) ----------
+  - id: gainsight-staircase-ai.stakeholder_mapping
+    object: Stakeholder
+    action: stakeholder_mapping
+    id_form: capability
+    description: "Know who matters, what they care about, and how engaged they are"
+    reference: https://www.gainsight.com/resource/mcp-use-cases/
+    category: Data Access
+    risk: high
+    business_impact: "Reads a relationship map of named account stakeholders with their roles, interests, and engagement levels; a directory of identifiable individuals and their profiled attributes, read-only."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: gainsight-staircase-ai.customer_feedback_summary
+    object: Communication
+    action: customer_feedback_summary
+    id_form: capability
+    description: "Access customer feedback and recent communications"
+    reference: https://support.gainsight.com/Staircase_AI/Staircase_AI_Features/Connect_Staircase_AI_to_LLMs_Using_MCP
+    category: Data Access
+    risk: high
+    business_impact: "Reads and summarizes customer feedback and recent communications for an account; surfaces the content of private communications from identifiable individuals, read-only."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+
+  - id: gainsight-staircase-ai.engagement_insights
+    object: Account
+    action: engagement_insights
+    id_form: capability
+    description: "Real-time, AI-powered customer engagement insights across all conversations"
+    reference: https://www.gainsight.com/resource/mcp-use-cases/
+    category: Data Access
+    risk: high
+    business_impact: "Reads AI-derived engagement insights spanning all customer conversations for an account; aggregates private-communication signal about identifiable individuals into a single intelligence view, read-only."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: gainsight-staircase-ai.portfolio_attention_signals
+    object: Portfolio
+    action: portfolio_attention_signals
+    id_form: capability
+    description: "What needs my attention this week?"
+    reference: https://support.gainsight.com/Staircase_AI/Staircase_AI_Features/Connect_Staircase_AI_to_LLMs_Using_MCP
+    category: Data Access
+    risk: high
+    business_impact: "Reads a prioritized risk-and-opportunity feed across the user's entire book of business; a bulk cross-account intelligence pull returning account-level prioritization rather than named-individual records, read-only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+
+  - id: gainsight-staircase-ai.competitor_mentions
+    object: Account
+    action: competitor_mentions
+    id_form: capability
+    description: "Surface competitor mentions before they become threats"
+    reference: https://www.gainsight.com/resource/mcp-use-cases/
+    category: Data Access
+    risk: medium
+    business_impact: "Reads competitor mentions extracted from customer conversations for an account; returns competitive/market intelligence about third-party products rather than the customer's personal data, read-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Customer (account-level aggregate intelligence) ----------
+  - id: gainsight-staircase-ai.account_health_snapshot
+    object: Account
+    action: account_health_snapshot
+    id_form: capability
+    description: "Live account health, stakeholder dynamics, risks, and expansion signals"
+    reference: https://www.gainsight.com/staircase-ai/gainsight-mcp/
+    category: Customer
+    risk: medium
+    business_impact: "Reads an account-level health snapshot (health score, risk, expansion signals); aggregate account intelligence, not a named-individual record, read-only."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+
+  - id: gainsight-staircase-ai.risk_signals
+    object: Account
+    action: risk_signals
+    id_form: capability
+    description: "Recent risks and engagement data"
+    reference: https://www.gainsight.com/staircase-ai/gainsight-mcp/
+    category: Customer
+    risk: medium
+    business_impact: "Reads account-level early risk indicators and recent risk signals; aggregate account intelligence, not a named-individual record, read-only."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+
+  - id: gainsight-staircase-ai.sentiment_trends
+    object: Account
+    action: sentiment_trends
+    id_form: capability
+    description: "Sentiment trends"
+    reference: https://www.gainsight.com/staircase-ai/gainsight-mcp/
+    category: Customer
+    risk: low
+    business_impact: "Reads account-level sentiment trends derived from interactions; aggregate inferred-attitude signal at the account level, not a named-individual record, read-only."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+
+  # ---------- Revenue & Pipeline ----------
+  - id: gainsight-staircase-ai.expansion_signals
+    object: Account
+    action: expansion_signals
+    id_form: capability
+    description: "Expansion opportunities"
+    reference: https://www.gainsight.com/resource/mcp-use-cases/
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Reads expansion-opportunity signals for a customer account; account-level revenue intelligence, not a named-individual record, read-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

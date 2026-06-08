@@ -1,0 +1,114 @@
+schema_version: "1.1"
+platform: chronograph
+display_name: Chronograph
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.chronograph.pe/chronograph-mcp-announcement/
+# Tool surface verified verbatim (id_form: verbatim, the default — field omitted).
+# Chronograph's hosted MCP server (https://ai.chronograph.pe/mcp) gates live
+# `tools/list` behind OAuth (introspection returns auth/401), but the verbatim
+# kebab-case tool ids ARE published by an independent connector-introspection
+# catalog — PromptArmor's Chronograph page lists exactly 7 tools with
+# Permissions: Read, Category: financial-services. Those 7 verbatim ids are
+# used below as the audit-matchable identifiers an MCP client would send:
+#   run-query, top-exposures, commitment-history, investment-metrics,
+#   entity-search, query-help-center-documentation, get-help-center-article.
+# Source: https://www.promptarmor.com/connectors/chronograph
+# This is a READ-ONLY connector (Permissions: Read) for private-markets
+# (LP/GP) portfolio analytics; there is no write/destructive/identity surface,
+# so sod_concern is false throughout and the risk gradient reflects the
+# exfiltration potential of confidential fund and portfolio-company financial
+# data, not write impact.
+actions:
+  # ---------- Data Access ----------
+  - id: chronograph.run-query
+    object: PortfolioQuery
+    action: run-query
+    description: "Queries the complete private investment portfolio using natural language, returning aggregate slices of fund and portfolio-company data."
+    reference: https://www.promptarmor.com/connectors/chronograph
+    category: Data Access
+    risk: high
+    business_impact: "Runs an arbitrary aggregate query across the LP/GP private-markets portfolio; can surface broad slices of confidential fund and portfolio-company financial data in a single call, making it the connector's primary data-exfiltration surface."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: chronograph.entity-search
+    object: Entity
+    action: entity-search
+    description: "Searches for companies, funds, groups, and general partners via substring similarity search."
+    reference: https://www.promptarmor.com/connectors/chronograph
+    category: Data Access
+    risk: medium
+    business_impact: "Locates and returns identifying details for portfolio companies, funds, groups, and general partners; entity records identify individuals (general partners) and confidential investment relationships."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: chronograph.top-exposures
+    object: Exposure
+    action: top-exposures
+    description: "Returns aggregated portfolio exposure analysis across sectors and asset classes."
+    reference: https://www.promptarmor.com/connectors/chronograph
+    category: Data Access
+    risk: medium
+    business_impact: "Returns aggregated sector and asset-class concentration across the portfolio; exposes confidential allocation positions of the institutional investor."
+    compliance: [GLBA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: chronograph.commitment-history
+    object: Commitment
+    action: commitment-history
+    description: "Calculates aggregate values for key metrics including NAV, Called, Distributed, Unfunded, Net IRR, Net MOIC, and Commitment Amount across the portfolio's commitment history."
+    reference: https://www.promptarmor.com/connectors/chronograph
+    category: Financial
+    risk: medium
+    business_impact: "Returns historical capital-call and distribution metrics (NAV, Called, Distributed, Net IRR, Net MOIC) used in LP/GP financial reporting; confidential fund-performance data feeding investor financial statements."
+    compliance: [GLBA, SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: chronograph.investment-metrics
+    object: InvestmentMetric
+    action: investment-metrics
+    description: "Calculates individual performance metrics across specific investments."
+    reference: https://www.promptarmor.com/connectors/chronograph
+    category: Financial
+    risk: medium
+    business_impact: "Computes per-investment performance metrics across holdings; confidential portfolio-company financial data used in fund-performance reporting."
+    compliance: [GLBA, SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Help Center ----------
+  - id: chronograph.query-help-center-documentation
+    object: HelpArticle
+    action: query-help-center-documentation
+    description: "Searches Chronograph's help-center documentation for relevant articles."
+    reference: https://www.promptarmor.com/connectors/chronograph
+    category: Data Access
+    risk: low
+    business_impact: "Searches Chronograph's public help-center documentation for relevant articles; returns product help content with no customer portfolio data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: chronograph.get-help-center-article
+    object: HelpArticle
+    action: get-help-center-article
+    description: "Retrieves the complete content of a Chronograph help-center article."
+    reference: https://www.promptarmor.com/connectors/chronograph
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves the full text of a Chronograph help-center article; product documentation only, with no customer portfolio data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

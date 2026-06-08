@@ -1,0 +1,399 @@
+schema_version: "1.1"
+platform: incident-io
+display_name: incident.io
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.incident.io/ai/remote-mcp
+actions:
+  # ---------- Incidents ----------
+  - id: incident-io.incident_create
+    object: Incident
+    action: incident_create
+    description: "Create a new incident."
+    category: Incidents
+    risk: medium
+    business_impact: "Declares a new incident; pages responders and triggers incident-response workflows, so mistaken creation mobilises on-call engineers."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: incident-io.incident_update
+    object: Incident
+    action: incident_update
+    description: "Update incident fields (status, severity, roles, custom fields)."
+    category: Incidents
+    risk: medium
+    business_impact: "Changes incident status, severity, or assigned roles; can downgrade or close a live incident and alter who is responsible for response."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: incident-io.incident_show
+    object: Incident
+    action: incident_show
+    description: "Full incident details with optional investigation, post-mortem, and update history."
+    category: Incidents
+    risk: medium
+    business_impact: "Returns full incident details including free-form investigation and post-mortem text, which can embed personal data, customer identifiers, or sensitive operational context."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: incident-io.incident_list
+    object: Incident
+    action: incident_list
+    description: "Search and browse incidents with filters, sortable by workload."
+    category: Incidents
+    risk: low
+    business_impact: "Lists incidents matching filters; returns operational metadata across the incident estate."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: incident-io.incident_stats
+    object: Incident
+    action: incident_stats
+    description: "Aggregate counts and workload by 10+ dimensions."
+    category: Incidents
+    risk: low
+    business_impact: "Returns aggregate incident counts and workload metrics; no individual records exposed."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: incident-io.incident_update_list
+    object: Incident
+    action: incident_update_list
+    description: "Full status update history for an incident."
+    category: Incidents
+    risk: low
+    business_impact: "Returns the full status-update history for one incident."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Investigation & Analysis ----------
+  - id: incident-io.investigation_sync
+    object: Investigation
+    action: investigation_sync
+    description: "Download a full investigation as an archive for LLM analysis."
+    category: Investigation & Analysis
+    risk: high
+    business_impact: "Exports a complete investigation as a single archive; bulk extraction of incident timelines, logs, and free-form notes that can contain personal data and confidential operational detail."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: incident-io.analysis_start
+    object: Analysis
+    action: analysis_start
+    description: "Start a structured operational analysis with playbooks and report template."
+    category: Investigation & Analysis
+    risk: low
+    business_impact: "Kicks off a structured operational analysis from a playbook; produces a report without changing incident state."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- AI Agents ----------
+  - id: incident-io.ask_incident
+    object: "*"
+    action: ask_incident
+    description: "AI agent for incident investigation and management actions."
+    category: Investigation & Analysis
+    risk: high
+    business_impact: "Free-form agent that can take incident management actions; blast radius equals the underlying write surface (status, severity, roles), so a single prompt can mutate live incident state."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: incident-io.ask
+    object: "*"
+    action: ask
+    description: "AI agent for on-call queries, schedule management, and general questions."
+    category: Investigation & Analysis
+    risk: medium
+    business_impact: "Free-form agent that can perform schedule-management actions; can change on-call coverage, so unbounded scope warrants review."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: incident-io.ask_telemetry
+    object: "*"
+    action: ask_telemetry
+    description: "AI agent for querying logs, metrics, traces, and dashboards."
+    category: Investigation & Analysis
+    risk: medium
+    business_impact: "Free-form agent that queries logs, metrics, and traces; telemetry can contain personal data, secrets, or customer identifiers depending on what is logged."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Follow-ups ----------
+  - id: incident-io.follow_up_create
+    object: FollowUp
+    action: follow_up_create
+    description: "Create a follow-up on an incident."
+    category: Follow-ups
+    risk: low
+    business_impact: "Adds a post-incident follow-up action item; reversible and low-impact."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: incident-io.follow_up_list
+    object: FollowUp
+    action: follow_up_list
+    description: "List post-incident follow-ups."
+    category: Follow-ups
+    risk: low
+    business_impact: "Lists post-incident follow-up action items."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Alerts ----------
+  - id: incident-io.alert_list
+    object: Alert
+    action: alert_list
+    description: "Search and browse alerts."
+    category: Alerts
+    risk: low
+    business_impact: "Lists alerts matching filters; operational monitoring data."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: incident-io.alert_show
+    object: Alert
+    action: alert_show
+    description: "Full alert details with linked incidents."
+    category: Alerts
+    risk: low
+    business_impact: "Returns full detail for one alert and its linked incidents."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: incident-io.alert_source_list
+    object: AlertSource
+    action: alert_source_list
+    description: "List configured alert sources."
+    category: Alerts
+    risk: low
+    business_impact: "Lists configured alert sources feeding the account."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: incident-io.alert_stats
+    object: Alert
+    action: alert_stats
+    description: "Alert counts with workload from linked incidents."
+    category: Alerts
+    risk: low
+    business_impact: "Returns aggregate alert counts and workload; no individual records exposed."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Escalation & On-call ----------
+  - id: incident-io.escalation_respond
+    object: Escalation
+    action: escalation_respond
+    description: "Acknowledge or decline a page."
+    category: Escalation & On-call
+    risk: medium
+    business_impact: "Acknowledges or declines a live page; declining can drop response coverage for an active escalation."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: incident-io.escalation_list
+    object: Escalation
+    action: escalation_list
+    description: "Search escalations (pages)."
+    category: Escalation & On-call
+    risk: low
+    business_impact: "Lists escalations (pages) matching filters."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: incident-io.escalation_show
+    object: Escalation
+    action: escalation_show
+    description: "Full escalation details with transition history."
+    category: Escalation & On-call
+    risk: low
+    business_impact: "Returns full escalation detail including who was paged and when; exposes responder identities and contact patterns."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: incident-io.escalation_stats
+    object: Escalation
+    action: escalation_stats
+    description: "Paging counts by path, priority, time of day."
+    category: Escalation & On-call
+    risk: low
+    business_impact: "Returns aggregate paging statistics by path, priority, and time."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: incident-io.escalation_path_list
+    object: EscalationPath
+    action: escalation_path_list
+    description: "List escalation paths."
+    category: Escalation & On-call
+    risk: low
+    business_impact: "Lists configured escalation paths."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: incident-io.escalation_path_show
+    object: EscalationPath
+    action: escalation_path_show
+    description: "Who would be paged at each level."
+    category: Escalation & On-call
+    risk: low
+    business_impact: "Reveals who would be paged at each escalation level; exposes the on-call roster and responder identities."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: incident-io.schedule_list
+    object: Schedule
+    action: schedule_list
+    description: "List on-call schedules."
+    category: Escalation & On-call
+    risk: low
+    business_impact: "Lists on-call schedules in the account."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: incident-io.schedule_show
+    object: Schedule
+    action: schedule_show
+    description: "Schedule details with current and upcoming shifts."
+    category: Escalation & On-call
+    risk: low
+    business_impact: "Returns a schedule with current and upcoming shifts; exposes named individuals and their on-call hours."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Teams & Directory ----------
+  - id: incident-io.team_list
+    object: Team
+    action: team_list
+    description: "List teams."
+    category: Teams & Directory
+    risk: low
+    business_impact: "Lists teams in the organisation."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: incident-io.team_show
+    object: Team
+    action: team_show
+    description: "Team details with owned escalation paths, alert sources, and schedules."
+    category: Teams & Directory
+    risk: low
+    business_impact: "Returns team detail including owned schedules and escalation paths; exposes member identities and on-call assignments."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Catalog & Configuration ----------
+  - id: incident-io.catalog_entry_list
+    object: CatalogEntry
+    action: catalog_entry_list
+    description: "Browse entries in a catalog type."
+    category: Catalog & Configuration
+    risk: low
+    business_impact: "Lists entries within a catalog type (services, teams, etc.)."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: incident-io.catalog_entry_show
+    object: CatalogEntry
+    action: catalog_entry_show
+    description: "Full catalog entry with all attributes."
+    category: Catalog & Configuration
+    risk: low
+    business_impact: "Returns one catalog entry with all attributes."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: incident-io.catalog_type_list
+    object: CatalogType
+    action: catalog_type_list
+    description: "List catalog types (Service, Team, etc.)."
+    category: Catalog & Configuration
+    risk: low
+    business_impact: "Lists catalog types configured in the account."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: incident-io.resource_show
+    object: Resource
+    action: resource_show
+    description: "Read organisation config, analysis playbooks, or telemetry datasources."
+    category: Catalog & Configuration
+    risk: low
+    business_impact: "Reads organisation configuration, analysis playbooks, or telemetry datasource definitions."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Platform ----------
+  - id: incident-io.feedback
+    object: Feedback
+    action: feedback
+    description: "Submit feedback about the tools."
+    category: Platform
+    risk: low
+    business_impact: "Submits free-text feedback about the MCP tools to incident.io; no operational state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

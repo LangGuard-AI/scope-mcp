@@ -1,0 +1,69 @@
+schema_version: "1.1"
+platform: granted
+display_name: Granted
+source: langguard-editorial
+updated: "2026-06"
+reference: https://grantedai.com/mcp
+actions:
+  # ---------- Grant Discovery ----------
+  - id: granted.search_grants
+    object: Grant
+    action: search_grants
+    description: "Search 84,000+ public grant opportunities by keyword, state, source type, and funder, combining semantic search with live AI-powered web discovery."
+    category: Data Access
+    risk: low
+    business_impact: "Read-only semantic search over public grant listings; returns up to 15 ranked opportunities and triggers outbound web discovery for fresh results."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: granted.get_grant
+    object: Grant
+    action: get_grant
+    description: "Returns full details for a single grant by slug, including eligibility, deadline, amount, funder info, and application link."
+    category: Data Access
+    risk: low
+    business_impact: "Read-only lookup of one public grant record; no data is written or shared."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Funder Research ----------
+  - id: granted.search_funders
+    object: Funder
+    action: search_funders
+    description: "Search 133,000+ US foundations by name, state, NTEE code, and asset/income range, returning metrics drawn from public IRS 990 filings."
+    category: Data Access
+    risk: low
+    business_impact: "Read-only search over a public IRS 990 foundation directory; returns up to 15 organizations with publicly filed financial metrics."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: granted.get_funder
+    object: Funder
+    action: get_funder
+    description: "Returns a full foundation profile by slug or EIN, including mission, multi-year financials, recent grants awarded, and key officers."
+    category: Data Access
+    risk: low
+    business_impact: "Read-only lookup of one foundation's public IRS 990 profile; surfaces publicly disclosed officer names alongside financials and giving history."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Competitive Intelligence ----------
+  - id: granted.get_past_winners
+    object: AwardRecipient
+    action: get_past_winners
+    description: "Returns prior recipients of a federal grant program grouped by organization, with award counts, total funding, and year-over-year trends, filterable by CFDA, agency, program, or state."
+    category: Data Access
+    risk: low
+    business_impact: "Read-only competitive-intelligence query over public federal award records; aggregates publicly reported recipient organizations and funding totals."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

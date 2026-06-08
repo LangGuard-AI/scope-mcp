@@ -1,94 +1,109 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: egnyte
 display_name: Egnyte
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://developers.egnyte.com/docs/Remote_MCP_Server
+# Tool surface = Egnyte hosted Remote MCP Server (the connector Claude calls),
+# NOT the open-source `egnyte/egnyte-mcp-server` stdio reference repo, which is a
+# divergent implementation using different names (search_for_document_by_name,
+# create_sharing_link_for_object, list_all_links, get_link_by_id, delete_link_by_id).
+# See provenance note at end of file for per-id source and confidence.
 actions:
-  # ---------- Data Access ----------
-  - id: egnyte.search
-    object: File
-    action: search
-    category: Data Access
-    risk: medium
-    business_impact: "Returns content matches across the corporate file store; can surface regulated documents agents weren't intended to see."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: egnyte.advanced_search
-    object: File
-    action: advanced_search
-    category: Data Access
-    risk: medium
-    business_impact: "Filtered search over file metadata and content; broader recall than basic search."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: egnyte.fetch
-    object: File
-    action: fetch
-    category: Data Access
-    risk: medium
-    business_impact: "Retrieves a file's contents into the agent context; regulated data leaves system of record into the LLM session."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: egnyte.list_filesystem_by_path
-    object: Folder
-    action: list_filesystem_by_path
-    category: Data Access
-    risk: low
-    business_impact: "Enumerates folder contents; reveals file existence and naming structure."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+  # ---------- Content Egress ----------
   - id: egnyte.download_file_by_id
     object: File
     action: download_file_by_id
-    category: Data Access
+    description: "Downloads a file's bytes by its Egnyte entry/group id, returned as base64 with a SHA-512 checksum and a truncation flag."
+    category: Content Egress
     risk: high
-    business_impact: "Pulls a specific file out of Egnyte; high exposure if the file contains PII, financial, or regulated content."
+    business_impact: "Pulls a specific file's raw contents out of the system of record; high exposure if the file holds PII, financial, contract, or regulated material."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: egnyte.download_file_by_path
     object: File
     action: download_file_by_path
-    category: Data Access
+    description: "Downloads a file's bytes by its full Egnyte path; same base64 + checksum response shape as the id-based download."
+    category: Content Egress
     risk: high
-    business_impact: "Pulls a file by path; same exfiltration profile as id-based download."
+    business_impact: "Pulls a file's raw contents by path; identical exfiltration profile to the id-based download."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
-    confidence: high
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: egnyte.fetch
+    object: File
+    action: fetch
+    description: "Fetches the content of a document by group_id/entry_id into the agent context."
+    category: Content Egress
+    risk: high
+    business_impact: "Reads a document's contents into the LLM session; regulated data leaves the system of record into the model context."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Search ----------
+  - id: egnyte.search
+    object: File
+    action: search
+    description: "Hybrid search for files and content across Egnyte."
+    category: Search
+    risk: medium
+    business_impact: "Returns content matches across the corporate file store; can surface regulated documents an agent was not intended to see."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: egnyte.advanced_search
+    object: File
+    action: advanced_search
+    description: "Advanced search with metadata, date-range, folder, file-type, and similarity filters."
+    category: Search
+    risk: medium
+    business_impact: "Filtered search over file metadata and content with broader recall than basic search; can surface regulated documents in bulk."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: egnyte.list_filesystem_by_path
+    object: Folder
+    action: list_filesystem_by_path
+    description: "Lists files and folders under a given path."
+    category: Search
+    risk: low
+    business_impact: "Enumerates folder contents; reveals file existence and naming structure without returning file contents."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: egnyte.list_projects
     object: Project
     action: list_projects
-    category: Data Access
+    description: "Lists project folders visible to the user."
+    category: Search
     risk: low
-    business_impact: "Lists Egnyte project workspaces visible to the user."
+    business_impact: "Lists Egnyte project workspaces the user can see; metadata-only read."
     compliance: [SOC2]
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
-  # ---------- Knowledge & Copilot ----------
+  # ---------- Knowledge & AI ----------
   - id: egnyte.ask_document
     object: File
     action: ask_document
-    category: Knowledge & Copilot
+    description: "Asks questions about a single document using Egnyte AI."
+    category: Knowledge & AI
     risk: medium
-    business_impact: "Q&A grounded in a single document; answer surfaces document contents that may include sensitive data."
+    business_impact: "Q&A grounded in one document; the answer surfaces document contents that may include regulated or sensitive data."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: high
@@ -97,9 +112,10 @@ actions:
   - id: egnyte.summarize_document
     object: File
     action: summarize_document
-    category: Knowledge & Copilot
+    description: "Generates an AI summary of a document."
+    category: Knowledge & AI
     risk: medium
-    business_impact: "Generates a summary of a document; reproduces regulated content in derivative form."
+    business_impact: "Reproduces a document's regulated content in derivative summary form within the model context."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: high
@@ -108,9 +124,10 @@ actions:
   - id: egnyte.ask_copilot
     object: "*"
     action: ask_copilot
-    category: Knowledge & Copilot
+    description: "Asks Egnyte Copilot a question with optional file/folder context."
+    category: Knowledge & AI
     risk: medium
-    business_impact: "Free-form copilot Q&A grounded in user-accessible Egnyte content; answer scope unbounded by single document."
+    business_impact: "Free-form Copilot Q&A grounded in user-accessible Egnyte content; answer scope is unbounded by any single document."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: medium
@@ -119,9 +136,10 @@ actions:
   - id: egnyte.ask_knowledge_base
     object: KnowledgeBase
     action: ask_knowledge_base
-    category: Knowledge & Copilot
+    description: "Queries a curated Knowledge Base."
+    category: Knowledge & AI
     risk: medium
-    business_impact: "Q&A scoped to a knowledge base; same content-exposure profile as ask_copilot."
+    business_impact: "Q&A scoped to a knowledge base; same content-exposure profile as ask_copilot over curated repositories."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: medium
@@ -130,111 +148,122 @@ actions:
   - id: egnyte.list_knowledge_bases
     object: KnowledgeBase
     action: list_knowledge_bases
-    category: Knowledge & Copilot
+    description: "Lists Knowledge Bases with filtering."
+    category: Knowledge & AI
     risk: low
-    business_impact: "Lists knowledge bases configured for the workspace."
+    business_impact: "Lists the knowledge bases configured for the workspace; metadata-only read."
     compliance: [SOC2]
     sod_concern: false
-    confidence: high
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Sharing & External Exposure ----------
+  - id: egnyte.create_link
+    object: Link
+    action: create_link
+    description: "Creates a share link for a file or folder."
+    category: Sharing & External Exposure
+    risk: high
+    business_impact: "Issues a shareable link to a file or folder; primary external-exfiltration vector that can unilaterally expose an entire folder tree."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: egnyte.list_links
+    object: Link
+    action: list_links
+    description: "Lists Egnyte share links with filters."
+    category: Sharing & External Exposure
+    risk: low
+    business_impact: "Lists existing share links visible to the user; reveals which content is externally exposed."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: egnyte.get_link_details
+    object: Link
+    action: get_link_details
+    description: "Returns details for a specific share link."
+    category: Sharing & External Exposure
+    risk: low
+    business_impact: "Returns metadata for one share link, including its target and exposure scope."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
     access_methods: [REST, MCP]
 
   # ---------- Content Management ----------
   - id: egnyte.upload_file
     object: File
     action: upload_file
+    description: "Uploads a new file or a new version of an existing file."
     category: Content Management
     risk: medium
-    business_impact: "Writes new content into the system of record; can introduce malicious or noncompliant material."
+    business_impact: "Writes new content into the system of record; can introduce malicious or noncompliant material or overwrite a controlled file version."
     compliance: [SOC2, ISO_27001]
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: egnyte.create_folder
     object: Folder
     action: create_folder
+    description: "Creates a new folder."
     category: Content Management
     risk: low
-    business_impact: "Adds an empty folder to the file tree."
+    business_impact: "Adds an empty folder to the file tree; reversible and low-impact."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: egnyte.set_file_metadata
     object: File
     action: set_file_metadata
+    description: "Sets custom metadata on a file."
     category: Content Management
     risk: medium
-    business_impact: "Updates file labels and metadata; may alter classification, retention, or DLP policy enforcement."
+    business_impact: "Updates file metadata; may alter classification, retention, or DLP-policy enforcement that downstream controls depend on."
     compliance: [SOC2, ISO_27001]
     sod_concern: true
     confidence: medium
     access_methods: [REST, MCP]
 
-  # ---------- Sharing & Collaboration ----------
-  - id: egnyte.create_link
-    object: Link
-    action: create_link
-    category: Sharing & Collaboration
-    risk: high
-    business_impact: "Issues a shareable link to a file or folder; primary external-exfiltration vector."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: egnyte.list_links
-    object: Link
-    action: list_links
-    category: Sharing & Collaboration
-    risk: low
-    business_impact: "Lists existing share links visible to the user."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: egnyte.get_link_details
-    object: Link
-    action: get_link_details
-    category: Sharing & Collaboration
-    risk: low
-    business_impact: "Returns metadata for a specific share link."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+  # ---------- Collaboration ----------
   - id: egnyte.create_comment
     object: Comment
     action: create_comment
-    category: Sharing & Collaboration
+    description: "Creates a note/comment on a file."
+    category: Collaboration
     risk: low
-    business_impact: "Adds a comment on a file."
+    business_impact: "Adds a comment on a file; low-impact write visible to users with file access."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: egnyte.list_comments
     object: Comment
     action: list_comments
-    category: Sharing & Collaboration
+    description: "Lists comments for a file or domain."
+    category: Collaboration
     risk: low
-    business_impact: "Reads comment threads on a file."
+    business_impact: "Reads comment threads on a file; comments may contain personal data discussed about the document."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: egnyte.get_comment
     object: Comment
     action: get_comment
-    category: Sharing & Collaboration
+    description: "Gets a single comment by id."
+    category: Collaboration
     risk: low
-    business_impact: "Reads a single comment."
+    business_impact: "Reads one comment; low-impact metadata read."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]

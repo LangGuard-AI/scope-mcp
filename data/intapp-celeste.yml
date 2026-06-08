@@ -1,0 +1,182 @@
+schema_version: "1.1"
+platform: intapp-celeste
+display_name: Intapp Celeste
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.intapp.com/mcp-documentation/
+# Tool surface from the vendor "Celeste Connector MCP Tools Reference"
+# (intapp.com/mcp-documentation/). Ten tool ids are verbatim from that page and
+# confirmed by raw-HTML grep: 7 DealCloud (dc_*) + 3 SharePoint, matching the
+# page's own "DealCloud 7 / SharePoint 3" badges.
+#
+# WRITE SURFACE: the same page describes the suite as "Query, create, and update
+# records in your DealCloud CRM" and instructs "Always call dc_list_fields before
+# using dc_find_records, dc_aggregate, or any mutation tools" — i.e. it confirms
+# create/update (mutation) tools exist on the MCP surface but NAMES NONE of them.
+# The connector page (claude.com/connectors/intapp-celeste) likewise advertises
+# "Search, create, and update records" and "Create a new client record and update
+# their contact information." No verbatim mutation id is published anywhere
+# reachable: the doc page has no dc_insert/dc_create/dc_update string, no public
+# MCP server URL exists for live tools/list introspection (OAuth-gated), and the
+# DealCloud REST SDK's insert/update/upsert verbs are REST endpoints, not MCP tool
+# ids (deriving ids from REST docs is forbidden). Per Step 3's capability-form
+# fallback, the two write capabilities are represented with id_form: capability,
+# a non-dc_ slug, the verbatim vendor phrasing in description, and confidence
+# capped at medium. They are intent-level matches, not identifier-level matches.
+#
+# Celeste serves professional, legal, and financial-services firms; DealCloud
+# holds clients, contacts, deals, and relationships (B2B personal + confidential
+# firm data) and SharePoint holds internal firm documents.
+actions:
+  # ---------- Data Access (DealCloud CRM) ----------
+  - id: intapp-celeste.dc_query
+    object: DealCloudRecord
+    action: dc_query
+    description: "Convert a plain-English question into a SQL query for data retrieval and analytics."
+    category: Data Access
+    risk: high
+    business_impact: "Runs arbitrary natural-language-to-SQL analytics across the firm's CRM, returning client, contact, and deal data at scale; a bulk-read/exfiltration surface over confidential and personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: intapp-celeste.dc_find_records
+    object: DealCloudRecord
+    action: dc_find_records
+    description: "Query DealCloud records with auto-detected mode: single record, text search, filtered query, or all records."
+    category: Data Access
+    risk: high
+    business_impact: "Returns filtered or whole-entity batches of CRM records including contact PII and confidential deal data; a bulk-read surface."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: intapp-celeste.dc_entry
+    object: DealCloudRecord
+    action: dc_entry
+    description: "Retrieve full entity records when IDs are already known, typically from a prior dc_lookup result."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns full CRM record detail for known IDs, including contact PII and confidential deal fields; single-/few-record read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: intapp-celeste.dc_lookup
+    object: DealCloudRecord
+    action: dc_lookup
+    description: "Search DealCloud using contextual phrases; returns IDs and key fields for follow-up queries."
+    category: Data Access
+    risk: medium
+    business_impact: "Resolves natural-language phrases to CRM record IDs and key fields; surfaces identifiers and pointers rather than full record contents."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: intapp-celeste.dc_aggregate
+    object: DealCloudRecord
+    action: dc_aggregate
+    description: "Group and aggregate DealCloud records by a field value (count, sum, avg, min, max)."
+    category: Data Access
+    risk: medium
+    business_impact: "Computes grouped aggregates over CRM records, returning summarized counts and statistics rather than row-level personal data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Records (DealCloud CRM mutations) ----------
+  # source: capability — vendor doc references "mutation tools" and the connector
+  # page advertises "create … records" / "Create a new client record"; no
+  # verbatim id is published, so id_form: capability per Step 3.
+  - id: intapp-celeste.create_record
+    object: DealCloudRecord
+    action: create_record
+    id_form: capability
+    description: "create … records in your DealCloud CRM"
+    category: Records
+    risk: medium
+    business_impact: "Creates a new CRM record (e.g. a client or contact) carrying personal and confidential firm data; reviewable single-record write to a system of record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: intapp-celeste.update_record
+    object: DealCloudRecord
+    action: update_record
+    id_form: capability
+    description: "update records in your DealCloud CRM"
+    category: Records
+    risk: medium
+    business_impact: "Updates fields on an existing CRM record (e.g. a client's contact information), changing personal data in the firm's system of record; reviewable single-record write."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Schema & Metadata (DealCloud CRM) ----------
+  - id: intapp-celeste.dc_list_objects
+    object: DealCloudSchema
+    action: dc_list_objects
+    description: "Discover all available object types in DealCloud (e.g., Deal, Company, Contact)."
+    category: Data Access
+    risk: low
+    business_impact: "Lists CRM entity types only; schema discovery with no record-level personal or confidential data returned."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: intapp-celeste.dc_list_fields
+    object: DealCloudSchema
+    action: dc_list_fields
+    description: "Return all field definitions for an entity type — names, types, required status, and validation rules."
+    category: Data Access
+    risk: low
+    business_impact: "Returns field/schema definitions and picklist values for an entity; metadata only, exposes the data model but not record contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access (SharePoint Documents) ----------
+  - id: intapp-celeste.get_file_content
+    object: SharePointFile
+    action: get_file_content
+    description: "Download a SharePoint file and extract its text content."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads and extracts the full contents of an internal firm document, which may contain client PII, confidential deal terms, or financial records; single-file read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: intapp-celeste.search_files
+    object: SharePointFile
+    action: search_files
+    description: "Search for files and folders in the connected SharePoint site by name or content."
+    category: Data Access
+    risk: medium
+    business_impact: "Searches internal firm documents by name and content, surfacing document titles and IDs that may reveal confidential client and deal information."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: intapp-celeste.list_folder
+    object: SharePointFolder
+    action: list_folder
+    description: "Browse the SharePoint file structure by listing the contents of a directory."
+    category: Data Access
+    risk: low
+    business_impact: "Lists folder and file names within the connected SharePoint library; directory metadata only, no file contents returned."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

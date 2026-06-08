@@ -1,0 +1,213 @@
+schema_version: "1.1"
+platform: courtlistener
+display_name: CourtListener
+source: langguard-editorial
+updated: "2026-06"
+reference: https://github.com/freelawproject/courtlistener-api-client/blob/main/MCP_README.md
+# Tool surface verified from the official Free Law Project server source
+# (github.com/freelawproject/courtlistener-api-client) — the registry in
+# courtlistener/mcp/tools/__init__.py and per-tool `name` attributes are the
+# authoritative tools/list. 16 tools, all verbatim unprefixed snake_case.
+# Hosted at https://mcp.courtlistener.com/ (OAuth-gated; live introspection 401s).
+# NOTE: CourtListener data is public U.S. court records (opinions, dockets,
+# RECAP/PACER filings, judges, oral arguments). Most reads are public-records
+# retrieval, NOT PII operations — privacy regimes are tagged only where raw
+# RECAP/PACER text or arbitrary person endpoints can surface un-redacted
+# third-party PII. The four alert/subscription writes act only on the signed-in
+# user's own account preferences.
+actions:
+  # ---------- Data Access ----------
+  - id: courtlistener.read_document
+    object: Document
+    action: read_document
+    description: "Read the full text of a court opinion or RECAP document."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the full text of a court opinion or RECAP/PACER filing; records are public, but raw RECAP text can contain un-redacted third-party PII (SSNs, minors, financial details)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: courtlistener.call_endpoint
+    object: "*"
+    action: call_endpoint
+    description: "Call any CourtListener API endpoint with custom query parameters."
+    category: Data Access
+    risk: medium
+    business_impact: "Generic escape hatch to any CourtListener REST endpoint, including person profiles, parties, attorneys, and financial-disclosure data; can return personal data of identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: courtlistener.get_endpoint_item
+    object: Item
+    action: get_endpoint_item
+    description: "Fetch a single item (opinion, docket, judge, etc.) by its CourtListener ID."
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves one public court record by ID; a person or party record may include personal data of an identifiable individual."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: courtlistener.search
+    object: SearchResult
+    action: search
+    description: "Search case law, dockets, judges, and oral arguments."
+    category: Data Access
+    risk: low
+    business_impact: "Queries the public CourtListener corpus of court opinions, dockets, judges, and oral arguments; returns published-record metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: courtlistener.search_document
+    object: Document
+    action: search_document
+    description: "Search for snippets within one or more court opinions or RECAP documents."
+    category: Data Access
+    risk: low
+    business_impact: "Returns matching text snippets from public court opinions or RECAP filings; snippets may surface un-redacted third-party detail present in the underlying document."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: courtlistener.get_more_results
+    object: SearchResult
+    action: get_more_results
+    description: "Page through additional results from a previous search or call_endpoint call."
+    category: Data Access
+    risk: low
+    business_impact: "Pages through the next batch of results from a prior query; carries the same data exposure as the originating call."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: courtlistener.get_counts
+    object: SearchResult
+    action: get_counts
+    description: "Get the total result count for a previous query."
+    category: Data Access
+    risk: low
+    business_impact: "Returns an aggregate result count for a prior query; exposes no record content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Metadata & Schema ----------
+  - id: courtlistener.get_endpoint_schema
+    object: Endpoint
+    action: get_endpoint_schema
+    description: "Retrieve the JSON schema (filters, response fields) for a given endpoint."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the filter and field schema for a CourtListener API endpoint; metadata only, no record content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: courtlistener.get_choices
+    object: Endpoint
+    action: get_choices
+    description: "Look up the valid values for an enum field (e.g. court IDs, case statuses)."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the valid enum values for a field, such as court IDs or case statuses; reference metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Citation Analysis ----------
+  - id: courtlistener.extract_citations
+    object: Citation
+    action: extract_citations
+    description: "Pull legal citations out of a block of text using eyecite; runs entirely on the server."
+    category: Data Access
+    risk: low
+    business_impact: "Parses legal citations from user-supplied text locally on the server with no API call; the input text is processed in-session and not persisted."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: courtlistener.analyze_citations
+    object: Citation
+    action: analyze_citations
+    description: "Extract citations and verify each unique case citation against the CourtListener database."
+    category: Data Access
+    risk: low
+    business_impact: "Extracts citations from supplied text and validates them against public case-law records; returns canonical case metadata and a good/bad/ambiguous status."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: courtlistener.resume_citation_analysis
+    object: Citation
+    action: resume_citation_analysis
+    description: "Continue verifying remaining citations from an analyze_citations job that exceeded the per-call batch limit."
+    category: Data Access
+    risk: low
+    business_impact: "Resumes a batched citation-verification job by job_id; same public-record validation as analyze_citations."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Alerts & Subscriptions ----------
+  - id: courtlistener.create_search_alert
+    object: SearchAlert
+    action: create_search_alert
+    description: "Create a search alert with real-time, daily, weekly, or monthly frequency."
+    category: Operations
+    risk: low
+    business_impact: "Creates a saved search alert on the signed-in user's own CourtListener account; reversible by deleting the alert."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: courtlistener.delete_search_alert
+    object: SearchAlert
+    action: delete_search_alert
+    description: "Delete a search alert by ID."
+    category: Operations
+    risk: low
+    business_impact: "Removes one of the signed-in user's own search alerts; the alert config is user-recreatable."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: courtlistener.subscribe_to_docket_alert
+    object: DocketAlert
+    action: subscribe_to_docket_alert
+    description: "Subscribe to email updates for a specific docket."
+    category: Operations
+    risk: low
+    business_impact: "Adds a docket-update email subscription to the signed-in user's own account; reversible by unsubscribing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: courtlistener.unsubscribe_from_docket_alert
+    object: DocketAlert
+    action: unsubscribe_from_docket_alert
+    description: "Unsubscribe from a docket alert."
+    category: Operations
+    risk: low
+    business_impact: "Removes a docket-update subscription from the signed-in user's own account; reversible by resubscribing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

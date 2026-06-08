@@ -1,0 +1,78 @@
+schema_version: "1.1"
+platform: clay
+display_name: Clay
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.clay.com/mcp
+# Official Clay.com (clayrun) GTM-enrichment connector listed at
+# claude.com/connectors/clay. NOTE: this is the clay.com sales/GTM platform, NOT
+# the unrelated clay.earth personal CRM (whose open-source clay-inc/clay-mcp repo
+# exposes "Contact Search", "Add New Contact", etc. — those ids are a DIFFERENT
+# product and are deliberately NOT used here).
+#
+# The hosted Clay MCP server is OAuth-gated and tied to a workspace API key: the
+# transport endpoint is not anonymously reachable (app.clay.com/mcp is a
+# CloudFront-fronted SPA returning 403 to POST tools/list; api.clay.com paths 404),
+# so verbatim tool ids are not obtainable. Clay's vendor docs (clay.com/mcp,
+# university.clay.com/docs/using-clay-in-claude, the clay.com/blog/clay-mcp post)
+# publish ONLY plain-language capability labels — no tool identifiers anywhere.
+# Per the curator spec this is the Apollo-class capability-form fallback: every
+# action uses id_form: capability with the verbatim vendor label in `description`
+# and a slugified id; confidence is capped at medium (intent-level, not
+# identifier-level matching). The docs describe NO delete/admin/destructive/
+# money-movement surface — none is invented here.
+actions:
+  # ---------- Workflow Automation ----------
+  - id: clay.run_ops_workflow
+    object: Function
+    action: run_ops_workflow
+    id_form: capability
+    description: "Run ops workflows with a prompt"
+    category: Operations
+    risk: high
+    business_impact: "Triggers a pre-built Clay Function (enrichment waterfall, lead qualification, or outbound sequence) that can resolve, enrich, and contact many individuals in one prompt; bulk contact-data extraction and outbound-consent obligations attach."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Enrichment ----------
+  - id: clay.enrich_with_context
+    object: Person
+    action: enrich_with_context
+    id_form: capability
+    description: "Enrich with context"
+    category: Customer
+    risk: high
+    business_impact: "Reveals verified email, phone, work history, and professional-profile data for a named individual by drawing on Clay's 100+ third-party data providers; single-record PII enrichment."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Prospecting ----------
+  - id: clay.find_icp_contacts
+    object: Person
+    action: find_icp_contacts
+    id_form: capability
+    description: "Find ICP contacts"
+    category: Customer
+    risk: medium
+    business_impact: "Returns up to 20 matched individuals (names, titles, employers, seniority, location) from Clay's people database per query; surfaces personal data of identifiable people."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: clay.company_search
+    object: Company
+    action: company_search
+    id_form: capability
+    description: "Company search"
+    category: Customer
+    risk: low
+    business_impact: "Returns firmographic company profiles (revenue, funding, tech stack, headcount growth, open jobs, website traffic) for Enterprise plans connected to Audiences; company data, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

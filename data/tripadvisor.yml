@@ -1,0 +1,134 @@
+schema_version: "1.1"
+platform: tripadvisor
+display_name: Tripadvisor
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/connectors/tripadvisor
+# PROVENANCE: Tripadvisor does NOT publish an official MCP server with verbatim
+# tool ids. The official Anthropic-distributed connector
+# (https://claude.com/connectors/tripadvisor) brokers an OAuth-gated server whose
+# URL is not publicly discoverable — `mcp.tripadvisor.com` does not resolve, and a
+# tools/list introspection attempt against the Content API host returned 401 with
+# no tool catalog. The only verbatim-id sources are COMMUNITY servers (pab1it0/
+# tripadvisor-mcp, hhw67865/tripadvisor-mcp-server, Apify, Composio) with
+# CONFLICTING names — per Step 3 these are a "do not use" case, not authoritative
+# for the official connector. The official connector page publishes only
+# plain-language capability labels under the "Read" and "Interactive" modes.
+# Per Step 3's capability-form fallback, these entries use id_form: capability
+# with verbatim labels in `description` and confidence capped at medium. The
+# underlying surface is the read-only Tripadvisor Content API (hotel catalog
+# search + detail retrieval); REST endpoint names were deliberately NOT used as
+# ids, and no write/destructive surface exists.
+actions:
+  # ---------- Data Access ----------
+  - id: tripadvisor.search_hotels
+    object: Hotel
+    action: search_hotels
+    id_form: capability
+    description: "search for hotels in an area"
+    reference: https://claude.com/connectors/tripadvisor
+    category: Data Access
+    risk: low
+    business_impact: "Performs a read-only search of Tripadvisor's public hotel catalog within an area and returns matching listings; makes no booking and stores nothing."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: tripadvisor.get_hotel_details
+    object: Hotel
+    action: get_hotel_details
+    id_form: capability
+    description: "retrieve hotel details"
+    reference: https://claude.com/connectors/tripadvisor
+    category: Data Access
+    risk: low
+    business_impact: "Returns public profile details for a single hotel from the Tripadvisor catalog; read-only over public content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: tripadvisor.get_hotel_photos
+    object: Hotel
+    action: get_hotel_photos
+    id_form: capability
+    description: "photos"
+    reference: https://claude.com/connectors/tripadvisor
+    category: Data Access
+    risk: low
+    business_impact: "Returns published photos for a hotel from the public Tripadvisor catalog; read-only, no stored personal data exposed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: tripadvisor.get_hotel_reviews
+    object: Review
+    action: get_hotel_reviews
+    id_form: capability
+    description: "reviews"
+    reference: https://claude.com/connectors/tripadvisor
+    category: Data Access
+    risk: low
+    business_impact: "Returns publicly posted traveler reviews for a hotel; read-only over content already published on Tripadvisor, not a private-data export."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: tripadvisor.get_review_ratings
+    object: Review
+    action: get_review_ratings
+    id_form: capability
+    description: "review ratings"
+    reference: https://claude.com/connectors/tripadvisor
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregate and per-review ratings for a hotel from public Tripadvisor content; read-only and non-destructive."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: tripadvisor.get_availability
+    object: Hotel
+    action: get_availability
+    id_form: capability
+    description: "availability"
+    reference: https://claude.com/connectors/tripadvisor
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only availability information for a hotel for given dates; surfaces listing data and performs no reservation."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: tripadvisor.get_pricing
+    object: Hotel
+    action: get_pricing
+    id_form: capability
+    description: "pricing"
+    reference: https://claude.com/connectors/tripadvisor
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only displayed nightly pricing for a hotel listing; informational catalog data, not a payment or transaction surface."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: tripadvisor.get_nearby_points_of_interest
+    object: PointOfInterest
+    action: get_nearby_points_of_interest
+    id_form: capability
+    description: "nearby points of interest"
+    reference: https://claude.com/connectors/tripadvisor
+    category: Data Access
+    risk: low
+    business_impact: "Returns nearby points of interest around a hotel or location from the public Tripadvisor catalog; read-only and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

@@ -1,0 +1,627 @@
+schema_version: "1.1"
+platform: xero
+display_name: Xero
+source: langguard-editorial
+updated: "2026-06"
+reference: https://github.com/XeroAPI/xero-mcp-server
+actions:
+  # ---------- Financial — General Ledger & Payments ----------
+  - id: xero.create-payment
+    object: Payment
+    action: create-payment
+    description: "Create a payment against an invoice in Xero."
+    category: Financial
+    risk: critical
+    business_impact: "Records a payment transaction against an invoice; settles the receivable/payable and directly affects the books and cash position."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.create-manual-journal
+    object: ManualJournal
+    action: create-manual-journal
+    description: "Create a manual journal in Xero from debit/credit journal lines."
+    category: Financial
+    risk: critical
+    business_impact: "Posts debit/credit lines to the general ledger; affects financial statements and is in scope for SOX ITGCs."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.update-manual-journal
+    object: ManualJournal
+    action: update-manual-journal
+    description: "Update a draft manual journal in Xero."
+    category: Financial
+    risk: high
+    business_impact: "Alters general-ledger journal lines on a draft entry; financial-statement-relevant change before posting."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.create-bank-transaction
+    object: BankTransaction
+    action: create-bank-transaction
+    description: "Create a spend or receive bank transaction in Xero."
+    category: Financial
+    risk: high
+    business_impact: "Writes a spend/receive money entry to a bank ledger; affects cash-account balances and the books."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.update-bank-transaction
+    object: BankTransaction
+    action: update-bank-transaction
+    description: "Update an existing bank transaction in Xero."
+    category: Financial
+    risk: high
+    business_impact: "Modifies a recorded bank-ledger entry; changes cash-account state and financial records."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Sales & Accounts Receivable ----------
+  - id: xero.create-invoice
+    object: Invoice
+    action: create-invoice
+    description: "Create a sales (ACCREC) or purchase (ACCPAY) invoice in Xero."
+    category: Financial
+    risk: high
+    business_impact: "Creates an accounts-receivable or accounts-payable invoice; recognises revenue or liability and writes to the financial records."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.update-invoice
+    object: Invoice
+    action: update-invoice
+    description: "Update a draft invoice in Xero; all line items must be re-supplied."
+    category: Financial
+    risk: high
+    business_impact: "Rewrites a draft invoice's line items and amounts; alters revenue/liability before approval."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.create-credit-note
+    object: CreditNote
+    action: create-credit-note
+    description: "Create a credit note in Xero."
+    category: Financial
+    risk: high
+    business_impact: "Issues a credit note that offsets an invoice; reduces recognised revenue or payable and affects the books."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.update-credit-note
+    object: CreditNote
+    action: update-credit-note
+    description: "Update a draft credit note in Xero; all line items must be re-supplied."
+    category: Financial
+    risk: high
+    business_impact: "Rewrites a draft credit note's line items and amounts; alters the offset to revenue or payable."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.create-quote
+    object: Quote
+    action: create-quote
+    description: "Create a quote in Xero."
+    category: Financial
+    risk: medium
+    business_impact: "Creates a customer quote; a pre-sale document with no ledger impact until accepted and converted."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.update-quote
+    object: Quote
+    action: update-quote
+    description: "Update a draft quote in Xero; all line items must be re-supplied."
+    category: Financial
+    risk: medium
+    business_impact: "Rewrites a draft quote's line items and amounts; no ledger impact until accepted."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Contacts ----------
+  - id: xero.create-contact
+    object: Contact
+    action: create-contact
+    description: "Create a contact (customer or supplier) in Xero."
+    category: Customer
+    risk: medium
+    business_impact: "Adds a customer or supplier record holding personal and business identifying data; reversible and individually audited."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.update-contact
+    object: Contact
+    action: update-contact
+    description: "Update an existing contact in Xero."
+    category: Customer
+    risk: medium
+    business_impact: "Modifies a customer or supplier record including personal identifying data such as name, email, and address."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Inventory & Items ----------
+  - id: xero.create-item
+    object: Item
+    action: create-item
+    description: "Create an inventory or sales/purchase item in Xero."
+    category: Operations
+    risk: low
+    business_impact: "Adds a catalogue item with default pricing and account codes; reversible operational record."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.update-item
+    object: Item
+    action: update-item
+    description: "Update an existing item in Xero."
+    category: Operations
+    risk: low
+    business_impact: "Changes an item's pricing or default account codes; reversible operational record."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Payroll ----------
+  - id: xero.approve-timesheet
+    object: Timesheet
+    action: approve-timesheet
+    description: "Approve a payroll timesheet in Xero by its ID."
+    category: Operations
+    risk: high
+    business_impact: "Approves a payroll timesheet for processing; a single actor advancing time data toward pay run bypasses two-person payroll review."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.create-timesheet
+    object: Timesheet
+    action: create-timesheet
+    description: "Create a new payroll timesheet in Xero."
+    category: Operations
+    risk: medium
+    business_impact: "Records employee working time that feeds payroll calculations; contains employee PII."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.update-timesheet-line
+    object: Timesheet
+    action: update-timesheet-line
+    description: "Update an existing timesheet line in a payroll timesheet in Xero."
+    category: Operations
+    risk: medium
+    business_impact: "Changes recorded employee hours on a timesheet line that feeds payroll calculations."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.add-timesheet-line
+    object: Timesheet
+    action: add-timesheet-line
+    description: "Add a new timesheet line to an existing payroll timesheet in Xero."
+    category: Operations
+    risk: medium
+    business_impact: "Adds employee hours to a timesheet that feeds payroll calculations."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.revert-timesheet
+    object: Timesheet
+    action: revert-timesheet
+    description: "Revert a payroll timesheet to draft in Xero by its ID."
+    category: Operations
+    risk: medium
+    business_impact: "Returns an approved timesheet to draft, reopening employee time data ahead of a pay run."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: xero.delete-timesheet
+    object: Timesheet
+    action: delete-timesheet
+    description: "Delete an existing payroll timesheet in Xero by its ID."
+    category: Operations
+    risk: medium
+    business_impact: "Removes a payroll timesheet and its recorded employee hours; destructive for that record."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.get-timesheet
+    object: Timesheet
+    action: get-timesheet
+    description: "Retrieve a single payroll timesheet from Xero by its ID."
+    category: Operations
+    risk: medium
+    business_impact: "Reads an employee's recorded working time; exposes payroll-related PII for one timesheet."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.list-timesheets
+    object: Timesheet
+    action: list-timesheets
+    description: "List all payroll timesheets in Xero."
+    category: Operations
+    risk: medium
+    business_impact: "Reads payroll timesheets across employees; exposes working-time PII in bulk."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.list-payroll-employees
+    object: Employee
+    action: list-payroll-employees
+    description: "List all payroll employees in Xero."
+    category: Operations
+    risk: high
+    business_impact: "Reads the full employee directory including personal identifying data; bulk PII exposure."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.list-payroll-employee-leave
+    object: EmployeeLeave
+    action: list-payroll-employee-leave
+    description: "List all leave records for a specific employee in Xero."
+    category: Operations
+    risk: medium
+    business_impact: "Reads an employee's leave transactions; exposes time-off PII that can imply health or family circumstances."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.list-payroll-employee-leave-balances
+    object: EmployeeLeave
+    action: list-payroll-employee-leave-balances
+    description: "List all leave balances for a specific employee in Xero."
+    category: Operations
+    risk: medium
+    business_impact: "Reads an employee's current leave balances; employee PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.list-payroll-employee-leave-types
+    object: EmployeeLeave
+    action: list-payroll-employee-leave-types
+    description: "List all leave types available for a specific employee in Xero."
+    category: Operations
+    risk: low
+    business_impact: "Reads the leave types configured for an employee; minimal PII beyond employee association."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: xero.list-payroll-leave-periods
+    object: LeavePeriod
+    action: list-payroll-leave-periods
+    description: "List all leave periods for a specific employee in Xero."
+    category: Operations
+    risk: low
+    business_impact: "Reads payroll leave periods for an employee; employee-associated scheduling data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: xero.list-payroll-leave-types
+    object: LeaveType
+    action: list-payroll-leave-types
+    description: "List all available leave types in Xero Payroll."
+    category: Operations
+    risk: low
+    business_impact: "Reads the organisation's configured payroll leave categories; reference data with no individual PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Configuration — Tracking Categories ----------
+  - id: xero.create-tracking-category
+    object: TrackingCategory
+    action: create-tracking-category
+    description: "Create a tracking category in Xero."
+    category: Configuration
+    risk: medium
+    business_impact: "Adds a tracking dimension used to segment ledger reporting; affects how financial data is classified."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: xero.update-tracking-category
+    object: TrackingCategory
+    action: update-tracking-category
+    description: "Update an existing tracking category in Xero."
+    category: Configuration
+    risk: medium
+    business_impact: "Renames or archives a tracking dimension; changes how financial reporting is segmented."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: xero.create-tracking-options
+    object: TrackingCategory
+    action: create-tracking-options
+    description: "Create tracking options for a tracking category in Xero."
+    category: Configuration
+    risk: low
+    business_impact: "Adds option values to a tracking category; reversible reporting-configuration change."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: xero.update-tracking-options
+    object: TrackingCategory
+    action: update-tracking-options
+    description: "Update tracking options for a tracking category in Xero."
+    category: Configuration
+    risk: low
+    business_impact: "Renames or archives tracking option values; reversible reporting-configuration change."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Financial Reports (read) ----------
+  - id: xero.list-profit-and-loss
+    object: Report
+    action: list-profit-and-loss
+    description: "Lists the profit and loss report in Xero over a specified period."
+    category: Financial
+    risk: medium
+    business_impact: "Reads the profit-and-loss statement; exposes summarised financial-statement figures."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.list-report-balance-sheet
+    object: Report
+    action: list-report-balance-sheet
+    description: "List the balance sheet report from Xero."
+    category: Financial
+    risk: medium
+    business_impact: "Reads the balance-sheet statement; exposes summarised financial-position figures."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.list-trial-balance
+    object: Report
+    action: list-trial-balance
+    description: "Lists the trial balance in Xero, showing debit and credit balances per account."
+    category: Financial
+    risk: medium
+    business_impact: "Reads the general-ledger trial balance; exposes per-account debit and credit positions."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.list-aged-receivables-by-contact
+    object: Report
+    action: list-aged-receivables-by-contact
+    description: "Lists the aged receivables report in Xero."
+    category: Financial
+    risk: medium
+    business_impact: "Reads aged-receivables balances by customer; exposes outstanding-debt figures tied to named counterparties."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.list-aged-payables-by-contact
+    object: Report
+    action: list-aged-payables-by-contact
+    description: "Lists the aged payables report in Xero."
+    category: Financial
+    risk: medium
+    business_impact: "Reads aged-payables balances by supplier; exposes outstanding-liability figures tied to named counterparties."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Ledger & Transactions (read) ----------
+  - id: xero.list-invoices
+    object: Invoice
+    action: list-invoices
+    description: "List invoices in Xero, including draft, submitted, and paid invoices."
+    category: Financial
+    risk: medium
+    business_impact: "Reads invoices across the organisation; exposes financial amounts and named counterparties."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.list-credit-notes
+    object: CreditNote
+    action: list-credit-notes
+    description: "List credit notes in Xero."
+    category: Financial
+    risk: medium
+    business_impact: "Reads credit notes across the organisation; exposes financial amounts and named counterparties."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.list-payments
+    object: Payment
+    action: list-payments
+    description: "List payments in Xero."
+    category: Financial
+    risk: medium
+    business_impact: "Reads payment transactions; exposes settlement amounts against invoices and bank accounts."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.list-bank-transactions
+    object: BankTransaction
+    action: list-bank-transactions
+    description: "List all bank transactions in Xero."
+    category: Financial
+    risk: medium
+    business_impact: "Reads bank-ledger transactions; exposes cash movements and account activity."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.list-manual-journals
+    object: ManualJournal
+    action: list-manual-journals
+    description: "List manual journals in Xero."
+    category: Financial
+    risk: medium
+    business_impact: "Reads general-ledger manual journal entries; exposes ledger postings behind the financial statements."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.list-quotes
+    object: Quote
+    action: list-quotes
+    description: "List all quotes in Xero."
+    category: Financial
+    risk: low
+    business_impact: "Reads customer quotes; exposes pre-sale amounts and named counterparties."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.list-contacts
+    object: Contact
+    action: list-contacts
+    description: "List all contacts in Xero, including suppliers and customers."
+    category: Customer
+    risk: high
+    business_impact: "Reads the full customer and supplier directory including personal identifying data; bulk PII exposure."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.list-contact-groups
+    object: ContactGroup
+    action: list-contact-groups
+    description: "List all contact groups in Xero."
+    category: Customer
+    risk: low
+    business_impact: "Reads contact-group definitions; reveals how named contacts are segmented."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Reference & Settings (read) ----------
+  - id: xero.list-accounts
+    object: Account
+    action: list-accounts
+    description: "Lists all accounts in Xero with their account codes and names."
+    category: Configuration
+    risk: low
+    business_impact: "Reads the chart of accounts; reference data that defines ledger structure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.list-items
+    object: Item
+    action: list-items
+    description: "Lists all items in Xero with their item codes and descriptions."
+    category: Operations
+    risk: low
+    business_impact: "Reads the item catalogue; operational reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.list-tax-rates
+    object: TaxRate
+    action: list-tax-rates
+    description: "Lists all tax rates in Xero."
+    category: Configuration
+    risk: low
+    business_impact: "Reads configured tax rates; reference data used when pricing transactions."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.list-tracking-categories
+    object: TrackingCategory
+    action: list-tracking-categories
+    description: "List all tracking categories in Xero with their tracking options."
+    category: Configuration
+    risk: low
+    business_impact: "Reads tracking-category definitions; reporting-configuration reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: xero.list-organisation-details
+    object: Organisation
+    action: list-organisation-details
+    description: "Lists the organisation details from Xero."
+    category: Configuration
+    risk: low
+    business_impact: "Reads the connected Xero organisation's profile and configuration details."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

@@ -1,0 +1,67 @@
+schema_version: "1.1"
+platform: tavily
+display_name: Tavily
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.tavily.com/documentation/mcp
+actions:
+  # ---------- Data Access ----------
+  - id: tavily.tavily_search
+    object: SearchResult
+    action: tavily_search
+    description: "Search the web for current information on any topic; returns snippets and source URLs."
+    category: Data Access
+    risk: low
+    business_impact: "Pulls public web content into the agent; returned snippets may contain third-party personal data about identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: tavily.tavily_extract
+    object: WebPage
+    action: tavily_extract
+    description: "Extracts raw page content from supplied URLs in markdown or text format."
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves full page content from arbitrary URLs (including profile pages like LinkedIn); extracted content may contain third-party personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: tavily.tavily_crawl
+    object: WebSite
+    action: tavily_crawl
+    description: "Crawls a website from a root URL, extracting content from many pages at configurable depth and breadth."
+    category: Data Access
+    risk: medium
+    business_impact: "Acquires content across many pages of a site in one operation; bulk web-content acquisition that may sweep up third-party personal data at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: tavily.tavily_map
+    object: WebSite
+    action: tavily_map
+    description: "Maps a website's structure and returns the list of URLs discovered from the base URL."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a site's URL structure only; no page content is retrieved, so no personal data is surfaced."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: tavily.tavily_research
+    object: ResearchTask
+    action: tavily_research
+    description: "Performs comprehensive multi-source research on a topic and returns a synthesized response."
+    category: Data Access
+    risk: low
+    business_impact: "Gathers and synthesizes public web content from multiple sources; findings may incorporate third-party personal data about identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

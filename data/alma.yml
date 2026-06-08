@@ -1,0 +1,85 @@
+schema_version: "1.1"
+platform: alma
+display_name: Alma
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/connectors/alma
+# NOTE: Alma (alma.food) is an AI nutrition-coaching connector. Its real MCP
+# server is https://mcp.alma.food (the documented https://alma.food/mcp URL
+# resolves to the marketing SPA on S3/CloudFront; the live server lives on the
+# `mcp.` subdomain). That server is OAuth-gated: an anonymous POST returns
+# HTTP 401 with RFC 9728 `resource_metadata`, and the RFC 8414 authorization-
+# server metadata advertises a SINGLE scope, `alma:read`, with DCR support.
+# tools/list is therefore not anonymously retrievable, the advertised
+# `service_documentation` (mcp.alma.food/docs) 404s, and no third-party catalog
+# publishes verbatim tool ids. The vendor publishes only plain-language
+# capability labels for the connector — on the claude.com connector page
+# ("Read" capability; "access meals logged, nutrient gaps, Alma Score trends,
+# and coaching history") and in https://www.alma.food/llms.txt. These are
+# recorded via the capability-form fallback (id_form: capability); ids are
+# intent-level slugs, not verbatim MCP identifiers, so every entry is capped at
+# confidence: medium. The single `alma:read` scope confirms the surface is
+# read-only — there is NO write / destructive / mutation tool to enumerate.
+# Compliance: these reads expose an identifiable user's own diet logs,
+# micronutrient profiles, and health-goal coaching history — personal data, so
+# the full privacy-regime stack is tagged. Alma is a consumer wellness app, not
+# a HIPAA covered entity, and each read pulls only the authenticated user's own
+# data into their own assistant (not a bulk export), so HIPAA, SOC2, and
+# ISO_27001 are intentionally NOT tagged despite the health-adjacent content.
+actions:
+  # ---------- Data Access ----------
+  - id: alma.read_meals
+    object: Meal
+    action: read_meals
+    id_form: capability
+    description: "Access meals logged"
+    reference: https://claude.com/connectors/alma
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the authenticated user's logged meals and food history (diet data that can reveal health conditions, religious practice, and lifestyle); read-only and scoped to the user's own account."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: alma.read_nutrient_gaps
+    object: NutrientProfile
+    action: read_nutrient_gaps
+    id_form: capability
+    description: "Access nutrient gaps"
+    reference: https://claude.com/connectors/alma
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the user's per-nutrient deficiency and intake profile across 25+ micronutrients; health-adjacent personal data scoped to the user's own account."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: alma.read_alma_score_trends
+    object: Score
+    action: read_alma_score_trends
+    id_form: capability
+    description: "Access Alma Score trends"
+    reference: https://claude.com/connectors/alma
+    category: Data Access
+    risk: low
+    business_impact: "Returns the user's daily diet-quality score (0-100) and its trend over time; a derived wellness metric scoped to the user's own account."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: alma.read_coaching_history
+    object: CoachingSession
+    action: read_coaching_history
+    id_form: capability
+    description: "Access coaching history"
+    reference: https://claude.com/connectors/alma
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the user's personalized nutrition-coaching history, including stated health goals and dietary guidance; personal data that may reveal health conditions, scoped to the user's own account."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

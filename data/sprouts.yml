@@ -1,0 +1,105 @@
+schema_version: "1.1"
+platform: sprouts
+display_name: Sprouts Data Intelligence
+source: langguard-editorial
+updated: "2026-06"
+reference: https://support.sprouts.ai/en/articles/13384582-sprouts-mcp-server-documentation
+actions:
+  # ---------- Data Access ----------
+  - id: sprouts.sprouts_data_intelligence
+    object: Prospect
+    action: sprouts_data_intelligence
+    description: "Performs B2B prospect searches using natural-language queries across the Sprouts contact and company database."
+    category: Data Access
+    risk: high
+    business_impact: "Returns identifiable B2B prospect records in bulk from a third-party data-broker database; large-scale personal-data retrieval and a data-exfiltration event regardless of intent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: sprouts.enrich_phone_email
+    object: Contact
+    action: enrich_phone_email
+    description: "Reveals a contact's phone number and email address by processing a LinkedIn profile, consuming enrichment credits."
+    category: Data Access
+    risk: high
+    business_impact: "Discloses a specific individual's direct phone number and email from a LinkedIn profile; reveals contact PII the data subject did not provide to the operator."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: sprouts.move_to_sprouts
+    object: Prospect
+    action: move_to_sprouts
+    description: "Exports qualified prospects (contacts or accounts) from search results into the Sprouts CRM platform."
+    category: Operations
+    risk: high
+    business_impact: "Egresses identifiable prospect records out of the search context into the Sprouts CRM; bulk personal-data transfer regardless of intent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: sprouts.icp_analysis
+    object: ICPProfile
+    action: icp_analysis
+    description: "Defines an Ideal Customer Profile and scores prospects against the established criteria for market-fit evaluation."
+    category: Operations
+    risk: medium
+    business_impact: "Defines the saved ICP profile and scores supplied prospect records against it; the scoring path processes identifiable prospect data for marketing fit."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: sprouts.search_history
+    object: SearchHistory
+    action: search_history
+    description: "Tracks the user's previous searches and generates analytics and recommendations from their search patterns."
+    category: Operations
+    risk: low
+    business_impact: "Reads and analyzes the user's own stored prospect-search history to surface patterns; affects only the requesting user's records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: sprouts.query_templates
+    object: QueryTemplate
+    action: query_templates
+    description: "Provides access to pre-built prospect-search templates across categories such as sales, recruiting, and market research."
+    category: Operations
+    risk: low
+    business_impact: "Surfaces and applies reusable search-query templates; reversible search configuration with no personal-data payload."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: sprouts.query_refinement
+    object: Query
+    action: query_refinement
+    description: "Analyzes a prospect-search query and suggests refinements to improve result quality and relevance."
+    category: Operations
+    risk: low
+    business_impact: "Suggests improvements to a search query; advisory operation with no personal-data payload."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Configuration ----------
+  - id: sprouts.sprouts_user_preferences
+    object: Preferences
+    action: sprouts_user_preferences
+    description: "Manages user settings, field-configuration preferences, and credentials for external integrations."
+    category: Configuration
+    risk: medium
+    business_impact: "Reads and writes user preferences and the stored credentials for external integrations; a secret-handling surface for the connector's downstream services."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

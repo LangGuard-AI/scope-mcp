@@ -1,0 +1,67 @@
+schema_version: "1.1"
+platform: midpage
+display_name: Midpage Legal Research
+source: langguard-editorial
+updated: "2026-06"
+reference: https://midpage-docs.apidocumentation.com/documentation/integration/mcp-tools
+actions:
+  # ---------- Data Access ----------
+  - id: midpage.search
+    object: CaseLaw
+    action: search
+    description: "Searches US case law across federal and state courts, returning metadata, highlights, and citator treatment data."
+    category: Data Access
+    risk: low
+    business_impact: "Read-only query over the public US case-law corpus; returns published court decisions and citator data with no write or storage effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: midpage.findInOpinion
+    object: Opinion
+    action: findInOpinion
+    description: "Locates quotable passages within a single court opinion using keyword search, accepting an opinion ID, reporter citation, or docket information."
+    category: Data Access
+    risk: low
+    business_impact: "Read-only passage lookup within a single published opinion; returns public court-record text with no write effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: midpage.analyzeOpinion
+    object: Opinion
+    action: analyzeOpinion
+    description: "Reads a full court opinion and answers legal questions, returning answers with supporting text excerpts and citator treatment."
+    category: Data Access
+    risk: low
+    business_impact: "Read-only legal-research analysis over a published court opinion; returns decision-support text from public court records, with the human attorney making any consequential decision."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: midpage.analyzeDocketReport
+    object: Docket
+    action: analyzeDocketReport
+    description: "Analyzes federal docket sheets to answer case-level questions about snapshots, activity, procedural status, and pending deadlines."
+    category: Data Access
+    risk: low
+    business_impact: "Read-only analysis of public federal docket reports, which may name litigants and counsel; returns court-record-derived answers with no write effect."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: midpage.analyzeDocketFiling
+    object: Filing
+    action: analyzeDocketFiling
+    description: "Examines specific filings from docket reports to answer targeted questions using passages from that filing."
+    category: Data Access
+    risk: low
+    business_impact: "Read-only analysis of an individual public docket filing, which may contain identifiable personal data of litigants; returns court-record excerpts with no write effect."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

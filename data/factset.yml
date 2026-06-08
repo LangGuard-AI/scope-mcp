@@ -1,0 +1,233 @@
+schema_version: "1.1"
+platform: factset
+display_name: FactSet AI-Ready Data
+source: langguard-editorial
+updated: "2026-06"
+reference: https://developer.factset.com/mcp/factset-ai-ready-data-mcp
+actions:
+  # ---------- People & Entity Reference ----------
+  # These tools return data about identifiable individuals (executives, board
+  # members) and entity reference records. Tagged with the privacy stack;
+  # confidence is medium because the data is public-figure professional data
+  # rather than consumer PII, so privacy-regime applicability is real but milder.
+  - id: factset.FactSet_People
+    object: Person
+    action: FactSet_People
+    description: "Retrieve executive profiles, leadership rosters, compensation analysis, employment history, and board composition data."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads personal data about identifiable individuals — names, titles, employment history, and compensation for company executives and board members."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: factset.FactSet_EntityReference
+    object: Entity
+    action: FactSet_EntityReference
+    description: "Get comprehensive entity reference data including business profiles, location information, and parent company relationships for 16M+ entities."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads entity reference data covering 16M+ entities, which can include personal data for individual proprietors and private entities."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: factset.FactSet_Entity
+    object: Entity
+    action: FactSet_Entity
+    description: "Retrieve entity reference information such as parent, associated debt instruments, and corporate structures."
+    category: Data Access
+    risk: low
+    business_impact: "Reads corporate-structure reference data — entity hierarchies, listings, and associated debt instruments."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Ownership & Market Microstructure ----------
+  - id: factset.FactSet_Ownership
+    object: Ownership
+    action: FactSet_Ownership
+    description: "Get fund holdings, institutional ownership, insider trading activity, and shareholder position changes."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads ownership and insider-trading data including institutional positions and shareholder changes, sensitive financial-market information relevant to financial-institution compliance."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Company Financials & Estimates ----------
+  - id: factset.FactSet_Fundamentals
+    object: Fundamentals
+    action: FactSet_Fundamentals
+    description: "Get most recent and historical public-company fundamentals and financials, including audit trail."
+    category: Data Access
+    risk: low
+    business_impact: "Reads public-company fundamentals and financial-statement reference data; no customer PII and no write to any system of record."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: factset.FactSet_EstimatesConsensus
+    object: Estimate
+    action: FactSet_EstimatesConsensus
+    description: "Retrieve consensus estimates, earnings surprises, analyst ratings, segment projections, and company guidance data."
+    category: Data Access
+    risk: low
+    business_impact: "Reads analyst consensus estimates and ratings; licensed third-party market data with no PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: factset.FactSet_Metrics
+    object: Metric
+    action: FactSet_Metrics
+    description: "Discover valid metric codes for Fundamentals and Estimates APIs before making data requests."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the catalogue of valid metric codes; a metadata-discovery read with no business-data exposure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Pricing & Market Data ----------
+  - id: factset.FactSet_GlobalPrices
+    object: Price
+    action: FactSet_GlobalPrices
+    description: "Retrieve public-company stock prices, returns, trading volume, corporate actions, dividends, and shares outstanding back to 2006."
+    category: Data Access
+    risk: low
+    business_impact: "Reads historical and current security pricing and corporate-action data; licensed market data with no PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: factset.FactSet_GeoRev
+    object: GeographicRevenue
+    action: FactSet_GeoRev
+    description: "Retrieve geographic revenue exposure data based on region or country breakdowns."
+    category: Data Access
+    risk: low
+    business_impact: "Reads geographic revenue-exposure breakdowns for companies; aggregate market data with no PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: factset.FactSet_RBICS
+    object: Classification
+    action: FactSet_RBICS
+    description: "Retrieve entity classification, revenue breakdown, and tradename mapping for 50,000+ publicly-traded companies."
+    category: Data Access
+    risk: low
+    business_impact: "Reads industry-classification and revenue-segmentation reference data for public companies; no PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: factset.FactSet_SupplyChain
+    object: SupplyChainRelationship
+    action: FactSet_SupplyChain
+    description: "Identify direct and reverse business relationships (suppliers, customers, competitors, partners) for a given company."
+    category: Data Access
+    risk: low
+    business_impact: "Reads inter-company supply-chain relationship data; aggregate business-relationship reference data with no PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Funds & Private Markets ----------
+  - id: factset.FactSet_FundsETF
+    object: Fund
+    action: FactSet_FundsETF
+    description: "Retrieve mutual fund and ETF data including NAV pricing, returns, AUM, flows, holdings, fees, risk analytics, and portfolio composition."
+    category: Data Access
+    risk: low
+    business_impact: "Reads fund and ETF reference and performance data; licensed market data with no customer PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: factset.FactSet_FundsScreener
+    object: Fund
+    action: FactSet_FundsScreener
+    description: "Perform advanced financial screening on funds and ETF data across multiple content sets."
+    category: Data Access
+    risk: low
+    business_impact: "Runs screening queries over fund and ETF reference data; a read/filter operation with no PII and no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: factset.FactSet_PrivateEquityVC
+    object: PrivateEquity
+    action: FactSet_PrivateEquityVC
+    description: "Retrieve Private Equity and Venture Capital data including funds, general partners, transactions, and portfolio companies."
+    category: Data Access
+    risk: low
+    business_impact: "Reads private-equity and venture-capital reference data on funds, GPs, and portfolio companies; licensed market data with no consumer PII."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Transactions & Fixed Income ----------
+  - id: factset.FactSet_MergersAcquisitions
+    object: Deal
+    action: FactSet_MergersAcquisitions
+    description: "Access key transactions and pricing metrics where the target of the deal is a publicly traded company."
+    category: Data Access
+    risk: low
+    business_impact: "Reads M&A deal and pricing-metric data for public-company transactions; aggregate market data with no PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: factset.FactSet_TermsConditions
+    object: Security
+    action: FactSet_TermsConditions
+    description: "Retrieve terms-and-conditions data for fixed-income Corporate, Government, and Agency securities, including coupon schedules and covenant details."
+    category: Data Access
+    risk: low
+    business_impact: "Reads fixed-income security terms and conditions; reference data on debt instruments with no PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Events & Documents ----------
+  - id: factset.FactSet_CalendarEvents
+    object: Event
+    action: FactSet_CalendarEvents
+    description: "Retrieve company events such as earnings calls and shareholder meetings for a given time period or date range, up to 90 days."
+    category: Data Access
+    risk: low
+    business_impact: "Reads scheduled company-event reference data (earnings calls, shareholder meetings); no PII and no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: factset.FactSet_UnstructuredContent
+    object: Document
+    action: FactSet_UnstructuredContent
+    description: "Retrieve vectorized data from CallStreet Transcripts, StreetAccount News, and EDGAR Filings (10K/10Q/8K) from 2022-present."
+    category: Data Access
+    risk: low
+    business_impact: "Runs semantic search over financial transcripts, news, and regulatory filings, returning ranked public-document excerpts; no customer PII."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

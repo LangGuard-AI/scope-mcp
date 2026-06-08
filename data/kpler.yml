@@ -1,0 +1,113 @@
+schema_version: "1.1"
+platform: kpler
+display_name: Kpler
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/connectors/kpler
+# NOTE: The official Kpler MCP server is distributed as an enrollment-gated
+# program (the developer portal's MCP section, developers.kpler.com/ecosystem/mcp,
+# describes an "Apply -> Qualification review -> Credentials & docs issued" flow,
+# and credentials/interactive docs are issued only after acceptance). No public
+# MCP server URL is published and no verbatim tools/list is reachable anonymously,
+# so the tool ids could not be retrieved. The connector page
+# (claude.com/connectors/kpler) marks the connector "Read" (read-only — it
+# "cannot modify data in Kpler's systems") and publishes only plain-language
+# capability labels describing the data surface. These are recorded via the
+# capability-form fallback (id_form: capability): the verbatim connector-page
+# label is in `description`, the id is an intent-level slug (NOT a verbatim MCP
+# identifier), and every entry is capped at confidence: medium. The Kpler MCP is
+# read-only commodity/maritime trade intelligence (vessels, cargoes, companies,
+# ports, trade flows); the underlying data is market/commercial rather than
+# consumer PII, so privacy regimes are tagged only on the
+# compliance/beneficial-owner entry, which touches named ultimate beneficial
+# owners and sanctions data. Sanctions / KYC / AML screening concerns are noted
+# in business_impact prose only (no canonical compliance code covers them
+# directly).
+actions:
+  # ---------- Compliance & Risk ----------
+  - id: kpler.compliance_screening
+    object: Vessel
+    action: compliance_screening
+    id_form: capability
+    description: "Compliance risk screening and beneficial owner identification"
+    reference: https://claude.com/connectors/kpler
+    category: Data Access
+    risk: medium
+    business_impact: "Returns sanctions-screening, risk-posture, and ultimate-beneficial-owner intelligence for vessels and their owners; surfaces named individuals and sanctions/PEP exposure that drives downstream KYC/AML and sanctions-compliance decisions."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Trade & Cargo Intelligence ----------
+  - id: kpler.trade_flow_tracking
+    object: TradeFlow
+    action: trade_flow_tracking
+    id_form: capability
+    description: "Trade flow tracking and cargo movement analysis"
+    reference: https://claude.com/connectors/kpler
+    category: Data Access
+    risk: low
+    business_impact: "Reads import/export trade-flow and cargo-movement intelligence across commodities and regions; read-only commercial market data, no personal data exposed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: kpler.supply_demand_balance
+    object: Balance
+    action: supply_demand_balance
+    id_form: capability
+    description: "Supply/demand balance analysis"
+    reference: https://claude.com/connectors/kpler
+    category: Data Access
+    risk: low
+    business_impact: "Returns supply/demand balance and forecasting analytics for commodity markets; read-only aggregated market data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Vessel & Maritime Tracking ----------
+  - id: kpler.vessel_tracking
+    object: Vessel
+    action: vessel_tracking
+    id_form: capability
+    description: "Real-time vessel and shipment tracking via AIS"
+    reference: https://claude.com/connectors/kpler
+    category: Data Access
+    risk: low
+    business_impact: "Returns real-time and historical vessel positions, voyage data, and shipment tracking from AIS; read-only operational maritime data on commercial vessels, not consumer PII."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: kpler.port_freight_data
+    object: PortCall
+    action: port_freight_data
+    id_form: capability
+    description: "Port calls and freight market data"
+    reference: https://claude.com/connectors/kpler
+    category: Data Access
+    risk: low
+    business_impact: "Reads port-call records and freight/chartering market data; read-only commercial logistics data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Onshore Assets ----------
+  - id: kpler.onshore_asset_monitoring
+    object: Asset
+    action: onshore_asset_monitoring
+    id_form: capability
+    description: "Onshore asset operations monitoring (LNG terminals, refineries)"
+    reference: https://claude.com/connectors/kpler
+    category: Data Access
+    risk: low
+    business_impact: "Returns operational monitoring data for onshore commodity assets such as LNG terminals and refineries; read-only infrastructure-operations market data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

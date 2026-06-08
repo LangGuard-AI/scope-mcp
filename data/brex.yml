@@ -1,0 +1,540 @@
+schema_version: "1.1"
+platform: brex
+display_name: Brex
+source: langguard-editorial
+updated: "2026-06"
+reference: https://developer.brex.com/docs/mcp
+# Tool surface verified against the vendor's authoritative MCP docs (single
+# "Available tools" table, 43 tools, no hidden/additional/insiders section).
+# Live tools/list introspection was OAuth-gated (401), so regime tags that hinge
+# on a field's exact data type (PCI/PAN on cards, PII breadth of user reads) are
+# inferences and carry medium confidence. The vendor states "Actions like
+# approvals and card management are not yet available via MCP" — there is no
+# money-movement, approval, privilege-grant, ledger-write, or audit-log surface,
+# so the write surface is 6 metadata tools and sod_concern is false throughout.
+actions:
+  # ---------- Data Access (bulk export — egress surface) ----------
+  - id: brex.start_expense_download
+    object: Expense
+    action: start_expense_download
+    description: "Start an asynchronous expense download job."
+    category: Data Access
+    risk: high
+    business_impact: "Initiates a bulk export of company expense records; financial data plus employee PII leaving the platform as a single download."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: brex.get_expense_download_result
+    object: Expense
+    action: get_expense_download_result
+    description: "Check the status of an expense download job and get the download URL when ready."
+    category: Data Access
+    risk: high
+    business_impact: "Returns the signed URL for a completed bulk expense export; the actual egress point for financial and PII data at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: brex.query_expense_analytics
+    object: Expense
+    action: query_expense_analytics
+    description: "Ask high-level company spend questions."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns company-wide aggregate spend figures; admin-only read of sensitive financial posture."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Expense (writes + sensitive reads) ----------
+  - id: brex.update_expense_memo
+    object: Expense
+    action: update_expense_memo
+    description: "Update memo for multiple expenses in bulk."
+    category: Expense
+    risk: medium
+    business_impact: "Bulk-edits memo text across multiple expense records; reversible but alters records used for accounting and audit."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: brex.upload_card_expense_receipt_from_urls
+    object: Expense
+    action: upload_card_expense_receipt_from_urls
+    description: "Upload receipts to a card expense by downloading them from provided URLs."
+    category: Expense
+    risk: medium
+    business_impact: "Attaches receipt documents to a card expense by fetching arbitrary URLs; alters expense substantiation and pulls external content into the account."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: brex.replace_attendees_for_card_expense
+    object: Expense
+    action: replace_attendees_for_card_expense
+    description: "Update attendees for a card expense."
+    category: Expense
+    risk: low
+    business_impact: "Replaces the named attendee list on a card expense; a reversible write that records individuals' names."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: brex.assign_limit_for_card_expenses
+    object: Expense
+    action: assign_limit_for_card_expenses
+    description: "Assign one or more card expenses to a spend limit."
+    category: Expense
+    risk: low
+    business_impact: "Reassigns existing card expenses to a spend limit for budget allocation; reversible categorization write, does not create or raise limits."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: brex.list_expenses
+    object: Expense
+    action: list_expenses
+    description: "List expenses with comprehensive filtering."
+    category: Expense
+    risk: low
+    business_impact: "Reads expense records with who-spent-what detail; surfaces employee financial activity but scoped to the caller's view-expenses capability."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: brex.get_expense_by_id
+    object: Expense
+    action: get_expense_by_id
+    description: "Get an expense by its ID."
+    category: Expense
+    risk: low
+    business_impact: "Reads a single expense record including spender identity and amount."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: brex.get_reimbursement_payout_date
+    object: Reimbursement
+    action: get_reimbursement_payout_date
+    description: "Get the expected payout date for a reimbursement expense."
+    category: Expense
+    risk: low
+    business_impact: "Reads the scheduled payout date for an individual's reimbursement; benign read tied to a named employee."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: brex.get_expense_policy
+    object: Policy
+    action: get_expense_policy
+    description: "Get expense policy information for a limit as structured, validatable content."
+    category: Expense
+    risk: low
+    business_impact: "Reads the expense-policy rules attached to a spend limit; internal control configuration, no PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: brex.list_my_limits
+    object: SpendLimit
+    action: list_my_limits
+    description: "Get all spend limits that apply to the current user with pagination support."
+    category: Expense
+    risk: low
+    business_impact: "Reads the spend limits scoped to the calling user; benign self-service read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Banking (financial account data) ----------
+  - id: brex.list_business_accounts
+    object: BankAccount
+    action: list_business_accounts
+    description: "List business bank accounts."
+    category: Banking
+    risk: medium
+    business_impact: "Reads the company's business bank accounts; corporate financial account data gated by the view-accounts capability."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: brex.get_business_account
+    object: BankAccount
+    action: get_business_account
+    description: "Get a business bank account by ID."
+    category: Banking
+    risk: medium
+    business_impact: "Reads a single business bank account including balance; corporate financial data gated by the view-accounts capability."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: brex.list_banking_transactions
+    object: BankingTransaction
+    action: list_banking_transactions
+    description: "List banking transactions with filtering."
+    category: Banking
+    risk: medium
+    business_impact: "Reads the cash-movement ledger for business accounts; corporate financial transaction data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: brex.get_banking_transaction
+    object: BankingTransaction
+    action: get_banking_transaction
+    description: "Get a banking transaction by ID."
+    category: Banking
+    risk: low
+    business_impact: "Reads a single business-account banking transaction; corporate financial detail."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: brex.get_reward_points
+    object: RewardPoints
+    action: get_reward_points
+    description: "Get the Brex reward points balance and redemption eligibility for the authenticated account."
+    category: Banking
+    risk: low
+    business_impact: "Reads the account's reward-points balance and redemption eligibility; benign financial read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Cards ----------
+  - id: brex.list_cards
+    object: Card
+    action: list_cards
+    description: "List cards with comprehensive filtering."
+    category: Cards
+    risk: medium
+    business_impact: "Reads issued corporate cards and their holders; card metadata likely masked (last-4), but PCI applies if full PAN is exposed."
+    compliance: [PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: brex.get_card_by_id
+    object: Card
+    action: get_card_by_id
+    description: "Get a card by its ID."
+    category: Cards
+    risk: medium
+    business_impact: "Reads a single corporate card and its holder; card metadata likely masked (last-4), but PCI applies if full PAN is exposed."
+    compliance: [PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Vendors & Bills (accounts payable) ----------
+  - id: brex.list_bills
+    object: Bill
+    action: list_bills
+    description: "List bills with filtering."
+    category: Vendors & Bills
+    risk: low
+    business_impact: "Reads accounts-payable bills; vendor financial data, no consumer PII."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: brex.get_bill_by_id
+    object: Bill
+    action: get_bill_by_id
+    description: "Get a bill by its ID."
+    category: Vendors & Bills
+    risk: low
+    business_impact: "Reads a single accounts-payable bill; vendor financial detail."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: brex.list_vendors
+    object: Vendor
+    action: list_vendors
+    description: "Get all vendors for the current authenticated user."
+    category: Vendors & Bills
+    risk: low
+    business_impact: "Reads the vendor directory, which may include sole-proprietor contact details that constitute personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: brex.get_vendor_by_id
+    object: Vendor
+    action: get_vendor_by_id
+    description: "Get a vendor by ID."
+    category: Vendors & Bills
+    risk: low
+    business_impact: "Reads a single vendor record, which may include sole-proprietor contact details that constitute personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Accounting ----------
+  - id: brex.get_active_integration
+    object: AccountingIntegration
+    action: get_active_integration
+    description: "Get the active accounting integration."
+    category: Accounting
+    risk: low
+    business_impact: "Reads which accounting (ERP/GL) integration is connected; financial-system configuration metadata."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: brex.list_accounting_records
+    object: AccountingRecord
+    action: list_accounting_records
+    description: "List accounting records."
+    category: Accounting
+    risk: low
+    business_impact: "Reads accounting records synced for the general ledger; financial-reporting source data, read-only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: brex.list_gl_accounts
+    object: GLAccount
+    action: list_gl_accounts
+    description: "List general ledger accounts."
+    category: Accounting
+    risk: low
+    business_impact: "Reads the chart of general-ledger accounts; financial-system reference data, read-only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Travel ----------
+  - id: brex.list_trips
+    object: Trip
+    action: list_trips
+    description: "List travel trips across the company with filtering, sorting, and pagination."
+    category: Travel
+    risk: medium
+    business_impact: "Reads company-wide travel trips revealing named individuals' travel itineraries and locations over time."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: brex.list_bookings
+    object: Booking
+    action: list_bookings
+    description: "List travel bookings across the company with filtering, sorting, and pagination."
+    category: Travel
+    risk: medium
+    business_impact: "Reads company-wide travel bookings exposing named travellers, dates, and destinations."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: brex.list_group_events
+    object: GroupEvent
+    action: list_group_events
+    description: "List group travel events (company offsites, conferences, etc.) with filtering, sorting, and pagination."
+    category: Travel
+    risk: low
+    business_impact: "Reads group travel events such as offsites and conferences; may reveal attendee lists tied to named individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Directory & Org (people + reference reads) ----------
+  - id: brex.get_user_myself
+    object: User
+    action: get_user_myself
+    description: "Get the current authenticated user."
+    category: Directory & Org
+    risk: low
+    business_impact: "Reads the calling user's own profile; personal data limited to self."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: brex.get_user_by_id
+    object: User
+    action: get_user_by_id
+    description: "Get a user by their unique ID."
+    category: Directory & Org
+    risk: low
+    business_impact: "Reads a single employee's profile; personal data of an identifiable individual."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: brex.list_users_by_name_or_email
+    object: User
+    action: list_users_by_name_or_email
+    description: "List users by name or email."
+    category: Directory & Org
+    risk: low
+    business_impact: "Searches the employee directory by name or email; returns personal data of identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: brex.list_users
+    object: User
+    action: list_users
+    description: "List users with optional filtering and pagination."
+    category: Directory & Org
+    risk: low
+    business_impact: "Enumerates the employee directory; bulk read of personal data for identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: brex.list_cost_centers
+    object: CostCenter
+    action: list_cost_centers
+    description: "List cost centers."
+    category: Directory & Org
+    risk: low
+    business_impact: "Reads the organization's cost centers; reference data, no PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: brex.list_departments
+    object: Department
+    action: list_departments
+    description: "List departments."
+    category: Directory & Org
+    risk: low
+    business_impact: "Reads the organization's departments; reference data, no PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: brex.list_locations
+    object: Location
+    action: list_locations
+    description: "List locations."
+    category: Directory & Org
+    risk: low
+    business_impact: "Reads the organization's office locations; reference data, no PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: brex.list_legal_entities
+    object: LegalEntity
+    action: list_legal_entities
+    description: "List legal entities."
+    category: Directory & Org
+    risk: low
+    business_impact: "Reads the company's legal entities; corporate reference data, no PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: brex.list_titles
+    object: Title
+    action: list_titles
+    description: "List employee titles."
+    category: Directory & Org
+    risk: low
+    business_impact: "Reads the set of employee job titles; reference data, no PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: brex.list_roles
+    object: Role
+    action: list_roles
+    description: "List Brex account roles."
+    category: Directory & Org
+    risk: low
+    business_impact: "Reads the set of Brex account roles; access-model reference data, read-only with no provisioning."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Reference (merchants & categories) ----------
+  - id: brex.list_merchants
+    object: Merchant
+    action: list_merchants
+    description: "Search card merchants by name."
+    category: Reference
+    risk: low
+    business_impact: "Searches the merchant catalog by name; reference data, no PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: brex.list_merchant_categories
+    object: MerchantCategory
+    action: list_merchant_categories
+    description: "List merchant categories (e.g., Restaurants, Software, Travel)."
+    category: Reference
+    risk: low
+    business_impact: "Reads merchant category labels; static reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: brex.list_expense_categories
+    object: ExpenseCategory
+    action: list_expense_categories
+    description: "List all available expense categories (also known as 'expense types' in Brex) for filtering expenses."
+    category: Reference
+    risk: low
+    business_impact: "Reads available expense categories used for filtering; static reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Platform ----------
+  - id: brex.submit_feedback
+    object: Feedback
+    action: submit_feedback
+    description: "Submit feedback about the Brex API or MCP tools to the Brex product team on behalf of the user."
+    category: Platform
+    risk: low
+    business_impact: "Sends free-text feedback to Brex's product team; low-impact write that leaves the account boundary."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

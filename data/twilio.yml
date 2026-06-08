@@ -1,0 +1,41 @@
+schema_version: "1.1"
+platform: twilio
+display_name: Twilio
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.twilio.com/docs/ai/mcp
+actions:
+  # ---------- Data Access ----------
+  # The claude.com/connectors/twilio connector is Twilio's hosted
+  # documentation-discovery MCP server (https://mcp.twilio.com/docs). It indexes
+  # PUBLIC Twilio/SendGrid/Segment documentation and API specifications only —
+  # it requires no authentication and exposes no tools that send SMS, place
+  # calls, manage phone numbers, or touch any customer/PII data. This is distinct
+  # from the self-hostable twilio-labs/mcp operational server (the "1,800
+  # endpoints" surface), which requires Twilio account credentials and is NOT the
+  # Claude connector. Live tools/list introspection (2026-06-03, no bearer token,
+  # exit 0) returned exactly two read-only tools; both carry readOnlyHint: true
+  # and destructiveHint: false.
+  - id: twilio.twilio__search
+    object: Documentation
+    action: twilio__search
+    description: "Searches Twilio documentation and API operations by natural language query, returning ranked doc snippets and API operation summaries."
+    category: Data Access
+    risk: low
+    business_impact: "Returns ranked snippets from Twilio's public documentation and API specs; read-only with no access to customer data or tenant accounts."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: twilio.twilio__retrieve
+    object: Documentation
+    action: twilio__retrieve
+    description: "Fetches full parameter schemas and response details for one or more Twilio API operations or documentation articles by id from a prior search."
+    category: Data Access
+    risk: low
+    business_impact: "Returns full schema and response details for a public Twilio API operation or doc article; read-only with no access to customer data or tenant accounts."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

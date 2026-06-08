@@ -1,0 +1,432 @@
+schema_version: "1.1"
+platform: s-p-global
+display_name: S&P Global
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.kensho.com/llmreadyapi/mcp
+# Tool surface is the Kensho LLM-Ready API ("kFinance") MCP server that powers the
+# S&P Global connector. Tool names are verbatim from the open-source
+# kensho-technologies/kfinance package (kfinance/integrations/tool_calling/all_tools.py
+# -> ALL_TOOLS; each tool's `name` attribute is what the MCP server registers).
+# Every tool is a read-only get_* against S&P Global / Capital IQ datasets:
+# no writes, deletes, money movement, or provisioning exist on this connector.
+# Subject matter is public-company financial/market data (legal entities), so SOX/COSO
+# and consumer-privacy regimes generally do NOT apply; the two `professionals` tools are
+# the exception (they return named individuals = business-contact PII).
+actions:
+  # ---------- Financials & Statements ----------
+  - id: s-p-global.get_financial_statement_from_identifiers
+    object: FinancialStatement
+    action: get_financial_statement_from_identifiers
+    description: "Get a financial statement (balance_sheet, income_statement, or cashflow) for a group of company identifiers."
+    category: Financial
+    risk: low
+    business_impact: "Reads licensed S&P Global / Capital IQ financial statements for public companies; reference data, not a write to the caller's own ledger."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_financial_line_item_from_identifiers
+    object: FinancialLineItem
+    action: get_financial_line_item_from_identifiers
+    description: "Get a specific financial line item (e.g. revenue, EBITDA) for a list of identifiers over a time range."
+    category: Financial
+    risk: low
+    business_impact: "Reads individual licensed financial line items for public companies; reference data only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_segments_from_identifiers
+    object: BusinessSegment
+    action: get_segments_from_identifiers
+    description: "Get the templated business or geographic segments associated with a list of identifiers."
+    category: Financial
+    risk: low
+    business_impact: "Reads licensed business/geographic segment breakdowns for public companies; reference data only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_financial_auditors_from_identifiers
+    object: Auditor
+    action: get_financial_auditors_from_identifiers
+    description: "Get the financial auditors (auditor company name and ID) for a list of companies, grouped by period."
+    category: Financial
+    risk: low
+    business_impact: "Reads the auditor-of-record (a company, not an individual) for public companies; reference data only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Market Data & Pricing ----------
+  - id: s-p-global.get_prices_from_identifiers
+    object: PriceHistory
+    action: get_prices_from_identifiers
+    description: "Get historical open/high/low/close prices and volume for a group of identifiers over a date range."
+    category: Market Data
+    risk: low
+    business_impact: "Reads licensed historical market price/volume series for public securities; reference data only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_history_metadata_from_identifiers
+    object: PriceHistory
+    action: get_history_metadata_from_identifiers
+    description: "Get price-history metadata (currency, symbol, exchange name, instrument type, first trade date) for identifiers."
+    category: Market Data
+    risk: low
+    business_impact: "Reads exchange/instrument reference metadata for public securities; low-sensitivity reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_capitalization_from_identifiers
+    object: Capitalization
+    action: get_capitalization_from_identifiers
+    description: "Get historical market cap, total enterprise value, or shares outstanding for a group of identifiers."
+    category: Market Data
+    risk: low
+    business_impact: "Reads licensed market-capitalization series for public companies; reference data only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Estimates & Guidance ----------
+  - id: s-p-global.get_consensus_estimates_from_identifiers
+    object: AnalystEstimate
+    action: get_consensus_estimates_from_identifiers
+    description: "Get consensus analyst estimates (EPS, Revenue, EBITDA, etc.) for a given identifier."
+    category: Estimates
+    risk: low
+    business_impact: "Reads licensed consensus sell-side analyst estimates for public companies; reference data only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_consensus_target_price_from_identifiers
+    object: AnalystEstimate
+    action: get_consensus_target_price_from_identifiers
+    description: "Get consensus analyst target-price estimates (high, low, mean, median) for a given company."
+    category: Estimates
+    risk: low
+    business_impact: "Reads licensed consensus analyst target prices for public companies; reference data only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_analyst_recommendations_from_identifiers
+    object: AnalystEstimate
+    action: get_analyst_recommendations_from_identifiers
+    description: "Get the consensus analyst recommendation breakdown (buy/hold/sell counts and overall rating) for a company."
+    category: Estimates
+    risk: low
+    business_impact: "Reads licensed consensus analyst recommendation breakdowns for public companies; reference data only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_guidance_from_identifiers
+    object: Guidance
+    action: get_guidance_from_identifiers
+    description: "Get company-issued financial guidance for a given identifier."
+    category: Estimates
+    risk: low
+    business_impact: "Reads licensed company-issued forward guidance for public companies; reference data only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Earnings & Transcripts ----------
+  - id: s-p-global.get_transcript_from_key_dev_id
+    object: Transcript
+    action: get_transcript_from_key_dev_id
+    description: "Get the raw transcript text for an earnings call by key_dev_id."
+    category: Earnings
+    risk: medium
+    business_impact: "Returns full proprietary earnings-call transcript text; bulk licensed-content retrieval is a confidentiality and data-licensing exposure."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_earnings_from_identifiers
+    object: Earnings
+    action: get_earnings_from_identifiers
+    description: "Get the list of earnings calls (name, key_dev_id, datetime) for each identifier."
+    category: Earnings
+    risk: low
+    business_impact: "Reads the earnings-call index for public companies; reference data only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_latest_earnings_from_identifiers
+    object: Earnings
+    action: get_latest_earnings_from_identifiers
+    description: "Get the latest (most recent) earnings call for a list of identifiers."
+    category: Earnings
+    risk: low
+    business_impact: "Reads the most recent earnings-call reference for public companies; reference data only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_next_earnings_from_identifiers
+    object: Earnings
+    action: get_next_earnings_from_identifiers
+    description: "Get the next scheduled earnings call for a list of identifiers."
+    category: Earnings
+    risk: low
+    business_impact: "Reads the next-scheduled earnings-call reference for public companies; reference data only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_key_devs_from_identifier
+    object: KeyDevelopment
+    action: get_key_devs_from_identifier
+    description: "Get key development events (announcements, M&A, earnings releases, etc.) for a single identifier in a date range."
+    category: Earnings
+    risk: low
+    business_impact: "Reads the licensed key-developments event feed for a public company; reference data only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Mergers, Acquisitions & Funding ----------
+  - id: s-p-global.get_mergers_from_identifiers
+    object: Merger
+    action: get_mergers_from_identifiers
+    description: "Retrieve all merger and acquisition transactions involving the specified companies."
+    category: Transactions
+    risk: low
+    business_impact: "Reads licensed M&A transaction history for public companies; reference data only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_merger_info_from_transaction_id
+    object: Merger
+    action: get_merger_info_from_transaction_id
+    description: "Get detailed information about a specific M&A transaction (timeline, participants, consideration) by transaction id."
+    category: Transactions
+    risk: low
+    business_impact: "Reads detailed licensed M&A deal terms for a transaction; reference data only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_advisors_for_company_in_transaction
+    object: Merger
+    action: get_advisors_for_company_in_transaction
+    description: "Get the advisor companies that provided advisory services to a company in a particular M&A transaction."
+    category: Transactions
+    risk: low
+    business_impact: "Reads the licensed advisor roster (companies, not individuals) for an M&A transaction; reference data only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_rounds_of_funding_from_identifiers
+    object: FundingRound
+    action: get_rounds_of_funding_from_identifiers
+    description: "Get funding-round overviews (transaction_ids, types, dates, basic notes) for capital-raising questions."
+    category: Transactions
+    risk: low
+    business_impact: "Reads licensed funding-round overview data for companies; reference data only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_rounds_of_funding_info_from_transaction_ids
+    object: FundingRound
+    action: get_rounds_of_funding_info_from_transaction_ids
+    description: "Get detailed funding-round transaction data (valuations, terms, advisors, governance) by transaction ids."
+    category: Transactions
+    risk: low
+    business_impact: "Reads detailed licensed private-funding deal terms (valuations, security terms, advisors); reference data only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_funding_summary_from_identifiers
+    object: FundingRound
+    action: get_funding_summary_from_identifiers
+    description: "Get aggregate funding statistics (total capital raised, total rounds, first/most recent dates) for identifiers."
+    category: Transactions
+    risk: low
+    business_impact: "Reads aggregate licensed funding statistics for companies; reference data only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Company Intelligence ----------
+  - id: s-p-global.get_info_from_identifiers
+    object: Company
+    action: get_info_from_identifiers
+    description: "Get core company info (name, status, type, industry, employee count, founding date, HQ address, CIQ company_id) for identifiers."
+    category: Company Intelligence
+    risk: low
+    business_impact: "Reads core reference profile data for public companies (legal entities); reference data only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_company_summary_from_identifiers
+    object: Company
+    action: get_company_summary_from_identifiers
+    description: "Get one-paragraph summary descriptions of companies (business, products, segments, markets, HQ)."
+    category: Company Intelligence
+    risk: low
+    business_impact: "Reads licensed one-paragraph company summaries for public companies; reference data only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_company_description_from_identifiers
+    object: Company
+    action: get_company_description_from_identifiers
+    description: "Get detailed sectioned company descriptions (primary business, segments, competition, events, history)."
+    category: Company Intelligence
+    risk: low
+    business_impact: "Reads licensed detailed company descriptions for public companies; reference data only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_company_other_names_from_identifiers
+    object: Company
+    action: get_company_other_names_from_identifiers
+    description: "Get alternate, historical, and native (non-Latin) names associated with each identifier."
+    category: Company Intelligence
+    risk: low
+    business_impact: "Reads alternate/historical company-name reference data for public companies; reference data only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_competitors_from_identifiers
+    object: Company
+    action: get_competitors_from_identifiers
+    description: "Get a list of competitor company_id and company_name for a list of companies, filtered by source."
+    category: Company Intelligence
+    risk: low
+    business_impact: "Reads licensed competitor-mapping data for public companies; reference data only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_business_relationship_from_identifiers
+    object: BusinessRelationship
+    action: get_business_relationship_from_identifiers
+    description: "Get current and previous companies with a specified business relationship (supplier, customer, borrower, etc.) to each identifier."
+    category: Company Intelligence
+    risk: low
+    business_impact: "Reads licensed company-to-company relationship data (suppliers, customers, borrowers); reference data only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Identifiers ----------
+  - id: s-p-global.get_cusip_from_identifiers
+    object: SecurityIdentifier
+    action: get_cusip_from_identifiers
+    description: "Get the CUSIPs for a group of identifiers."
+    category: Identifiers
+    risk: low
+    business_impact: "Resolves CUSIP security identifiers for a group of identifiers; low-sensitivity reference lookup."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_isin_from_identifiers
+    object: SecurityIdentifier
+    action: get_isin_from_identifiers
+    description: "Get the ISINs for a group of identifiers."
+    category: Identifiers
+    risk: low
+    business_impact: "Resolves ISIN security identifiers for a group of identifiers; low-sensitivity reference lookup."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- People (business-contact PII) ----------
+  - id: s-p-global.get_professionals_from_identifiers
+    object: Professional
+    action: get_professionals_from_identifiers
+    description: "Get the professionals (employees or board members) at one or more companies, grouped by job function, with person_id, name, title, type, and tenure dates."
+    category: People
+    risk: medium
+    business_impact: "Returns named individuals (executives, directors) with titles and tenure dates — business-contact personal data of identifiable persons."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_professionals_from_person_ids
+    object: Professional
+    action: get_professionals_from_person_ids
+    description: "Get per-person profiles by person_id, including full role history across all companies."
+    category: People
+    risk: medium
+    business_impact: "Returns per-person career/role-history profiles keyed by person_id — personal data of identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Date Helpers ----------
+  - id: s-p-global.get_latest
+    object: DateHelper
+    action: get_latest
+    description: "Return the latest annual period, latest quarterly period, and current date — a stateless date helper."
+    category: Utilities
+    risk: low
+    business_impact: "Returns calendar/period reference values; no data access and no side effects."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: s-p-global.get_n_quarters_ago
+    object: DateHelper
+    action: get_n_quarters_ago
+    description: "Return the year and quarter from n quarters before the current quarter — a stateless date helper."
+    category: Utilities
+    risk: low
+    business_impact: "Computes a relative quarter reference; no data access and no side effects."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

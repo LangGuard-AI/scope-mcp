@@ -1,17 +1,60 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: gamma
 display_name: Gamma
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://developers.gamma.app/mcp/mcp-tools-reference
 actions:
-  # ---------- Content Generation ----------
+  # ---------- Content ----------
   - id: gamma.generate
     object: Gamma
     action: generate
-    category: Content Generation
-    risk: medium
-    business_impact: "Generates a presentation, document, or webpage; output may be auto-published with sharing settings the agent controls."
-    compliance: [SOC2]
+    description: "Create presentations, documents, webpages, or social posts from scratch."
+    reference: https://developers.gamma.app/mcp/mcp-tools-reference
+    category: Content
+    risk: low
+    business_impact: "Creates a new gamma (deck, doc, site, or social post) in the user's workspace from a prompt; reversible and individually owned."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: gamma.generate_from_template
+    object: Gamma
+    action: generate_from_template
+    description: "Create a new gamma by adapting, remixing, or transforming an existing template gamma."
+    reference: https://developers.gamma.app/mcp/mcp-tools-reference
+    category: Content
+    risk: low
+    business_impact: "Creates a new gamma derived from an existing template; reversible and individually owned."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: gamma.get_generation_status
+    object: Generation
+    action: get_generation_status
+    description: "Check the status of a generation started with generate or generate_from_template."
+    reference: https://developers.gamma.app/mcp/mcp-tools-reference
+    category: Data Access
+    risk: low
+    business_impact: "Reads the status of an in-flight generation job; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: gamma.get_gammas
+    object: Gamma
+    action: get_gammas
+    description: "Browse or search the user's existing gammas, including templates."
+    reference: https://developers.gamma.app/mcp/mcp-tools-reference
+    category: Data Access
+    risk: low
+    business_impact: "Lists the user's existing gammas and templates; read-only metadata browse."
+    compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
@@ -19,9 +62,11 @@ actions:
   - id: gamma.read_gamma
     object: Gamma
     action: read_gamma
-    category: Content Generation
+    description: "Read the content of an existing Gamma presentation or document."
+    reference: https://developers.gamma.app/mcp/mcp-tools-reference
+    category: Data Access
     risk: low
-    business_impact: "Retrieves the contents of an existing gamma by ID or URL."
+    business_impact: "Reads the full content of a single gamma the user already owns or can access; read-only."
     compliance: []
     sod_concern: false
     confidence: high
@@ -30,9 +75,11 @@ actions:
   - id: gamma.get_themes
     object: Theme
     action: get_themes
-    category: Content Generation
+    description: "Browse or search the Gamma theme library."
+    reference: https://developers.gamma.app/mcp/mcp-tools-reference
+    category: Data Access
     risk: low
-    business_impact: "Browses Gamma's theme library."
+    business_impact: "Lists available presentation themes; read-only catalog browse with no personal data."
     compliance: []
     sod_concern: false
     confidence: high
@@ -41,9 +88,11 @@ actions:
   - id: gamma.get_folders
     object: Folder
     action: get_folders
-    category: Content Generation
+    description: "Browse or search your Gamma folders."
+    reference: https://developers.gamma.app/mcp/mcp-tools-reference
+    category: Data Access
     risk: low
-    business_impact: "Lists workspace folders for organizing gammas."
+    business_impact: "Lists the user's workspace folders for organizing gammas; read-only metadata browse."
     compliance: []
     sod_concern: false
     confidence: high

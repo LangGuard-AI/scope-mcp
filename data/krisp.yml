@@ -1,0 +1,81 @@
+schema_version: "1.1"
+platform: krisp
+display_name: Krisp
+source: langguard-editorial
+updated: "2026-06"
+reference: https://help.krisp.ai/hc/en-us/articles/25416265429660-Krisp-MCP-Supported-tools
+actions:
+  # ---------- Data Access ----------
+  - id: krisp.get_document
+    object: Document
+    action: get_document
+    description: "Fetches any document (meeting, agenda, transcript, etc.) by its 32-character ID."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the full content of a meeting document including transcript text; surfaces private conversation contents and any PII or sensitive matter discussed (potentially PHI in healthcare-org usage)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: krisp.search_meetings
+    object: Meeting
+    action: search_meetings
+    description: "Searches meetings by text or meeting ID and returns metadata, summaries, key points, and action items."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads meeting summaries, key points, and metadata across the workspace; exposes private conversation contents and participant PII, though full transcripts require a separate get_document fetch."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: krisp.list_action_items
+    object: ActionItem
+    action: list_action_items
+    description: "Lists action items (tasks and follow-ups) from meetings, filterable by completion status and assignee."
+    category: Operations
+    risk: low
+    business_impact: "Reads task and follow-up metadata from meetings; exposes assignee names and task descriptions but not full conversation content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: krisp.list_activities
+    object: Activity
+    action: list_activities
+    description: "Lists items from the Activity Center — notifications, action-item assignments, meeting summaries, and other updates."
+    category: Operations
+    risk: low
+    business_impact: "Reads the user's Activity Center feed; exposes notification and assignment metadata referencing participants and meetings."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: krisp.list_upcoming_meetings
+    object: Meeting
+    action: list_upcoming_meetings
+    description: "Lists upcoming calendar meetings for the next 1–14 days."
+    category: Operations
+    risk: low
+    business_impact: "Reads upcoming calendar entries; exposes meeting titles, times, and attendee PII for the coming days."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Utility ----------
+  - id: krisp.date_time
+    object: DateTime
+    action: date_time
+    description: "Returns the current date/time or enumerates dates in a range."
+    category: Utility
+    risk: low
+    business_impact: "Returns date/time information; touches no user or business data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

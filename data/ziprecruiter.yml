@@ -1,0 +1,26 @@
+schema_version: "1.1"
+platform: ziprecruiter
+display_name: ZipRecruiter
+source: langguard-editorial
+updated: "2026-06"
+reference: https://api.ziprecruiter.com/mcp/docs
+# PROVENANCE: Tool surface confirmed via live anonymous introspection of the
+# hosted MCP server (https://api.ziprecruiter.com/mcp, streamable-http). The
+# server's tools/list returns exactly ONE tool — search_jobs — verbatim, with
+# annotations readOnlyHint:true, destructiveHint:false, openWorldHint:false.
+# The ZipRecruiter Job Search connector is a read-only public-job-listings
+# search surface; it exposes no write, apply, save-search, profile, or
+# destructive operations, so none are invented here. id_form: verbatim.
+actions:
+  # ---------- Data Access ----------
+  - id: ziprecruiter.search_jobs
+    object: JobListing
+    action: search_jobs
+    description: "Searches public job listings by title, skills, keywords, location, remote options, salary range, employment type, seniority, and posting recency; returns matching jobs with links to apply on ZipRecruiter."
+    category: Data Access
+    risk: low
+    business_impact: "Read-only retrieval of public job postings matching a query; returns no caller PII, stores nothing, and changes no state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

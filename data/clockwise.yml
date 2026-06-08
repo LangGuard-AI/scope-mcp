@@ -1,0 +1,104 @@
+schema_version: "1.1"
+platform: clockwise
+display_name: Clockwise
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.getclockwise.com/mcp
+# ---------------------------------------------------------------------------
+# PROVENANCE / sourcing note
+# Clockwise's hosted MCP server (https://mcp.getclockwise.com/mcp) is fully
+# OAuth-gated, and live tools/list introspection was NOT possible from this
+# environment (no network egress; the MCP client fails at the transport layer).
+# Clockwise was also acquired by Salesforce and is shutting down 2026-03-27, so
+# getclockwise.com/mcp now serves only a shutdown notice.
+#
+# The tool surface below is the COMPLETE 6-tool surface, attested verbatim and
+# concordantly by the apigene.ai Clockwise server detail page
+# (https://apigene.ai/mcp/official/clockwise) and its MCP tools directory
+# (https://apigene.ai/mcp/tools), with read/write classification per the same
+# pages; the getclockwise.com/blog and pulsemcp.com pages independently confirm
+# the "schedule and reschedule meetings" write capabilities. All six ids are
+# id_form: verbatim. confidence is high on the read/write nature of each tool;
+# it is NOT downgraded for the OAuth gating because the surface is multiply and
+# independently attested.
+#
+# The six tools are: confirm_proposal (W), schedule_meeting (W),
+# reschedule_meeting (W), create_link_booking (W), visualize_team_calendar (R),
+# get_calendar_preferences (R). The write surface is complete: every
+# state-changing calendar operation (schedule, reschedule, confirm a proposal,
+# create a booking link) is present.
+# ---------------------------------------------------------------------------
+actions:
+  # ---------- Scheduling (writes) ----------
+  - id: clockwise.schedule_meeting
+    object: Meeting
+    action: schedule_meeting
+    description: "Creates a new calendar meeting with one or more participants, factoring in working hours, time zones, and Focus Time goals."
+    category: Operations
+    risk: medium
+    business_impact: "Creates a calendar meeting and sends invites to multiple attendees; affects every participant's calendar and exposes their availability and meeting details. Reversible by cancelling but visible to all invitees."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: clockwise.reschedule_meeting
+    object: Meeting
+    action: reschedule_meeting
+    description: "Moves an existing meeting to a new time, recomputing an optimal slot across all attendees' calendars."
+    category: Operations
+    risk: medium
+    business_impact: "Moves an existing meeting on every attendee's calendar; affects all participants and re-notifies them. Reversible by rescheduling again but visible to all invitees."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: clockwise.confirm_proposal
+    object: Proposal
+    action: confirm_proposal
+    description: "Confirms a pending scheduling proposal, applying the create/move/reschedule changes to the user's and attendees' calendars."
+    category: Operations
+    risk: medium
+    business_impact: "Writes the confirmed scheduling changes to calendars — creates, moves, or reschedules meetings affecting every attendee. Reversible by re-scheduling but visible to all participants."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: clockwise.create_link_booking
+    object: BookingLink
+    action: create_link_booking
+    description: "Creates a Clockwise scheduling link through which others can book time on the user's calendar."
+    category: Operations
+    risk: medium
+    business_impact: "Creates a public scheduling link that exposes the user's availability and collects invitee personal data when used to book meetings; reversible by deleting the link."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Calendar (reads) ----------
+  - id: clockwise.visualize_team_calendar
+    object: Calendar
+    action: visualize_team_calendar
+    description: "Reads and renders a team's combined calendar — members' meetings, availability, and Focus Time across the group."
+    category: Operations
+    risk: low
+    business_impact: "Reads other team members' calendar and availability data (meeting subjects, attendees, free/busy); exposes colleagues' personal scheduling information but does not modify it."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: clockwise.get_calendar_preferences
+    object: CalendarPreferences
+    action: get_calendar_preferences
+    description: "Reads the user's own Clockwise calendar preferences, such as working hours and Focus Time settings."
+    category: Operations
+    risk: low
+    business_impact: "Returns the user's own scheduling preferences (working hours, Focus Time goals); read-only and limited to the calling user's settings."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

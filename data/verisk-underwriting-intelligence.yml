@@ -1,0 +1,61 @@
+schema_version: "1.1"
+platform: verisk-underwriting-intelligence
+display_name: Verisk Underwriting Intelligence
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.verisk.com/resources/verisk-underwriting-intelligence/
+actions:
+  # ---------- Data Access ----------
+  # All four tools are read-only retrievals of ISO aggregate actuarial / industry
+  # loss-cost statistics (published insurance-industry data, not personal data).
+  # The vendor states verbatim: "Tools are read-only. The connector retrieves data.
+  # It cannot file circulars, edit indications, or push anything back to ISO."
+  # No PII, no financial-statement postings, no automated decisioning about
+  # individuals — hence compliance: [] across the board.
+  - id: verisk-underwriting-intelligence.iso_losscost_activity_get
+    object: LossCostFiling
+    action: iso_losscost_activity_get
+    description: "Recent history of filed ISO loss cost changes and summaries of their impact."
+    category: Data Access
+    risk: low
+    business_impact: "Reads recent ISO loss-cost filing history and impact summaries; read-only retrieval of published industry data scoped to the caller's subscription."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: verisk-underwriting-intelligence.iso_losscost_experienceindex_get
+    object: ExperienceIndex
+    action: iso_losscost_experienceindex_get
+    description: "Loss experience trends, pure premium movement, and data that drives future indications."
+    category: Data Access
+    risk: low
+    business_impact: "Reads ISO loss-experience trends and pure-premium movement; read-only retrieval of aggregate actuarial data scoped to the caller's subscription."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: verisk-underwriting-intelligence.iso_losscost_indications_get
+    object: LossCostIndication
+    action: iso_losscost_indications_get
+    description: "Key details from recent ISO loss cost reviews, including advance preliminary indications."
+    category: Data Access
+    risk: low
+    business_impact: "Reads ISO loss-cost review details and preliminary indications; read-only retrieval of aggregate industry rate data scoped to the caller's subscription."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: verisk-underwriting-intelligence.iso_visualizer_skill_include
+    object: Visualization
+    action: iso_visualizer_skill_include
+    description: "A helper that runs alongside the loss-cost data tools to render charts and tables."
+    category: Data Access
+    risk: low
+    business_impact: "Renders retrieved ISO loss-cost data as charts and tables in the Claude session; auto-included, processes no new data and writes nothing back."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

@@ -1,0 +1,386 @@
+schema_version: "1.1"
+platform: port-io
+display_name: Port
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.port.io/ai-interfaces/port-mcp-server/available-tools/
+actions:
+  # ---------- Platform & DevOps (Blueprints / data model) ----------
+  - id: port-io.list_blueprints
+    object: Blueprint
+    action: list_blueprints
+    description: "List blueprints in your organization. Without identifiers, returns a summary list; with identifiers, returns full blueprint details."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Reads the catalog data-model schema; non-destructive metadata read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: port-io.upsert_blueprint
+    object: Blueprint
+    action: upsert_blueprint
+    description: "Create or update a blueprint. Updates if the blueprint exists, creates if it does not."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Changes the catalog data-model schema that all entities conform to; reversible but affects every entity of the blueprint."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: port-io.delete_blueprint
+    object: Blueprint
+    action: delete_blueprint
+    description: "Delete blueprint and all its entities."
+    category: Platform & DevOps
+    risk: critical
+    business_impact: "Irreversibly destroys a blueprint and every entity built on it in a single call; bulk catalog data loss."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: port-io.trigger_auto_discovery
+    object: Blueprint
+    action: trigger_auto_discovery
+    description: "Start auto-discovery to suggest or find entities for a blueprint."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Initiates automated ingestion that populates the catalog with discovered entities; reversible but mutates catalog state."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Platform & DevOps (Entities / catalog records) ----------
+  - id: port-io.list_entities
+    object: Entity
+    action: list_entities
+    description: "Query entities from a blueprint with filtering, sorting, and pagination."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Reads catalog entities; entity fields may include service owners or on-call assignees, so a result set can surface employee identifiers."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: port-io.upsert_entity
+    object: Entity
+    action: upsert_entity
+    description: "Create or update an entity. Updates if the entity exists, creates if it does not, merging by default to preserve existing fields."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Writes a catalog entity; entity fields may include employee owner or on-call data, making this a personal-data write when those fields are set."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: port-io.delete_entity
+    object: Entity
+    action: delete_entity
+    description: "Delete entity with optional dependents."
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Removes a catalog entity and optionally its dependents; cascade deletion can remove related records beyond the named entity."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: port-io.simulate_blueprint_permissions
+    object: Permission
+    action: simulate_blueprint_permissions
+    description: "Simulate blueprint entity permissions for a user; returns the entities a given user can access."
+    category: Identity & Access
+    risk: low
+    business_impact: "Resolves which catalog entities a named user can access; reveals per-user access scope without changing it."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: port-io.get_action_permissions
+    object: Permission
+    action: get_action_permissions
+    description: "Get permissions/approval config for actions."
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads the approval and permission configuration governing who may run self-service actions."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: port-io.update_action_permissions
+    object: Permission
+    action: update_action_permissions
+    description: "Update action permissions configuration."
+    category: Identity & Access
+    risk: critical
+    business_impact: "Rewrites who may run or approve self-service actions; a single actor can remove an approval gate and unlock privileged actions, including change control on financial systems where Port governs them."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations (Self-service actions) ----------
+  - id: port-io.list_actions
+    object: Action
+    action: list_actions
+    description: "List actions in your organization. Without identifiers, returns a summary list; with identifiers, returns full action details."
+    category: Operations
+    risk: low
+    business_impact: "Reads the catalog of self-service actions; non-destructive metadata read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: port-io.upsert_action
+    object: Action
+    action: upsert_action
+    description: "Create or update an action. Updates if the action exists, creates if it does not."
+    category: Operations
+    risk: high
+    business_impact: "Defines or rewrites a self-service action, including the automation it triggers and its input contract; alters what privileged operations the portal can execute."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: port-io.delete_action
+    object: Action
+    action: delete_action
+    description: "Delete action by identifier."
+    category: Operations
+    risk: medium
+    business_impact: "Removes a self-service action definition; reversible by recreation but breaks any workflow that invokes it."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: port-io.run_action
+    object: "*"
+    action: run_action
+    description: "Execute any action you have permission to run in Port; a unified dispatcher that handles all actions in the organization given an identifier and inputs."
+    category: Operations
+    risk: critical
+    business_impact: "Generic executor that invokes any governed self-service action — provisioning, deploys, infra or environment changes — so blast radius depends entirely on which actions the org has defined, including change control on financial systems where Port governs them."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: port-io.track_action_run
+    object: ActionRun
+    action: track_action_run
+    description: "Track action execution status."
+    category: Operations
+    risk: low
+    business_impact: "Reads the status of an action run; non-destructive operational read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations (Workflows) ----------
+  - id: port-io.list_workflows
+    object: Workflow
+    action: list_workflows
+    description: "List workflows in your organization. Without identifiers, returns a summary list; with identifiers, returns full workflow details."
+    category: Operations
+    risk: low
+    business_impact: "Reads the catalog of self-service workflows; non-destructive metadata read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: port-io.upsert_workflow
+    object: Workflow
+    action: upsert_workflow
+    description: "Create or update a workflow. Updates if the workflow exists, creates if it does not."
+    category: Operations
+    risk: high
+    business_impact: "Defines or rewrites a self-service workflow and the orchestration it performs; alters what multi-step operations the portal can execute."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: port-io.delete_workflow
+    object: Workflow
+    action: delete_workflow
+    description: "Delete workflow by identifier."
+    category: Operations
+    risk: medium
+    business_impact: "Removes a self-service workflow definition; reversible by recreation but disables the orchestration it provided."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: port-io.trigger_workflow_run
+    object: Workflow
+    action: trigger_workflow_run
+    description: "Trigger a self-service workflow run by its workflow identifier, with optional input parameters."
+    category: Operations
+    risk: high
+    business_impact: "Executes a self-service workflow, kicking off the automated orchestration it defines; effect depends on the workflow's downstream steps."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: port-io.get_workflow_run
+    object: WorkflowRun
+    action: get_workflow_run
+    description: "Get the status and details of a workflow run by its identifier."
+    category: Operations
+    risk: low
+    business_impact: "Reads the status and details of a workflow run; non-destructive operational read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations (Scorecards / governance gates) ----------
+  - id: port-io.list_scorecards
+    object: Scorecard
+    action: list_scorecards
+    description: "List scorecards in your organization. Without identifiers, returns a summary list; with identifiers, returns full scorecard details."
+    category: Operations
+    risk: low
+    business_impact: "Reads the catalog of scorecards and their rules; non-destructive metadata read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: port-io.upsert_scorecard
+    object: Scorecard
+    action: upsert_scorecard
+    description: "Create or update a scorecard. Updates if the scorecard exists, creates if it does not."
+    category: Operations
+    risk: medium
+    business_impact: "Defines or rewrites a scorecard, the quality/compliance gate services are graded against; changing rules can mask or surface compliance failures."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: port-io.delete_scorecard
+    object: Scorecard
+    action: delete_scorecard
+    description: "Delete scorecard by identifiers."
+    category: Operations
+    risk: medium
+    business_impact: "Removes a scorecard, eliminating a quality/compliance gate; reversible by recreation but ends the standard it enforced."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access (Integrations) ----------
+  - id: port-io.list_integrations
+    object: Integration
+    action: list_integrations
+    description: "List integrations in your organization. Without identifiers, returns a summary list; with identifiers, returns full integration details."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the configured integration list; non-destructive metadata read."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: port-io.test_integration_mapping
+    object: Integration
+    action: test_integration_mapping
+    description: "Test an integration mapping against raw data examples; validates the mapping and returns the mapped result."
+    category: Data Access
+    risk: medium
+    business_impact: "Evaluates a mapping against raw source data, which can return any field present in the upstream system, including personal data when the source carries it."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: port-io.get_integration_sync_metrics
+    object: Integration
+    action: get_integration_sync_metrics
+    description: "Fetch sync metrics for an integration, including status and counts of items handled in each phase."
+    category: Data Access
+    risk: low
+    business_impact: "Reads operational sync metrics for an integration; non-destructive observability read."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: port-io.get_integration_event_logs
+    object: Integration
+    action: get_integration_event_logs
+    description: "Fetch event logs for an integration, with pagination support."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads integration event logs, which can echo ingested record contents and surface personal data carried by the upstream source."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: port-io.get_integration_kinds_with_examples
+    object: Integration
+    action: get_integration_kinds_with_examples
+    description: "Fetch all kinds (data types) an integration ingests, along with raw data examples for each kind."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns raw sample records the integration ingests, which can include personal data present in the upstream source."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access (Knowledge / user context) ----------
+  - id: port-io.search_port_knowledge_sources
+    object: Documentation
+    action: search_port_knowledge_sources
+    description: "Search the official Port documentation and return the most relevant sections for a user query."
+    category: Data Access
+    risk: low
+    business_impact: "Searches public Port product documentation; no organizational or personal data involved."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: port-io.describe_user_details
+    object: User
+    action: describe_user_details
+    description: "Describe the connected user, their organization, and the teams they are a member of."
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads the calling user's identity, organization, and team memberships; returns personal data about the authenticated user."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: port-io.load_skill
+    object: Skill
+    action: load_skill
+    description: "Load specialized guidance for a domain-specific task; skills provide step-by-step instructions for common workflows."
+    category: Data Access
+    risk: low
+    business_impact: "Loads static prompt guidance for a Port workflow; no organizational or personal data involved."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

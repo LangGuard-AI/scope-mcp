@@ -1,0 +1,289 @@
+schema_version: "1.1"
+platform: datagrail
+display_name: DataGrail
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+actions:
+  # ---------- Risk & Compliance ----------
+  - id: datagrail.create_assessment
+    object: Assessment
+    action: create_assessment
+    description: "Create a new risk assessment from a template."
+    category: Risk & Compliance
+    risk: medium
+    business_impact: "Creates a new risk assessment in the GRC system of record; reversible business write affecting the compliance posture inventory."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datagrail.update_assessment
+    object: Assessment
+    action: update_assessment
+    description: "Update an assessment's name, due date, or status."
+    category: Risk & Compliance
+    risk: medium
+    business_impact: "Modifies a risk assessment's status or deadline; alters the recorded state of a compliance control, reversible from history."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datagrail.answer_assessment_question
+    object: Assessment
+    action: answer_assessment_question
+    description: "Answer a question in an assessment."
+    category: Risk & Compliance
+    risk: medium
+    business_impact: "Records an answer within a risk assessment; changes the evidentiary content of a compliance record, reversible."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datagrail.add_system
+    object: System
+    action: add_system
+    description: "Add a new system to the Live Data Map inventory."
+    category: Risk & Compliance
+    risk: medium
+    business_impact: "Adds a system to the data-map inventory; changes the recorded scope of the organization's processing landscape, reversible."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datagrail.associate_processing_activity
+    object: ProcessingActivity
+    action: associate_processing_activity
+    description: "Associate processing activities with an inventory item (system)."
+    category: Risk & Compliance
+    risk: medium
+    business_impact: "Links a processing activity to a system in the GDPR Article 30 records of processing; alters the recordkeeping that demonstrates compliance, reversible."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datagrail.search_risks
+    object: Risk
+    action: search_risks
+    description: "Search the risk register for identified risks and their mitigation status."
+    category: Risk & Compliance
+    risk: low
+    business_impact: "Returns entries from the risk register; exposes the organization's internal risk posture and mitigation status."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datagrail.search_assessments
+    object: Assessment
+    action: search_assessments
+    description: "Search completed and in-progress risk assessments with deadline tracking."
+    category: Risk & Compliance
+    risk: low
+    business_impact: "Returns risk assessments and their status; exposes the state of the organization's compliance controls."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datagrail.search_inventory
+    object: System
+    action: search_inventory
+    description: "Search the system inventory for detected systems and data stores."
+    category: Risk & Compliance
+    risk: low
+    business_impact: "Returns the inventory of detected systems and data stores; exposes the organization's data-processing landscape."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datagrail.search_assessment_templates
+    object: AssessmentTemplate
+    action: search_assessment_templates
+    description: "Search risk assessment templates, including prebuilt and custom templates."
+    category: Risk & Compliance
+    risk: low
+    business_impact: "Returns the catalog of assessment templates; non-sensitive configuration metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Request Manager ----------
+  - id: datagrail.search_tickets
+    object: Ticket
+    action: search_tickets
+    description: "Search privacy request tickets with flexible filters and aggregation modes."
+    category: Request Manager
+    risk: medium
+    business_impact: "Returns privacy request (DSAR) tickets that carry the requesting data subject's identifying details; surfaces individuals' personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datagrail.get_ticket_activity_log
+    object: Ticket
+    action: get_ticket_activity_log
+    description: "Retrieve the chronological activity log for a specific privacy request ticket."
+    category: Request Manager
+    risk: medium
+    business_impact: "Returns the full activity history of a privacy request, including the data subject's identity and handling details; surfaces individuals' personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datagrail.get_request_policies
+    object: RequestPolicy
+    action: get_request_policies
+    description: "Retrieve the list of privacy request policies configured for your organization."
+    category: Request Manager
+    risk: low
+    business_impact: "Returns the organization's configured privacy-request policies; non-sensitive configuration metadata with no data-subject PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Opt-Out Management ----------
+  - id: datagrail.search_opt_outs
+    object: OptOut
+    action: search_opt_outs
+    description: "Search opt-out requests with flexible filters and aggregation modes."
+    category: Opt-Out Management
+    risk: medium
+    business_impact: "Returns opt-out (do-not-sell/share) requests tied to identifiable consumers; surfaces individuals' personal data and stated privacy preferences."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Consent Management ----------
+  - id: datagrail.get_consent_updates
+    object: ConsentUpdate
+    action: get_consent_updates
+    description: "Retrieve consent update history and change timeline."
+    category: Consent Management
+    risk: medium
+    business_impact: "Returns the consent change timeline; can include per-subject consent decisions tied to identifiable individuals, surfacing personal data and privacy preferences."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datagrail.fetch_cookies
+    object: Cookie
+    action: fetch_cookies
+    description: "Retrieve cookies in different states of categorization."
+    category: Consent Management
+    risk: low
+    business_impact: "Returns the site's catalog of cookies and their categorization state; non-personal site-configuration metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datagrail.fetch_tags
+    object: Tag
+    action: fetch_tags
+    description: "Retrieve tags (services) that need consent category assignment."
+    category: Consent Management
+    risk: low
+    business_impact: "Returns the site's third-party tags awaiting consent categorization; non-personal site-configuration metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datagrail.get_banner_status
+    object: ConsentBanner
+    action: get_banner_status
+    description: "Get the status of consent banners and their configuration."
+    category: Consent Management
+    risk: low
+    business_impact: "Returns the consent-banner configuration and deployment status; non-personal site-configuration metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datagrail.get_consent_privacy_policies
+    object: ConsentPrivacyPolicy
+    action: get_consent_privacy_policies
+    description: "Retrieve consent privacy policies that define banner behavior."
+    category: Consent Management
+    risk: low
+    business_impact: "Returns the consent privacy policies that govern banner behavior; non-personal configuration metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Integrations ----------
+  - id: datagrail.fetch_configured_integration_catalog
+    object: Integration
+    action: fetch_configured_integration_catalog
+    description: "Retrieve your organization's configured (connected) integrations."
+    category: Integrations
+    risk: low
+    business_impact: "Returns the list of connected integrations; exposes which external systems the organization has linked to DataGrail."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datagrail.fetch_integration_catalog
+    object: Integration
+    action: fetch_integration_catalog
+    description: "Browse the catalog of all available DataGrail integrations."
+    category: Integrations
+    risk: low
+    business_impact: "Returns the catalog of available integrations; non-sensitive product metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: datagrail.fetch_integration_errors
+    object: Integration
+    action: fetch_integration_errors
+    description: "Retrieve integration errors grouped by integration and error type."
+    category: Integrations
+    risk: low
+    business_impact: "Returns integration error diagnostics grouped by integration and error type; operational metadata with no data-subject PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Documentation ----------
+  - id: datagrail.search_knowledgebase_docs
+    object: Document
+    action: search_knowledgebase_docs
+    description: "Search DataGrail's knowledgebase documentation using semantic search."
+    category: Documentation
+    risk: low
+    business_impact: "Performs a semantic search over DataGrail's public knowledgebase; benign read with no customer data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Feedback ----------
+  - id: datagrail.submit_product_feedback
+    object: Feedback
+    action: submit_product_feedback
+    description: "Submit product feedback, feature requests, or bug reports."
+    category: Feedback
+    risk: low
+    business_impact: "Sends product feedback to the DataGrail team; benign write with no impact on the customer's compliance records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

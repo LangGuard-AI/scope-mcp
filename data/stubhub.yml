@@ -1,0 +1,65 @@
+schema_version: "1.1"
+platform: stubhub
+display_name: StubHub
+source: langguard-editorial
+updated: "2026-06"
+reference: https://support.stubhub.com/articles/61000310240-using-stubhub-in-chatgpt-and-claude
+# PROVENANCE: The official StubHub Claude/ChatGPT connector MCP server
+# (https://open-ai-app.stubhub.net/mcp — the install URL published on
+# https://claude.com/connectors/stubhub) is OAuth-gated and additionally
+# WAF/CloudFront-blocked to unauthenticated callers: live tools/list
+# introspection returns auth-required (HTTP 403 / 401) and no bearer token is
+# available. No verbatim MCP tool identifier strings are published in any
+# authoritative source. StubHub's official support doc DOES describe the
+# connector's surface as "exactly three MCP tools," each given a plain-language
+# label: "Event Search — Search StubHub Events Catalog", "Fetch Listings —
+# View Available Tickets for Event", and "Highlight Listing — Show Details for
+# Specific Ticket". The same doc states the tools "only provide information"
+# and "the agent does not make transactions on behalf of users" — purchases are
+# completed manually on stubhub.com, so the connector has no write/destructive
+# surface. Per Step 3 of the curator spec these entries therefore use the
+# capability-form fallback (id_form: capability) with the verbatim vendor labels
+# in `description` and confidence capped at medium. The StubHub REST Catalog API
+# endpoint names (developer.stubhub.com) and third-party Apify scraper tool
+# names are deliberately NOT used: the spec forbids deriving ids from REST
+# endpoints and from conflicting community servers.
+actions:
+  # ---------- Data Access ----------
+  - id: stubhub.event_search
+    object: Event
+    action: event_search
+    id_form: capability
+    description: "Event Search — Search StubHub Events Catalog"
+    category: Data Access
+    risk: low
+    business_impact: "Performs a read-only search of StubHub's public event catalog by performer, team, or category; returns event listings only, makes no transaction and stores nothing."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: stubhub.fetch_listings
+    object: Listing
+    action: fetch_listings
+    id_form: capability
+    description: "Fetch Listings — View Available Tickets for Event"
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only live ticket availability, pricing, and seat/view details for a given event; performs no purchase and creates no order."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: stubhub.highlight_listing
+    object: Listing
+    action: highlight_listing
+    id_form: capability
+    description: "Highlight Listing — Show Details for Specific Ticket"
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only detail for a single ticket listing (section, view, price); informational only, makes no transaction on the user's behalf."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

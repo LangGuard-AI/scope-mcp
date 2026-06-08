@@ -1,0 +1,33 @@
+schema_version: "1.1"
+platform: pg-aiguide
+display_name: pg-aiguide
+source: langguard-editorial
+updated: "2026-06"
+reference: https://github.com/timescale/pg-aiguide
+actions:
+  # ---------- Data Access ----------
+  - id: pg-aiguide.search_docs
+    object: Documentation
+    action: search_docs
+    description: "Search documentation with hybrid semantic (vector) and keyword (BM25) search across Tiger Cloud (TimescaleDB), PostgreSQL, and PostGIS."
+    reference: https://github.com/timescale/pg-aiguide/blob/main/API.md
+    category: Data Access
+    risk: low
+    business_impact: "Read-only query against public PostgreSQL, TimescaleDB, and PostGIS documentation; returns no customer or personal data and changes no state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: pg-aiguide.view_skill
+    object: Skill
+    action: view_skill
+    description: "Retrieve curated PostgreSQL and TimescaleDB best-practice skill guides for AI coding assistants."
+    reference: https://github.com/timescale/pg-aiguide/blob/main/API.md
+    category: Data Access
+    risk: low
+    business_impact: "Read-only retrieval of static best-practice guidance content; returns no customer or personal data and changes no state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

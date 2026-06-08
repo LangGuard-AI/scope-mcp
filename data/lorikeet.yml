@@ -1,0 +1,120 @@
+schema_version: "1.1"
+platform: lorikeet
+display_name: Lorikeet
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.lorikeetcx.ai/mcp/mcp-server
+# Provenance: Lorikeet's hosted MCP server (https://mcp.lorikeetcx.ai) is OAuth 2.0 +
+# PKCE gated; live tools/list returned 401 and the full docs site is behind an access
+# code. No anonymous tools-catalog path exists (/tools, /tools.json, /.well-known/mcp/tools,
+# /mcp/tools all 404). The only verbatim MCP tool id reachable in public docs is
+# `load_prompt` (https://docs.lorikeetcx.ai/mcp/skills.md, referenced as "the MCP
+# load_prompt tool"). The underlying account-management tools are described only as
+# plain-language capability labels on https://docs.lorikeetcx.ai/mcp/mcp-server — those
+# entries below use id_form: capability (verbatim label in `description`, confidence
+# capped at medium). The documented "skills" (create-simulations, edit-workflow,
+# diagnose-ticket, etc.) are prompt recipes loaded THROUGH load_prompt, not standalone
+# MCP tools, so they are not enumerated as separate actions.
+actions:
+  # ---------- Platform & DevOps ----------
+  - id: lorikeet.load_prompt
+    object: Skill
+    action: load_prompt
+    description: "Loads a named Lorikeet skill (prompt recipe) and returns its content inline."
+    reference: https://docs.lorikeetcx.ai/mcp/skills
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Fetches a guided prompt recipe into the assistant context; read-only and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  # Capability-form entries: verbatim labels from the "Once connected, you can" list on
+  # https://docs.lorikeetcx.ai/mcp/mcp-server. Underlying verbatim tool ids are OAuth-gated.
+  - id: lorikeet.build_workflows
+    object: Workflow
+    action: build_workflows
+    id_form: capability
+    description: "Build workflows"
+    reference: https://docs.lorikeetcx.ai/mcp/mcp-server
+    category: Operations
+    risk: high
+    business_impact: "Creates or edits the production automation that handles live customer interactions (e.g. refund processing); a change-management event on a customer-facing system, though edits land on a draft version with publish as a separate gate."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lorikeet.test_tools
+    object: Tool
+    action: test_tools
+    id_form: capability
+    description: "Test tools"
+    reference: https://docs.lorikeetcx.ai/mcp/mcp-server
+    category: Operations
+    risk: medium
+    business_impact: "Runs a configured tool against supplied inputs, which can invoke real downstream integrations (e.g. order-status or refund APIs) if the wrong execution environment is selected."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lorikeet.run_simulations
+    object: Simulation
+    action: run_simulations
+    id_form: capability
+    description: "Run simulations"
+    reference: https://docs.lorikeetcx.ai/mcp/mcp-server
+    category: Operations
+    risk: medium
+    business_impact: "Executes batched workflow simulations against test customer scenarios; reversible test runs but can exercise configured tools and surface customer-shaped data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Service ----------
+  - id: lorikeet.diagnose_tickets
+    object: Ticket
+    action: diagnose_tickets
+    id_form: capability
+    description: "Diagnose tickets"
+    reference: https://docs.lorikeetcx.ai/mcp/mcp-server
+    category: Service
+    risk: high
+    business_impact: "Reads individual support tickets and their workflow-execution traces, exposing customer PII and conversation content from a platform serving complex and regulated businesses."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: lorikeet.audit_knowledge_bases
+    object: KnowledgeBase
+    action: audit_knowledge_bases
+    id_form: capability
+    description: "Audit knowledge bases"
+    reference: https://docs.lorikeetcx.ai/mcp/mcp-server
+    category: Data Access
+    risk: medium
+    business_impact: "Reads knowledge-base articles at scale to find gaps and quality issues; bulk content read that may include internal or customer-derived material."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lorikeet.explore_your_setup
+    object: Configuration
+    action: explore_your_setup
+    id_form: capability
+    description: "Explore your setup"
+    reference: https://docs.lorikeetcx.ai/mcp/mcp-server
+    category: Data Access
+    risk: low
+    business_impact: "Reads tenant configuration — workflows, tools, and integrations — to summarize how the account is set up; read-only inspection."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

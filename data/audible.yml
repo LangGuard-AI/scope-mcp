@@ -1,0 +1,26 @@
+schema_version: "1.1"
+platform: audible
+display_name: Audible
+source: langguard-editorial
+updated: "2026-06"
+reference: https://help.audible.com/s/article/connect-audible-to-claude
+actions:
+  # ---------- Discovery ----------
+  # Capability-form entry: the Audible hosted MCP server (https://mcp.audible.com/mcp)
+  # is gated — live tools/list returns 403/auth and no anonymous /tools catalog is
+  # reachable, so verbatim tool ids are unavailable. Audible's own authorization
+  # prompt and help docs publish a single plain-language capability label: "Recommend".
+  # See id_form: capability handling — id/action are an intent-level slug, confidence
+  # is capped at medium.
+  - id: audible.recommend
+    object: Recommendation
+    action: recommend
+    id_form: capability
+    description: "Recommend"
+    category: Data Access
+    risk: low
+    business_impact: "Returns up to six audiobook recommendation cards from Audible's U.S. catalog (title, cover art, author, duration, rating) with links that open on Audible's site; read-only, no sign-in, and no account or listening data is accessed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]

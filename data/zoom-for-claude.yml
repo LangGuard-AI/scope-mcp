@@ -1,16 +1,30 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: zoom-for-claude
 display_name: Zoom for Claude
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://developers.zoom.us/docs/mcp/zoom/
 actions:
-  # ---------- Data Access ----------
+  # ---------- Meeting Intelligence ----------
   - id: zoom-for-claude.search_meetings
     object: Meeting
     action: search_meetings
-    category: Data Access
+    description: "AI Companion-powered semantic search across meeting content with date filtering and pagination."
+    category: Meeting Intelligence
     risk: high
-    business_impact: "AI Companion semantic search across meeting content; can surface confidential discussions, deal terms, or HR conversations."
+    business_impact: "Surfaces meeting summaries and linked content via semantic search; results may expose private business conversations, customer PII, PHI, or material non-public information."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: zoom-for-claude.search_zoom
+    object: SearchResult
+    action: search_zoom
+    description: "Cross-Zoom knowledge discovery over Team Chat messages, Zoom Docs, and My Notes with entity-type filtering."
+    category: Meeting Intelligence
+    risk: high
+    business_impact: "Reads across Team Chat private messages and Zoom Docs; query results can surface confidential discussions, customer PII, or material non-public information."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
@@ -19,9 +33,10 @@ actions:
   - id: zoom-for-claude.get_meeting_assets
     object: Meeting
     action: get_meeting_assets
-    category: Data Access
+    description: "Retrieves documents, recordings, and related resources linked to a specific meeting."
+    category: Meeting Intelligence
     risk: high
-    business_impact: "Retrieves meeting-linked assets including AI summaries and shared documents; can expose private conversation content."
+    business_impact: "Returns documents and recordings linked to a meeting; assets may contain verbatim private discussions, PII, or PHI."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
@@ -30,121 +45,47 @@ actions:
   - id: zoom-for-claude.get_recording_resource
     object: Recording
     action: get_recording_resource
-    category: Data Access
+    description: "Accesses recording playback resources, transcripts, and clips with timestamp and encoding parameters."
+    category: Meeting Intelligence
     risk: high
-    business_impact: "Pulls recording resources (video, audio, transcript) for a meeting; transcripts may contain PHI, financial figures, or other regulated content."
+    business_impact: "Returns recording playback, transcripts, and clips of a meeting; raw recording of private conversations may include PII or PHI."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
     sod_concern: false
-    confidence: medium
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: zoom-for-claude.get_file_content
+    object: Document
+    action: get_file_content
+    description: "Exports Markdown content from a returned Zoom Docs or My Notes file for inspection."
+    category: Meeting Intelligence
+    risk: high
+    business_impact: "Returns the full Markdown body of a Zoom Doc or My Notes file; content may include confidential notes, customer PII, or material non-public information."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
     access_methods: [REST, MCP]
 
   - id: zoom-for-claude.recordings_list
     object: Recording
     action: recordings_list
-    category: Data Access
+    description: "Lists the user's cloud recordings within a date range with trash and pagination filters."
+    category: Meeting Intelligence
     risk: medium
-    business_impact: "Enumerates a user's cloud recordings; metadata-level disclosure that supports downstream content retrieval."
+    business_impact: "Lists cloud recordings with titles, dates, and meeting identifiers; recording titles alone can reveal sensitive context (M&A, layoffs, customer names)."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  # ---------- Content & Collaboration ----------
+  # ---------- Documents ----------
   - id: zoom-for-claude.create_new_file_with_markdown
     object: Document
     action: create_new_file_with_markdown
-    category: Content & Collaboration
+    description: "Generates a new Zoom Doc from Markdown content with a customizable name and parent directory."
+    category: Documents
     risk: low
-    business_impact: "Creates a new Zoom Doc from markdown content; reversible and scoped to the user."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Whiteboard ----------
-  - id: zoom-for-claude.list_whiteboards
-    object: Whiteboard
-    action: list_whiteboards
-    category: Whiteboard
-    risk: low
-    business_impact: "Lists accessible whiteboards; metadata-only enumeration."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: zoom-for-claude.get_a_whiteboard
-    object: Whiteboard
-    action: get_a_whiteboard
-    category: Whiteboard
-    risk: medium
-    business_impact: "Reads whiteboard contents; brainstorm boards may contain unreleased product or strategy details."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: zoom-for-claude.create_a_whiteboard
-    object: Whiteboard
-    action: create_a_whiteboard
-    category: Whiteboard
-    risk: low
-    business_impact: "Creates a new empty whiteboard; low-impact and reversible."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: zoom-for-claude.create_a_whiteboard_for_brainstorming
-    object: Whiteboard
-    action: create_a_whiteboard_for_brainstorming
-    category: Whiteboard
-    risk: low
-    business_impact: "Creates a whiteboard pre-seeded for brainstorming workflows."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: zoom-for-claude.create_a_whiteboard_by_script
-    object: Whiteboard
-    action: create_a_whiteboard_by_script
-    category: Whiteboard
-    risk: low
-    business_impact: "Creates a whiteboard from a script-defined layout; agent-driven content placement."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: zoom-for-claude.create_a_whiteboard_for_meeting_summary
-    object: Whiteboard
-    action: create_a_whiteboard_for_meeting_summary
-    category: Whiteboard
-    risk: medium
-    business_impact: "Generates a whiteboard from a meeting summary; may surface confidential discussion content into a more shareable artifact."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: zoom-for-claude.create_a_whiteboard_for_strategy_analysis
-    object: Whiteboard
-    action: create_a_whiteboard_for_strategy_analysis
-    category: Whiteboard
-    risk: low
-    business_impact: "Generates a whiteboard pre-formatted for strategy analysis."
-    compliance: []
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: zoom-for-claude.update_a_whiteboard_metadata
-    object: Whiteboard
-    action: update_a_whiteboard_metadata
-    category: Whiteboard
-    risk: low
-    business_impact: "Updates whiteboard metadata (name, description); reversible."
+    business_impact: "Creates a new Zoom Doc from agent-supplied Markdown; reversible and scoped to the user's own document space."
     compliance: []
     sod_concern: false
     confidence: high

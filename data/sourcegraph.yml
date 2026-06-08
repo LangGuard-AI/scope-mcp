@@ -1,0 +1,178 @@
+schema_version: "1.1"
+platform: sourcegraph
+display_name: Sourcegraph
+source: langguard-editorial
+updated: "2026-06"
+reference: https://sourcegraph.com/docs/api/mcp
+actions:
+  # ---------- Data Access ----------
+  - id: sourcegraph.keyword_search
+    object: SearchResult
+    action: keyword_search
+    description: "Perform exact keyword searches with boolean operators, regex, and filters across indexed repositories."
+    category: Data Access
+    risk: high
+    business_impact: "Searches source code across every indexed repository in a single call; can surface secrets, credentials, and proprietary code at scale regardless of intent."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: sourcegraph.nls_search
+    object: SearchResult
+    action: nls_search
+    description: "Semantic (natural-language) search with flexible linguistic matching across indexed repositories."
+    category: Data Access
+    risk: high
+    business_impact: "Runs broad semantic search across the entire indexed codebase; can surface secrets and proprietary code well beyond a targeted lookup."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: sourcegraph.evaluator
+    object: SearchResult
+    action: evaluator
+    description: "Run sandboxed Lua scripts for aggregation, cross-referencing, and computation over search results."
+    category: Data Access
+    risk: high
+    business_impact: "Aggregates and cross-references many search matches across repositories in one pass; an effective bulk-extraction primitive over source-code intelligence."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: sourcegraph.read_file
+    object: File
+    action: read_file
+    description: "Read file contents with line numbers and optional ranges or revisions."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the full contents of a source file; a single file can expose secrets, credentials, or proprietary logic."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Version Control & History ----------
+  - id: sourcegraph.commit_search
+    object: Commit
+    action: commit_search
+    description: "Search commits by message, author, content, files, and date ranges."
+    category: Version Control & History
+    risk: high
+    business_impact: "Searches commit history across repositories; surfaces secrets accidentally committed in the past plus committer identity and activity."
+    compliance: [SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: sourcegraph.diff_search
+    object: Diff
+    action: diff_search
+    description: "Search code changes (diffs) for specific patterns across repositories."
+    category: Version Control & History
+    risk: high
+    business_impact: "Searches historical diffs across repositories; a common surface for leaked secrets that were added then removed in later commits."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: sourcegraph.compare_revisions
+    object: Diff
+    action: compare_revisions
+    description: "Compare changes between two revisions of a repository."
+    category: Version Control & History
+    risk: medium
+    business_impact: "Returns the diff between two specified revisions; a targeted read of code changes within a single repository."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: sourcegraph.get_contributor_repos
+    object: Contributor
+    action: get_contributor_repos
+    description: "Find repositories where a given contributor has commits."
+    category: Version Control & History
+    risk: medium
+    business_impact: "Maps an identifiable contributor to their repository activity; profiles an individual developer's involvement across the codebase."
+    compliance: [SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Repository ----------
+  - id: sourcegraph.list_files
+    object: File
+    action: list_files
+    description: "List files and directories in a repository path."
+    category: Repository
+    risk: low
+    business_impact: "Lists file and directory names within a repository path; exposes structure metadata but not file contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: sourcegraph.list_repos
+    object: Repository
+    action: list_repos
+    description: "Search and list repositories by name patterns with pagination support."
+    category: Repository
+    risk: low
+    business_impact: "Enumerates repository names matching a pattern; reveals the inventory of available repositories but not their contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: sourcegraph.go_to_definition
+    object: Symbol
+    action: go_to_definition
+    description: "Find the definition of a symbol from a usage location."
+    category: Repository
+    risk: low
+    business_impact: "Resolves a symbol to its definition location; a targeted navigation read over indexed code."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: sourcegraph.find_references
+    object: Symbol
+    action: find_references
+    description: "Find all references to a symbol from its definition location."
+    category: Repository
+    risk: low
+    business_impact: "Lists usages of a symbol across repositories; a navigation read that exposes code locations but not bulk content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Deep Search ----------
+  - id: sourcegraph.deepsearch
+    object: DeepSearchConversation
+    action: deepsearch
+    description: "Create a Deep Search agent conversation that answers complex questions over the codebase."
+    category: Data Access
+    risk: high
+    business_impact: "Launches an agentic deep search that ranges broadly across indexed repositories to synthesize an answer; a wide automated-retrieval surface over source-code intelligence."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: sourcegraph.deepsearch_read
+    object: DeepSearchConversation
+    action: deepsearch_read
+    description: "Read the results of a Deep Search conversation."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the synthesized results of a Deep Search conversation, which may aggregate code excerpts drawn from across many repositories."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

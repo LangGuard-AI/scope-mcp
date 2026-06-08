@@ -1,220 +1,155 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: wordpress-com
 display_name: WordPress.com
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://developer.wordpress.com/docs/mcp/tools-reference/
 actions:
-  # ---------- Content Authoring ----------
+  # ---------- Content & Publishing ----------
   - id: wordpress-com.wpcom-mcp-content-authoring
-    object: Post
+    object: "*"
     action: wpcom-mcp-content-authoring
-    category: Content Authoring
+    description: "Create, read, update, and delete content on a WordPress.com site — posts, pages, comments, media, categories, tags, block patterns, and content search."
+    category: Content & Publishing
     risk: high
-    business_impact: "Creates, updates, and deletes posts, pages, comments, media metadata, categories, and tags on WordPress.com sites; can publish or remove live content."
-    compliance: [SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Site Editor & Settings ----------
-  - id: wordpress-com.wpcom-mcp-site-editor-context
-    object: SiteEditor
-    action: wpcom-mcp-site-editor-context
-    category: Site Editor & Settings
-    risk: low
-    business_impact: "Reads site design context (theme presets, colors, fonts, registered block types)."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: wordpress-com.wpcom-mcp-site-settings
-    object: SiteSettings
-    action: wpcom-mcp-site-settings
-    category: Site Editor & Settings
-    risk: medium
-    business_impact: "Reads site-wide settings and configuration."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: wordpress-com.wpcom-mcp-site-plugins
-    object: Plugin
-    action: wpcom-mcp-site-plugins
-    category: Site Editor & Settings
-    risk: low
-    business_impact: "Reads installed plugin information for a site."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Content Discovery ----------
-  - id: wordpress-com.wpcom-mcp-posts-search
-    object: Post
-    action: wpcom-mcp-posts-search
-    category: Content Discovery
-    risk: low
-    business_impact: "Searches posts across user sites."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: wordpress-com.wpcom-mcp-post-get
-    object: Post
-    action: wpcom-mcp-post-get
-    category: Content Discovery
-    risk: low
-    business_impact: "Retrieves a single post by ID or URL."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: wordpress-com.wpcom-mcp-site-comments-search
-    object: Comment
-    action: wpcom-mcp-site-comments-search
-    category: Content Discovery
-    risk: medium
-    business_impact: "Searches site comments; comment authors are personal data and may include email/IP metadata."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Site Users ----------
-  - id: wordpress-com.wpcom-mcp-site-users
-    object: SiteUser
-    action: wpcom-mcp-site-users
-    category: Site Users
-    risk: high
-    business_impact: "Lists site users with roles, permissions, and activity metrics; bulk PII read across site members."
+    business_impact: "Single facade that publishes posts/pages live immediately, edits or moderates commenter content, and permanently deletes taxonomy terms (categories/tags have no trash); comment author fields carry visitor PII."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
-  # ---------- User Account ----------
-  - id: wordpress-com.wpcom-mcp-user-sites
-    object: UserSite
-    action: wpcom-mcp-user-sites
-    category: User Account
+  - id: wordpress-com.wpcom-mcp-site-editor-context
+    object: Theme
+    action: wpcom-mcp-site-editor-context
+    description: "Query site design context — theme presets, applied styles, and registered block types."
+    category: Content & Publishing
     risk: low
-    business_impact: "Lists and manages the user's owned sites with metrics."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: wordpress-com.wpcom-mcp-user-sites-resource
-    object: UserSite
-    action: wpcom-mcp-user-sites-resource
-    category: User Account
-    risk: low
-    business_impact: "MCP resource view of user sites data."
+    business_impact: "Read-only companion to content authoring; returns theme presets and block metadata with no write capability and no personal data."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: wordpress-com.wpcom-mcp-user-profile
-    object: UserProfile
-    action: wpcom-mcp-user-profile
-    category: User Account
-    risk: medium
-    business_impact: "Reads the authenticated user's profile (name, email, settings)."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: wordpress-com.wpcom-mcp-user-achievements
-    object: UserAchievement
-    action: wpcom-mcp-user-achievements
-    category: User Account
-    risk: low
-    business_impact: "Reads user achievements and progress tracking."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: wordpress-com.wpcom-mcp-user-connections
-    object: SocialConnection
-    action: wpcom-mcp-user-connections
-    category: User Account
-    risk: medium
-    business_impact: "Reads connected social accounts; tokens for third-party platforms are linked here."
-    compliance: [SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: wordpress-com.wpcom-mcp-user-notifications
-    object: Notification
-    action: wpcom-mcp-user-notifications
-    category: User Account
-    risk: low
-    business_impact: "Reads user notifications."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: wordpress-com.wpcom-mcp-user-notifications-inbox
-    object: Notification
-    action: wpcom-mcp-user-notifications-inbox
-    category: User Account
-    risk: low
-    business_impact: "Manages the user's notification inbox."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: wordpress-com.wpcom-mcp-user-security
-    object: UserSecurity
-    action: wpcom-mcp-user-security
-    category: User Account
+  # ---------- Identity & Admin ----------
+  - id: wordpress-com.wpcom-mcp-account
+    object: Account
+    action: wpcom-mcp-account
+    description: "Manage the authenticated user's WordPress.com account — profile, notifications, achievements, domains, connections, security, and currency."
+    category: Identity & Admin
     risk: high
-    business_impact: "Reads user security settings including 2FA status; sensitive identity-posture data."
-    compliance: [SOC2, ISO_27001, NIST_CSF, GDPR, UK_GDPR, CCPA]
+    business_impact: "Reads and writes the account holder's PII (email, locale, profile, domains) and exposes account-security state — 2FA status, application passwords, active sessions, and login history."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
-  - id: wordpress-com.wpcom-mcp-user-subscriptions
-    object: Subscription
-    action: wpcom-mcp-user-subscriptions
-    category: User Account
-    risk: medium
-    business_impact: "Reads user subscriptions and billing information."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+  # ---------- Configuration ----------
+  - id: wordpress-com.wpcom-mcp-site
+    object: Site
+    action: wpcom-mcp-site
+    description: "Manage a WordPress.com site — settings, statistics, plugins, activity log, themes, and Jetpack module configuration."
+    category: Configuration
+    risk: high
+    business_impact: "Single facade that changes live-site settings and visibility, switches the active theme, toggles Jetpack security modules (including account protection), and reads the site activity log."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
-  # ---------- Analytics & Audit ----------
-  - id: wordpress-com.wpcom-mcp-site-statistics
-    object: SiteStats
-    action: wpcom-mcp-site-statistics
-    category: Analytics & Audit
+  - id: wordpress-com.wpcom-user-sites
+    object: Site
+    action: wpcom-user-sites
+    description: "List the authenticated user's accessible sites across WordPress.com and Jetpack-connected sites."
+    category: Configuration
     risk: low
-    business_impact: "Reads site traffic statistics including views, visitors, and referrers."
+    business_impact: "Read-only enumeration of the caller's own accessible sites and their metadata; used to discover site IDs before calling site-scoped tools."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: wordpress-com.wpcom-mcp-site-activity-log
-    object: ActivityLog
-    action: wpcom-mcp-site-activity-log
-    category: Analytics & Audit
-    risk: medium
-    business_impact: "Reads activity log entries for a site; can be used to reconstruct user actions for audit."
+  # ---------- DNS & Domains ----------
+  - id: wordpress-com.wpcom-domain-update-dns-records
+    object: Domain
+    action: wpcom-domain-update-dns-records
+    description: "Add or remove DNS records (A, AAAA, ALIAS, CAA, CNAME, MX, NS, SRV, TXT) for a custom domain."
+    category: DNS & Domains
+    risk: high
+    business_impact: "Vendor-flagged destructive change to live DNS; a misconfigured record can break email delivery and take production websites offline."
     compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: wordpress-com.wpcom-domain-update-nameservers
+    object: Domain
+    action: wpcom-domain-update-nameservers
+    description: "Set the nameservers for a custom domain."
+    category: DNS & Domains
+    risk: high
+    business_impact: "Transfers authoritative DNS control away from WordPress.com; misconfigured nameservers sever email, websites, and every other service on the domain."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: wordpress-com.wpcom-domain-set-mail-service
+    object: Domain
+    action: wpcom-domain-set-mail-service
+    description: "Configure DNS records for an external mail service (Google Workspace, iCloud Mail, Office 365, Zoho Mail)."
+    category: DNS & Domains
+    risk: high
+    business_impact: "Overwrites the domain's existing MX and related DNS records; existing mail flow stops as soon as the new records propagate."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: wordpress-com.wpcom-domain-restore-default-dns-records
+    object: Domain
+    action: wpcom-domain-restore-default-dns-records
+    description: "Restore the WordPress.com default A records or default www CNAME for a custom domain."
+    category: DNS & Domains
+    risk: medium
+    business_impact: "Resets a domain's DNS to WordPress.com defaults; reversible but discards any custom records currently configured for the apex or www host."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Commerce ----------
+  - id: wordpress-com.wpcom-domain-purchase
+    object: Domain
+    action: wpcom-domain-purchase
+    description: "Search for available domains and generate checkout links for registration on WordPress.com."
+    category: Commerce
+    risk: low
+    business_impact: "Searches domain availability and returns pre-built checkout URLs; no purchase is committed and no payment data is handled by the tool."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: wordpress-com.wpcom-checkout-url
+    object: Checkout
+    action: wpcom-checkout-url
+    description: "Generate a pre-configured WordPress.com checkout URL for a purchase or subscription renewal."
+    category: Commerce
+    risk: low
+    business_impact: "Produces a checkout link that opens in the browser; payment is entered by the user on WordPress.com and never passes through the tool."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: wordpress-com.wpcom-plans-list
+    object: Plan
+    action: wpcom-plans-list
+    description: "List WordPress.com plans with pricing and per-tier features."
+    category: Commerce
+    risk: low
+    business_impact: "Read-only listing of plan tiers and prices; surfaces purchase options with no personal data and no state change."
+    compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]

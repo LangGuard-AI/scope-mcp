@@ -1,0 +1,82 @@
+schema_version: "1.1"
+platform: alltrails
+display_name: AllTrails
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.alltrails.com/mcp
+# PROVENANCE: Tool ids below are VERBATIM from a live tools/list call against the
+# official AllTrails MCP server at https://www.alltrails.com/mcp. The server answered
+# `initialize` AND `tools/list` with NO authentication (streamable-http transport),
+# returning exactly 5 read-only tools with snake_case names and no pagination cursor.
+# This corrects the prior file, whose central claim — that the server was "OAuth-gated /
+# not anonymously reachable, so tools/list could not be retrieved" — was empirically
+# false. That false premise produced three fabricated capability-form ids
+# (find_nearby_trails, check_trail_conditions, plan_route) which have been DROPPED; they
+# are not real MCP tool names. All five tools carry readOnlyHint: true and
+# destructiveHint: false in their server-declared annotations. AllTrails exposes no
+# public REST API (a third-party scraping server was taken down at AllTrails' request),
+# so access_methods is [MCP] only. All tools read AllTrails' public trail catalog;
+# get_trail_details returns a *summarized* review_summary and aggregate user-generated-
+# content stats (directing users to the web for individual reviews) and no
+# identifiable-individual data, so no privacy regimes apply.
+actions:
+  # ---------- Data Access ----------
+  - id: alltrails.find_trails_near_location
+    object: Trail
+    action: find_trails_near_location
+    description: "Finds trails for outdoor activities near a set of coordinates within an optional maximum radius, with activity/attraction/difficulty filters."
+    category: Data Access
+    risk: low
+    business_impact: "Searches AllTrails' public trail catalog around a coordinate point and returns matching trails; read-only, no account or stored personal data accessed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  - id: alltrails.find_trails_within_bounds
+    object: Trail
+    action: find_trails_within_bounds
+    description: "Finds trails for outdoor activities within a bounding box defined by southwest and northeast coordinates, with the same filter set."
+    category: Data Access
+    risk: low
+    business_impact: "Searches AllTrails' public trail catalog within a geographic bounding box and returns matching trails; read-only, no account or stored personal data accessed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  - id: alltrails.search_trails_by_name
+    object: Trail
+    action: search_trails_by_name
+    description: "Searches for trails by full or partial name match, optionally biased toward provided coordinates."
+    category: Data Access
+    risk: low
+    business_impact: "Looks up trails in AllTrails' public catalog by name and returns matches; read-only, no account or stored personal data accessed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  - id: alltrails.get_trail_details
+    object: Trail
+    action: get_trail_details
+    description: "Returns detailed information about a single trail: overview, accessibility, activities, geo/length stats, aggregate user-generated-content stats, and a summarized review_summary."
+    category: Data Access
+    risk: low
+    business_impact: "Returns public details for one trail including aggregate UGC stats and a summarized review_summary; read-only, returns no identifiable-individual data and directs users to the web for individual reviews."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  - id: alltrails.get_trail_weather_overview
+    object: Trail
+    action: get_trail_weather_overview
+    description: "Returns a 7-day weather forecast for a trail at its trailhead, including high/low temperatures."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a public 7-day trailhead weather forecast for one trail; read-only, no account or stored personal data accessed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]

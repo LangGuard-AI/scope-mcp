@@ -1,0 +1,44 @@
+schema_version: "1.1"
+platform: medidata
+display_name: Medidata
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/resources/tutorials/using-the-medidata-connector-in-claude
+# NOTE: id_form: capability for all actions. The Medidata connector's live MCP
+# endpoint is gated behind an Intelligent Trials / Study Feasibility subscription
+# (OAuth), and Medidata publishes no verbatim MCP tool ids anywhere reachable
+# (the "MCP Server Documentation" link on their pages is a placeholder). The two
+# entries below are the verbatim plain-language capability labels published on the
+# official Anthropic connector page and on Medidata's own product pages. The slug
+# ids are intent-level, not identifier-level — confidence is capped at medium.
+# The connector is typed "Read" (read-only); it exposes no write/destructive surface.
+actions:
+  # ---------- Data Access ----------
+  - id: medidata.predictive_site_ranking
+    object: Site
+    action: predictive_site_ranking
+    id_form: capability
+    description: "Predictive Site Ranking"
+    reference: https://claude.com/connectors/medidata
+    category: Data Access
+    risk: low
+    business_impact: "Returns a ranked list of candidate clinical-trial sites computed from aggregated historical enrollment, population/country, and standardized site data; read-only and limited to the customer's Intelligent Trials subscription scope, with no patient-level PHI exposed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: medidata.platform_help
+    object: Documentation
+    action: platform_help
+    id_form: capability
+    description: "Platform Help"
+    reference: https://claude.com/connectors/medidata
+    category: Data Access
+    risk: low
+    business_impact: "Queries Medidata's Knowledge Hub product documentation via natural language; read-only retrieval of public-facing platform guidance with no customer or trial data exposed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

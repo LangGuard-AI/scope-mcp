@@ -1,0 +1,55 @@
+schema_version: "1.1"
+platform: adisinsight
+display_name: AdisInsight
+source: langguard-editorial
+updated: "2026-06"
+reference: https://adisinsight-mcp.springer.com
+actions:
+  # ---------- Data Access ----------
+  - id: adisinsight.search_drugs
+    object: Drug
+    action: search_drugs
+    description: "Search pharmaceutical drugs by name, therapeutic area, developer, mechanism, phase, target, and 60+ advanced filters."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a filtered list from the published drug-pipeline intelligence corpus; read-only competitive-intelligence query."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adisinsight.get_drug
+    object: Drug
+    action: get_drug
+    description: "Get comprehensive drug profiles with development history, adverse events, organizations, brand names, and vector-searched chunks."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a single published drug profile (development history, organizations, brand names); read-only, no individual patient data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: adisinsight.search_trials
+    object: ClinicalTrial
+    action: search_trials
+    description: "Search clinical trials by condition, sponsor, compound, phase, status, location, patient demographics, and date ranges."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a filtered list from the published clinical-trial intelligence corpus; results can surface named sponsors and investigators (personal data of identifiable professionals); no patient PHI is returned."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adisinsight.get_trial
+    object: ClinicalTrial
+    action: get_trial
+    description: "Get complete trial profiles with investigators, study centres, compounds, indications, endpoints, and eligibility criteria."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a single published trial profile that names individual investigators and study centres — personal data of identifiable professionals; no patient PHI is returned."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

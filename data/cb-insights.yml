@@ -1,0 +1,20 @@
+schema_version: "1.1"
+platform: cb-insights
+display_name: CB Insights
+source: langguard-editorial
+updated: "2026-06"
+reference: https://api-docs.cbinsights.com/portal/docs/CBI-MCP-Server/
+actions:
+  # ---------- Data Access ----------
+  - id: cb-insights.ChatCBI
+    object: ChatSession
+    action: ChatCBI
+    description: "Sends a free-text query to the ChatCBI market-intelligence copilot and returns research drawn from CB Insights' private-markets data corpus."
+    reference: https://github.com/cbinsights/cbi-mcp-server
+    category: Data Access
+    risk: low
+    business_impact: "Read-only query against CB Insights' own third-party market-intelligence corpus; returns company profiles, deal, and funding research that may name founders and executives as public business-context information, but does not read, write, or export the customer's own records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

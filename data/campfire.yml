@@ -1,0 +1,172 @@
+schema_version: "1.1"
+platform: campfire
+display_name: Campfire
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.campfire.ai/guides/ai-integration
+# NOTE: Campfire's hosted MCP server (https://api.meetcampfire.com/mcp) is OAuth/token-gated;
+# an anonymous tools/list returns HTTP 401 ("Authentication required"). The vendor's MCP docs
+# publish exactly 12 plain-language capability labels under "Available Tools" (4 accordion groups)
+# but no verbatim tool identifiers anywhere reachable, so every action below uses id_form:
+# capability with the verbatim label in `description` and a faithful snake_case slug id. Confidence
+# is capped at medium accordingly. All 12 documented tools are read/retrieve/report-generation
+# only — the docs describe a read-only surface with no write/create/update/delete tools.
+actions:
+  # ---------- Financial ----------
+  - id: campfire.transactions
+    object: Transaction
+    action: transactions
+    id_form: capability
+    description: "Transactions: Search and filter general ledger transactions with support for entity, account, vendor, department, tag, and date range filters"
+    category: Financial
+    risk: high
+    business_impact: "Runs filtered queries over general-ledger transaction detail (by entity, account, vendor, department, tag, date); exposes financial-record and counterparty data in scope for SOX financial-reporting controls."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: campfire.contracts
+    object: Contract
+    action: contracts
+    id_form: capability
+    description: "Contracts: Retrieve revenue recognition contracts with performance obligations"
+    category: Financial
+    risk: high
+    business_impact: "Reads revenue-recognition contracts and performance obligations; exposes revenue-relevant terms and counterparty detail in scope for SOX revenue controls."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: campfire.chart_of_accounts
+    object: Account
+    action: chart_of_accounts
+    id_form: capability
+    description: "Chart of Accounts: Retrieve chart of accounts with optional filtering by type, subtype, or search query"
+    category: Financial
+    risk: low
+    business_impact: "Reads the chart-of-accounts structure; reveals the organization's account taxonomy but no transaction-level or personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: campfire.budgets
+    object: Budget
+    action: budgets
+    id_form: capability
+    description: "Budgets: Retrieve budget records with entity and time-period metadata"
+    category: Financial
+    risk: low
+    business_impact: "Reads budget records and time-period metadata; exposes internal financial planning figures but no transaction-level or personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Financial Reporting ----------
+  - id: campfire.income_statement
+    object: Report
+    action: income_statement
+    id_form: capability
+    description: "Income Statement: Generate profit & loss statements for specified periods with configurable cadence (monthly, quarterly, yearly)"
+    category: Financial Reporting
+    risk: medium
+    business_impact: "Generates profit-and-loss statements; produces a financial-reporting artifact in scope for SOX over financial reporting, derived from aggregated ledger data."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: campfire.balance_sheet
+    object: Report
+    action: balance_sheet
+    id_form: capability
+    description: "Balance Sheet: Generate balance sheet showing assets, liabilities, and equity"
+    category: Financial Reporting
+    risk: medium
+    business_impact: "Generates a balance sheet of assets, liabilities, and equity; a financial-reporting artifact in scope for SOX over financial reporting."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: campfire.cash_flow_statement
+    object: Report
+    action: cash_flow_statement
+    id_form: capability
+    description: "Cash Flow Statement: Generate cash flow by operating, investing, and financing activities"
+    category: Financial Reporting
+    risk: medium
+    business_impact: "Generates a cash-flow statement by activity; a financial-reporting artifact in scope for SOX over financial reporting."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: campfire.aging_report
+    object: Report
+    action: aging_report
+    id_form: capability
+    description: "Aging Report: Generate AP/AR aging reports with age bucket breakdowns"
+    category: Financial Reporting
+    risk: medium
+    business_impact: "Generates AP/AR aging reports with age-bucket breakdowns; aggregate payables/receivables exposure that may surface vendor and customer balances."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Company Data ----------
+  - id: campfire.vendors
+    object: Vendor
+    action: vendors
+    id_form: capability
+    description: "Vendors: Retrieve vendor/payee directory with contact details and status"
+    category: Company Data
+    risk: high
+    business_impact: "Reads the full vendor/payee directory including contact details; bulk read of business-contact personal data of payees."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: campfire.entities
+    object: Entity
+    action: entities
+    id_form: capability
+    description: "Entities: Retrieve chart entities (parent companies, subsidiaries, locations)"
+    category: Company Data
+    risk: low
+    business_impact: "Reads the legal-entity hierarchy (parents, subsidiaries, locations); organizational metadata with no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: campfire.departments
+    object: Department
+    action: departments
+    id_form: capability
+    description: "Departments: Retrieve department hierarchy (cost centers, business units)"
+    category: Company Data
+    risk: low
+    business_impact: "Reads the department hierarchy of cost centers and business units; organizational metadata with no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: campfire.tags
+    object: Tag
+    action: tags
+    id_form: capability
+    description: "Tags: Retrieve transaction tags (custom dimensions) used for analytics"
+    category: Company Data
+    risk: low
+    business_impact: "Reads custom transaction tags used as analytics dimensions; configuration metadata with no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

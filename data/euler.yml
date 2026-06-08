@@ -1,0 +1,379 @@
+schema_version: "1.1"
+platform: euler
+display_name: EULER
+source: langguard-editorial
+updated: "2026-06"
+reference: https://mcp.eulerapp.com/public/docs
+# Tool surface: 29 verbatim tools across 13 categories (22 read / 7 write) sourced
+# from the vendor's authoritative structured manifest at
+# https://mcp.eulerapp.com/public/docs.json (HTTP 200, server.name "euler-mcp").
+# The manifest tags each tool with operation = read | write | write_destructive:
+# 22 read, 4 write, 3 write_destructive. The 3 vendor-badged write_destructive
+# tools are: flow_steps (deactivate), flow_assignment (unassign), and
+# communications_manage (send_broadcast — irreversible bulk external partner email).
+# Live introspection of the /mcp endpoint returns 401 (OAuth 2.1 + PKCE + DCR
+# gated per the manifest's authentication block), so ids come from the public
+# manifest, not a token'd tools/list — but the manifest IS the server's own
+# canonical per-tool reference, so ids are verbatim. `get_form_for_partner` /
+# `get_answers` / `list_audiences` / `send_broadcast` etc. are action values
+# inside generic tools (referrals, communications, communications_manage), not
+# separate tools, and are correctly represented as actions of their parent tool.
+actions:
+  # ---------- Messaging ----------
+  - id: euler.communications_manage
+    object: Broadcast
+    action: communications_manage
+    description: "Creates audiences and templates, adds partner contacts, and sends email broadcasts to real partners (send_broadcast cannot be undone)."
+    reference: https://mcp.eulerapp.com/public/docs
+    category: Messaging
+    risk: high
+    business_impact: "Sends irreversible bulk email broadcasts to identifiable external partner contacts via send_broadcast; an external-communication and anti-spam (CAN-SPAM/TCPA-style) exposure regardless of intent, and vendor-badged write-destructive."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: euler.communications
+    object: Broadcast
+    action: communications
+    description: "Read-only access to the Communications Hub: lists audiences, templates, and sent emails, and previews broadcasts and templates with sample recipient data."
+    reference: https://mcp.eulerapp.com/public/docs
+    category: Messaging
+    risk: medium
+    business_impact: "Reads partner email-program data including recipients, subjects, and open/click engagement metrics plus sample contacts; recipient and behavioral PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: euler.invite_partner_to_portal
+    object: PartnerContact
+    action: invite_partner_to_portal
+    description: "Invites a partner contact by email to a partner's portal, creating the contact record and triggering an invitation email."
+    category: Identity & Access
+    risk: high
+    business_impact: "Provisions external portal access for a new person and sends an invitation email carrying their name and email address; idempotent so re-invites are no-ops."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Customer ----------
+  - id: euler.list_partner_contacts
+    object: PartnerContact
+    action: list_partner_contacts
+    description: "Retrieves the contacts associated with a partner, including name, email, role, and portal access status."
+    category: Customer
+    risk: high
+    business_impact: "Returns identifiable contact PII (names, email addresses, roles) for a partner; a bulk PII read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: euler.list_accounts
+    object: Account
+    action: list_accounts
+    description: "Returns the customer and partner accounts the user authorized during the MCP consent screen."
+    category: Customer
+    risk: medium
+    business_impact: "Reads the roster of authorized customer and partner accounts, which can include identifiable account contacts."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: euler.partner_directory_search
+    object: PartnerProfile
+    action: partner_directory_search
+    description: "Searches EULER's Partner Directory of public company profiles by tier, status, and other filters."
+    category: Customer
+    risk: medium
+    business_impact: "Reads partner-directory profiles that can include identifiable contact and company information."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: euler.partners
+    object: Partner
+    action: partners
+    description: "Queries company partners with list, pending, and summary actions, returning roster and status data."
+    category: Customer
+    risk: medium
+    business_impact: "Reads the partner roster and status metrics, which can include identifiable partner-contact data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Revenue & Pipeline ----------
+  - id: euler.submit_referral
+    object: Referral
+    action: submit_referral
+    description: "Submits a new referral or deal registration on behalf of a partner after collecting the form answers."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Creates a referral / deal-registration record containing deal and contact details; reviewable and reversible business write."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: euler.referrals
+    object: Referral
+    action: referrals
+    description: "Queries existing referrals and deal registrations and retrieves referral forms and submitted answers."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Reads referral and deal-registration records, which include deal and submitter contact details."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: euler.get_search_deals
+    object: Deal
+    action: get_search_deals
+    description: "Looks up specific deals by name."
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reads deal records by name; pipeline data with no direct PII or financial-statement impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: euler.influenced_sourced_deals
+    object: Deal
+    action: influenced_sourced_deals
+    description: "Returns deal attribution data showing which deals partners influenced or sourced."
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reads deal-attribution and sourcing metrics; aggregate pipeline data with no direct PII."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Financial ----------
+  - id: euler.company_invoices
+    object: Invoice
+    action: company_invoices
+    description: "Queries company-level invoices with filters, or returns aggregate invoiced totals by status."
+    category: Financial
+    risk: medium
+    business_impact: "Reads company invoicing and billing data; financial confidentiality concern but not a change to financial state."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: euler.commissions
+    object: Commission
+    action: commissions
+    description: "Calculates commission payouts and expense totals over a date range for a partner or company."
+    category: Financial
+    risk: medium
+    business_impact: "Reads and calculates commission-payout figures; financial confidentiality concern, no money movement and no GL write."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: euler.charges_lookup
+    object: Charge
+    action: charges_lookup
+    description: "Inspects charges linked to a deal or looked up by charge ID."
+    category: Financial
+    risk: medium
+    business_impact: "Reads charge-level financial records tied to deals; financial confidentiality concern without altering financial state."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: euler.partner_artifacts
+    object: PartnerArtifact
+    action: partner_artifacts
+    description: "Accesses partner artifacts: agreements, tracking links, deals, charges, and invoices for a partner."
+    category: Financial
+    risk: medium
+    business_impact: "Reads partner agreements and financial artifacts (charges, invoices) that may include identifiable contact data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: euler.incentives_summary
+    object: Incentive
+    action: incentives_summary
+    description: "Returns incentive programs and the partner counts enrolled in each."
+    category: Operations
+    risk: low
+    business_impact: "Reads incentive-program definitions and aggregate partner counts; no direct PII or financial-statement impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: euler.performance
+    object: PerformanceMetric
+    action: performance
+    description: "Retrieves partner performance metrics and rankings at partner, company, or overall scope."
+    category: Operations
+    risk: low
+    business_impact: "Reads aggregate partner performance metrics and rankings; no direct PII or financial-statement impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Onboarding ----------
+  - id: euler.flow_lifecycle
+    object: Flow
+    action: flow_lifecycle
+    description: "Creates or edits Flow containers (onboarding and enablement programs)."
+    category: Onboarding
+    risk: medium
+    business_impact: "Creates or modifies onboarding/enablement flow programs that govern partner training; reviewable and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: euler.flow_steps
+    object: FlowStep
+    action: flow_steps
+    description: "Creates, edits, or deactivates Steps within a Flow."
+    category: Onboarding
+    risk: medium
+    business_impact: "Creates, edits, or — via the vendor-badged write-destructive deactivate action — disables onboarding flow steps, changing training content; reversible by re-activating."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: euler.flow_assignment
+    object: FlowAssignment
+    action: flow_assignment
+    description: "Assigns or unassigns Flows to partners or users."
+    category: Onboarding
+    risk: high
+    business_impact: "Assigns or — via the vendor-badged write-destructive unassign action — removes a partner's access to an onboarding flow, revoking their training assignment; reversible by re-assigning."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: euler.flow_details
+    object: Flow
+    action: flow_details
+    description: "Retrieves Flow or Step details."
+    category: Onboarding
+    risk: low
+    business_impact: "Reads onboarding flow and step metadata; no PII or financial impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: euler.partner_flow_details
+    object: Flow
+    action: partner_flow_details
+    description: "Returns the Flows assigned to the calling partner."
+    category: Onboarding
+    risk: low
+    business_impact: "Reads the calling partner's assigned onboarding flows; no PII or financial impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: euler.partner_flow_progress
+    object: Flow
+    action: partner_flow_progress
+    description: "Retrieves per-flow completion statistics for a partner."
+    category: Onboarding
+    risk: low
+    business_impact: "Reads onboarding completion statistics; aggregate progress data with no PII or financial impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: euler.flow_attachable_resources
+    object: FlowResource
+    action: flow_attachable_resources
+    description: "Lists resources that can be embedded into Flow Steps."
+    category: Onboarding
+    risk: low
+    business_impact: "Reads the list of resources embeddable in onboarding flow steps; no PII or financial impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: euler.flow_assignment_candidates
+    object: FlowAssignment
+    action: flow_assignment_candidates
+    description: "Lists partners and users eligible to receive a Flow assignment."
+    category: Onboarding
+    risk: low
+    business_impact: "Reads the list of partners/users eligible for flow assignment, which can include identifiable names."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: euler.content_search
+    object: Content
+    action: content_search
+    description: "Runs semantic search within partner-shared content."
+    category: Data Access
+    risk: low
+    business_impact: "Searches partner-shared content; data sensitivity depends on what partners have uploaded."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: euler.content_list
+    object: Content
+    action: content_list
+    description: "Lists the files and documents a partner can access."
+    category: Data Access
+    risk: low
+    business_impact: "Lists partner-accessible files and documents; data sensitivity depends on the content set."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Support ----------
+  - id: euler.euler_help
+    object: HelpArticle
+    action: euler_help
+    description: "Searches EULER product help and support articles."
+    category: Support
+    risk: low
+    business_impact: "Reads public product help and support documentation; no PII or business impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: euler.submit_feedback
+    object: Feedback
+    action: submit_feedback
+    description: "Sends feedback to the EULER engineering team."
+    category: Support
+    risk: low
+    business_impact: "Routes a free-text feedback message to EULER's internal team; no business-critical state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

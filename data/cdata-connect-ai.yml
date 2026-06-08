@@ -1,0 +1,112 @@
+schema_version: "1.1"
+platform: cdata-connect-ai
+display_name: CData Connect AI
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.cloud.cdata.com/MCP.html
+actions:
+  # ---------- Data Access ----------
+  - id: cdata-connect-ai.queryData
+    object: Query
+    action: queryData
+    description: "execute SQL queries against the connected data sources and retrieve results"
+    reference: https://docs.cloud.cdata.com/MCP.html
+    category: Data Access
+    risk: critical
+    business_impact: "Executes arbitrary SQL through the Connect AI gateway against any connected source (Salesforce, NetSuite, Snowflake, and 350+ others); a single call can read at scale or mutate rows via INSERT/UPDATE/DELETE with no review gate, and the connected source may hold PII, financial, payment, or health records."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: cdata-connect-ai.executeProcedure
+    object: StoredProcedure
+    action: executeProcedure
+    description: "execute the stored procedure for the chosen catalog and schema"
+    reference: https://docs.cloud.cdata.com/MCP.html
+    category: Data Access
+    risk: critical
+    business_impact: "Invokes a stored procedure on a connected source; procedures contain executable SQL logic that can mutate data, trigger side effects, or move money in the backing system, with no review gate and no inherent visibility into what the procedure does."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Catalog Discovery ----------
+  - id: cdata-connect-ai.getCatalogs
+    object: Catalog
+    action: getCatalogs
+    description: "retrieve a list of available connections from Connect AI"
+    reference: https://docs.cloud.cdata.com/MCP.html
+    category: Data Access
+    risk: low
+    business_impact: "Lists the connected data-source catalogs configured in Connect AI; reveals which systems are reachable but returns no schema details or row-level data."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cdata-connect-ai.getSchemas
+    object: Schema
+    action: getSchemas
+    description: "retrieve database schemas from Connect AI for a specific catalog"
+    reference: https://docs.cloud.cdata.com/MCP.html
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates schemas within a catalog; reveals data-source structure but no row-level data."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cdata-connect-ai.getTables
+    object: Table
+    action: getTables
+    description: "retrieve database tables from Connect AI for a specific catalog and schema"
+    reference: https://docs.cloud.cdata.com/MCP.html
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates table identifiers within a schema; reveals naming and structure but no row-level data."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cdata-connect-ai.getColumns
+    object: Column
+    action: getColumns
+    description: "retrieve a list of available database columns from Connect AI for a specific catalog, schema, and table"
+    reference: https://docs.cloud.cdata.com/MCP.html
+    category: Data Access
+    risk: low
+    business_impact: "Returns column names, data types, and definitions for a table; exposes structure and field names (which can themselves hint at sensitive data) but no row-level values."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cdata-connect-ai.getProcedures
+    object: StoredProcedure
+    action: getProcedures
+    description: "retrieve stored procedures from Connect AI for a specific catalog and schema"
+    reference: https://docs.cloud.cdata.com/MCP.html
+    category: Data Access
+    risk: low
+    business_impact: "Lists stored procedures available in a schema; reveals procedure names and structure but executes nothing and returns no data."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cdata-connect-ai.getProcedureParameters
+    object: StoredProcedure
+    action: getProcedureParameters
+    description: "retrieve parameter metadata for stored procedures from Connect AI for a specific catalog, schema, and procedure"
+    reference: https://docs.cloud.cdata.com/MCP.html
+    category: Data Access
+    risk: low
+    business_impact: "Returns parameter names, data types, and directions for a stored procedure; exposes the procedure's signature but executes nothing and returns no data."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

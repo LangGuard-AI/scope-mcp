@@ -1,292 +1,327 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: similarweb
 display_name: Similarweb
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://developers.similarweb.com/docs/similarweb-mcp
 actions:
-  # ---------- Data Access ----------
+  # ---------- Data Access (Web Metrics) ----------
+  # All tools are read-only market-intelligence queries returning aggregate /
+  # estimated metrics about websites and apps. The vendor's MCP docs publish
+  # only Title Case capability labels under a "Tool Name" column (no verbatim
+  # tool ids reachable; live server is OAuth-gated), so these are capability-
+  # form entries: slugified ids, verbatim labels in `description`, confidence
+  # capped at medium.
   - id: similarweb.traffic_and_engagement
     object: WebMetric
     action: traffic_and_engagement
+    id_form: capability
+    description: "Traffic and Engagement"
     category: Data Access
     risk: low
-    business_impact: "Returns aggregate traffic volume and engagement metrics for a domain."
+    business_impact: "Returns aggregate traffic-volume and engagement metrics over time for a website; read-only competitive intelligence."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: similarweb.traffic_sources
     object: WebMetric
     action: traffic_sources
+    id_form: capability
+    description: "Traffic Sources"
     category: Data Access
     risk: low
-    business_impact: "Returns traffic source breakdowns (search/social/direct/etc.) for a domain."
+    business_impact: "Returns traffic broken down by marketing channel (direct, display, mail, search, referral, social) for a website."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: similarweb.website_rank
     object: WebMetric
     action: website_rank
+    id_form: capability
+    description: "Website Rank"
     category: Data Access
     risk: low
-    business_impact: "Returns global and category website ranking."
+    business_impact: "Returns global and category website rank over time for a domain."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: similarweb.subdomains
     object: WebMetric
     action: subdomains
+    id_form: capability
+    description: "Subdomains"
     category: Data Access
     risk: low
-    business_impact: "Lists subdomains and their traffic share."
+    business_impact: "Returns subdomain traffic-share data for a website."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: similarweb.similar_sites
     object: WebMetric
     action: similar_sites
+    id_form: capability
+    description: "Similar Sites"
     category: Data Access
     risk: low
-    business_impact: "Returns competitor sites with audience similarity to the input domain."
+    business_impact: "Returns competitor sites with audience and traffic patterns similar to the input domain."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: similarweb.referrals
     object: WebMetric
     action: referrals
+    id_form: capability
+    description: "Referrals"
     category: Data Access
     risk: low
-    business_impact: "Returns top referring sites driving traffic."
+    business_impact: "Returns incoming or outgoing referral sites driving or receiving traffic for a website."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: similarweb.audience_interests
     object: WebMetric
     action: audience_interests
+    id_form: capability
+    description: "Audience Interests"
     category: Data Access
     risk: low
-    business_impact: "Returns audience interest categories for a domain."
+    business_impact: "Returns audience-interest (also-visited) websites for a domain; aggregate behavioral data."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: similarweb.audience_overlap
     object: WebMetric
     action: audience_overlap
+    id_form: capability
+    description: "Audience Overlap"
     category: Data Access
     risk: low
-    business_impact: "Returns audience overlap between two domains."
+    business_impact: "Returns aggregate audience-overlap data comparing two to five websites."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: similarweb.deduplicated_audience
     object: WebMetric
     action: deduplicated_audience
+    id_form: capability
+    description: "Deduplicated Audience"
     category: Data Access
     risk: low
-    business_impact: "Returns deduplicated audience reach across a domain set."
+    business_impact: "Returns deduplicated aggregate audience metrics for a website."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: similarweb.leading_folders
     object: WebMetric
     action: leading_folders
+    id_form: capability
+    description: "Leading Folders"
     category: Data Access
     risk: low
-    business_impact: "Returns top-trafficked URL folders for a domain."
+    business_impact: "Returns leading-folder traffic-share data (top-trafficked URL paths) for a website."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: similarweb.popular_pages
     object: WebMetric
     action: popular_pages
+    id_form: capability
+    description: "Popular Pages"
     category: Data Access
     risk: low
-    business_impact: "Returns the top entry/landing pages by traffic."
+    business_impact: "Returns the most-trafficked pages for a website."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: similarweb.ppc_spend
     object: WebMetric
     action: ppc_spend
+    id_form: capability
+    description: "PPC Spend"
     category: Data Access
     risk: low
-    business_impact: "Returns estimated paid-search spend for a domain."
+    business_impact: "Returns estimated monthly paid-search advertising spend for a website."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: similarweb.segment_traffic_and_engagement
     object: WebMetric
     action: segment_traffic_and_engagement
+    id_form: capability
+    description: "Segment Traffic and Engagement"
     category: Data Access
     risk: low
-    business_impact: "Returns traffic and engagement metrics for a custom URL segment."
+    business_impact: "Returns traffic and engagement metrics over time for a custom URL segment of a website."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: similarweb.segment_traffic_sources
     object: WebMetric
     action: segment_traffic_sources
+    id_form: capability
+    description: "Segment Traffic Sources"
     category: Data Access
     risk: low
-    business_impact: "Returns traffic-source breakdowns for a custom URL segment."
+    business_impact: "Returns channel-level traffic-source breakdowns for a custom URL segment of a website."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: similarweb.ad_networks
     object: WebMetric
     action: ad_networks
+    id_form: capability
+    description: "Ad Networks"
     category: Data Access
     risk: low
-    business_impact: "Returns ad networks observed serving creative on a domain."
+    business_impact: "Returns incoming or outgoing ad-network data observed for a website."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: similarweb.geography
     object: WebMetric
     action: geography
+    id_form: capability
+    description: "Geography"
     category: Data Access
     risk: low
-    business_impact: "Returns geographic distribution of a domain's audience."
+    business_impact: "Returns traffic and engagement for a website broken down by country."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: similarweb.technologies
     object: WebMetric
     action: technologies
+    id_form: capability
+    description: "Technologies"
     category: Data Access
     risk: low
-    business_impact: "Returns the technology stack detected on a domain."
+    business_impact: "Returns the current technology stack detected on a domain."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: similarweb.demographics
     object: WebMetric
     action: demographics
+    id_form: capability
+    description: "Demographics"
     category: Data Access
     risk: low
-    business_impact: "Returns aggregate demographic breakdowns for a domain's audience."
+    business_impact: "Returns aggregate demographic breakdowns (age, gender shares) for a website's audience; estimated, not individual-level."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: similarweb.traffic_by_demographics
     object: WebMetric
     action: traffic_by_demographics
+    id_form: capability
+    description: "Traffic by Demographics"
     category: Data Access
     risk: low
-    business_impact: "Returns traffic shares by demographic segment."
+    business_impact: "Returns aggregate traffic metrics for a specified demographic group; estimated, not individual-level."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
+  # ---------- Data Access (Search Metrics) ----------
   - id: similarweb.serp_players
     object: SearchMetric
     action: serp_players
+    id_form: capability
+    description: "SERP Players"
     category: Data Access
     risk: low
-    business_impact: "Returns the domains ranking for a keyword's SERP."
+    business_impact: "Returns the top websites driving search traffic for a keyword or custom keyword list."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: similarweb.serp_clicks
     object: SearchMetric
     action: serp_clicks
+    id_form: capability
+    description: "SERP Clicks"
     category: Data Access
     risk: low
-    business_impact: "Returns estimated organic click distribution for a SERP."
+    business_impact: "Returns the click trend over time for each top website ranking for a keyword or keyword group."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
-  - id: similarweb.keywords_overview
-    object: SearchMetric
-    action: keywords_overview
-    category: Data Access
-    risk: low
-    business_impact: "Returns aggregate keyword metrics (volume, competition)."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: similarweb.website_keywords
-    object: SearchMetric
-    action: website_keywords
-    category: Data Access
-    risk: low
-    business_impact: "Returns the organic keywords a domain ranks for."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+  # ---------- Data Access (App Metrics) ----------
   - id: similarweb.app_install_penetration
     object: AppMetric
     action: app_install_penetration
+    id_form: capability
+    description: "App Install Penetration"
     category: Data Access
     risk: low
-    business_impact: "Returns mobile-app install penetration estimates."
+    business_impact: "Returns the estimated percentage of devices in a country with an app installed."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: similarweb.app_store_rank
     object: AppMetric
     action: app_store_rank
+    id_form: capability
+    description: "App Store Rank"
     category: Data Access
     risk: low
-    business_impact: "Returns app-store ranking history for an app."
+    business_impact: "Returns app-store rank over time for a specific mobile app."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: similarweb.app_details
     object: AppMetric
     action: app_details
+    id_form: capability
+    description: "App Details"
     category: Data Access
     risk: low
-    business_impact: "Returns app metadata (developer, category, release dates)."
+    business_impact: "Returns detailed metadata about a mobile app by its ID."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]

@@ -1,0 +1,129 @@
+schema_version: "1.1"
+platform: datasite
+display_name: Datasite
+source: langguard-editorial
+updated: "2026-06"
+reference: https://app.global.datasite.com/dev-portal/guides/mcp-server
+# Provenance and id_form notes (read before editing):
+#
+# The Datasite hosted MCP server gates tools/list behind OAuth, so a live
+# introspection could not be reached anonymously (mcp-introspect.py fails the
+# TaskGroup handshake; the dev-portal endpoint returns text/html to an
+# unauthenticated client). The tool surface below is therefore enumerated from
+# the vendor's own public skills repository — DatasiteAI/mcp-skills, whose eight
+# published SKILL.md files declare `mcp-server: datasite` and invoke MCP tools
+# by verbatim name. An exhaustive grep across all eight skills surfaces EXACTLY
+# these seven camelCase tool ids and no others:
+#
+#     getProjectOverview, listFolderContents, searchDocuments, listSubscriptions,
+#     setupProject, createContent, updateContent
+#
+# This is a CONFIRMED FLOOR, not necessarily the full server surface — the live
+# tools/list is unreachable, so tools_discovered is unknowable. All seven ids
+# are id_form: verbatim (the default; id_form omitted). Confidence is capped at
+# medium for every action because this is the skills-consumer enumeration, not
+# a live tools/list, and because the data semantics depend on whether the
+# customer's Blueflame AI search tier is activated.
+#
+# NOTE FOR FUTURE EDITORS: a prior revision of this file padded the surface with
+# ten id_form: capability entries slugified from REST API-family labels (user
+# invites, role management, metadata permissions, fileroom deletes/renames,
+# document upload, and Q&A writes). None of those strings is a verified MCP tool
+# id — they appear nowhere in the authoritative skills repo and were removed as
+# fabrication. Do NOT reintroduce capability-form ids unless the vendor publishes
+# verbatim MCP tool strings or live introspection succeeds.
+actions:
+  # ---------- Data Access ----------
+  # Read surface. searchDocuments is the only tool that returns document CONTENT
+  # (Blueflame AI semantic search); the rest return deal-level or structural
+  # metadata. Privacy regimes are tagged ONLY where the action actually returns
+  # personal data of identifiable individuals — i.e. searchDocuments, which the
+  # skills use to surface employee PII (DOB, national-insurance, salary, IBAN).
+  - id: datasite.searchDocuments
+    object: Document
+    action: searchDocuments
+    description: "Semantically searches the data room (Blueflame AI) and returns text passages from deal documents with document and page citations."
+    category: Data Access
+    risk: high
+    business_impact: "Returns the text of confidential M&A diligence documents that can contain employee PII (the skills use it to surface dates of birth, national-insurance numbers, salaries, and bank account details); an unscoped query is a confidentiality and data-exposure event."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datasite.getProjectOverview
+    object: Project
+    action: getProjectOverview
+    description: "Returns deal-level project context — company name, sector, geography, transaction type, and transaction value — plus the fileroom structure."
+    category: Data Access
+    risk: medium
+    business_impact: "Exposes confidential deal economics and material non-public information about a live M&A transaction; sensitive business data but not bulk content extraction and not individual personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datasite.listFolderContents
+    object: Folder
+    action: listFolderContents
+    description: "Traverses the fileroom and returns the folder hierarchy and per-document metadata (names, metadata IDs, file types, status, page counts)."
+    category: Data Access
+    risk: low
+    business_impact: "Reveals the folder structure and document names of a data room without document content; a routine metadata read."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datasite.listSubscriptions
+    object: Subscription
+    action: listSubscriptions
+    description: "Lists the Datasite subscriptions available to the organisation and the project types each permits."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the organisation's available subscription entitlements; a low-sensitivity operational read."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Content Management ----------
+  # Structural writes against the live data room. These create or rename
+  # filerooms and folders; they are change-management events on the deal's
+  # navigable index (SOC2 / ISO_27001), but they operate on structure and
+  # metadata, not on personal data, so no privacy regimes are tagged.
+  - id: datasite.setupProject
+    object: Project
+    action: setupProject
+    description: "Creates a new Datasite project and its entire fileroom/folder hierarchy from a content tree in a single call."
+    category: Content Management
+    risk: medium
+    business_impact: "Provisions a new virtual data room and its folder structure for a deal; a reviewable, reversible business write."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datasite.createContent
+    object: Content
+    action: createContent
+    description: "Creates filerooms and folders inside an existing project from a content tree."
+    category: Content Management
+    risk: medium
+    business_impact: "Adds filerooms and folders to a live data room; a reversible write that shapes what buyers and advisors navigate during due diligence."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: datasite.updateContent
+    object: Content
+    action: updateContent
+    description: "Updates existing data-room content or its metadata in place, including renaming filerooms, folders, and documents."
+    category: Content Management
+    risk: medium
+    business_impact: "Modifies or renames existing data-room content that buyers rely on for diligence; the vendor's own skills flag renaming through this interface as irreversible and require explicit user confirmation before each call."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

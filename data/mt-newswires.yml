@@ -1,0 +1,72 @@
+schema_version: "1.1"
+platform: mt-newswires
+display_name: MT Newswires
+source: langguard-editorial
+updated: "2026-06"
+reference: https://console.blueskyapi.com/docs/EDGE/news/MT_NEWSWIRES_Global#mcp
+# Provenance: the MT Newswires connector is the viaNexus VAST MCP server
+# (MT-Newswires-scoped endpoint https://vast.blueskyapi.com/mtnewswires/mcp; the
+# SDK auth/data host is https://vast-mcp.blueskyapi.com). The server is OAuth2-gated:
+# live tools/list introspection returns HTTP 401 (authentication required), so the
+# tool surface could not be enumerated directly. It was instead confirmed VERBATIM
+# from three independent vendor-controlled sources, all in agreement:
+#   1. blueskynexus/claude-skills (GitHub, vendor org): all four SKILL.md files
+#      declare the tool surface as `viaNexus:fetch`, `viaNexus:search`,
+#      `viaNexus:current_date` (the `viaNexus:` / `MT Newswires:` prefix is the
+#      server-namespace label, interchangeable, and NOT part of the tool id).
+#   2. README of the same repo: lists `search` and `fetch` as the MCP tools;
+#      dataset names like `quote`, `summary_normalized_financials` are PARAMETERS
+#      passed to `fetch`, not tool ids.
+#   3. viaNexus VAST docs (vianexus.com/vast): names `search` and `fetch` and
+#      states the tools are read-only with no write/create/delete capabilities.
+# Three ids only: fetch, search, current_date. All read-only, no id_form:capability.
+#
+# DROPPED vs. the prior file: create_rule, create_rules, delete_rule. Those three
+# ids appeared in NO vendor-controlled source (they came solely from a third-party
+# MCP catalog) and are not real viaNexus tool names; including them was the
+# fabrication flagged in the prior audit. The "alerts/rules" referenced by the
+# vendor skill packs are computed CLIENT-SIDE against fetched quote data
+# ("this skill does not store state") — there is no server-side rule write tool.
+# NOTE: the connector page carries a coarse "Read & write" badge, but no specific
+# write-tool id is documented in any reachable vendor source, so the write surface
+# is treated as UNVERIFIABLE (not confirmed-absent) rather than fabricated.
+actions:
+  # ---------- Data Access ----------
+  # Read-only retrieval of licensed MT Newswires financial-news content about public
+  # securities. No consumer PII (queries are by ticker/topic), no write effect, and
+  # no financial-reporting surface, so every compliance array is correctly empty.
+  - id: mt-newswires.fetch
+    object: NewsArticle
+    action: fetch
+    description: "Retrieves detailed MT Newswires news content and structured data for the requested article or dataset."
+    category: Data Access
+    risk: low
+    business_impact: "Returns licensed financial-news content about public securities; read-only with no persistent effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mt-newswires.search
+    object: NewsArticle
+    action: search
+    description: "Searches MT Newswires news across equities, fixed income, commodities, FX, and macroeconomics."
+    category: Data Access
+    risk: low
+    business_impact: "Queries licensed financial-news content about public securities; read-only with no persistent effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mt-newswires.current_date
+    object: Date
+    action: current_date
+    description: "Returns the server's current date so that relative date-scoped news queries resolve correctly."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the server's current date; no data is read or written."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

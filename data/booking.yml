@@ -1,0 +1,46 @@
+schema_version: "1.1"
+platform: booking
+display_name: Booking.com
+source: langguard-editorial
+updated: "2026-06"
+reference: https://developers.booking.com/mcp/booking-connector/about
+# PROVENANCE: The official Booking.com Connector MCP server
+# (https://demandapi-mcp.booking.com/v1/mcp/<account-id>) is auth-gated — live
+# tools/list introspection returns 401, and no verbatim MCP tool ids are
+# published in the vendor's MCP docs or any authoritative source. The vendor
+# DOES publish plain-language capability labels in the official connector docs.
+# Per Step 3 of the curator spec, these entries use the capability-form fallback
+# (id_form: capability) with verbatim labels in `description` and confidence
+# capped at medium. The REST Demand API endpoint names (post/accommodations/...)
+# are deliberately NOT used — the spec forbids deriving ids from REST endpoints,
+# and this consumer connector is a no-auth, read-only search surface narrower
+# than the full Demand API.
+actions:
+  # ---------- Data Access ----------
+  - id: booking.search_stays
+    object: Accommodation
+    action: search_stays
+    id_form: capability
+    description: "Search stays"
+    reference: https://developers.booking.com/mcp/booking-connector/about
+    category: Data Access
+    risk: low
+    business_impact: "Performs a read-only accommodation search by destination, travel dates, and guest count; returns summarised results, makes no booking and stores nothing."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: booking.filter_results
+    object: Accommodation
+    action: filter_results
+    id_form: capability
+    description: "Filter results by common preferences"
+    reference: https://developers.booking.com/mcp/booking-connector/about
+    category: Data Access
+    risk: low
+    business_impact: "Refines a read-only accommodation search by accommodation type, facilities, star rating, meal plan, or rating bucket; reversible and non-destructive."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

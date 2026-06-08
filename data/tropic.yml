@@ -1,0 +1,95 @@
+schema_version: "1.1"
+platform: tropic
+display_name: Tropic
+source: langguard-editorial
+updated: "2026-06"
+reference: https://help.tropicapp.io/hc/en-us/articles/45502083594267-Using-Model-Context-Protocol-MCP-with-Tropic
+# NOTE: Tropic's hosted MCP server (https://app.tropicapp.io/mcp) is OAuth-gated;
+# tools/list is not reachable anonymously and no verbatim tool ids are published in
+# vendor docs or any vendor source repo. The six entries below use the documented
+# capability-form fallback (id_form: capability): slugs are intent-level, descriptions
+# are the verbatim capability headings from the vendor's MCP help-center doc
+# ("What You Can Do with MCP"). Audit matching is intent-level, not identifier-level.
+# Every capability is a read/analysis surface — the MCP server exposes no write,
+# create, renew, cancel, or approve tools.
+actions:
+  # ---------- Data Access ----------
+  - id: tropic.contract_document_search
+    object: Contract
+    action: contract_document_search
+    id_form: capability
+    description: "Contract Document Search"
+    category: Data Access
+    risk: medium
+    business_impact: "Searches across the customer's entire contract corpus for terms, clauses, and pricing; exposes the full repository of confidential commercial agreements to the agent."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: tropic.contract_insights
+    object: Contract
+    action: contract_insights
+    id_form: capability
+    description: "Contract Insights"
+    category: Data Access
+    risk: low
+    business_impact: "Views and filters contracts by savings opportunity, department, and value, surfacing Purchase Prep recommendations to renew, negotiate, or cancel; read-only analysis that does not execute any of those actions."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Compliance ----------
+  - id: tropic.compliance_check
+    object: Contract
+    action: compliance_check
+    id_form: capability
+    description: "Compliance Check"
+    category: Compliance
+    risk: low
+    business_impact: "Validates a contract against the organization's own procurement policies and flags potential policy violations; reads contract terms but takes no enforcement action."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Procurement Intelligence ----------
+  - id: tropic.supplier_intelligence
+    object: Supplier
+    action: supplier_intelligence
+    id_form: capability
+    description: "Supplier Intelligence"
+    category: Procurement Intelligence
+    risk: low
+    business_impact: "Returns Tropic's aggregated competitor, common-terms, and deal-context intelligence for a vendor; reads market data, not customer records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: tropic.price_benchmark
+    object: Benchmark
+    action: price_benchmark
+    id_form: capability
+    description: "Price Benchmark"
+    category: Procurement Intelligence
+    risk: low
+    business_impact: "Compares a quoted price against Tropic's market benchmark data and surfaces savings opportunities; advisory read with no write to financial records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: tropic.negotiation_playbook
+    object: Playbook
+    action: negotiation_playbook
+    id_form: capability
+    description: "Negotiation Playbook"
+    category: Procurement Intelligence
+    risk: low
+    business_impact: "Returns vendor-specific negotiation tactics and flexibility scores from Tropic's network data; advisory read with no system state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

@@ -1,220 +1,18 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: vercel
 display_name: Vercel
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://vercel.com/docs/agent-resources/vercel-mcp/tools
 actions:
-  # ---------- Documentation ----------
-  - id: vercel.search_documentation
-    object: Documentation
-    action: search_documentation
-    category: Documentation
-    risk: low
-    business_impact: "Searches Vercel documentation."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Project Management ----------
-  - id: vercel.list_teams
-    object: Team
-    action: list_teams
-    category: Project Management
-    risk: low
-    business_impact: "Lists teams the authenticated user belongs to."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: vercel.list_projects
-    object: Project
-    action: list_projects
-    category: Project Management
-    risk: low
-    business_impact: "Lists projects within a team."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: vercel.get_project
-    object: Project
-    action: get_project
-    category: Project Management
-    risk: low
-    business_impact: "Returns project metadata including framework and domain configuration."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Deployments ----------
-  - id: vercel.list_deployments
-    object: Deployment
-    action: list_deployments
-    category: Deployments
-    risk: low
-    business_impact: "Lists deployments for a project with state and target."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP, CLI]
-
-  - id: vercel.get_deployment
-    object: Deployment
-    action: get_deployment
-    category: Deployments
-    risk: low
-    business_impact: "Returns details about a specific deployment."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP, CLI]
-
-  - id: vercel.get_deployment_build_logs
-    object: Deployment
-    action: get_deployment_build_logs
-    category: Deployments
-    risk: medium
-    business_impact: "Returns build logs that may contain environment variable names, source paths, and stack traces."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP, CLI]
-
-  - id: vercel.get_runtime_logs
-    object: Log
-    action: get_runtime_logs
-    category: Deployments
-    risk: high
-    business_impact: "Returns application runtime logs; may include user identifiers, request bodies, and PII."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP, CLI]
-
-  # ---------- Domain Management ----------
-  - id: vercel.check_domain_availability_and_price
-    object: Domain
-    action: check_domain_availability_and_price
-    category: Domain Management
-    risk: low
-    business_impact: "Checks domain availability and pricing."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: vercel.buy_domain
-    object: Domain
-    action: buy_domain
-    category: Domain Management
-    risk: critical
-    business_impact: "Purchases a domain registration with billing; binds registrant PII and incurs financial commitment."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Access ----------
-  - id: vercel.get_access_to_vercel_url
-    object: ShareableLink
-    action: get_access_to_vercel_url
-    category: Access
-    risk: high
-    business_impact: "Mints a bypass link for an authentication-protected deployment; expands access surface."
-    compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: vercel.web_fetch_vercel_url
-    object: Deployment
-    action: web_fetch_vercel_url
-    category: Access
-    risk: medium
-    business_impact: "Fetches content from a Vercel deployment URL with authentication; can pull pre-release pages."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Toolbar ----------
-  - id: vercel.list_toolbar_threads
-    object: ToolbarThread
-    action: list_toolbar_threads
-    category: Toolbar
-    risk: low
-    business_impact: "Lists Vercel Toolbar comment threads for a team."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: vercel.get_toolbar_thread
-    object: ToolbarThread
-    action: get_toolbar_thread
-    category: Toolbar
-    risk: low
-    business_impact: "Returns a single toolbar thread including all messages."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: vercel.change_toolbar_thread_resolve_status
-    object: ToolbarThread
-    action: change_toolbar_thread_resolve_status
-    category: Toolbar
-    risk: low
-    business_impact: "Marks a toolbar thread resolved or unresolved."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: vercel.reply_to_toolbar_thread
-    object: ToolbarThread
-    action: reply_to_toolbar_thread
-    category: Toolbar
-    risk: low
-    business_impact: "Posts a reply to a toolbar thread."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: vercel.edit_toolbar_message
-    object: ToolbarMessage
-    action: edit_toolbar_message
-    category: Toolbar
-    risk: low
-    business_impact: "Edits an existing toolbar message."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: vercel.add_toolbar_reaction
-    object: ToolbarMessage
-    action: add_toolbar_reaction
-    category: Toolbar
-    risk: low
-    business_impact: "Adds an emoji reaction to a toolbar message."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
   # ---------- Platform & DevOps ----------
   - id: vercel.use_vercel_cli
     object: CLI
     action: use_vercel_cli
+    description: "Instructs the model to use Vercel CLI commands with the --help flag for information."
     category: Platform & DevOps
     risk: high
-    business_impact: "Instructs the agent to invoke arbitrary Vercel CLI commands; effective scope is the user's full Vercel access."
+    business_impact: "Steers the agent to invoke Vercel CLI commands whose effective scope is the user's full Vercel access, including deploys, deletes, and env-var management."
     compliance: [SOC2, ISO_27001, NIST_CSF]
     sod_concern: true
     confidence: medium
@@ -223,10 +21,232 @@ actions:
   - id: vercel.deploy_to_vercel
     object: Deployment
     action: deploy_to_vercel
+    description: "Deploy the current project to Vercel."
     category: Platform & DevOps
-    risk: critical
-    business_impact: "Deploys the current project to Vercel; ships code to production with no review gate."
-    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
+    risk: high
+    business_impact: "Ships the current project to a Vercel environment with no review gate; changes live application state, reversible only by redeploy or rollback."
+    compliance: [SOC2, ISO_27001]
     sod_concern: true
     confidence: high
     access_methods: [REST, MCP, CLI]
+
+  - id: vercel.get_runtime_logs
+    object: Log
+    action: get_runtime_logs
+    description: "Get runtime logs for a project or deployment, including console output and errors from Vercel Functions during requests."
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Returns production runtime output that can contain user identifiers, request data, and secrets logged from live user traffic."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  - id: vercel.get_deployment_build_logs
+    object: Deployment
+    action: get_deployment_build_logs
+    description: "Get the build logs of a deployment by deployment ID or URL to investigate why it failed."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Returns raw build output that can surface environment-variable values, tokens, or other secrets echoed during the build."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  - id: vercel.list_deployments
+    object: Deployment
+    action: list_deployments
+    description: "List deployments for a project with creation time, state, and target information."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Enumerates a project's deployment history; metadata only, no application payloads."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: vercel.get_deployment
+    object: Deployment
+    action: get_deployment
+    description: "Get detailed information for a specific deployment including build status, regions, and metadata."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns metadata for a single deployment; no application data or secrets exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Identity & Access ----------
+  - id: vercel.get_access_to_vercel_url
+    object: ShareableLink
+    action: get_access_to_vercel_url
+    description: "Create a temporary shareable link that grants access to protected Vercel deployments."
+    category: Identity & Access
+    risk: high
+    business_impact: "Mints a shareable link that bypasses deployment protection, granting unauthenticated access to an otherwise gated deployment."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: vercel.web_fetch_vercel_url
+    object: Deployment
+    action: web_fetch_vercel_url
+    description: "Fetch content directly from a Vercel deployment URL, including when Vercel Authentication is required."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads response bodies from a deployment even when authentication-protected; returned content may contain personal data served by the app."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: vercel.search_documentation
+    object: Documentation
+    action: search_documentation
+    description: "Search Vercel documentation for specific topics and information."
+    category: Data Access
+    risk: low
+    business_impact: "Searches public Vercel documentation; no account or customer data involved."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: vercel.buy_domain
+    object: Domain
+    action: buy_domain
+    description: "Purchase a domain name with registrant information."
+    category: Operations
+    risk: high
+    business_impact: "Spends account funds to register a domain and writes registrant personal data (name, address, phone, email) that may be published to public WHOIS."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: vercel.check_domain_availability_and_price
+    object: Domain
+    action: check_domain_availability_and_price
+    description: "Check if domain names are available for purchase and get pricing information."
+    category: Operations
+    risk: low
+    business_impact: "Queries registry availability and price; read-only and incurs no charge."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Org & Access ----------
+  - id: vercel.list_teams
+    object: Team
+    action: list_teams
+    description: "List all teams that include the authenticated user as a member."
+    category: Org & Access
+    risk: low
+    business_impact: "Enumerates the teams the caller belongs to; organizational metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: vercel.list_projects
+    object: Project
+    action: list_projects
+    description: "List all Vercel projects associated with a user."
+    category: Org & Access
+    risk: low
+    business_impact: "Enumerates projects in a team; configuration metadata only, no application data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: vercel.get_project
+    object: Project
+    action: get_project
+    description: "Get detailed information about a specific project including framework, domains, and latest deployment."
+    category: Org & Access
+    risk: low
+    business_impact: "Returns configuration details for a single project; no application data or secrets exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Messaging ----------
+  - id: vercel.list_toolbar_threads
+    object: ToolbarThread
+    action: list_toolbar_threads
+    description: "List Vercel Toolbar comment threads for a team; returns unresolved threads by default."
+    category: Messaging
+    risk: low
+    business_impact: "Lists deployment comment threads; thread metadata and text may include team members' names and remarks."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: vercel.get_toolbar_thread
+    object: ToolbarThread
+    action: get_toolbar_thread
+    description: "Get a specific toolbar thread by ID, including all messages and context."
+    category: Messaging
+    risk: low
+    business_impact: "Returns the full message history of one comment thread; content may include team members' personal data."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: vercel.change_toolbar_thread_resolve_status
+    object: ToolbarThread
+    action: change_toolbar_thread_resolve_status
+    description: "Change the resolve status of a toolbar thread."
+    category: Messaging
+    risk: low
+    business_impact: "Resolves or reopens a comment thread; reversible collaboration state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: vercel.reply_to_toolbar_thread
+    object: ToolbarThread
+    action: reply_to_toolbar_thread
+    description: "Add a reply message to an existing toolbar thread."
+    category: Messaging
+    risk: low
+    business_impact: "Posts a reply to a comment thread visible to the team; reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: vercel.edit_toolbar_message
+    object: ToolbarMessage
+    action: edit_toolbar_message
+    description: "Edit an existing message in a toolbar thread."
+    category: Messaging
+    risk: low
+    business_impact: "Rewrites the content of an existing comment message; reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: vercel.add_toolbar_reaction
+    object: ToolbarMessage
+    action: add_toolbar_reaction
+    description: "Add an emoji reaction to a message in a toolbar thread."
+    category: Messaging
+    risk: low
+    business_impact: "Adds an emoji reaction to a comment; trivially reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

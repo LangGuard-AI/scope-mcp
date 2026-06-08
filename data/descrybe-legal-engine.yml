@@ -1,0 +1,170 @@
+schema_version: "1.1"
+platform: descrybe-legal-engine
+display_name: Descrybe Legal Engine
+source: langguard-editorial
+updated: "2026-06"
+reference: https://descrybe.com/connect
+actions:
+  # ---------- Data Access ----------
+  # Read-only retrieval over Descrybe's corpus of published U.S. primary law
+  # (judicial opinions, statutes, regulations). All tools below carry
+  # readOnlyHint:true and destructiveHint:false per live tools/list introspection
+  # of https://mcp.descrybe.com/mcp. Privacy regimes are tagged where a tool
+  # ingests user-supplied legal text (which may contain client personal data) or
+  # returns opinion content that routinely names identifiable parties; pure
+  # reference/lookup tools keyed on a Descrybe case_id carry an empty array.
+  - id: descrybe-legal-engine.analyze_legal_question
+    object: ResearchQuery
+    action: analyze_legal_question
+    description: "Assesses a legal research question before searching to identify jurisdiction, facts, legal issue, and procedural context; returns ready_for_research or up to three clarifying questions."
+    category: Data Access
+    risk: low
+    business_impact: "Triages a user-supplied legal question and returns clarifying prompts; no retrieval or write, but the free-text input can contain client facts and personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: descrybe-legal-engine.search_cases_by_concept
+    object: Case
+    action: search_cases_by_concept
+    description: "Finds cases by legal issue, doctrine, fact pattern, jurisdiction, claim, or topic, authority-ranked to surface stronger authorities first."
+    category: Data Access
+    risk: low
+    business_impact: "Returns an authority-ranked list of published court opinions matching a concept query; read-only against public primary law, though the query and result captions can include named parties."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: descrybe-legal-engine.search_laws_and_rules
+    object: Statute
+    action: search_laws_and_rules
+    description: "Semantic search over U.S. non-case primary law including statutes, regulations, and constitutional provisions, returning the relevant source language."
+    category: Data Access
+    risk: low
+    business_impact: "Returns statutory, regulatory, and constitutional text matching a natural-language topic; read-only against published primary law with no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: descrybe-legal-engine.search_case_text
+    object: Case
+    action: search_case_text
+    description: "Searches the full text of judicial opinions for exact words or phrases across Descrybe's case-law text index."
+    category: Data Access
+    risk: low
+    business_impact: "Returns opinion passages matching an exact-phrase query; read-only against public case law, though both the query phrase and matched opinion text can contain named individuals and personal facts."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: descrybe-legal-engine.find_case_from_reference
+    object: Case
+    action: find_case_from_reference
+    description: "Resolves a citation, case name, docket number, short cite, quote, or mixed reference into a Descrybe case or candidate set."
+    category: Data Access
+    risk: low
+    business_impact: "Resolves a free-text reference into a published case or candidate list; read-only, but the supplied reference/context text can carry client-specific personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: descrybe-legal-engine.extract_case_references
+    object: Case
+    action: extract_case_references
+    description: "Extracts case-law citations and references from pasted legal text, grouping repeats and optionally resolving them to Descrybe cases."
+    category: Data Access
+    risk: low
+    business_impact: "Parses a pasted block of legal text (e.g. a brief) to pull out cited authorities; read-only, but the submitted text can contain confidential or personal client material."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: descrybe-legal-engine.get_case_summary
+    object: Case
+    action: get_case_summary
+    description: "Retrieves the precomputed standard or simplified summary for a known Descrybe case's primary opinion; requires a case_id."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a precomputed summary of a single published opinion keyed by case_id; read-only against public primary law that may name parties."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: descrybe-legal-engine.get_case_passages
+    object: Case
+    action: get_case_passages
+    description: "Returns a small ranked list of focused raw passages from a known Descrybe case's primary opinion; requires a case_id and a focus issue or phrase."
+    category: Data Access
+    risk: low
+    business_impact: "Returns focused opinion passages for one published case keyed by case_id; read-only against public case law that may name parties."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: descrybe-legal-engine.get_case_details
+    object: Case
+    action: get_case_details
+    description: "Retrieves case metadata, summary availability, opinion inventory, and treatment summary for a known Descrybe case; requires a case_id."
+    category: Data Access
+    risk: low
+    business_impact: "Returns caption, court, date, and treatment metadata for one published case keyed by case_id; read-only reference data with party names in the caption."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: descrybe-legal-engine.check_case_status
+    object: Case
+    action: check_case_status
+    description: "Checks how later cases treat a known authority and returns a quick positive, negative, cautious, or neutral signal; requires a case_id."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a treatment-status signal for one published case keyed by case_id; read-only derived analysis with no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: descrybe-legal-engine.find_cases_that_cite
+    object: Case
+    action: find_cases_that_cite
+    description: "Finds later cases that cite a known Descrybe case; requires a case_id."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a list of later published opinions that cite a given case; read-only citation-graph traversal over public case law that may name parties."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: descrybe-legal-engine.verify_quote
+    object: Case
+    action: verify_quote
+    description: "Verifies whether quoted language appears in a known Descrybe case and locates the matching opinion; requires a case_id and exact or near-exact quote text."
+    category: Data Access
+    risk: low
+    business_impact: "Confirms whether a supplied quote appears in a given published case and where; read-only, but the quote text can contain client-specific or personal material."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: descrybe-legal-engine.get_case_pdf
+    object: Case
+    action: get_case_pdf
+    description: "Creates or reuses a generated Descrybe case PDF asset and returns its public URL; requires a case_id and returns URL/job metadata, not PDF bytes."
+    category: Data Access
+    risk: low
+    business_impact: "Generates (or reuses) a PDF of a published court opinion and returns a public URL; benign side-effecting render of public primary law, reversible and individually scoped to one case."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

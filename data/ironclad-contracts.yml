@@ -1,0 +1,63 @@
+schema_version: "1.1"
+platform: ironclad-contracts
+display_name: Ironclad Contracts
+source: langguard-editorial
+updated: "2026-06"
+reference: https://support.ironcladapp.com/hc/en-us/articles/39887091143319-Ironclad-MCP-Server
+# NOTE: The Ironclad Contracts MCP server (https://mcp.na1.ironcladapp.com/mcp, per-env
+# NA1/EU1/demo) gates tools/list behind OAuth — an unauthenticated tools/list returns
+# HTTP 401 ("Bearer token required") and there is no anonymous tools catalog, so verbatim
+# tool ids could not be retrieved. The vendor publishes only plain-language capability
+# labels (on the claude.com connector page) plus the live OAuth protected-resource metadata,
+# which enumerates exactly three read-only scopes: public.search.conversational,
+# public.records.readRecords, public.workflows.readWorkflows. Vendor docs state the server
+# is read-only ("search only and never creating, editing, or deleting data"). Actions below
+# are therefore in capability form (id_form: capability, vendor wording in description,
+# confidence capped at medium). Third-party catalogs (Vinkius/Zapier/Pipedream) listing
+# 10 write-capable ironclad_* tools describe a DIFFERENT Ironclad workflow-automation MCP,
+# not this read-only Conversational Search connector — they were deliberately not used.
+actions:
+  # ---------- Data Access (public.search.conversational — read-only) ----------
+  - id: ironclad-contracts.search_contracts
+    object: Contract
+    action: search_contracts
+    id_form: capability
+    description: "Find expiring contracts"
+    reference: https://support.ironcladapp.com/hc/en-us/articles/39887091143319-Ironclad-MCP-Server
+    category: Data Access
+    risk: high
+    business_impact: "Runs permission-aware natural-language search across the entire contract repository, surfacing confidential agreement terms and counterparty PII in matching results."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access (public.records.readRecords — read-only) ----------
+  - id: ironclad-contracts.read_record
+    object: Record
+    action: read_record
+    id_form: capability
+    description: "Locate specific agreements"
+    reference: https://support.ironcladapp.com/hc/en-us/articles/39887091143319-Ironclad-MCP-Server
+    category: Data Access
+    risk: medium
+    business_impact: "Reads a single executed contract record in full — metadata, dates, obligations, signatory PII, and linked documents — for the requesting user's authorized scope."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access (public.workflows.readWorkflows — read-only) ----------
+  - id: ironclad-contracts.read_workflow
+    object: Workflow
+    action: read_workflow
+    id_form: capability
+    description: "Check contract status"
+    reference: https://support.ironcladapp.com/hc/en-us/articles/39887091143319-Ironclad-MCP-Server
+    category: Data Access
+    risk: medium
+    business_impact: "Reads an in-flight contract workflow — current approval step, counterparty information, negotiation status, and timeline — exposing confidential deal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

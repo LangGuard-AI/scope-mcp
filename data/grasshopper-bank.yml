@@ -1,0 +1,107 @@
+schema_version: "1.1"
+platform: grasshopper-bank
+display_name: Grasshopper Bank
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/connectors/grasshopper-bank
+# PROVENANCE: tool ids are GROUND TRUTH from a live, anonymous `tools/list`
+# JSON-RPC POST against the connector's real MCP server URL (taken from the
+# official claude.com/connectors/grasshopper-bank page):
+#   https://grasshopper-mcp.prd.narmitech.com/mcp
+# The server answered HTTP 200 unauthenticated and returned exactly 5 tools with
+# nextCursor=null and no annotations — i.e. the complete advertised surface.
+# Names and descriptions are copied verbatim from that response (cached at
+# mcp-server/data/_sources/grasshopper-bank/0.cache.txt; manifest at
+# .../grasshopper-bank/tools.json). The connector is white-labeled by Narmi for
+# Grasshopper Bank, N.A., an OCC-chartered US national bank.
+#
+# SCOPE: The surface is entirely READ-ONLY — five `*_list` retrieval tools, with
+# no create/update/delete/transfer/payment/approval/admin tool. Hence
+# sod_concern is false throughout and nothing reaches `critical` (no money
+# movement, no destruction, no privilege change, no cross-customer bulk exfil).
+#
+# REGIME RATIONALE (fixes the prior regime_overtag_guard failure): tags are now
+# allocated per-action to the regime that is actually load-bearing for that
+# tool, never blanket-applied. GLBA (US financial-services NPI) carries the
+# account/transfer/external-account reads; CCPA carries the identity-laden
+# consumer reads; SOC2+ISO_27001 attach only to the two highest-sensitivity
+# bulk/document reads as confidentiality controls. The foreign privacy stack
+# (GDPR/UK_GDPR/PIPEDA/LGPD/APPI/PIPL/POPIA) is DROPPED — Grasshopper is a
+# US-only OCC-chartered business bank that does not plausibly hold EU/UK/Canada/
+# Brazil/Japan/China/South-Africa resident data, so those tags were
+# substantively wrong, not merely over-applied. SOX/COSO omitted (customer reads
+# of their own data do not write or control the bank's financial reporting or
+# ITGCs). PCI omitted (ACH/bank-account activity, not cardholder PANs). PSD2
+# omitted (US bank, not an EU PSP). NY_DFS_500 omitted (OCC-supervised national
+# banks are generally exempt from NY DFS Part 500).
+actions:
+  # ---------- Data Access (financial PII reads) ----------
+  # source: https://grasshopper-mcp.prd.narmitech.com/mcp
+  - id: grasshopper-bank.transactions_list
+    object: Transaction
+    action: transactions_list
+    description: "Retrieve a paginated list of banking transactions, with optional filtering by creation or settlement date."
+    category: Data Access
+    risk: high
+    business_impact: "Returns full banking transaction history (debits, credits, ACH activity) for the authenticated customer, exposing counterparties, amounts, and spending patterns — sensitive financial PII whose bulk retrieval is an exfiltration concern."
+    compliance: [CCPA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://grasshopper-mcp.prd.narmitech.com/mcp
+  - id: grasshopper-bank.documents_list
+    object: Document
+    action: documents_list
+    description: "Retrieve bank document links such as account statements and tax documents."
+    category: Data Access
+    risk: high
+    business_impact: "Returns links to account statements and tax documents that can contain account numbers and taxpayer identifiers (SSN/TIN); high-sensitivity financial PII whose retrieval is a confidentiality and exfiltration concern."
+    compliance: [CCPA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://grasshopper-mcp.prd.narmitech.com/mcp
+  - id: grasshopper-bank.external_accounts_list
+    object: ExternalAccount
+    action: external_accounts_list
+    description: "Retrieve externally linked bank accounts connected via ACH."
+    category: Data Access
+    risk: high
+    business_impact: "Returns externally linked bank accounts (account and routing identifiers for outside institutions), nonpublic personal information that maps a customer's full banking relationships."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://grasshopper-mcp.prd.narmitech.com/mcp
+  - id: grasshopper-bank.accounts_list
+    object: Account
+    action: accounts_list
+    description: "Retrieve bank accounts with balances."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the customer's bank accounts and current balances — financial nonpublic personal information tied to an identifiable consumer, though limited to account-summary scope rather than full activity."
+    compliance: [GLBA, CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://grasshopper-mcp.prd.narmitech.com/mcp
+  - id: grasshopper-bank.scheduled_transfers_list
+    object: ScheduledTransfer
+    action: scheduled_transfers_list
+    description: "Retrieve scheduled, recurring, or future-dated transfers."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the customer's scheduled, recurring, and future-dated transfers, revealing upcoming money movement and counterparties; read-only nonpublic personal information that cannot initiate or alter a transfer."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

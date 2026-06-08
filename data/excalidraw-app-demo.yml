@@ -1,0 +1,69 @@
+schema_version: "1.1"
+platform: excalidraw-app-demo
+display_name: Excalidraw
+source: langguard-editorial
+updated: "2026-06"
+reference: https://github.com/excalidraw/excalidraw-mcp
+actions:
+  # ---------- Data Egress ----------
+  - id: excalidraw-app-demo.export_to_excalidraw
+    object: Diagram
+    action: export_to_excalidraw
+    description: "Upload diagram to excalidraw.com and return shareable URL."
+    category: Data Access
+    risk: medium
+    business_impact: "Uploads the rendered diagram to the public excalidraw.com backend and returns a publicly-decryptable share URL (AES-GCM key embedded in the link fragment); any personal or confidential content the diagram happens to contain leaves the tenant to a third-party service."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  # ---------- Diagram Rendering ----------
+  - id: excalidraw-app-demo.create_view
+    object: Diagram
+    action: create_view
+    description: "Renders a hand-drawn diagram using Excalidraw elements with streaming draw-on animations."
+    category: Operations
+    risk: low
+    business_impact: "Renders a model-authored diagram in an interactive widget; produces no external side effects and persists only an ephemeral, randomly-keyed checkpoint."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  - id: excalidraw-app-demo.read_me
+    object: Reference
+    action: read_me
+    description: "Returns the Excalidraw element format reference with color palettes, examples, and tips."
+    category: Operations
+    risk: low
+    business_impact: "Returns a static element-format cheat sheet; read-only and contains no tenant data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  # ---------- Checkpoint State ----------
+  - id: excalidraw-app-demo.save_checkpoint
+    object: Checkpoint
+    action: save_checkpoint
+    description: "Update checkpoint with user-edited state."
+    category: Operations
+    risk: low
+    business_impact: "Persists the current diagram geometry to a short-lived, randomly-keyed checkpoint store so an edit can be restored; affects only ephemeral diagram state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  - id: excalidraw-app-demo.read_checkpoint
+    object: Checkpoint
+    action: read_checkpoint
+    description: "Read checkpoint state for restore."
+    category: Operations
+    risk: low
+    business_impact: "Reads back a previously-saved ephemeral diagram checkpoint by id; returns only model-authored diagram geometry."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]

@@ -1,0 +1,159 @@
+schema_version: "1.1"
+platform: lucid
+display_name: Lucid
+source: langguard-editorial
+updated: "2026-06"
+reference: https://learn.microsoft.com/en-us/connectors/lucidmcpserver/
+# Provenance: The first-party Lucid MCP server (https://mcp.lucid.app/mcp) is OAuth 2.0 /
+# DCR-gated; an anonymous tools/list returns HTTP 401 (confirmed via mcp-introspect.py)
+# and no /tools catalog path is reachable. Lucid publishes only plain-language capability
+# labels, never verbatim tools/list identifier strings, so every entry uses
+# id_form: capability with the verbatim vendor label in `description`; ids are
+# intent-level snake_case slugs and confidence is capped at medium.
+#
+# Authoritative sources:
+#   1. Lucid Software's Microsoft 365 Copilot connector reference
+#      (learn.microsoft.com/en-us/connectors/lucidmcpserver/, updated 2026-05-22) —
+#      lists nine capabilities as `### <Label>` section headers.
+#   2. Lucid Community post 13145 "Update to the Lucid MCP server: Document Editing &
+#      UML Sequence Generation" (2026-04-08) — confirms the tenth capability,
+#      "Document Editing" (add, update, and remove shapes within an existing document),
+#      which the Microsoft Learn reference has not yet caught up to. Corroborated by the
+#      Lucid marketplace listing ("Deploy changes and edits to documents").
+#
+# The community server smartzan63/lucid-mcp-server and the unrelated "Lucid Computing"
+# (docs.lucidcomputing.ai) are NOT this connector and were excluded.
+actions:
+  # ---------- Identity & Access ----------
+  - id: lucid.share_document_with_collaborators
+    object: Document
+    action: share_document_with_collaborators
+    id_form: capability
+    description: "Share Lucid Document with Collaborators"
+    category: Identity & Access
+    risk: high
+    business_impact: "Grants up to 100 users view/comment/edit/edit-and-share access to a document by email in a single call; provisions access at scale without a review gate."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lucid.create_document_share_link
+    object: ShareLink
+    action: create_document_share_link
+    id_form: capability
+    description: "Create Lucid Document Share Link"
+    category: Identity & Access
+    risk: high
+    business_impact: "Mints a share link with a chosen role and optional anonymous access, potentially exposing a document to anyone holding the link and bypassing per-user access review."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: lucid.export_document_as_image
+    object: Document
+    action: export_document_as_image
+    id_form: capability
+    description: "Export Lucid Document as Image"
+    category: Data Access
+    risk: high
+    business_impact: "Exports a document page as a base64-encoded PNG, extracting the full visible content of any accessible diagram as a downloadable artifact."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lucid.fetch_document_content
+    object: Document
+    action: fetch_document_content
+    id_form: capability
+    description: "Fetch Lucid Document Content"
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the full structure of a document including shapes, lines, and metadata; can surface confidential or PII-bearing diagram content on demand."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lucid.search_documents
+    object: Document
+    action: search_documents
+    id_form: capability
+    description: "Search Lucid Documents"
+    category: Data Access
+    risk: low
+    business_impact: "Searches by keyword and returns up to 200 document titles, IDs, and URLs sorted by relevance; enumerates the accessible document directory without returning document content."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: lucid.edit_document
+    object: Document
+    action: edit_document
+    id_form: capability
+    description: "Document Editing"
+    reference: https://community.lucid.co/product-questions-3/update-to-the-lucid-mcp-server-document-editing-uml-sequence-generation-13145
+    category: Operations
+    risk: medium
+    business_impact: "Adds, updates, and removes shapes within an existing Lucid document; a state-changing write that can alter or delete diagram content, reversible only through document version history."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lucid.create_org_chart
+    object: Document
+    action: create_org_chart
+    id_form: capability
+    description: "Create Org Chart in Lucid"
+    category: Operations
+    risk: medium
+    business_impact: "Creates an organizational chart from up to 1000 nodes carrying employee names, roles, images, and reporting relationships; writes identifiable personnel data into a new document."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lucid.create_diagram_from_specification
+    object: Document
+    action: create_diagram_from_specification
+    id_form: capability
+    description: "Create Lucid Diagram from Specification"
+    category: Operations
+    risk: low
+    business_impact: "Creates a new document from Standard Import markup (shapes, lines, containers, swim lanes, BPMN, UML); reversible content creation in the user's own workspace."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lucid.create_mind_map
+    object: Document
+    action: create_mind_map
+    id_form: capability
+    description: "Create Mind Map in Lucid"
+    category: Operations
+    risk: low
+    business_impact: "Creates a mind-map document from up to 1000 hierarchical topic nodes; reversible content creation with no inherent personal-data exposure."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lucid.create_uml_sequence_diagram
+    object: Document
+    action: create_uml_sequence_diagram
+    id_form: capability
+    description: "Create UML Sequence Diagram in Lucid"
+    category: Operations
+    risk: low
+    business_impact: "Creates a UML sequence-diagram document from PlantUML markup; reversible content creation with no inherent personal-data exposure."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

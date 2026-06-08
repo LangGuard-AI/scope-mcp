@@ -1,0 +1,69 @@
+schema_version: "1.1"
+platform: common-room
+display_name: Common Room
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.commonroom.io/docs/using-common-room/mcp-server/
+actions:
+  # ---------- Data Access ----------
+  - id: common-room.commonroom_list_objects
+    object: Contact
+    action: commonroom_list_objects
+    description: "Query and retrieve objects (Contacts, Organizations, Activities, Segments, Tags) with filtering, sorting, and pagination."
+    category: Data Access
+    risk: high
+    business_impact: "Bulk read of the customer/prospect directory; filtered, paginated PII retrieval is a data-exfiltration vector regardless of intent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: common-room.commonroom_get_catalog
+    object: Catalog
+    action: commonroom_get_catalog
+    description: "Discover available object types, properties, filters, and sort fields."
+    category: Data Access
+    risk: low
+    business_impact: "Returns schema metadata only; no member records are read or modified."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Customer ----------
+  - id: common-room.commonroom_update_object
+    object: Contact
+    action: commonroom_update_object
+    description: "Update existing contacts and organizations by ID."
+    category: Customer
+    risk: medium
+    business_impact: "Overwrites existing contact and organization records; mutates customer PII but is reversible and individually audited."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: common-room.commonroom_create_object
+    object: Contact
+    action: commonroom_create_object
+    description: "Create new contacts, organizations, segments, activities, and notes."
+    category: Customer
+    risk: low
+    business_impact: "Adds a new contact, organization, segment, activity, or note; writes PII but is reversible and individually audited."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: common-room.commonroom_submit_feedback
+    object: Feedback
+    action: commonroom_submit_feedback
+    description: "Provide feedback on query results to improve response quality."
+    category: Operations
+    risk: low
+    business_impact: "Submits relevance feedback on a prior query; does not read or modify member records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

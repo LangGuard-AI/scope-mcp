@@ -1,52 +1,177 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: apollo
 display_name: Apollo
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://www.apollo.io/product/mcp
+# Official Apollo.io connector (https://claude.com/connectors/apollo). The hosted
+# MCP server (https://mcp.apollo.io) is OAuth-gated: live introspection of
+# /mcp returns 405 without a session, /sse returns 401, and the server advertises
+# /.well-known/oauth-protected-resource (200) — so verbatim tools/list identifiers
+# are NOT reachable without a user token. Apollo's first-party docs (product page,
+# the "Apollo now powers outbound execution in Claude" magazine post, and the
+# "Use Apollo with AI Tools to Run Your GTM Workflow" knowledge-base article)
+# publish ONLY plain-language capability labels for the MCP surface, never
+# snake_case tool identifiers. Every action below therefore uses id_form:
+# capability with the verbatim doc label in `description`, a slugified id, and
+# confidence capped at medium (intent-level, not identifier-level matching).
+#
+# Snake_case identifiers seen elsewhere (account_write, contacts_bulk_create,
+# emailer_campaigns_create, opportunity_write, tasks_create, etc.) are Apollo
+# REST-API operation names echoed by several CONFLICTING community MCP servers
+# (reporting 20 / 27 / 44 / 45 tools). They are not attested by any official
+# Apollo source and are deliberately NOT adopted as verbatim ids here —
+# slugifying a REST endpoint is the fabrication failure this curator must avoid.
+# Only capabilities Apollo itself names in plain language are curated below.
+# Apollo's official MCP capability surface is read/enrich/create/update on
+# contacts and accounts plus sequence enrollment and analytics; it exposes no
+# documented delete, bulk-create, deal/opportunity-write, task-write, or
+# sequence-authoring capability, so none are invented.
 actions:
-  # ---------- Prospecting & Enrichment ----------
-  - id: apollo.enrich-lead
-    object: Contact
-    action: enrich-lead
-    category: Customer
-    risk: medium
-    business_impact: "Looks up a person and returns enriched contact PII (email, phone, role, employer)."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: apollo.prospect
-    object: Contact
-    action: prospect
+  # ---------- Enrichment (PII reveal) ----------
+  - id: apollo.enrich_person
+    object: Person
+    action: enrich_person
+    id_form: capability
+    description: "Enrich contacts with verified emails and phone numbers"
     category: Customer
     risk: high
-    business_impact: "Returns a ranked list of decision-maker contacts including PII; bulk PII pull from B2B database."
+    business_impact: "Reveals a verified work email, direct-dial/mobile phone, title, and employment history for a single named individual."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: apollo.bulk_enrich_people
+    object: Person
+    action: bulk_enrich_people
+    id_form: capability
+    description: "Bulk enrich a set of prospects"
+    category: Customer
+    risk: high
+    business_impact: "Reveals verified email and phone PII for many individuals in a single request; bulk contact-data extraction event."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
-  # ---------- Outreach ----------
-  - id: apollo.sequence-load
+  - id: apollo.enrich_company
+    object: Company
+    action: enrich_company
+    id_form: capability
+    description: "Enrich companies"
+    category: Customer
+    risk: low
+    business_impact: "Returns firmographics for a company (industry, size, revenue, tech stack, funding, HQ); company data, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Prospecting (search) ----------
+  - id: apollo.search_people
+    object: Person
+    action: search_people
+    id_form: capability
+    description: "Search 230M+ verified B2B contacts"
+    category: Customer
+    risk: medium
+    business_impact: "Returns names, titles, and employers for matched individuals from Apollo's 230M+ person database; contact details are withheld until enrichment."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: apollo.search_companies
+    object: Company
+    action: search_companies
+    id_form: capability
+    description: "Search for companies that match your ICP"
+    category: Customer
+    risk: low
+    business_impact: "Returns firmographic profiles for matched companies; company data, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Record Management (CRM writes) ----------
+  - id: apollo.create_contact
+    object: Contact
+    action: create_contact
+    id_form: capability
+    description: "Create or update contacts that live in Apollo"
+    category: Customer
+    risk: medium
+    business_impact: "Adds a new contact to the Apollo CRM with name, email, phone numbers, and custom fields; reversible single-record PII write."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: apollo.update_contact
+    object: Contact
+    action: update_contact
+    id_form: capability
+    description: "Create or update contacts that live in Apollo"
+    category: Customer
+    risk: medium
+    business_impact: "Modifies fields on an existing CRM contact including email, phone, and custom fields; reversible single-record PII write."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: apollo.create_account
+    object: Account
+    action: create_account
+    id_form: capability
+    description: "Create or update account records in Apollo"
+    category: Customer
+    risk: medium
+    business_impact: "Adds a new account (company) record to the Apollo CRM with name, domain, and firmographic fields; reversible single-record company-data write."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: apollo.update_account
+    object: Account
+    action: update_account
+    id_form: capability
+    description: "Create or update account records in Apollo"
+    category: Customer
+    risk: medium
+    business_impact: "Modifies fields on an existing account (company) record in the Apollo CRM; reversible single-record company-data write."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Sequence Activation (outbound enrollment) ----------
+  - id: apollo.add_to_sequence
     object: Sequence
-    action: sequence-load
+    action: add_to_sequence
+    id_form: capability
+    description: "Add prospects to sequences and kick off outreach"
     category: Revenue & Pipeline
     risk: medium
-    business_impact: "Bulk-enrolls contacts into an outbound email sequence; triggers automated outreach to individuals."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    business_impact: "Enrolls contacts into an existing email sequence and kicks off automated outbound to those individuals; outbound-consent obligations (e.g. CAN-SPAM/TCPA) attach in prose but map to no canonical regime code."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
-  # ---------- Analytics ----------
-  - id: apollo.analytics
-    object: Report
-    action: analytics
+  # ---------- Analytics (performance read) ----------
+  - id: apollo.query_analytics
+    object: Analytics
+    action: query_analytics
+    id_form: capability
+    description: "Claude queries Apollo analytics and returns structured insights on emails, calls, meetings, tasks, pipeline, and sequences"
     category: Revenue & Pipeline
     risk: low
-    business_impact: "Reads sales performance analytics (emails, calls, meetings, sequence stats)."
-    compliance: [SOC2]
+    business_impact: "Returns aggregated performance metrics on emails, calls, meetings, tasks, pipeline, and sequences grouped by rep/team/period; reporting read, no record mutation."
+    compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]

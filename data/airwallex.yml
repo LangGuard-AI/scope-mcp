@@ -1,0 +1,236 @@
+schema_version: "1.1"
+platform: airwallex
+display_name: Airwallex
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.airwallex.com/docs/developer-tools/ai/developer-mcp
+# PROVENANCE: tool ids verbatim from the @airwallex/developer-mcp npm package
+# (registerTool ToolConfig.name constants, v0.3.0-beta.12), cross-checked against
+# the package README tools table and a live stdio tools/list introspection.
+# SCOPE NOTE: This is a SANDBOX-ONLY developer/integration MCP server. The SDK
+# env is hardcoded to "demo" and every base URL is *-demo.airwallex.com; there is
+# no production code path. All "create"/"transfer"/"payment" tools act on the
+# authenticated sandbox account only — no real funds, card data, or live PII move.
+# Classification reflects that sandbox reality. The production analog of each
+# write is described in business_impact prose so the user can opt into
+# production-payments tagging (SOX/COSO/PCI/PSD2/GLBA + privacy stack) if desired.
+actions:
+  # ---------- Financial ----------
+  - id: airwallex.create_transfer
+    object: Transfer
+    action: create_transfer
+    description: "Initiate a new transfer to a recipient (sandbox account)."
+    category: Financial
+    risk: medium
+    business_impact: "Creates a transfer in the authenticated sandbox account; no real funds move. The production analog would initiate a live cross-border payout to a recipient and carry direct financial-statement impact."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: airwallex.list_transfers
+    object: Transfer
+    action: list_transfers
+    description: "List transfers initiated in the sandbox account."
+    category: Financial
+    risk: low
+    business_impact: "Reads sandbox transfer records; no real transaction or recipient PII is exposed. The production analog would surface live payout history and beneficiary details."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airwallex.simulate_transfer_result
+    object: Transfer
+    action: simulate_transfer_result
+    description: "Simulate the status of a transfer (sandbox-only test helper)."
+    category: Financial
+    risk: low
+    business_impact: "Forces a synthetic status on a sandbox transfer for testing; has no production equivalent and cannot affect real funds."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airwallex.list_beneficiaries
+    object: Beneficiary
+    action: list_beneficiaries
+    description: "List available transfer recipients in the sandbox account."
+    category: Financial
+    risk: low
+    business_impact: "Reads sandbox beneficiary records; no real recipient PII is exposed. The production analog would surface live payee bank-account details."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airwallex.get_fx_quote
+    object: FxQuote
+    action: get_fx_quote
+    description: "Get a quote for an FX conversion."
+    category: Financial
+    risk: low
+    business_impact: "Retrieves an indicative foreign-exchange rate quote; read-only and carries no transactional or data-exposure effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Accounts & Balances ----------
+  - id: airwallex.list_global_accounts
+    object: GlobalAccount
+    action: list_global_accounts
+    description: "List all available global accounts in the sandbox account."
+    category: Financial
+    risk: low
+    business_impact: "Reads sandbox global-account records; no real account or balance data is exposed. The production analog would surface live multi-currency account details."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airwallex.get_balances
+    object: Balance
+    action: get_balances
+    description: "List balances in all currencies for the sandbox account."
+    category: Financial
+    risk: low
+    business_impact: "Reads sandbox currency balances; no real financial position is exposed. The production analog would surface live account balances."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airwallex.simulate_create_deposit
+    object: GlobalAccount
+    action: simulate_create_deposit
+    description: "Simulate a deposit to an available global account (sandbox-only test helper)."
+    category: Financial
+    risk: low
+    business_impact: "Injects a synthetic deposit into a sandbox global account for testing; has no production equivalent and cannot move real funds."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Billing & Payments ----------
+  - id: airwallex.create_payment_link
+    object: PaymentLink
+    action: create_payment_link
+    description: "Create a new payment link."
+    category: Financial
+    risk: medium
+    business_impact: "Creates a sandbox payment link that collects no real payment. The production analog would create a live, customer-facing checkout URL that accepts real card or bank payments."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: airwallex.list_payment_links
+    object: PaymentLink
+    action: list_payment_links
+    description: "List created payment links in the sandbox account."
+    category: Financial
+    risk: low
+    business_impact: "Reads sandbox payment-link records; no real customer payment data is exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airwallex.create_billing_product
+    object: BillingProduct
+    action: create_billing_product
+    description: "Create a new billing product."
+    category: Financial
+    risk: low
+    business_impact: "Creates a billing-catalog product in the sandbox account; no real revenue is recognized. The production analog would define a sellable product for live billing."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: airwallex.create_billing_price
+    object: BillingPrice
+    action: create_billing_price
+    description: "Create a new billing price."
+    category: Financial
+    risk: low
+    business_impact: "Creates a price for a sandbox billing product; no real revenue is recognized. The production analog would set a live customer-charged price."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: airwallex.create_billing_checkout
+    object: BillingCheckout
+    action: create_billing_checkout
+    description: "Create a new hosted billing checkout page."
+    category: Financial
+    risk: medium
+    business_impact: "Creates a hosted sandbox checkout page that collects no real payment. The production analog would create a live, customer-facing checkout that accepts real payments."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: airwallex.list_billing_products
+    object: BillingProduct
+    action: list_billing_products
+    description: "List available billing products in the sandbox account."
+    category: Financial
+    risk: low
+    business_impact: "Reads sandbox billing-product records; no real catalog or revenue data is exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airwallex.list_billing_prices
+    object: BillingPrice
+    action: list_billing_prices
+    description: "List available billing prices in the sandbox account."
+    category: Financial
+    risk: low
+    business_impact: "Reads sandbox billing-price records; no real pricing or revenue data is exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Platform & DevOps ----------
+  - id: airwallex.get_default_api_version
+    object: ApiVersion
+    action: get_default_api_version
+    description: "Get the default API version associated with the account or organization."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns the account's default API version string; pure metadata read with no data or financial exposure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airwallex.search_public_docs
+    object: Documentation
+    action: search_public_docs
+    description: "Search the Airwallex documentation (product docs, API reference, SDKs)."
+    category: Data Access
+    risk: low
+    business_impact: "Searches public Airwallex documentation; returns only published reference content with no account or PII access."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airwallex.read_integration_best_practices
+    object: Documentation
+    action: read_integration_best_practices
+    description: "Read Airwallex integration best-practices guidance."
+    category: Data Access
+    risk: low
+    business_impact: "Returns static Airwallex integration best-practices content; no account or PII access."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

@@ -1,0 +1,66 @@
+schema_version: "1.1"
+platform: make
+display_name: Make
+source: langguard-editorial
+updated: "2026-06"
+reference: https://developers.make.com/mcp-server/make-mcp-server
+# NOTE: Make's hosted MCP server (https://mcp.make.com) is OAuth-gated — live
+# anonymous introspection of its /sse endpoint returns 401, confirming no
+# anonymous tool surface. Its tools are generated DYNAMICALLY from each user's
+# own scenarios: the legacy local server (integromat/make-mcp-server) registers
+# every on-demand scenario as `run_scenario_<scenarioId>` (verified in
+# src/index.ts: name: "run_scenario_${scenario.id}", matched by the
+# `/^run_scenario_\d+$/` call handler), and the cloud server derives tool names
+# from scenario titles cropped to 56 chars. There is therefore NO stable,
+# account-independent verbatim tool name to curate. The vendor publishes only
+# plain-language CAPABILITY LABELS for the MCP surface (the action bullets in
+# make-mcp-server.md). Per the curator spec's capability-form fallback, the
+# entries below use id_form: capability, carry the verbatim label in
+# `description`, and are capped at confidence: medium (intent-level, not
+# identifier-level, matches). The docs also mention an async "corresponding
+# tool" for retrieving execution results, but never name it and publish no
+# capability label for it, so it is NOT curated (prose-only, unverifiable).
+actions:
+  # ---------- Identity & Access ----------
+  - id: make.modify_teams_and_organizations
+    object: Organization
+    action: modify_teams_and_organizations
+    id_form: capability
+    description: "View and modify teams and organizations"
+    reference: https://developers.make.com/mcp-server/make-mcp-server
+    category: Identity & Access
+    risk: critical
+    business_impact: "Modifies team and organization membership and settings; can escalate privileges or restructure tenant access, bypassing normal access-review controls."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: make.modify_scenarios_and_entities
+    object: Scenario
+    action: modify_scenarios_and_entities
+    id_form: capability
+    description: "View and modify scenarios and their related entities (e.g., connections, webhooks, and data stores)"
+    reference: https://developers.make.com/mcp-server/make-mcp-server
+    category: Operations
+    risk: high
+    business_impact: "Creates, edits, or deletes automation scenarios, connections, webhooks, and data stores; connections hold third-party credentials, so editing them is effectively a secret-write, and reconfiguring or deleting a connection or data store can disrupt production workflows reversible only by manual rebuild."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: make.run_scenarios
+    object: Scenario
+    action: run_scenarios
+    id_form: capability
+    description: "Run active and on-demand scenarios"
+    reference: https://developers.make.com/mcp-server/make-mcp-server
+    category: Operations
+    risk: high
+    business_impact: "Executes user-built automation scenarios that can perform arbitrary actions across every connected app (send email, move money, write records, call external APIs); blast radius depends entirely on the scenario's modules."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

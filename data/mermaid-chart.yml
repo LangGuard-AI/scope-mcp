@@ -1,0 +1,116 @@
+schema_version: "1.1"
+platform: mermaid-chart
+display_name: Mermaid Chart
+source: langguard-editorial
+updated: "2026-06"
+reference: https://mermaid.ai/docs/ai/mcp-server
+actions:
+  # ---------- Diagram Management ----------
+  - id: mermaid-chart.create_mermaid_chart_diagram
+    object: Diagram
+    action: create_mermaid_chart_diagram
+    description: "Creates a new diagram in the user's Mermaid Chart account."
+    category: Diagram Management
+    risk: low
+    business_impact: "Adds a new diagram to the user's Mermaid Chart account; reversible and individually owned by the account holder."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mermaid-chart.update_mermaid_chart_diagram
+    object: Diagram
+    action: update_mermaid_chart_diagram
+    description: "Updates the contents of an existing diagram in the user's Mermaid Chart account."
+    category: Diagram Management
+    risk: low
+    business_impact: "Overwrites the contents of an existing diagram in the user's account; reversible through diagram version history."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mermaid-chart.list_mermaid_chart_projects
+    object: Project
+    action: list_mermaid_chart_projects
+    description: "Lists all projects in the user's Mermaid Chart account."
+    category: Diagram Management
+    risk: low
+    business_impact: "Enumerates projects in the user's account; read-only metadata with no persisted state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mermaid-chart.list_mermaid_chart_diagrams
+    object: Diagram
+    action: list_mermaid_chart_diagrams
+    description: "Lists diagrams within a specific project in the user's Mermaid Chart account."
+    category: Diagram Management
+    risk: low
+    business_impact: "Enumerates diagrams within a project in the user's account; read-only metadata with no persisted state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mermaid-chart.get_mermaid_chart_diagram
+    object: Diagram
+    action: get_mermaid_chart_diagram
+    description: "Retrieves a specific diagram from the user's Mermaid Chart account."
+    category: Diagram Management
+    risk: low
+    business_impact: "Reads the contents of a single diagram from the user's account; read-only and scoped to one diagram."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Diagramming ----------
+  - id: mermaid-chart.validate_and_render_mermaid_diagram
+    object: Diagram
+    action: validate_and_render_mermaid_diagram
+    description: "Validates Mermaid syntax and renders the supplied diagram source as an image with a Mermaid Chart live link."
+    category: Diagramming
+    risk: low
+    business_impact: "Renders supplied diagram source to an image and live link; stateless and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mermaid-chart.get_diagram_title
+    object: Diagram
+    action: get_diagram_title
+    description: "Generates a descriptive title for a Mermaid diagram based on its content."
+    category: Diagramming
+    risk: low
+    business_impact: "Suggests a title from supplied diagram content; read-only analysis with no persisted state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mermaid-chart.get_diagram_summary
+    object: Diagram
+    action: get_diagram_summary
+    description: "Generates a concise summary of a Mermaid diagram's primary flow and key decisions."
+    category: Diagramming
+    risk: low
+    business_impact: "Summarizes supplied diagram content; read-only analysis with no persisted state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mermaid-chart.list_tools
+    object: Tool
+    action: list_tools
+    description: "Lists all available MCP tools exposed by the Mermaid Chart server."
+    category: Diagramming
+    risk: low
+    business_impact: "Enumerates the server's available tools; read-only metadata with no persisted state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

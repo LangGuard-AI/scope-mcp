@@ -1,0 +1,19 @@
+schema_version: "1.1"
+platform: dice
+display_name: Dice
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.dice.com/about/mcp
+actions:
+  # ---------- Data Access ----------
+  - id: dice.search_jobs
+    object: JobListing
+    action: search_jobs
+    description: "Search for job listings by keyword, location, and filters; returns job details, company info, and application links."
+    category: Data Access
+    risk: low
+    business_impact: "Read-only retrieval of public tech-job listings matching a query; returns no caller PII and changes no state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

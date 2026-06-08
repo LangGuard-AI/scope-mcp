@@ -1,0 +1,45 @@
+schema_version: "1.1"
+platform: sketchup
+display_name: Trimble SketchUp
+source: langguard-editorial
+updated: "2026-06"
+reference: https://help.sketchup.com/en/sketchup-claude-connector
+actions:
+  # ---------- Code & Execution ----------
+  - id: sketchup.evaluate_py
+    object: Model
+    action: evaluate_py
+    description: "Executes Python code against the live model."
+    category: Code & Execution
+    risk: high
+    business_impact: "Runs arbitrary Python against the live SketchUp model in a hosted sandbox whose boundary is not publicly documented; absent a verifiable sandbox limit, the call could read or write local files and exfiltrate results via the generated save URL rather than merely build geometry."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  # ---------- Models ----------
+  - id: sketchup.save_model
+    object: Model
+    action: save_model
+    description: "Saves the completed model and provides a URL."
+    category: Models
+    risk: low
+    business_impact: "Persists the generated .skp model and returns a download URL; reversible and version-tracked, returning only the user's own 3D geometry."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  # ---------- Documentation ----------
+  - id: sketchup.get_docs
+    object: Documentation
+    action: get_docs
+    description: "Claude loads the full SDK."
+    category: Documentation
+    risk: low
+    business_impact: "Loads the static SketchUp SDK documentation into context; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]

@@ -1,0 +1,102 @@
+schema_version: "1.1"
+platform: outlook
+display_name: Outlook (Microsoft 365 Connector)
+source: langguard-editorial
+updated: "2026-06"
+reference: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+# NOTE: The claude.com/connectors/outlook listing is Anthropic's umbrella
+# "Microsoft 365 Connector for Claude". There is no separate per-workload
+# connector slug (claude.com/connectors/sharepoint 404s), so this file carries
+# the full M365 connector surface — Outlook (email/calendar), plus the SharePoint
+# and Teams tools the same connector exposes. The connector is READ-ONLY: per the
+# vendor security guide it "cannot send emails, schedule meetings, create/modify
+# documents, or post Teams messages." Tool ids are verbatim from the vendor's
+# published read-only tool table; all run under user-delegated Graph permissions.
+actions:
+  # ---------- Email & Correspondence ----------
+  - id: outlook.outlook_email_search
+    object: Email
+    action: outlook_email_search
+    description: "Search email with sender/date filters"
+    category: Data Access
+    risk: medium
+    business_impact: "Reads the signed-in user's email matching a filter; surfaces private correspondence and the PII it contains, scoped to delegated Mail.Read access (read-only — cannot send or modify mail)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: outlook.read_resource
+    object: Resource
+    action: read_resource
+    description: "Read files, emails, or chat by URI"
+    category: Data Access
+    risk: medium
+    business_impact: "Fetches the full content of a specific file, email, or chat message by URI; returns private correspondence or documents that may contain PII or, in healthcare contexts, PHI (read-only)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, HIPAA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Calendar ----------
+  - id: outlook.outlook_calendar_search
+    object: CalendarEvent
+    action: outlook_calendar_search
+    description: "Search calendar events"
+    category: Data Access
+    risk: low
+    business_impact: "Reads the user's calendar events, exposing meeting subjects, times, and attendee identities (PII) under delegated Calendars.Read access (read-only)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: outlook.find_meeting_availability
+    object: CalendarEvent
+    action: find_meeting_availability
+    description: "Find available meeting times"
+    category: Data Access
+    risk: low
+    business_impact: "Returns free/busy availability windows for scheduling; exposes minimal personal data (availability timing) and creates nothing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Teams Messaging ----------
+  - id: outlook.chat_message_search
+    object: ChatMessage
+    action: chat_message_search
+    description: "Search Teams chat messages"
+    category: Data Access
+    risk: medium
+    business_impact: "Reads the user's Teams chat messages, surfacing private one-to-one and group conversations and the PII (and potentially PHI) they contain, under delegated Chat.Read access (read-only)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, HIPAA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Documents (SharePoint / OneDrive) ----------
+  - id: outlook.sharepoint_search
+    object: Document
+    action: sharepoint_search
+    description: "Search SharePoint documents and pages"
+    category: Data Access
+    risk: low
+    business_impact: "Searches SharePoint documents and pages the user can already access; returns organizational content that may contain PII, scoped to delegated Sites.Read.All (read-only)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: outlook.sharepoint_folder_search
+    object: Folder
+    action: sharepoint_folder_search
+    description: "Find SharePoint folders by name"
+    category: Data Access
+    risk: low
+    business_impact: "Locates SharePoint folders by name within the user's existing access; returns folder metadata only and creates nothing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

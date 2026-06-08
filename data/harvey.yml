@@ -1,0 +1,68 @@
+schema_version: "1.1"
+platform: harvey
+display_name: Harvey
+source: langguard-editorial
+updated: "2026-06"
+reference: https://developers.harvey.ai/guides/harvey_mcp
+actions:
+  # ---------- Data Access ----------
+  - id: harvey.ask_about_vault
+    object: VaultProject
+    action: ask_about_vault
+    description: "Ask a question about documents in a specific Vault project"
+    category: Data Access
+    risk: medium
+    business_impact: "Reads and analyzes documents inside a firm Vault project and returns answers with source citations; can surface client PII, privileged communications, and confidential matter content from the document repository."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: harvey.list_vault_projects
+    object: VaultProject
+    action: list_vault_projects
+    description: "List all Vault projects accessible to the authenticated user"
+    category: Data Access
+    risk: low
+    business_impact: "Returns the names and identifiers of accessible Vault projects; project names can reveal confidential client or matter identities even without document content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Research ----------
+  - id: harvey.ask_harvey
+    object: LegalQuery
+    action: ask_harvey
+    description: "Ask a general legal question using Harvey's broad legal knowledge"
+    category: Research
+    risk: low
+    business_impact: "Submits a free-text legal question to Harvey's general legal model; the prompt the agent supplies can itself carry client PII or privileged facts being analyzed, though no stored record corpus is read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: harvey.ask_with_knowledge_source
+    object: KnowledgeSource
+    action: ask_with_knowledge_source
+    description: "Ask a question using a specific research knowledge source"
+    category: Research
+    risk: low
+    business_impact: "Queries a specialized published legal-research database (e.g. tax-law sources) and returns an answer; reads curated reference material rather than identifiable individuals' records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: harvey.list_knowledge_sources
+    object: KnowledgeSource
+    action: list_knowledge_sources
+    description: "List all available research knowledge sources"
+    category: Research
+    risk: low
+    business_impact: "Returns the catalog of research knowledge sources available to the account; metadata only, no personal or confidential matter data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

@@ -1,0 +1,29 @@
+schema_version: "1.1"
+platform: resy
+display_name: Resy
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.americanexpress.com/content/dam/amex/en-us/credit-cards/benefits/resy/resy_mcp_app_claude.pdf
+actions:
+  # ---------- Data Access ----------
+  # The official Amex/Resy MCP App (distributed via Claude's connector directory)
+  # does not publish verbatim tool ids, and its MCP server URL is not reachable for
+  # live tools/list introspection. The authoritative vendor doc (the Amex/Resy
+  # connector PDF) describes exactly one capability — the "Restaurant Availability
+  # tool" — in plain language. Per the spec's capability-form fallback, the id below
+  # is a best-effort snake_case slug of that label (id_form: capability, confidence
+  # capped at medium); the verbatim vendor label is preserved in `description`.
+  # Booking is explicitly NOT a tool: the connector hands the user out to the Resy
+  # app/website to complete reservations, so no create/book/cancel action exists.
+  - id: resy.restaurant_availability
+    object: Reservation
+    action: restaurant_availability
+    id_form: capability
+    description: "The Restaurant Availability tool retrieves available reservation times for a selected restaurant based on your requested date and party size."
+    category: Data Access
+    risk: low
+    business_impact: "Reads live restaurant reservation inventory (open time slots for a date and party size); returns no personal data and books nothing — completion is handed off to the Resy app or website."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

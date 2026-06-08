@@ -1,0 +1,33 @@
+schema_version: "1.1"
+platform: consensus
+display_name: Consensus
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.consensus.app/docs/mcp
+actions:
+  # ---------- Data Access ----------
+  - id: consensus.search
+    object: Paper
+    action: search
+    description: "Searches Consensus for peer-reviewed research papers, with optional year, study-type, journal-quality, and medical-mode filters."
+    reference: https://docs.consensus.app/docs/mcp
+    category: Data Access
+    risk: low
+    business_impact: "Returns a list of public, already-published peer-reviewed papers matching the query; read-only against open academic literature with no write or PII surface."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: consensus.fetch
+    object: Paper
+    action: fetch
+    description: "Retrieves full paper details for a specific paper found by search; documented as currently available for ChatGPT clients only, other MCP clients use the search tool."
+    reference: https://docs.consensus.app/docs/mcp
+    category: Data Access
+    risk: low
+    business_impact: "Returns the full details of a single public, already-published paper by id; read-only against open academic literature with no write or PII surface."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

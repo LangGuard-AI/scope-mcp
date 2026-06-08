@@ -1,0 +1,55 @@
+schema_version: "1.1"
+platform: otter-ai
+display_name: Otter.ai
+source: langguard-editorial
+updated: "2026-06"
+reference: https://help.otter.ai/hc/en-us/articles/35287607569687-Otter-MCP-Server
+# Otter's hosted MCP server (https://mcp.otter.ai/mcp) is OAuth-gated and does not
+# expose tools/list anonymously (live introspection returned 401). The official
+# vendor MCP doc publishes only plain-language, title-case capability labels in a
+# "Tools overview" table — no verbatim identifier strings are reachable. Per the
+# curator spec these are captured with id_form: capability (slugified ids, verbatim
+# labels in description, confidence capped at medium). The labels match the standard
+# deep-research connector pattern (search / fetch + a whoami tool), which corroborates
+# the slugs but does not license treating them as verbatim ids. Read-only connector.
+actions:
+  # ---------- Data Access ----------
+  - id: otter-ai.fetch
+    object: Transcript
+    action: fetch
+    id_form: capability
+    description: "Fetch"
+    category: Data Access
+    risk: high
+    business_impact: "Returns the full speech transcript of a meeting or conversation; surfaces private meeting contents that may include personal data or, in healthcare contexts, PHI."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: otter-ai.search
+    object: Meeting
+    action: search
+    id_form: capability
+    description: "Search"
+    category: Data Access
+    risk: medium
+    business_impact: "Searches the meeting library and returns overviews of matching meetings; exposes metadata and snippets of private meeting content scoped to the query."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: otter-ai.get_user_info
+    object: User
+    action: get_user_info
+    id_form: capability
+    description: "Get user info"
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns the calling user's own name and email; a whoami-style self lookup with no access to other users' records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

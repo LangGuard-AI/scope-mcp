@@ -1,0 +1,101 @@
+schema_version: "1.1"
+platform: tango
+display_name: Tango
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.makegov.com/mcp/
+# ---------------------------------------------------------------------------
+# PROVENANCE / id_form NOTE
+# Tango is the federal-procurement competitive-intelligence connector from
+# MakeGov Inc. The hosted MCP server lives at https://govcon.dev/mcp (HTTP
+# transport) and is OAuth-gated: an unauthenticated tools/list returns
+# HTTP 401 with a www-authenticate Bearer challenge
+# (resource_metadata="http://govcon.dev/.well-known/oauth-protected-resource"),
+# so live introspection could not enumerate the surface directly.
+#
+# The five tool ids below are VERBATIM from the vendor's own MCP docs
+# (https://docs.makegov.com/mcp/, raw markdown at .../mcp/index.md), which
+# publish an "Available tools" table with real identifier strings — not
+# plain-language capability labels. The doc explicitly states "The server
+# exposes 5 tools"; the table lists exactly 5; count cross-checks. There are
+# NO additional / remote-only / insiders / extension tool sections. The
+# tango:// entries in the docs are MCP *resources*, not tools, and are
+# excluded. id_form is therefore verbatim, not capability.
+#
+# All five tools are READ-ONLY queries over PUBLIC federal-procurement
+# records (SAM.gov entities, contracts, IDVs, vehicles, OTAs, subawards,
+# protests, opportunities/forecasts, GSA eLibrary, IT Dashboard). There is
+# no write/destructive/admin/financial-transaction surface — risk is low
+# across the board and no SoD concern exists.
+#
+# PRIVACY-REGIME JUDGMENT CALL: the four data-returning tools can surface
+# personal data of identifiable individuals (e.g. a named contracting
+# officer / primary point-of-contact on an opportunity or entity record),
+# even though that data is public-record. The 8-regime privacy stack is
+# OMITTED as a defensible judgment call (public US-federal procurement
+# records, weak foreign-data-subject nexus), which is why those four are
+# confidence: medium rather than high. The user may wish to add the privacy
+# stack if customers treat federal POC data as in-scope PII.
+# ---------------------------------------------------------------------------
+actions:
+  # ---------- Data Access ----------
+  - id: tango.search
+    object: Record
+    action: search
+    description: "Search across 13 record types (contract, idv, vehicle, ota, otidv, subaward, organization, protest, gsa_elibrary, lcat, itdashboard, and all); filter by vendor, agency, NAICS, PSC, dates, and keyword, with optional aggregate summary statistics."
+    category: Data Access
+    risk: low
+    business_impact: "Returns matching public federal-procurement records and aggregate statistics; read-only and may surface named points-of-contact on otherwise public records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: tango.search_opportunities
+    object: Opportunity
+    action: search_opportunities
+    description: "Search open opportunities and agency forecasts, filtering by agency, NAICS, PSC, set-aside type, response deadline, notice type, and keyword."
+    category: Data Access
+    risk: low
+    business_impact: "Returns public open-solicitation and forecast listings; read-only and may surface the named primary contact attached to a solicitation."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: tango.resolve
+    object: Record
+    action: resolve
+    description: "Resolve a name or keyword to identifiers and short previews across entities, vehicles, organizations, contracts, opportunities, OTAs, OTIDVs, subawards, protests, IT Dashboard investments, and NAICS/PSC/SIN codes."
+    category: Data Access
+    risk: low
+    business_impact: "Resolves free-text to public-record identifiers and previews; read-only entry point that may echo named-individual previews from public registrations."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: tango.get_details
+    object: Record
+    action: get_details
+    description: "Fetch detailed information for a single item by ID and type (entity, contract, idv, vehicle, opportunity, ota, otidv, organization, subaward, protest, sin, gsa_elibrary_contract, itdashboard), with optional include_related enrichment."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the full public record for one item, including enrichment such as an opportunity's primary contact; read-only and may surface personal contact data of an identifiable individual."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Reference ----------
+  - id: tango.fetch_api_docs
+    object: Documentation
+    action: fetch_api_docs
+    description: "Fetch curated, LLM-friendly markdown documentation for a single Tango resource (e.g. contracts, opportunities, protests, naics/psc/sin lookups)."
+    category: Reference
+    risk: low
+    business_impact: "Returns static Tango API documentation for a resource section; no data-subject content and no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

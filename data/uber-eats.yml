@@ -1,0 +1,62 @@
+schema_version: "1.1"
+platform: uber-eats
+display_name: Uber Eats
+source: langguard-editorial
+updated: "2026-06"
+# Capability-form fallback. Uber's official, first-party "Uber Eats" connector
+# (made by Uber, listed at claude.com/connectors/uber-eats) gates its MCP server
+# behind OAuth and an edge/WAF layer (every path under mcp.uber.com returns a
+# blanket 403 "access denied"), so tools/list could not be introspected. Uber
+# publishes NO developer MCP tools reference for Eats (developer.uber.com/docs/
+# eats/mcp is a 404; the connector page's "Documentation" link points only at the
+# www.ubereats.com consumer storefront). The only action-level labels reachable
+# are the marketing capability taglines on the connector page, used verbatim in
+# `description` below. The community `ubereats_*` GitHub/Apify servers are a
+# DIFFERENT, third-party, browser-automation server and were deliberately NOT
+# used as a source. Only the published read/browse surface is represented here;
+# the connector's "Interactive" ordering/cart/checkout surface has no published
+# action-level label and is intentionally omitted rather than fabricated.
+reference: https://claude.com/connectors/uber-eats
+actions:
+  # ---------- Data Access ----------
+  - id: uber-eats.find_dinner
+    object: Restaurant
+    action: find_dinner
+    id_form: capability
+    description: "Find dinner"
+    reference: https://claude.com/connectors/uber-eats
+    category: Data Access
+    risk: low
+    business_impact: "Searches and browses nearby restaurants for delivery using the user's approximate location; a location-scoped read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: uber-eats.discover_dishes
+    object: Dish
+    action: discover_dishes
+    id_form: capability
+    description: "Discover dishes"
+    reference: https://claude.com/connectors/uber-eats
+    category: Data Access
+    risk: low
+    business_impact: "Browses dishes and menu items near the user for delivery; a location-scoped read of restaurant catalog data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: uber-eats.browse_by_craving
+    object: Restaurant
+    action: browse_by_craving
+    id_form: capability
+    description: "Browse by craving"
+    reference: https://claude.com/connectors/uber-eats
+    category: Data Access
+    risk: low
+    business_impact: "Browses restaurants and dishes by cuisine or craving near the user; a location-scoped read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

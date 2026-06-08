@@ -1,0 +1,164 @@
+schema_version: "1.1"
+platform: descript
+display_name: Descript
+source: langguard-editorial
+updated: "2026-06"
+reference: https://help.descript.com/hc/en-us/articles/46056322186509-Use-Descript-with-an-AI-assistant-MCP
+# PROVENANCE / METHOD NOTE
+# Descript's hosted MCP server (https://api.descript.com/v2/mcp) is OAuth-gated:
+# it requires an interactive Descript sign-in (no static API token), so live
+# tools/list introspection returns HTTP 401 (reproduced via mcp-introspect.py on
+# 2026-06-04). No vendor source publishes verbatim MCP tool identifiers
+# (a literal tools/list). The official MCP help article
+# (help.descript.com/.../46056322186509 and the older /.../45008080343053) is
+# Cloudflare-challenge-blocked ("Just a moment..." interstitial) to WebFetch,
+# curl, and the Wayback Machine alike, so its raw markup is unreadable here.
+#
+# The Matty-1337/descript-mcp GitHub project DOES publish verbatim tool ids
+# (descript_import_video, descript_agent_edit, descript_check_job, ...), but it
+# is a COMMUNITY v1 server hitting descriptapi.com/v1 — a different
+# implementation with different naming — NOT the official hosted v2 surface this
+# connector uses. Per the curator spec's hard rule, community-server names are
+# not substituted for the official surface, so those ids are deliberately NOT used.
+#
+# Two primary sources DO publish the official surface as plain-language
+# capability labels, reproduced verbatim below:
+#   1. The official connector page (https://claude.com/connectors/descript) lists
+#      three "Read & write" capabilities: "Edit by transcript", "Pull highlights",
+#      "Generate audio".
+#   2. The official Descript MCP help article, surfaced through search of the
+#      vendor's own documentation, describes the full hosted surface: import media
+#      ("Import media from a URL or directly from your computer — transcription
+#      runs automatically"), create a project from a prompt, find and manage
+#      projects in the drive, organize with folders, publish finished projects
+#      ("Publish finished projects and get back a share link or download URL"),
+#      and track progress of import/agent/publish jobs.
+#
+# Per the curator spec's capability-form fallback, every action uses
+# id_form: capability, with `description` set to the VERBATIM vendor capability
+# label / wording, a slugified id, and confidence capped at medium (intent-level
+# match, not identifier-level). The publish/import/create-from-prompt/manage/
+# folders/track actions are recovered from source (2) and were the coverage gap
+# the prior revision flagged.
+actions:
+  # ---------- Publishing & Distribution ----------
+  - id: descript.publish
+    object: Project
+    action: publish
+    id_form: capability
+    description: "Publish finished projects and get back a share link or download URL."
+    category: Publishing & Distribution
+    risk: high
+    business_impact: "Produces a public share link or download URL for a finished project, distributing media containing identifiable individuals' speech, face, and likeness outside the workspace; the link exposes the content even after it is later revoked."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Media Ingest ----------
+  - id: descript.import_media
+    object: Media
+    action: import_media
+    id_form: capability
+    description: "Import media from a URL or directly from your computer — transcription runs automatically."
+    category: Media Ingest
+    risk: low
+    business_impact: "Imports audio/video from a URL or local computer into a new project and auto-transcribes it, ingesting media and a derived transcript that contain identifiable individuals' speech and likeness."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Media Editing ----------
+  - id: descript.edit_by_transcript
+    object: Composition
+    action: edit_by_transcript
+    id_form: capability
+    description: "Edit by transcript"
+    category: Media Editing
+    risk: low
+    business_impact: "Runs transcript-driven Underlord edits on a composition (filler-word removal, audio cleanup, captions, visuals); reversible and scoped to a single project, but operates on media containing identifiable individuals' speech and likeness."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: descript.pull_highlights
+    object: Composition
+    action: pull_highlights
+    id_form: capability
+    description: "Pull highlights"
+    category: Media Editing
+    risk: low
+    business_impact: "Extracts highlight and social clips from a longer composition; produces new derivative clips within the project from media that may contain identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Media Generation ----------
+  - id: descript.generate_audio
+    object: Media
+    action: generate_audio
+    id_form: capability
+    description: "Generate audio"
+    category: Media Generation
+    risk: medium
+    business_impact: "Generates synthetic Overdub voiceover from text; AI voice cloning reproduces a person's vocal likeness, creating synthetic media that triggers deepfake/synthetic-media transparency obligations and a biometric-adjacent consent concern."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, EU_AI_ACT, NIST_AI_RMF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: descript.create_project_from_prompt
+    object: Project
+    action: create_project_from_prompt
+    id_form: capability
+    description: "Create a project from a prompt — no media needed. Describe what you want and Underlord builds it from scratch."
+    category: Media Generation
+    risk: low
+    business_impact: "Underlord builds a new project from a text prompt with no input media; creates derivative content but does not by itself ingest data about identifiable real individuals."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Project & Workspace Management ----------
+  - id: descript.manage_projects
+    object: Project
+    action: manage_projects
+    id_form: capability
+    description: "Find and manage projects in your drive — search by name, filter by date, and pull up the compositions inside any project."
+    category: Project & Workspace Management
+    risk: medium
+    business_impact: "Enumerates and manages projects across the entire connected Descript drive, exposing the inventory of compositions and their media; the management verbs may mutate or remove project state beyond a single composition."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+
+  - id: descript.organize_folders
+    object: Folder
+    action: organize_folders
+    id_form: capability
+    description: "Organize with folders — import into a named folder path, with nested folders created automatically."
+    category: Project & Workspace Management
+    risk: low
+    business_impact: "Creates and arranges folder paths in the drive and files imports into them; reorganizes workspace structure without altering media content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: descript.track_progress
+    object: Job
+    action: track_progress
+    id_form: capability
+    description: "Track progress as import, agent, and publish jobs run — poll for status or get notified via webhook."
+    category: Project & Workspace Management
+    risk: low
+    business_impact: "Polls the status of import, agent-edit, and publish jobs or subscribes to webhook notifications; read-only over job metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

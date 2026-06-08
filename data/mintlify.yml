@@ -1,0 +1,202 @@
+schema_version: "1.1"
+platform: mintlify
+display_name: Mintlify
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.mintlify.com/docs/ai/mintlify-mcp
+actions:
+  # ---------- Content ----------
+  - id: mintlify.read
+    object: Page
+    action: read
+    description: "Fetch the full MDX of any page on the session branch."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the MDX source of a single documentation page on the session branch; read-only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mintlify.search
+    object: Page
+    action: search
+    description: "Find lines matching a substring or regular expression across every page."
+    category: Data Access
+    risk: low
+    business_impact: "Searches documentation content for matching lines across all pages; read-only and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mintlify.edit_page
+    object: Page
+    action: edit_page
+    description: "Apply a targeted edit to a page."
+    category: Data Access
+    risk: low
+    business_impact: "Applies a scoped edit to a single page's MDX; buffered on the session branch and reversible before save."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mintlify.write_page
+    object: Page
+    action: write_page
+    description: "Overwrite a page's full MDX content."
+    category: Data Access
+    risk: medium
+    business_impact: "Replaces a page's entire MDX content, discarding prior text; buffered on the session branch but a destructive overwrite if saved."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Navigation ----------
+  - id: mintlify.list_nodes
+    object: NavigationNode
+    action: list_nodes
+    description: "Walk the navigation tree with optional filters."
+    category: Operations
+    risk: low
+    business_impact: "Lists navigation-tree nodes with optional filters; read-only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mintlify.create_node
+    object: NavigationNode
+    action: create_node
+    description: "Add a new page, group, tab, anchor, version, language, product, or dropdown."
+    category: Operations
+    risk: low
+    business_impact: "Adds a new navigation node; buffered on the session branch and reversible before save."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mintlify.update_node
+    object: NavigationNode
+    action: update_node
+    description: "Update a node's properties in place (rename a group, change an icon, set a default version)."
+    category: Operations
+    risk: low
+    business_impact: "Updates a navigation node's properties in place; buffered on the session branch and reversible before save."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mintlify.move_node
+    object: NavigationNode
+    action: move_node
+    description: "Move a node, including renaming a page's path."
+    category: Operations
+    risk: medium
+    business_impact: "Moves a navigation node and can rename a page's path, breaking existing inbound URLs to that page."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: mintlify.delete_node
+    object: NavigationNode
+    action: delete_node
+    description: "Remove a node from the navigation."
+    category: Operations
+    risk: medium
+    business_impact: "Removes a node from the navigation tree; buffered on the session branch but removes the page from published navigation once saved."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Configuration ----------
+  - id: mintlify.update_config
+    object: Config
+    action: update_config
+    description: "Modify docs.json (theme, navigation roots, integrations, SEO settings)."
+    category: Configuration
+    risk: medium
+    business_impact: "Modifies the site-wide docs.json controlling theme, navigation roots, integrations, and SEO; affects the entire documentation site."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Session ----------
+  - id: mintlify.checkout
+    object: Session
+    action: checkout
+    description: "Bind the session to a branch."
+    category: Operations
+    risk: low
+    business_impact: "Binds the editing session to a Git branch, creating a fresh working branch from the deploy branch; no published content changes."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mintlify.list_branches
+    object: Branch
+    action: list_branches
+    description: "List Git branches available for the project, with optional query filtering."
+    category: Operations
+    risk: low
+    business_impact: "Lists the project's Git branches with optional filtering; read-only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mintlify.get_session_state
+    object: Session
+    action: get_session_state
+    description: "Inspect the current branch, edited files, and pending nav diff."
+    category: Operations
+    risk: low
+    business_impact: "Reports the current branch, edited files, and pending navigation diff for the session; read-only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mintlify.diff
+    object: Session
+    action: diff
+    description: "List all changes between the session and main."
+    category: Operations
+    risk: low
+    business_impact: "Lists pending changes between the session branch and main; read-only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mintlify.save
+    object: Session
+    action: save
+    description: "Open a pull request or commit to the session branch."
+    category: Operations
+    risk: medium
+    business_impact: "Flushes buffered session changes to Git, opening a pull request by default or pushing a direct commit when mode is set to commit, bypassing review."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: mintlify.discard_session
+    object: Session
+    action: discard_session
+    description: "Drop the session and its in-flight changes."
+    category: Operations
+    risk: low
+    business_impact: "Discards all in-session changes and releases the branch; affects only unsaved buffered edits, not published content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

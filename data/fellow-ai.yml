@@ -1,0 +1,77 @@
+schema_version: "1.1"
+platform: fellow-ai
+display_name: Fellow.ai
+source: langguard-editorial
+updated: "2026-06"
+reference: https://help.fellow.ai/en/articles/12622641-fellow-s-mcp-server
+# Fellow.ai is a meeting-intelligence connector. Its hosted MCP server
+# (https://fellow.app/mcp, OAuth-gated) is strictly READ-ONLY: all five tools
+# retrieve or search existing meeting data (transcripts, summaries, action
+# items, participants). No create/update/delete/send surface exists, so no
+# action carries an SoD concern. Risk here is driven by the SENSITIVITY of the
+# data read (private meeting content, participant profiling), not by blast
+# radius — privacy regimes apply to every read because each tool surfaces
+# identifiable individuals. Tool ids are verbatim from the vendor MCP docs;
+# live introspection was OAuth-gated (expected) so could not re-confirm them.
+actions:
+  # ---------- Data Access — verbatim meeting content ----------
+  - id: fellow-ai.get_meeting_transcript
+    object: Transcript
+    action: get_meeting_transcript
+    description: "Get meeting transcript."
+    category: Data Access
+    risk: high
+    business_impact: "Returns the full verbatim transcript of a private meeting; exposes complete spoken content that may contain PII, PHI, or material non-public information."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: fellow-ai.get_meeting_summary
+    object: Meeting
+    action: get_meeting_summary
+    description: "Get meeting summary."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the summarized notes and decisions from a private meeting; exposes condensed discussion content and participant personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access — meeting & participant records ----------
+  - id: fellow-ai.search_meetings
+    object: Meeting
+    action: search_meetings
+    description: "Search meetings."
+    category: Data Access
+    risk: medium
+    business_impact: "Searches past meeting discussions by natural-language query and may surface content snippets across the meeting history; exposes private discussion and participant personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: fellow-ai.get_meeting_participants
+    object: Participant
+    action: get_meeting_participants
+    description: "Get meeting participants."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the attendee list for a meeting, including participant identities; reversible read that surfaces personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: fellow-ai.get_action_items
+    object: ActionItem
+    action: get_action_items
+    description: "Get action items."
+    category: Data Access
+    risk: low
+    business_impact: "Returns action items including assignee identities; reversible read that surfaces participant personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

@@ -1,0 +1,273 @@
+schema_version: "1.1"
+platform: mem
+display_name: Mem
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.mem.ai/mcp/supported-tools
+actions:
+  # ---------- Data Access ----------
+  - id: mem.search_notes
+    object: Note
+    action: search_notes
+    description: "Search notes using a required free-text query and structured filters."
+    category: Data Access
+    risk: medium
+    business_impact: "Runs a relevance-ranked search across the user's notebook; can surface confidential or PII-bearing personal notes in one call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mem.list_notes
+    object: Note
+    action: list_notes
+    description: "List notes visible to the authenticated caller with cursor pagination."
+    category: Data Access
+    risk: medium
+    business_impact: "Paginates the full set of accessible notes; aggregates personal-note content that may contain PII across the whole notebook."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mem.get_note
+    object: Note
+    action: get_note
+    description: "Fetch the full current state of a single note by ID, including trashed notes."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the full content of a single note; may expose confidential or PII-bearing material."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mem.find_related_notes
+    object: Note
+    action: find_related_notes
+    description: "Find notes semantically related to the current persisted content of a note."
+    category: Data Access
+    risk: low
+    business_impact: "Returns notes semantically related to a source note; can surface adjacent personal-note content that may contain PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mem.create_note
+    object: Note
+    action: create_note
+    description: "Create a note with an optional note ID and collection links."
+    category: Data Access
+    risk: low
+    business_impact: "Creates a new note in the notebook; reversible and individually attributed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mem.update_note
+    object: Note
+    action: update_note
+    description: "Submit a complete markdown body for a note and the exact version being updated."
+    category: Data Access
+    risk: medium
+    business_impact: "Overwrites a note's entire body with the supplied content; can destroy prior text in a living document."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mem.trash_note
+    object: Note
+    action: trash_note
+    description: "Soft-delete a note by moving it to trash."
+    category: Data Access
+    risk: medium
+    business_impact: "Soft-deletes a note to trash; reversible via restore_note."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mem.restore_note
+    object: Note
+    action: restore_note
+    description: "Restore a previously trashed note to the active note set."
+    category: Data Access
+    risk: low
+    business_impact: "Restores a trashed note to the active set; reverses soft-delete lifecycle state only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mem.set_note_created_at
+    object: Note
+    action: set_note_created_at
+    description: "Set a note's visible creation timestamp without changing its content."
+    category: Data Access
+    risk: medium
+    business_impact: "Backdates a note's visible creation timestamp (bounded — cannot post-date or push past the real creation time), altering the apparent provenance of the record without changing its content."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access — Attachments & Recordings ----------
+  - id: mem.read_attachment
+    object: Attachment
+    action: read_attachment
+    description: "Read structured content for a single attachment by kind and ID."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the structured content of a single attachment; may expose confidential or PII-bearing material."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mem.answer_question_about_attachment
+    object: Attachment
+    action: answer_question_about_attachment
+    description: "Ask one focused question about a single attachment by kind and ID."
+    category: Data Access
+    risk: low
+    business_impact: "Returns an answer derived from a single attachment's contents; may surface confidential or PII-bearing material."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: mem.get_note_attachment_download_url
+    object: Attachment
+    action: get_note_attachment_download_url
+    description: "Generate a temporary signed download URL for a note attachment."
+    category: Data Access
+    risk: medium
+    business_impact: "Mints a temporary signed URL that lets the holder download the underlying attachment file outside the access-controlled app surface."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: mem.get_audio_recording
+    object: AudioRecording
+    action: get_audio_recording
+    description: "Fetch the current public transcript and metadata for a single audio recording by ID."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the transcript and metadata of an audio recording; voice transcripts can contain personal or sensitive content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access — Collections ----------
+  - id: mem.delete_collection
+    object: Collection
+    action: delete_collection
+    description: "Permanently delete a collection."
+    category: Data Access
+    risk: high
+    business_impact: "Permanently and irreversibly deletes a collection resource; the notes inside survive but the grouping is unrecoverable."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mem.create_collection
+    object: Collection
+    action: create_collection
+    description: "Create a collection with optional caller-provided ID and timestamps."
+    category: Data Access
+    risk: low
+    business_impact: "Creates a new collection container; reversible and individually attributed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mem.update_collection
+    object: Collection
+    action: update_collection
+    description: "Update metadata for a collection by ID."
+    category: Data Access
+    risk: low
+    business_impact: "Edits a collection's title or description; metadata-only change with no note content affected."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mem.get_collection
+    object: Collection
+    action: get_collection
+    description: "Fetch metadata for a single collection by ID."
+    category: Data Access
+    risk: low
+    business_impact: "Reads metadata for a single collection; returns no note content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mem.list_collections
+    object: Collection
+    action: list_collections
+    description: "List collections visible to the authenticated caller with cursor pagination."
+    category: Data Access
+    risk: low
+    business_impact: "Lists collection metadata across the notebook; structural metadata only, no note content returned."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mem.search_collections
+    object: Collection
+    action: search_collections
+    description: "Search collections using free-text relevance matching."
+    category: Data Access
+    risk: low
+    business_impact: "Returns relevance-ranked collection metadata; structural metadata only, no note content returned."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mem.add_note_to_collection
+    object: Collection
+    action: add_note_to_collection
+    description: "Add an existing note to an existing collection."
+    category: Data Access
+    risk: low
+    business_impact: "Creates a membership link between a note and a collection; does not modify note or collection content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mem.remove_note_from_collection
+    object: Collection
+    action: remove_note_from_collection
+    description: "Remove a note from a collection while keeping both resources."
+    category: Data Access
+    risk: low
+    business_impact: "Removes a membership link between a note and a collection; both resources are retained."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mem.move_note
+    object: Collection
+    action: move_note
+    description: "Move a note from one collection to another collection."
+    category: Data Access
+    risk: low
+    business_impact: "Re-links a note from a source collection to a target collection; does not modify note or collection content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

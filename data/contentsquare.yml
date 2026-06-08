@@ -1,0 +1,274 @@
+schema_version: "1.1"
+platform: contentsquare
+display_name: Contentsquare
+source: langguard-editorial
+updated: "2026-06"
+reference: https://support.contentsquare.com/hc/en-us/articles/41563169756945-How-to-set-up-and-use-Model-Context-Protocol-MCP
+# NOTE: Contentsquare's MCP server (https://api.contentsquare.com/mcp) is OAuth2-gated
+# with a per-tenant scope, so live tools/list was not reachable anonymously. The 21
+# tool names below are verbatim from a published connector catalog and were
+# cross-corroborated against the vendor's own support doc, which attests the same
+# camelCase convention and tools (e.g. computeJourney, computeFunnel,
+# getTopErrorsByImpactOnGoal, submitMcpFeedback, and the recommend*/search* config
+# family, plus the quota note that configuration-retrieval calls don't count). The
+# kebab-case `list-projects` outlier and a few catalog-only ids are marked
+# confidence: medium since they were not individually attested by the vendor doc.
+# This is an analytics/insights surface: every tool reads or computes over
+# aggregated behavioral experience data; there is no raw-data export, deletion, or
+# admin/identity mutation on the MCP surface. `submitMcpFeedback` is the only write.
+actions:
+  # ---------- Analytics ----------
+  - id: contentsquare.computeJourney
+    object: Journey
+    action: computeJourney
+    description: "Surfaces the most common paths users take through the site (journey analysis)."
+    category: Analytics
+    risk: medium
+    business_impact: "Computes aggregated visitor journey paths over behavioral session data; reveals how users move through the product but returns aggregates, not raw PII records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: contentsquare.computeFunnel
+    object: Funnel
+    action: computeFunnel
+    description: "Identifies drop-off points across key steps such as product page, cart, checkout, and purchase (funnel analysis)."
+    category: Analytics
+    risk: medium
+    business_impact: "Computes conversion-funnel drop-off over aggregated behavioral data; returns aggregates rather than identifiable individual records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: contentsquare.computeImpact
+    object: Impact
+    action: computeImpact
+    description: "Estimates the business impact of a behavior, error, or page on conversions and goals."
+    category: Analytics
+    risk: low
+    business_impact: "Returns an aggregated impact estimate over experience data; read-only and non-identifying."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: contentsquare.computeSiteMetrics
+    object: Metric
+    action: computeSiteMetrics
+    description: "Computes aggregated site-level experience metrics for a time range."
+    category: Analytics
+    risk: low
+    business_impact: "Returns aggregated site-level experience metrics; read-only and non-identifying."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: contentsquare.computePageGroupMetrics
+    object: Metric
+    action: computePageGroupMetrics
+    description: "Computes aggregated metrics for a page group."
+    category: Analytics
+    risk: low
+    business_impact: "Returns aggregated page-group experience metrics; read-only and non-identifying."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: contentsquare.computePageComparison
+    object: Metric
+    action: computePageComparison
+    description: "Compares experience metrics across pages or page groups."
+    category: Analytics
+    risk: low
+    business_impact: "Returns an aggregated comparison of page-level metrics; read-only and non-identifying."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Error Analysis ----------
+  - id: contentsquare.getTopErrorsBySessionsWithErrors
+    object: Error
+    action: getTopErrorsBySessionsWithErrors
+    description: "Ranks the top JavaScript/API errors by the number of sessions in which they occurred."
+    category: Analytics
+    risk: low
+    business_impact: "Returns aggregated error rankings derived from session telemetry; read-only and non-identifying."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: contentsquare.getTopErrorsByImpactOnGoal
+    object: Error
+    action: getTopErrorsByImpactOnGoal
+    description: "Ranks the top errors by their measured impact on a conversion goal."
+    category: Analytics
+    risk: low
+    business_impact: "Returns aggregated error-to-goal impact rankings; read-only and non-identifying."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: contentsquare.getTopErrorsByMissedOpportunity
+    object: Error
+    action: getTopErrorsByMissedOpportunity
+    description: "Ranks the top errors by estimated missed-conversion opportunity."
+    category: Analytics
+    risk: low
+    business_impact: "Returns aggregated error rankings weighted by missed-conversion estimate; read-only and non-identifying."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: contentsquare.getTopPagesBySessionsWithErrors
+    object: Page
+    action: getTopPagesBySessionsWithErrors
+    description: "Ranks the pages with the most error-affected sessions."
+    category: Analytics
+    risk: low
+    business_impact: "Returns an aggregated ranking of pages by error-affected sessions; read-only and non-identifying."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: contentsquare.getTopPageGroupsByLostConversions
+    object: PageGroup
+    action: getTopPageGroupsByLostConversions
+    description: "Ranks page groups by estimated lost conversions."
+    category: Analytics
+    risk: low
+    business_impact: "Returns an aggregated ranking of page groups by lost-conversion estimate; read-only and non-identifying."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Configuration ----------
+  - id: contentsquare.list-projects
+    object: Project
+    action: list-projects
+    description: "Lists the Contentsquare projects the connected principal can access."
+    category: Configuration
+    risk: low
+    business_impact: "Lists accessible projects scoped to the principal's existing role-based permissions; configuration read."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: contentsquare.getPageGroupsForMapping
+    object: Mapping
+    action: getPageGroupsForMapping
+    description: "Returns the page groups defined under a given mapping."
+    category: Configuration
+    risk: low
+    business_impact: "Returns page-group configuration for a mapping; configuration metadata read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: contentsquare.searchMappings
+    object: Mapping
+    action: searchMappings
+    description: "Searches configured page-group mappings by name or attribute."
+    category: Configuration
+    risk: low
+    business_impact: "Searches mapping configuration metadata; read-only with no record-level data returned."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: contentsquare.searchGoals
+    object: Goal
+    action: searchGoals
+    description: "Searches configured conversion goals by name or attribute."
+    category: Configuration
+    risk: low
+    business_impact: "Searches goal configuration metadata; read-only with no record-level data returned."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: contentsquare.searchSegments
+    object: Segment
+    action: searchSegments
+    description: "Searches configured visitor segments by name or attribute."
+    category: Configuration
+    risk: low
+    business_impact: "Searches segment configuration metadata; read-only with no record-level data returned."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: contentsquare.recommendMappings
+    object: Mapping
+    action: recommendMappings
+    description: "Suggests page-group mappings relevant to the query (configuration retrieval; not counted against quota)."
+    category: Configuration
+    risk: low
+    business_impact: "Returns suggested mapping configuration for the agent to use; read-only recommendation, no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: contentsquare.recommendGoals
+    object: Goal
+    action: recommendGoals
+    description: "Suggests conversion goals relevant to the query (configuration retrieval; not counted against quota)."
+    category: Configuration
+    risk: low
+    business_impact: "Returns suggested goal configuration for the agent to use; read-only recommendation, no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: contentsquare.recommendPageGroups
+    object: PageGroup
+    action: recommendPageGroups
+    description: "Suggests page groups relevant to the query (configuration retrieval; not counted against quota)."
+    category: Configuration
+    risk: low
+    business_impact: "Returns suggested page-group configuration for the agent to use; read-only recommendation, no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: contentsquare.recommendSegments
+    object: Segment
+    action: recommendSegments
+    description: "Suggests visitor segments relevant to the query (configuration retrieval; not counted against quota)."
+    category: Configuration
+    risk: low
+    business_impact: "Returns suggested segment configuration for the agent to use; read-only recommendation, no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Feedback ----------
+  - id: contentsquare.submitMcpFeedback
+    object: Feedback
+    action: submitMcpFeedback
+    description: "Submits feedback about the MCP integration back to Contentsquare (configuration call; not counted against quota)."
+    category: Operations
+    risk: low
+    business_impact: "Sends free-text feedback about the MCP integration to the vendor; low-impact write that does not alter tenant analytics data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

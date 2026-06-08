@@ -1,0 +1,255 @@
+schema_version: "1.1"
+platform: surveymonkey
+display_name: SurveyMonkey
+source: langguard-editorial
+updated: "2026-06"
+reference: https://help.surveymonkey.com/en/surveymonkey/integrations/claude-app/
+# Tool ids are CAPABILITY-FORM (id_form: capability). SurveyMonkey's official
+# remote MCP server (https://mcp.surveymonkey.com/mcp) is OAuth-gated and does
+# not expose an anonymous tools/list. The vendor publishes only plain-language
+# capability labels in the official Claude-connector help page (Read-only /
+# Write-or-delete table). The `description` on each action is the verbatim label
+# as SurveyMonkey wrote it; the slug in `id`/`action` is best-effort, so audit
+# matching here is intent-level, not identifier-level, and confidence is capped
+# at medium. OAuth scopes advertised by the server confirm the surface:
+# surveys_read, surveys_write, collectors_write, responses_read,
+# responses_read_detail, users_read.
+actions:
+  # ---------- Responses & Analytics ----------
+  - id: surveymonkey.get_survey_responses_with_full_answer_data
+    object: Response
+    action: get_survey_responses_with_full_answer_data
+    id_form: capability
+    description: "Get survey responses with full answer data"
+    category: Responses & Analytics
+    risk: high
+    business_impact: "Returns full respondent answer data for a survey; respondent free-text and contact fields are personal data, making this a scoped bulk PII read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: surveymonkey.get_number_of_responses_for_a_survey
+    object: Response
+    action: get_number_of_responses_for_a_survey
+    id_form: capability
+    description: "Get number of responses for a survey"
+    category: Responses & Analytics
+    risk: low
+    business_impact: "Returns only the aggregate response count for a survey; no respondent-level data is exposed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Collectors ----------
+  - id: surveymonkey.create_a_shareable_survey_link
+    object: Collector
+    action: create_a_shareable_survey_link
+    id_form: capability
+    description: "Create a shareable survey link"
+    category: Collectors
+    risk: medium
+    business_impact: "Creates a public web-link collector; anyone holding the link can submit responses until the collector is closed, but the action is reversible."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Survey Design ----------
+  - id: surveymonkey.create_a_new_survey
+    object: Survey
+    action: create_a_new_survey
+    id_form: capability
+    description: "Create a new survey"
+    category: Survey Design
+    risk: low
+    business_impact: "Creates a new empty survey in the account; reversible and individually attributed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: surveymonkey.update_survey_properties
+    object: Survey
+    action: update_survey_properties
+    id_form: capability
+    description: "Update survey properties"
+    category: Survey Design
+    risk: low
+    business_impact: "Edits survey-level properties such as title and settings; reversible business write with no respondent data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: surveymonkey.add_a_page_to_a_survey
+    object: Page
+    action: add_a_page_to_a_survey
+    id_form: capability
+    description: "Add a page to a survey"
+    category: Survey Design
+    risk: low
+    business_impact: "Adds a page to a survey's structure; reversible and affects only survey design, not respondent data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: surveymonkey.add_a_question_to_a_page
+    object: Question
+    action: add_a_question_to_a_page
+    id_form: capability
+    description: "Add a question to a page"
+    category: Survey Design
+    risk: low
+    business_impact: "Adds a question to a survey page; reversible survey-design change with no respondent data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: surveymonkey.edit_a_single_question
+    object: Question
+    action: edit_a_single_question
+    id_form: capability
+    description: "Edit a single question"
+    category: Survey Design
+    risk: low
+    business_impact: "Edits the wording or options of one survey question; reversible survey-design change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: surveymonkey.delete_a_question_from_a_page
+    object: Question
+    action: delete_a_question_from_a_page
+    id_form: capability
+    description: "Delete a question from a page"
+    category: Survey Design
+    risk: medium
+    business_impact: "Removes a question from a survey page; deleting a fielded question drops its collected respondent answers, an integrity loss recoverable only by re-authoring (and not the lost data)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: surveymonkey.reorder_all_questions_on_a_page
+    object: Page
+    action: reorder_all_questions_on_a_page
+    id_form: capability
+    description: "Reorder all questions on a page"
+    category: Survey Design
+    risk: low
+    business_impact: "Changes the display order of questions on a page; reversible survey-design change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Survey Reads ----------
+  - id: surveymonkey.search_and_list_users_surveys
+    object: Survey
+    action: search_and_list_users_surveys
+    id_form: capability
+    description: "Search and list user's surveys"
+    category: Survey Reads
+    risk: low
+    business_impact: "Lists and searches the surveys in the user's account; returns survey metadata, not respondent answers."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: surveymonkey.get_survey_details_by_id
+    object: Survey
+    action: get_survey_details_by_id
+    id_form: capability
+    description: "Get survey details by ID"
+    category: Survey Reads
+    risk: low
+    business_impact: "Returns the configuration and metadata of a single survey; no respondent answers are exposed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: surveymonkey.list_pages_in_a_survey
+    object: Page
+    action: list_pages_in_a_survey
+    id_form: capability
+    description: "List pages in a survey"
+    category: Survey Reads
+    risk: low
+    business_impact: "Returns the list of pages within a survey; survey-structure metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: surveymonkey.get_page_details_by_id
+    object: Page
+    action: get_page_details_by_id
+    id_form: capability
+    description: "Get page details by ID"
+    category: Survey Reads
+    risk: low
+    business_impact: "Returns the details of a single survey page; survey-structure metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: surveymonkey.list_questions_on_a_page
+    object: Question
+    action: list_questions_on_a_page
+    id_form: capability
+    description: "List questions on a page"
+    category: Survey Reads
+    risk: low
+    business_impact: "Returns the questions on a survey page; survey-structure metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: surveymonkey.get_question_details_by_id
+    object: Question
+    action: get_question_details_by_id
+    id_form: capability
+    description: "Get question details by ID"
+    category: Survey Reads
+    risk: low
+    business_impact: "Returns the configuration of a single survey question; survey-structure metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: surveymonkey.get_available_question_types_and_display_options
+    object: Question
+    action: get_available_question_types_and_display_options
+    id_form: capability
+    description: "Get available question types and display options"
+    category: Survey Reads
+    risk: low
+    business_impact: "Returns the catalog of supported question types and display options; static reference data with no account-specific or personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Platform ----------
+  - id: surveymonkey.view_information_about_the_surveymonkey_mcp_server
+    object: Server
+    action: view_information_about_the_surveymonkey_mcp_server
+    id_form: capability
+    description: "View information about the SurveyMonkey MCP Server"
+    category: Platform
+    risk: low
+    business_impact: "Returns informational metadata about the MCP server itself; no account or respondent data is exposed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

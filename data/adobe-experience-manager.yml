@@ -1,17 +1,47 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: adobe-experience-manager
 display_name: Adobe Experience Manager
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://experienceleague.adobe.com/en/docs/experience-manager-cloud-service/content/ai-in-aem/mcp-support/using-mcp-with-aem-as-a-cloud-service
+# PROVENANCE / TOOL-SURFACE NOTES
+# ------------------------------------------------------------------------------
+# AEM exposes five OAuth-gated MCP servers under https://mcp.adobeaemcloud.com/adobe/mcp/ :
+#   /content, /content-readonly, /cloudmanager, /experience-governance, /cloud-migration.
+# Live tools/list is OAuth-gated — anonymous introspection returns 401
+# (Bearer realm=oauth.adobeaemcloud.com), so an authoritative machine-readable
+# tool registry could not be retrieved. The vendor doc explicitly states the
+# tool surface is discovered at runtime: "The specific tools exposed by each MCP
+# server may evolve over time ... ask your MCP-enabled application to discover
+# tools." There is therefore NO published exhaustive tools/list.
+#
+# WHAT IS PUBLISHED:
+#   1. Seven verbatim tool ids appear in the official doc's "Example Workflows"
+#      section (server-rendered, confirmed against raw HTML, not a JS shell).
+#      They are framed as illustrative ("Call a tool SUCH AS get-aem-page-content")
+#      and the doc disclaims that the surface "may evolve", so they are recorded
+#      verbatim but capped at confidence: medium — they are real strings from the
+#      vendor, NOT a guaranteed/complete registry.
+#   2. The remaining surface is published ONLY as natural-language capability
+#      phrases in the doc's "MCP Servers" table and "Example Use Cases" list.
+#      Those are recorded in capability form (id_form: capability) with the
+#      vendor's wording verbatim in `description`; ids are intent-level
+#      snake_case slugs and confidence is capped at medium.
+#
+# NOT INCLUDED (deliberately, to avoid fabrication): no publish/unpublish,
+# copy-page, rename-title, or import-brand-policy entries — those exact ids and
+# capability labels appear in NO authoritative Adobe source. Page create/update/
+# delete is covered by the verbatim CRUD capability phrase below.
 actions:
-  # ---------- Content Operations ----------
+  # ---------- Content Operations — /content server (verbatim ids from Example Workflows) ----------
   - id: adobe-experience-manager.get-aem-page-content
     object: Page
     action: get-aem-page-content
+    description: "Retrieves an AEM page and locates the fragmentPath property."
     category: Data Access
     risk: low
-    business_impact: "Reads the rendered content of an AEM page; may include unpublished customer-facing copy."
-    compliance: [SOC2]
+    business_impact: "Reads the content of an AEM page; may surface unpublished or PII-bearing customer-facing copy."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: medium
     access_methods: [REST, MCP]
@@ -19,9 +49,10 @@ actions:
   - id: adobe-experience-manager.resolve_fragment_path
     object: ContentFragment
     action: resolve_fragment_path
+    description: "Converts a content-fragment path to a UUID for use by other tools."
     category: Data Access
     risk: low
-    business_impact: "Resolves a content-fragment reference path used by other AEM tools."
+    business_impact: "Resolves a content-fragment reference path to a UUID; no data mutation."
     compliance: []
     sod_concern: false
     confidence: medium
@@ -30,43 +61,22 @@ actions:
   - id: adobe-experience-manager.get_fragment
     object: ContentFragment
     action: get_fragment
+    description: "Retrieves a content fragment's current fields and ETag."
     category: Data Access
     risk: low
-    business_impact: "Reads a specific content fragment's structured fields."
-    compliance: [SOC2]
+    business_impact: "Reads a content fragment's structured fields; may contain customer-facing or PII-bearing copy."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: medium
     access_methods: [REST, MCP]
 
-  - id: adobe-experience-manager.create_fragment
-    object: ContentFragment
-    action: create_fragment
-    category: Operations
-    risk: medium
-    business_impact: "Authors a new content fragment; affects downstream rendered pages on publish."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: adobe-experience-manager.patch_fragment
-    object: ContentFragment
-    action: patch_fragment
-    category: Operations
-    risk: medium
-    business_impact: "Modifies an existing content fragment; can change live customer-facing copy on next publish."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Models ----------
   - id: adobe-experience-manager.list_models
     object: ContentFragmentModel
     action: list_models
+    description: "Lists the content-fragment models available in the environment."
     category: Data Access
     risk: low
-    business_impact: "Lists content-fragment model definitions."
+    business_impact: "Lists content-fragment model definitions; structural metadata only."
     compliance: []
     sod_concern: false
     confidence: medium
@@ -75,10 +85,156 @@ actions:
   - id: adobe-experience-manager.get_model
     object: ContentFragmentModel
     action: get_model
+    description: "Reads a single content-fragment model's field schema."
     category: Data Access
     risk: low
-    business_impact: "Reads a single content-fragment model schema."
+    business_impact: "Reads a single content-fragment model schema; structural metadata only."
     compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-experience-manager.create_fragment
+    object: ContentFragment
+    action: create_fragment
+    description: "Creates a new content fragment with values derived from the prompt."
+    category: Operations
+    risk: medium
+    business_impact: "Authors a new content fragment; surfaces on downstream rendered pages once published."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-experience-manager.patch_fragment
+    object: ContentFragment
+    action: patch_fragment
+    description: "Applies a JSON Patch to an existing content fragment using an ETag for optimistic concurrency."
+    category: Operations
+    risk: medium
+    business_impact: "Modifies an existing content fragment; can change live customer-facing copy on next publish."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Content Operations — /content server (capability-form; verbatim vendor capability phrases) ----------
+  - id: adobe-experience-manager.manage_pages
+    object: Page
+    action: manage_pages
+    id_form: capability
+    description: "Create, read, update, and delete pages and page content"
+    category: Operations
+    risk: high
+    business_impact: "Creates, updates, or deletes AEM pages and their content; deletion of a live page removes customer-facing content with no guaranteed undo."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-experience-manager.import_assets
+    object: Asset
+    action: import_assets
+    id_form: capability
+    description: "Import assets with status check"
+    category: Operations
+    risk: medium
+    business_impact: "Imports binary assets into the DAM; can introduce copyrighted or PII-bearing media into customer-facing content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-experience-manager.search_content_fragments
+    object: ContentFragment
+    action: search_content_fragments
+    id_form: capability
+    description: "Search for content fragments"
+    category: Data Access
+    risk: low
+    business_impact: "Searches content fragments; can return fragment bodies containing customer-facing or PII-bearing copy."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-experience-manager.search_assets
+    object: Asset
+    action: search_assets
+    id_form: capability
+    description: "Asset Search"
+    category: Data Access
+    risk: low
+    business_impact: "Searches DAM assets and their metadata; metadata can include rights, authorship, or PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-experience-manager.list_sites
+    object: Site
+    action: list_sites
+    id_form: capability
+    description: "List sites"
+    category: Data Access
+    risk: low
+    business_impact: "Lists AEM sites; structural inventory with no content mutation."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Platform & DevOps — /cloudmanager server (capability-form; verbatim server-table phrase) ----------
+  - id: adobe-experience-manager.manage_cloud_manager_entities
+    object: "*"
+    action: manage_cloud_manager_entities
+    id_form: capability
+    description: "Manage Cloud Manager entities including programs, environments, repositories and pipelines, which can also be triggered"
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Reads or modifies Cloud Manager programs, environments, and repositories and can trigger pipelines, starting a production deployment to live AEM environments without separate review."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-experience-manager.list_environments
+    object: Environment
+    action: list_environments
+    id_form: capability
+    description: "List environments and licenses to decide where to run a workflow"
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Lists Cloud Manager environments and licenses; configuration inventory read with no modification."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Experience Governance — /experience-governance server (capability-form; verbatim server-table phrase) ----------
+  - id: adobe-experience-manager.evaluate_content_governance
+    object: GovernanceCheck
+    action: evaluate_content_governance
+    id_form: capability
+    description: "Evaluate content (text, images, pages) against brand governance rules, and list brand configurations and checks"
+    category: Operations
+    risk: low
+    business_impact: "Evaluates page content against brand governance rules and lists brand configurations; read-style governance check with no content mutation."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Cloud Migration — /cloud-migration server (capability-form; verbatim server-table phrase) ----------
+  - id: adobe-experience-manager.fetch_bpa_findings
+    object: BPAFinding
+    action: fetch_bpa_findings
+    id_form: capability
+    description: "Fetch Best Practices Analyzer (BPA) findings from Cloud Acceleration Manager (CAM) by migration pattern or severity level"
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Reads Best Practices Analyzer findings for an AEM 6.x-to-Cloud-Service migration; analytical read with no modification."
+    compliance: [SOC2]
     sod_concern: false
     confidence: medium
     access_methods: [REST, MCP]

@@ -1,0 +1,164 @@
+schema_version: "1.1"
+platform: crossbeam
+display_name: Crossbeam
+source: langguard-editorial
+updated: "2026-06"
+reference: https://help.crossbeam.com/en/articles/12601327-crossbeam-mcp-server-limited-availability
+# Official Crossbeam connector (partner ecosystem / co-selling overlap platform).
+# The hosted MCP server is OAuth-gated and its URL is issued privately ("reach out
+# to your Crossbeam contact or product@crossbeam.com to get our MCP server access
+# credentials"), so live tools/list introspection is not reachable without a user
+# token. Crossbeam's vendor MCP docs publish a verbatim "Supported Tools" table of
+# 12 snake_case tool identifiers, each with a one-line description — so all entries
+# below are id_form: verbatim copied exactly from that table. The connector exposes
+# a READ-only surface (the claude.com connector page lists only a "Read" capability):
+# every tool retrieves/searches data; there are NO create/update/delete/send or any
+# destructive operations, and none are invented here. All 12 tools are written; the
+# surface is under 25 so nothing was trimmed.
+actions:
+  # ---------- Partner Intelligence ----------
+  - id: crossbeam.get_account_overlap_info
+    object: AccountOverlap
+    action: get_account_overlap_info
+    description: "Returns partner overlaps for a specific account by ID."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Reveals which partner organizations also have a given account in their CRM; surfaces cross-organization partner pipeline data shared under data-sharing agreements."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: crossbeam.get_partner_populations
+    object: Population
+    action: get_partner_populations
+    description: "Returns all partner Populations visible to the current organization from a partner."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Returns a partner organization's shared segments; Populations can be built from lead- or contact-level records, so cross-organization personal data shared under a co-selling agreement may be exposed."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: crossbeam.get_partner_leaderboard
+    object: Partner
+    action: get_partner_leaderboard
+    description: "Returns historical partner performance metrics across recently closed deals."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Returns historical deal-influence and win-rate metrics across partners; exposes competitively sensitive pipeline-performance data but no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: crossbeam.find_partners
+    object: Partner
+    action: find_partners
+    description: "Retrieves data on all your Crossbeam partners to help assess partner coverage and impact."
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Lists the organization's Crossbeam partners with coverage and impact metrics; partner/company-level data, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: crossbeam.get_partner_suggestions
+    object: Partner
+    action: get_partner_suggestions
+    description: "Returns suggested partners and helps identify new potential partnerships."
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Returns recommended new partner organizations to pursue; partner/company-level metadata, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: crossbeam.get_partner_tags
+    object: PartnerTag
+    action: get_partner_tags
+    description: "Returns all partner tags your organization has created for use in filtering and segmentation."
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Lists the organization's partner tags used for filtering and segmentation; internal configuration metadata, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: crossbeam.get_own_populations
+    object: Population
+    action: get_own_populations
+    description: "Returns all of your organization's defined Populations."
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Lists the organization's own defined segments (Populations); Populations can be built from lead- or contact-level records, so personal data may be exposed beyond plain configuration metadata."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Account & Records ----------
+  - id: crossbeam.get_record_signals
+    object: Record
+    action: get_record_signals
+    description: "Retrieves signal events for records (accounts or leads) with filtering and ordered from latest to oldest."
+    category: Customer
+    risk: medium
+    business_impact: "Returns time-ordered signal events for accounts and leads; lead-level signals can identify individuals and surface their activity, so single-record personal data is exposed."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: crossbeam.get_own_account_info
+    object: Account
+    action: get_own_account_info
+    description: "Searches your organization's account records by domain, CRM record ID, or name (fuzzy match)."
+    category: Customer
+    risk: low
+    business_impact: "Searches the organization's own account records by domain, CRM ID, or name; primarily company-level data, though account records may carry associated contact PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Knowledge & Content ----------
+  - id: crossbeam.search_help_center
+    object: HelpArticle
+    action: search_help_center
+    description: "Provides relevant product information from Crossbeam's Help Center to help users navigate questions."
+    category: Data Access
+    risk: low
+    business_impact: "Returns Crossbeam Help Center product documentation; public knowledge content with no business or personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: crossbeam.search_blog_site
+    object: BlogArticle
+    action: search_blog_site
+    description: "Provides additional context (resources, data, tactics, and stories) to help drive and retain revenue."
+    category: Data Access
+    risk: low
+    business_impact: "Returns Crossbeam blog and resource content; public knowledge content with no business or personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: crossbeam.search_elg_book
+    object: BookContent
+    action: search_elg_book
+    description: "Provides insights and use cases on how to use your company's partner ecosystem to grow revenue."
+    category: Data Access
+    risk: low
+    business_impact: "Returns ecosystem-led-growth book content and use cases; public knowledge content with no business or personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

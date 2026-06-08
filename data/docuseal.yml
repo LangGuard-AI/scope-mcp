@@ -1,0 +1,68 @@
+schema_version: "1.1"
+platform: docuseal
+display_name: DocuSeal
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.docuseal.com/guides/integrate-with-ai-agents-using-mcp
+actions:
+  # ---------- Documents & Signatures ----------
+  - id: docuseal.send_documents
+    object: Submission
+    action: send_documents
+    description: "Send a document template for signing to specified submitters."
+    category: Documents & Signatures
+    risk: high
+    business_impact: "Transmits submitter PII (name, email, phone) to external parties and initiates a legally-binding e-signature workflow; emails are dispatched to every named signer."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: docuseal.search_documents
+    object: Submission
+    action: search_documents
+    description: "Search signed or pending documents by submitter name, email, phone, or template name."
+    category: Documents & Signatures
+    risk: high
+    business_impact: "Returns submitter PII (name, email, phone, status) across many submissions in a single query; a scoped personal-data read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Templates ----------
+  - id: docuseal.create_template
+    object: Template
+    action: create_template
+    description: "Create a document template by uploading a PDF/DOCX from a URL or creating an empty template with an edit URL."
+    category: Templates
+    risk: medium
+    business_impact: "Creates a reusable document template and ingests an external file; reversible, but the uploaded file content is unverified at creation time."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docuseal.load_template
+    object: Template
+    action: load_template
+    description: "Load a template with its fields; each field includes name, type, and the signing role name."
+    category: Templates
+    risk: low
+    business_impact: "Reads a single template's field and role definitions; returns document structure, not submitter data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: docuseal.search_templates
+    object: Template
+    action: search_templates
+    description: "Search document templates by name."
+    category: Templates
+    risk: low
+    business_impact: "Returns template ids and names matching a query; reversible read of document structure with no submitter data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

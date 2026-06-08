@@ -1,0 +1,43 @@
+schema_version: "1.1"
+platform: function
+display_name: Function Health
+source: langguard-editorial
+updated: "2026-06"
+reference: https://services.functionhealth.com/auth0/acul/claude_connector_docs.html
+actions:
+  # ---------- Health Data ----------
+  - id: function.overall-summary
+    object: HealthSummary
+    action: overall-summary
+    description: "Provides a high-level overview of the member's in-range and out-of-range lab biomarkers."
+    category: Health Data
+    risk: low
+    business_impact: "Reads the authenticated member's own lab-result summary (e.g. biomarker in-range/out-of-range counts); read-only, single-user, no cross-member or bulk export."
+    compliance: [HIPAA, GDPR, UK_GDPR, CCPA, PIPEDA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  - id: function.category-summary
+    object: HealthCategory
+    action: category-summary
+    description: "Shows a category-level breakdown of the member's lab results for requested health categories."
+    category: Health Data
+    risk: low
+    business_impact: "Reads the authenticated member's own biomarker counts for specific health categories (e.g. Heart); read-only, single-user, no cross-member or bulk export."
+    compliance: [HIPAA, GDPR, UK_GDPR, CCPA, PIPEDA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  - id: function.get-action-plans
+    object: ActionPlan
+    action: get-action-plans
+    description: "Displays the member's personalized nutrition protocol, goals, and dietary recommendations."
+    category: Health Data
+    risk: low
+    business_impact: "Reads the authenticated member's own nutrition plan and dietary goals derived from their biomarkers; read-only, single-user, no cross-member or bulk export."
+    compliance: [HIPAA, GDPR, UK_GDPR, CCPA, PIPEDA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]

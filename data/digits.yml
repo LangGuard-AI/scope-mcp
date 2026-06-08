@@ -1,0 +1,129 @@
+schema_version: "1.1"
+platform: digits
+display_name: Digits
+source: langguard-editorial
+updated: "2026-06"
+reference: https://help.digits.com/business-connections/digits-mcp
+actions:
+  # ---------- Financial ----------
+  - id: digits.financial_statement
+    object: FinancialStatement
+    action: financial_statement
+    description: "Generates complete financial statements: Profit & Loss, Balance Sheet, Cash Flow, and AR/AP Aging reports."
+    category: Financial
+    risk: medium
+    business_impact: "Reads the full financial statements (P&L, balance sheet, cash flow, AR/AP aging) for a business; sensitive aggregate financials, read-only with no write-back."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: digits.query_transactions
+    object: Transaction
+    action: query_transactions
+    description: "Searches and filters individual transactions by date range, amount, party, and category."
+    category: Financial
+    risk: medium
+    business_impact: "Reads individual ledger transactions including counterparty names and amounts; transaction parties may be identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: digits.dimensional_summarize_transactions
+    object: Transaction
+    action: dimensional_summarize_transactions
+    description: "Aggregates transactions into multi-dimensional summaries, e.g. spending by category over time or revenue by customer per quarter."
+    category: Financial
+    risk: medium
+    business_impact: "Reads aggregated transaction summaries across dimensions such as category, customer, and time; exposes financial performance detail, read-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: digits.search_term
+    object: Entity
+    action: search_term
+    description: "Resolves customer, vendor, category, department, or location names using fuzzy text matching."
+    category: Data Access
+    risk: low
+    business_impact: "Resolves customer, vendor, and dimension names from free text; surfaced names may identify individual customers or vendors."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: digits.list_categories
+    object: Category
+    action: list_categories
+    description: "Lists all account categories and their types for a business."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the chart-of-accounts category list for a business; organizational metadata with no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: digits.list_departments
+    object: Department
+    action: list_departments
+    description: "Lists all departments and their identifiers for a business."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the department list for a business; organizational metadata with no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: digits.list_locations
+    object: Location
+    action: list_locations
+    description: "Lists all locations and their identifiers for a business."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the location list for a business; organizational metadata with no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: digits.list_business_users
+    object: User
+    action: list_business_users
+    description: "Lists all users who have access to a given business."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Reads the roster of users with access to a business, including their identities; exposes the access-control list as personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: digits.list_businesses
+    object: Business
+    action: list_businesses
+    description: "Lists all businesses you have access to in Digits, including direct and affiliated entities."
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads the list of businesses and affiliated entities the caller can access; organizational metadata, read-only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: digits.select_business
+    object: Business
+    action: select_business
+    description: "Selects a specific business to work with for subsequent queries."
+    category: Identity & Access
+    risk: low
+    business_impact: "Sets the active business context for the session; scopes subsequent reads but changes no stored state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

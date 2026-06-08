@@ -1,0 +1,390 @@
+schema_version: "1.1"
+platform: google-compute-engine
+display_name: Google Compute Engine
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.cloud.google.com/compute/docs/use-compute-engine-mcp
+actions:
+  # ---------- Instance Lifecycle ----------
+  - id: google-compute-engine.delete_instance
+    object: Instance
+    action: delete_instance
+    description: "Delete a Google Compute Engine virtual machine (VM) instance."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: critical
+    business_impact: "Destroys a VM and, by default (boot-disk autoDelete=true), its boot disk and all on-disk data with no soft-delete or trash to recover from."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  - id: google-compute-engine.create_instance
+    object: Instance
+    action: create_instance
+    description: "Create a new Google Compute Engine virtual machine (VM) instance."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Provisions a new compute resource that incurs billing and expands the attack surface; reversible by deletion."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: google-compute-engine.start_instance
+    object: Instance
+    action: start_instance
+    description: "Starts a Google Compute Engine virtual machine (VM) instance."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Brings a stopped VM back online, resuming billing and exposing its services; reversible by stopping."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: google-compute-engine.stop_instance
+    object: Instance
+    action: stop_instance
+    description: "Stops a Google Compute Engine virtual machine (VM) instance."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Takes a running VM offline, causing an availability outage for any service it hosts; reversible by starting."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: google-compute-engine.reset_instance
+    object: Instance
+    action: reset_instance
+    description: "Resets a Google Compute Engine virtual machine (VM) instance."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Hard-reboots a VM, interrupting in-flight workloads and dropping in-memory state; data on persistent disks survives."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: google-compute-engine.set_instance_machine_type
+    object: Instance
+    action: set_instance_machine_type
+    description: "Sets the machine type for a stopped Google Compute Engine instance to the specified machine type."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Re-sizes a stopped VM's CPU/memory profile, changing performance and billing; reversible by setting another type."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Instance Inventory (read) ----------
+  - id: google-compute-engine.list_instances
+    object: Instance
+    action: list_instances
+    description: "Lists Compute Engine VM instances with name, ID, status, machine type, creation timestamp, and attached guest accelerators."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns an inventory of VMs and their basic configuration metadata; no row-level or in-VM data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: google-compute-engine.get_instance_basic_info
+    object: Instance
+    action: get_instance_basic_info
+    description: "Get basic information about a Compute Engine VM instance, including name, ID, status, machine type, creation timestamp, and attached accelerators."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns configuration metadata for a single VM; no in-VM data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: google-compute-engine.list_instance_attached_disks
+    object: Disk
+    action: list_instance_attached_disks
+    description: "Lists the disks attached to a Compute Engine VM instance with kind, type, mode, source, encryption key, size, and other disk metadata."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns disk attachment metadata for a VM, including encryption-key references; exposes no disk contents."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Managed Instance Groups (read) ----------
+  - id: google-compute-engine.list_instance_group_managers
+    object: InstanceGroupManager
+    action: list_instance_group_managers
+    description: "Lists Compute Engine managed instance groups (MIGs) with name, ID, instance template, base name, target sizes, status, and creation timestamp."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns MIG inventory and scaling metadata; no in-VM data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: google-compute-engine.get_instance_group_manager_basic_info
+    object: InstanceGroupManager
+    action: get_instance_group_manager_basic_info
+    description: "Get basic information about a Compute Engine managed instance group (MIG), including instance template, base name, target sizes, status, and creation timestamp."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns scaling and template metadata for a single MIG; no in-VM data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: google-compute-engine.list_managed_instances
+    object: Instance
+    action: list_managed_instances
+    description: "Lists managed instances for a given MIG, including instance ID, URL, status, and current action."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns the membership and lifecycle state of instances in a MIG; no in-VM data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Instance Templates (read) ----------
+  - id: google-compute-engine.get_instance_template_properties
+    object: InstanceTemplate
+    action: get_instance_template_properties
+    description: "Get instance properties of an instance template — including network interfaces, metadata, service accounts, and shielded/confidential instance configurations."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Exposes a template's security-relevant configuration — service accounts, network interfaces, instance metadata, and shielded/confidential settings — that informs lateral-movement and privilege paths."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  - id: google-compute-engine.list_instance_templates
+    object: InstanceTemplate
+    action: list_instance_templates
+    description: "Lists Compute Engine instance templates with name, ID, description, machine type, region, and creation timestamp."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns an inventory of instance templates and their basic metadata; no service-account or in-VM data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: google-compute-engine.get_instance_template_basic_info
+    object: InstanceTemplate
+    action: get_instance_template_basic_info
+    description: "Get basic information about an instance template, including name, ID, description, machine type, region, and creation timestamp."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns top-level metadata for a single instance template; no security-config detail."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Disks & Snapshots (read) ----------
+  - id: google-compute-engine.list_disks
+    object: Disk
+    action: list_disks
+    description: "Lists Compute Engine disks with name, ID, description, creation timestamp, size, type, status, and attach/detach timestamps."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns a disk inventory and metadata; exposes no disk contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: google-compute-engine.get_disk_basic_info
+    object: Disk
+    action: get_disk_basic_info
+    description: "Get basic information about a Compute Engine disk, including name, ID, description, creation timestamp, size, type, status, and attach/detach timestamps."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns metadata for a single disk; exposes no disk contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: google-compute-engine.get_disk_performance_config
+    object: Disk
+    action: get_disk_performance_config
+    description: "Get performance configuration of a disk, including type, size, provisioned IOPS/throughput, physical block size, storage pool, and access mode."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns performance-tuning metadata for a single disk; exposes no disk contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: google-compute-engine.list_snapshots
+    object: Snapshot
+    action: list_snapshots
+    description: "Lists snapshots in a project with name, ID, status, creation time, disk size, storage bytes, source disk, and source disk ID."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns a project-wide snapshot inventory and metadata; exposes no snapshot contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Reservations & Commitments (read) ----------
+  - id: google-compute-engine.list_reservations
+    object: Reservation
+    action: list_reservations
+    description: "Lists Compute Engine reservations with name, ID, creation timestamp, zone, status, reservation requirement, and linked commitments."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns capacity-reservation inventory; no in-VM data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: google-compute-engine.get_reservation_basic_info
+    object: Reservation
+    action: get_reservation_basic_info
+    description: "Get basic info for a reservation, including name, ID, creation timestamp, zone, status, reservation requirement, and linked commitments."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns summary metadata for a single capacity reservation; no in-VM data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: google-compute-engine.get_reservation_details
+    object: Reservation
+    action: get_reservation_details
+    description: "Get reservation details, including machine type, guest accelerators, local SSDs, aggregate properties, commitments, sharing settings, and resource status."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns detailed capacity-reservation configuration; no in-VM data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: google-compute-engine.list_commitments
+    object: Commitment
+    action: list_commitments
+    description: "Lists Compute Engine committed-use commitments in a region with name, ID, status, plan, type, resources, and timestamps."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns committed-use-discount inventory and billing-plan metadata; no in-VM data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: google-compute-engine.get_commitment_basic_info
+    object: Commitment
+    action: get_commitment_basic_info
+    description: "Get basic information about a committed-use commitment, including name, ID, status, plan, type, resources, and timestamps."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns summary metadata for a single committed-use commitment; no in-VM data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: google-compute-engine.list_commitment_reservations
+    object: Reservation
+    action: list_commitment_reservations
+    description: "Lists reservations attached to a committed-use commitment, with full reservation detail (machine type, accelerators, sharing, status)."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns the reservations bound to a commitment; no in-VM data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Catalog & Operations (read) ----------
+  - id: google-compute-engine.list_machine_types
+    object: MachineType
+    action: list_machine_types
+    description: "Lists available machine types with id, name, description, vCPUs, memory, max persistent disks, accelerators, and architecture."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns the public catalog of machine types for a zone; reference data only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: google-compute-engine.list_accelerator_types
+    object: AcceleratorType
+    action: list_accelerator_types
+    description: "Lists available accelerator (GPU) types with id, name, description, zone, and maximum cards per instance."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns the public catalog of accelerator types for a zone; reference data only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: google-compute-engine.list_images
+    object: Image
+    action: list_images
+    description: "Lists Compute Engine images with name, ID, status, family, and creation timestamp."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns the catalog of available OS/boot images; reference metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: google-compute-engine.get_zone_operation
+    object: Operation
+    action: get_zone_operation
+    description: "Get details of a zone operation, including id, name, status, creation timestamp, error, warning, and HTTP error message/status code."
+    reference: https://docs.cloud.google.com/compute/docs/reference/mcp
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns the status and any error of a previously issued zonal operation; read-only progress check."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]

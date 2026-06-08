@@ -1,16 +1,26 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: gmail
 display_name: Gmail
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://claude.com/connectors/gmail
+# Tool surface verified by live tools/list introspection against the Google-hosted
+# Gmail MCP endpoint (https://gmailmcp.googleapis.com/mcp/v1, the endpoint the
+# mcp__claude_ai_Gmail__* connector points at). The endpoint answered HTTP 200
+# anonymously and returned exactly 12 tools with no pagination cursor. All ids
+# below are verbatim from that response; risk for the three destructive tools
+# (unlabel_thread, unlabel_message, delete_label; annotations.destructiveHint=true)
+# is set per that signal. This surface is read + draft + label-management only:
+# it ships NO send, archive, trash, or message-delete tools, so none are listed.
 actions:
-  # ---------- Messaging ----------
+  # ---------- Data Access ----------
   - id: gmail.search_threads
     object: Thread
     action: search_threads
-    category: Messaging
+    description: "Searches the mailbox for threads matching a query, returning IDs, snippets, subjects, senders, and recipients across many threads."
+    category: Data Access
     risk: high
-    business_impact: "Searches the user's mailbox; can surface PII, credentials, contracts, and material non-public information across all correspondence."
+    business_impact: "Bulk read across the entire mailbox; surfaces subjects, senders, recipients, and snippets for matching correspondence and can expose PII, contracts, or material non-public information."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
@@ -19,20 +29,10 @@ actions:
   - id: gmail.get_thread
     object: Thread
     action: get_thread
-    category: Messaging
+    description: "Retrieves a specific email thread, including the full message bodies of every message in it."
+    category: Data Access
     risk: high
-    business_impact: "Reads an entire email thread; full message body and attachments enter agent context."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: gmail.create_draft
-    object: Draft
-    action: create_draft
-    category: Messaging
-    risk: medium
-    business_impact: "Composes an email draft on the user's behalf; not auto-sent but visible to the user as their outgoing communication."
+    business_impact: "Pulls full message bodies for an entire thread into agent context; high exposure when correspondence contains PII, financial, or regulated data."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: high
@@ -41,22 +41,11 @@ actions:
   - id: gmail.list_drafts
     object: Draft
     action: list_drafts
-    category: Messaging
+    description: "Lists draft emails in the mailbox, optionally filtered by query, returning draft IDs and subjects."
+    category: Data Access
     risk: low
-    business_impact: "Enumerates the user's saved drafts."
+    business_impact: "Enumerates the user's saved drafts, exposing subjects and recipients of unsent mail; reversible read."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Labels ----------
-  - id: gmail.create_label
-    object: Label
-    action: create_label
-    category: Labels
-    risk: low
-    business_impact: "Creates a new mailbox label."
-    compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
@@ -64,9 +53,36 @@ actions:
   - id: gmail.list_labels
     object: Label
     action: list_labels
+    description: "Lists the user-defined labels in the mailbox and their IDs."
+    category: Data Access
+    risk: low
+    business_impact: "Lists mailbox label names and IDs; reveals inbox taxonomy but no message content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Messaging ----------
+  - id: gmail.create_draft
+    object: Draft
+    action: create_draft
+    description: "Creates a new draft email (recipients, subject, body) in the mailbox; does not send."
+    category: Messaging
+    risk: low
+    business_impact: "Composes an email draft on the user's behalf; not auto-sent, but stores recipient addresses and body content as a reversible draft."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Labels ----------
+  - id: gmail.label_thread
+    object: Thread
+    action: label_thread
+    description: "Adds one or more labels to an entire thread, affecting all current and future messages in it."
     category: Labels
     risk: low
-    business_impact: "Lists existing mailbox labels."
+    business_impact: "Applies labels to a whole thread; reversible organizational metadata change with no message-content impact."
     compliance: []
     sod_concern: false
     confidence: high
@@ -75,31 +91,34 @@ actions:
   - id: gmail.label_message
     object: Message
     action: label_message
+    description: "Adds one or more labels to a specific message."
     category: Labels
     risk: low
-    business_impact: "Applies a label to a message; minor mailbox organization change."
+    business_impact: "Applies labels to a single message; reversible organizational metadata change with no message-content impact."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: gmail.unlabel_message
-    object: Message
-    action: unlabel_message
+  - id: gmail.create_label
+    object: Label
+    action: create_label
+    description: "Creates a new label, including nested sub-labels via slash-delimited names."
     category: Labels
     risk: low
-    business_impact: "Removes a label from a message."
+    business_impact: "Adds a new label definition (and any missing parent labels) to the mailbox; reversible and low-impact."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: gmail.label_thread
-    object: Thread
-    action: label_thread
+  - id: gmail.update_label
+    object: Label
+    action: update_label
+    description: "Modifies an existing label's name and color."
     category: Labels
     risk: low
-    business_impact: "Applies a label to all messages in a thread."
+    business_impact: "Renames or recolors an existing label; reversible metadata change affecting how labelled mail is displayed."
     compliance: []
     sod_concern: false
     confidence: high
@@ -108,9 +127,34 @@ actions:
   - id: gmail.unlabel_thread
     object: Thread
     action: unlabel_thread
+    description: "Removes one or more labels from an entire thread (marked destructive by the server)."
     category: Labels
-    risk: low
-    business_impact: "Removes a label from all messages in a thread."
+    risk: medium
+    business_impact: "Removes labels from a whole thread; flagged destructive by the server and can drop the thread out of label-based filters or retention views, though the labels can be re-applied."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: gmail.unlabel_message
+    object: Message
+    action: unlabel_message
+    description: "Removes one or more labels from a specific message (marked destructive by the server)."
+    category: Labels
+    risk: medium
+    business_impact: "Removes labels from a single message; flagged destructive by the server and can drop the message out of label-based filters or retention views, though the labels can be re-applied."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: gmail.delete_label
+    object: Label
+    action: delete_label
+    description: "Deletes a label definition from the mailbox (marked destructive by the server)."
+    category: Labels
+    risk: medium
+    business_impact: "Deletes a label across the entire mailbox, stripping it from every message it was applied to; flagged destructive by the server and can disrupt label-based filters or retention rules that depend on it."
     compliance: []
     sod_concern: false
     confidence: high

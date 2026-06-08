@@ -1,0 +1,85 @@
+schema_version: "1.1"
+platform: intuit-turbotax
+display_name: Intuit TurboTax
+source: langguard-editorial
+updated: "2026-06"
+reference: https://ttlc.intuit.com/turbotax-support/en-us/help-article/tax-return/access-turbotax-tools-claude
+# NOTE: Intuit's hosted TurboTax connector is OAuth-gated (mcp.intuit.com returns
+# 403/ELB with no anonymous tools catalog) and Intuit publishes no verbatim MCP
+# tool-id list anywhere reachable — only the plain-language capability labels on
+# the support page above. Unlike the sibling intuit-quickbooks connector, TurboTax
+# has NO open-source MCP server. These entries therefore use id_form: capability
+# (intent-level match, confidence capped at medium). Labels are copied verbatim
+# from the support article. This is a consumer tax-prep surface (personal refund
+# estimates, expert referral, document upload) — NOT corporate accounting, so SOX
+# and COSO do NOT apply; the connector neither posts to a filing entity's books
+# nor moves money. The agent estimates and refers to a human expert; it cannot
+# file a return or make a payment, so no such actions are invented.
+actions:
+  # ---------- Customer (sensitive write) ----------
+  - id: intuit-turbotax.document_upload
+    object: TaxDocument
+    action: document_upload
+    id_form: capability
+    description: "Document upload"
+    category: Customer
+    risk: high
+    business_impact: "Uploads tax documents (W-2/1099-class records containing SSNs, wages, and financial PII) to TurboTax."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Financial (informational) ----------
+  - id: intuit-turbotax.tax_estimate
+    object: TaxEstimate
+    action: tax_estimate
+    id_form: capability
+    description: "Tax estimate"
+    category: Financial
+    risk: medium
+    business_impact: "Collects income, filing-status, and withholding details to compute an estimated US federal refund or tax owed; processes financial PII but writes nothing to a filing or accounting system."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: intuit-turbotax.tax_checklist
+    object: TaxChecklist
+    action: tax_checklist
+    id_form: capability
+    description: "Tax checklist"
+    category: Financial
+    risk: low
+    business_impact: "Generates a personalized list of tax documents to gather based on the user's described tax situation; informational only."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: intuit-turbotax.tax_filing_options
+    object: FilingOption
+    action: tax_filing_options
+    id_form: capability
+    description: "Tax filing options"
+    category: Financial
+    risk: low
+    business_impact: "Presents TurboTax product/filing options in an interactive widget for the user to choose; product selection, not payment capture or return filing."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Service ----------
+  - id: intuit-turbotax.expert_search
+    object: TaxExpert
+    action: expert_search
+    id_form: capability
+    description: "Expert search"
+    category: Service
+    risk: low
+    business_impact: "Searches for available Intuit tax experts and initiates a Connect Now referral so a human can answer questions or prepare the return."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

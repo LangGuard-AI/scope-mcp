@@ -1,0 +1,105 @@
+schema_version: "1.1"
+platform: dremio-cloud
+display_name: Dremio Cloud
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.dremio.com/dremio-cloud/ai-integration/mcp-server/
+actions:
+  # ---------- Data Access ----------
+  - id: dremio-cloud.RunSqlQuery
+    object: Query
+    action: RunSqlQuery
+    description: "Run a SQL query on the Dremio cluster and return the results; DML statements may be permitted depending on project configuration."
+    category: Data Access
+    risk: critical
+    business_impact: "Executes arbitrary SQL across the governed lakehouse, enabling bulk extraction of any accessible data and — where the project enables allow_dml — INSERT/UPDATE/DELETE/CTAS writes to underlying tables."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: dremio-cloud.SearchTableAndViews
+    object: Dataset
+    action: SearchTableAndViews
+    description: "Runs a semantic search on the Dremio cluster to find tables and views that match the query."
+    category: Data Access
+    risk: medium
+    business_impact: "Surfaces the names and locations of tables and views across the data estate, exposing the structure of governed datasets to the agent."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Metadata ----------
+  - id: dremio-cloud.GetUsefulSystemTableNames
+    object: SystemTable
+    action: GetUsefulSystemTableNames
+    description: "Gets the names of system tables in the Dremio cluster, useful for various analysis."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the names of system tables; reveals cluster metadata structure but no row-level data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: dremio-cloud.GetSchemaOfTable
+    object: Dataset
+    action: GetSchemaOfTable
+    description: "Gets the schema of the given table."
+    category: Data Access
+    risk: low
+    business_impact: "Returns column names and types for a table; exposes dataset structure but no row-level data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: dremio-cloud.GetDescriptionOfTableOrSchema
+    object: Dataset
+    action: GetDescriptionOfTableOrSchema
+    description: "Returns the description and tags of one or more tables or schemas, including parent-schema descriptions."
+    category: Data Access
+    risk: low
+    business_impact: "Returns curated descriptions and tags for tables or schemas; reveals semantic metadata but no row-level data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: dremio-cloud.GetTableOrViewLineage
+    object: Dataset
+    action: GetTableOrViewLineage
+    description: "Finds the lineage of a table or view in the Dremio cluster."
+    category: Data Access
+    risk: low
+    business_impact: "Returns upstream/downstream lineage for a dataset; exposes data-flow structure but no row-level data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Dynamic Tools ----------
+  - id: dremio-cloud.DiscoverDynamicTools
+    object: Tool
+    action: DiscoverDynamicTools
+    description: "Discover additional tools dynamically available from the Dremio server, with their names, descriptions, and input schemas."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Lists additional server-side tools the agent may invoke; expands the reachable action surface but performs no data operation itself."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: dremio-cloud.CallDynamicTool
+    object: Tool
+    action: CallDynamicTool
+    description: "Invoke a dynamically discovered tool on the Dremio server by name with supplied arguments."
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Invokes an arbitrary server-registered remote tool whose effect is not statically known, so its data access and side effects are determined at runtime rather than by this identifier."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

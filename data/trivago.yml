@@ -1,0 +1,46 @@
+schema_version: "1.1"
+platform: trivago
+display_name: trivago
+source: langguard-editorial
+updated: "2026-06"
+reference: https://mcp.trivago.com/docs
+actions:
+  # ---------- Data Access ----------
+  - id: trivago.trivago-search-suggestions
+    object: Suggestion
+    action: trivago-search-suggestions
+    description: "Provide search suggestions based on the given query"
+    reference: https://mcp.trivago.com/docs
+    category: Data Access
+    risk: low
+    business_impact: "Returns autocomplete suggestions (cities, countries) for a free-text query; read-only and holds no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: trivago.trivago-accommodation-search
+    object: Accommodation
+    action: trivago-accommodation-search
+    description: "Search for accommodations based on the provided query and filters (cities, countries, broader areas)."
+    reference: https://mcp.trivago.com/docs
+    category: Data Access
+    risk: low
+    business_impact: "Returns public accommodation listings for a destination and stay dates; read-only search against an external travel index with no booking or payment surface."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: trivago.trivago-accommodation-radius-search
+    object: Accommodation
+    action: trivago-accommodation-radius-search
+    description: "Search for accommodations based on the provided coordinates and radius around a search target (landmark or address)."
+    reference: https://mcp.trivago.com/docs
+    category: Data Access
+    risk: low
+    business_impact: "Returns public accommodation listings within a radius of target coordinates (the search target, not the user's location); read-only with no booking or payment surface."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

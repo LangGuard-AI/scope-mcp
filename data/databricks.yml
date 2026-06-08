@@ -1,0 +1,112 @@
+schema_version: "1.1"
+platform: databricks
+display_name: Databricks
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.databricks.com/aws/en/generative-ai/mcp/managed-mcp
+# Databricks ships several managed MCP servers (Genie, Genie Space, AI Search,
+# Databricks SQL, Unity Catalog functions). Only the Genie conversation server
+# publishes fixed, verbatim tool names (genie_ask / genie_poll_response). The
+# `system.ai` Unity Catalog functions server exposes the built-in code
+# interpreter at the verbatim id `system__ai__python_exec`. The remaining
+# servers generate tools dynamically from customer Unity Catalog resources
+# (indexes, functions, Genie spaces, AI-authored SQL), so their runtime tool
+# ids are customer-resource-derived and cannot be enumerated verbatim — those
+# are captured as id_form: capability (intent-level match, confidence medium).
+actions:
+  # ---------- Data Access ----------
+  - id: databricks.databricks_sql
+    object: Query
+    action: databricks_sql
+    id_form: capability
+    description: "Run AI-generated SQL to author data pipelines with AI coding tools such as Claude Code, Cursor, and Codex. Read and write."
+    reference: https://docs.databricks.com/aws/en/generative-ai/mcp/managed-mcp
+    category: Data Access
+    risk: critical
+    business_impact: "Executes AI-generated SQL with read and write access against the lakehouse — can mutate, delete, or bulk-exfiltrate any table the principal can reach, with no review gate."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  - id: databricks.system__ai__python_exec
+    object: Function
+    action: system__ai__python_exec
+    description: "Built-in system.ai Unity Catalog code-interpreter tool that executes arbitrary Python in a sandbox."
+    reference: https://docs.databricks.com/aws/en/generative-ai/agent-framework/code-interpreter-tools
+    category: Data Access
+    risk: high
+    business_impact: "Runs arbitrary Python supplied by the agent; can transform, read, or move any data the execution context can reach and is a broad code-execution surface."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  - id: databricks.vector_search
+    object: VectorIndex
+    action: vector_search
+    id_form: capability
+    description: "Query AI Search indexes to find relevant documents. The index must use Databricks managed embeddings."
+    reference: https://docs.databricks.com/aws/en/generative-ai/mcp/managed-mcp
+    category: Data Access
+    risk: medium
+    business_impact: "Returns documents from a vector-search index the principal is authorized for; can surface unstructured content that may include PII depending on what was indexed."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: databricks.unity_catalog_functions
+    object: Function
+    action: unity_catalog_functions
+    id_form: capability
+    description: "Use Unity Catalog functions to run predefined SQL queries."
+    reference: https://docs.databricks.com/aws/en/generative-ai/mcp/managed-mcp
+    category: Data Access
+    risk: medium
+    business_impact: "Executes a predefined Unity Catalog SQL function; effect depends on the function definition but runs under the caller's enforced permissions and can read or write governed data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Analytics & Natural-Language Query ----------
+  - id: databricks.genie_ask
+    object: GenieConversation
+    action: genie_ask
+    description: "Starts a Genie conversation that answers natural-language questions across Genie Spaces and Unity Catalog data; read-only."
+    reference: https://docs.databricks.com/aws/en/generative-ai/mcp/managed-mcp
+    category: Data Access
+    risk: medium
+    business_impact: "Issues a natural-language question that Genie answers from enterprise data; can surface aggregated or row-level data including PII the principal is authorized to read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: databricks.genie_space
+    object: GenieSpace
+    action: genie_space
+    id_form: capability
+    description: "Query a single Genie Space to analyze structured data using natural language. Read-only."
+    reference: https://docs.databricks.com/aws/en/generative-ai/mcp/managed-mcp
+    category: Data Access
+    risk: medium
+    business_impact: "Runs a natural-language query against one Genie Space's structured data; can return row-level results including PII the principal is authorized to read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: databricks.genie_poll_response
+    object: GenieConversation
+    action: genie_poll_response
+    description: "Polls an in-progress Genie conversation until the asynchronous response is complete; read-only."
+    reference: https://docs.databricks.com/aws/en/generative-ai/mcp/managed-mcp
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves the result of a previously started Genie question; returns whatever data that question already resolved to."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

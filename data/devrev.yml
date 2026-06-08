@@ -1,0 +1,107 @@
+schema_version: "1.1"
+platform: devrev
+display_name: DevRev
+source: langguard-editorial
+updated: "2026-06"
+reference: https://support.devrev.ai/devrev/article/ART-21859
+# CAPABILITY-FORM FILE. The official DevRev hosted remote MCP server
+# (https://api.devrev.ai/mcp/v1) gates tools/list behind OAuth — live introspection
+# (mcp-introspect.py) returns HTTP 401, as do the anonymous /mcp/v1/tools and
+# /mcp/tools paths. DevRev's own docs (docs.devrev.ai/docs/product/remote-mcp ->
+# support.devrev.ai/.../ART-21859) is a JS-rendered SPA that serves no static tool
+# table, and the official devrev/mcp-server GitHub repo is not anonymously reachable
+# (404). The only published, authoritative description of this connector's surface is
+# the capability set on the Anthropic connector page (https://claude.com/connectors/
+# devrev): Search / Triage and manage / Create / Stay connected / Update, under
+# "Read & write" access.
+#
+# Third-party / community sources DISAGREE on the verbatim identifier strings and are
+# therefore deliberately excluded as fabrication-by-proxy: the kpsunil97 OSS server
+# registers only 2 tools (search, get_object); a community write-up lists 6
+# (search, get_object, create_object, update_object, find_relevant_part,
+# add_timeline_entry); a catalog summary claims ~13 (get_work, create_work, list_works,
+# get_part, list_meetings, list_subtypes, ...). These are mutually contradictory and
+# none is confirmed against the live remote server, so no verbatim id can be trusted.
+#
+# Every action below therefore uses id_form: capability per the curator spec's
+# documented fallback: the verbatim connector-page capability label is preserved in
+# `description`, `id`/`action` are intent-level slugs, and confidence is capped at
+# medium. When a real tools/list capture from api.devrev.ai becomes available, refresh
+# to id_form: verbatim with the actual identifier strings.
+#
+# REGIME TAGGING (over-tag fix, 2026-06): regimes are scoped to whether the action
+# introduces or reads customer PII *content* versus only workflow *metadata*. Only
+# `search` (bulk cross-object content read / exfil vector) and `create` (captures the
+# customer-supplied ticket body — reporter name, contact, and described issue) carry
+# the privacy stack. `triage_and_manage` (assignment / routing / status), `update`
+# (stage and field transitions on an existing item), and `stay_connected` (linking a
+# conversation reference) are workflow-metadata mutations and carry [] — they route or
+# re-stage records rather than processing personal data, so a privacy-regime tag would
+# be mechanical, not substantive.
+actions:
+  # ---------- Data Access ----------
+  - id: devrev.search
+    object: "*"
+    action: search
+    id_form: capability
+    description: "Search"
+    category: Data Access
+    risk: high
+    business_impact: "Searches across DevRev objects (tickets, issues, accounts, customer and dev users, articles), surfacing customer PII and support-conversation content at scale; a data-exfiltration vector regardless of intent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Service ----------
+  - id: devrev.create
+    object: WorkItem
+    action: create
+    id_form: capability
+    description: "Create"
+    category: Service
+    risk: low
+    business_impact: "Creates a new work item such as a ticket, issue, or bug report, capturing the customer-supplied body — reporter name, contact details, and the described issue — as personal data on a single, individually-reversible record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: devrev.triage_and_manage
+    object: WorkItem
+    action: triage_and_manage
+    id_form: capability
+    description: "Triage and manage"
+    category: Service
+    risk: medium
+    business_impact: "Triages and manages tickets and issues — assignment, routing, and status changes — mutating workflow metadata on existing support records; reversible operational write that re-routes rather than reads or edits personal-data content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: devrev.update
+    object: WorkItem
+    action: update
+    id_form: capability
+    description: "Update"
+    category: Service
+    risk: medium
+    business_impact: "Updates the stage or fields of an existing work item (e.g. moving an issue to in-progress); a reversible workflow-state transition on a record, not a write of new personal-data content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: devrev.stay_connected
+    object: TimelineEntry
+    action: stay_connected
+    id_form: capability
+    description: "Stay connected"
+    category: Service
+    risk: low
+    business_impact: "Links a conversation to a ticket or work item, adding a timeline reference; low-impact operational write of metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

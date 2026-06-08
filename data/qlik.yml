@@ -1,0 +1,530 @@
+schema_version: "1.1"
+platform: qlik
+display_name: Qlik
+source: langguard-editorial
+updated: "2026-06"
+reference: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+actions:
+  # ---------- Data Access ----------
+  # Value-returning tools: these surface ACTUAL underlying data values, whose
+  # type is tenant-dependent and may include personal data. Tagged with the full
+  # privacy stack at medium confidence (data type depends on the customer's app).
+  - id: qlik.qlik_create_data_object
+    object: DataObject
+    action: qlik_create_data_object
+    description: "Builds a temporary hypercube/calculation object to run ad-hoc queries against an app's loaded data."
+    category: Data Access
+    risk: high
+    business_impact: "Ad-hoc query engine that surfaces underlying record values from the app's data model; can return personal data depending on the loaded dataset."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_get_field_values
+    object: Field
+    action: qlik_get_field_values
+    description: "Retrieves the distinct values present in a specific field of an app."
+    category: Data Access
+    risk: high
+    business_impact: "Dumps the distinct values of a column; for fields like name, email, or customer id this is a direct read of personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_search_field_values
+    object: Field
+    action: qlik_search_field_values
+    description: "Searches for specific values across fields in an app."
+    category: Data Access
+    risk: high
+    business_impact: "Returns matching underlying field values across the data model; can expose personal data when fields hold PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_get_chart_data
+    object: Chart
+    action: qlik_get_chart_data
+    description: "Fetches paginated data rows backing an existing chart visualization."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads the actual values rendered by a chart; paginated but can include personal data depending on the chart's dimensions."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_get_dataset_sample
+    object: Dataset
+    action: qlik_get_dataset_sample
+    description: "Previews the first rows of a dataset."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns sample rows of raw dataset content; bounded preview but can contain personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_get_dataset_profile
+    object: Dataset
+    action: qlik_get_dataset_profile
+    description: "Accesses profiling statistics and value distributions for a dataset."
+    category: Data Access
+    risk: medium
+    business_impact: "Surfaces value distributions and frequencies derived from raw data; can reveal personal-data patterns at the column level."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_get_dataset_schema
+    object: Dataset
+    action: qlik_get_dataset_schema
+    description: "Retrieves the column definitions (names and types) of a dataset."
+    category: Data Access
+    risk: low
+    business_impact: "Reads column metadata only; exposes field names and types, not the underlying values."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_search_knowledgebase_chunks
+    object: KnowledgeBase
+    action: qlik_search_knowledgebase_chunks
+    description: "Searches indexed knowledge base contents and returns matching chunks."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns chunks of indexed document content; tenant-dependent and can include personal data depending on the indexed sources."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Products ----------
+  # Governed data-product lifecycle: change-control surface over how data is
+  # packaged, shared, and exposed in the tenant. SOC2/ISO on state changes.
+  - id: qlik.qlik_create_data_product
+    object: DataProduct
+    action: qlik_create_data_product
+    description: "Establishes a new data product in a space."
+    category: Data Products
+    risk: medium
+    business_impact: "Creates a governed data product; reversible and individually audited."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_update_data_product
+    object: DataProduct
+    action: qlik_update_data_product
+    description: "Modifies a data product's name, description, and dataset membership."
+    category: Data Products
+    risk: medium
+    business_impact: "Changes which datasets a governed data product exposes; alters data sharing scope, reversible."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_update_data_product_space
+    object: DataProduct
+    action: qlik_update_data_product_space
+    description: "Relocates a data product to a different space."
+    category: Data Products
+    risk: medium
+    business_impact: "Moves a data product between spaces, changing who can access it; a sharing-scope change."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_update_activate_data_product
+    object: DataProduct
+    action: qlik_update_activate_data_product
+    description: "Activates a data product in a space, making it consumable."
+    category: Data Products
+    risk: medium
+    business_impact: "Publishes a data product to consumers; reversible by deactivation."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_update_deactivate_data_product
+    object: DataProduct
+    action: qlik_update_deactivate_data_product
+    description: "Deactivates a data product, removing it from consumers."
+    category: Data Products
+    risk: medium
+    business_impact: "Withdraws a data product from consumers; can disrupt downstream dashboards but is reversible."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_delete_data_product
+    object: DataProduct
+    action: qlik_delete_data_product
+    description: "Removes a data product."
+    category: Data Products
+    risk: medium
+    business_impact: "Deletes a governed data product definition; removes downstream access, reversible by recreation."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_get_data_product
+    object: DataProduct
+    action: qlik_get_data_product
+    description: "Accesses a data product's metadata."
+    category: Data Products
+    risk: low
+    business_impact: "Reads data-product metadata; definition only, no underlying record values."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Master Items ----------
+  # Reusable library dimensions and measures: analytical DEFINITIONS (expressions),
+  # not personal data. Deletes act on definitions and are recreatable.
+  - id: qlik.qlik_create_dimension
+    object: Dimension
+    action: qlik_create_dimension
+    description: "Establishes a reusable library dimension in an app."
+    category: Master Items
+    risk: low
+    business_impact: "Adds a reusable dimension definition to an app; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_update_dimension
+    object: Dimension
+    action: qlik_update_dimension
+    description: "Modifies an existing library dimension."
+    category: Master Items
+    risk: low
+    business_impact: "Changes a library dimension definition; affects charts that reuse it, reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_delete_dimension
+    object: Dimension
+    action: qlik_delete_dimension
+    description: "Removes a library dimension."
+    category: Master Items
+    risk: medium
+    business_impact: "Deletes a reusable dimension; breaks charts that reference it but is recreatable."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_create_measure
+    object: Measure
+    action: qlik_create_measure
+    description: "Establishes a reusable library measure with an expression."
+    category: Master Items
+    risk: low
+    business_impact: "Adds a reusable measure (calculation) to an app; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_update_measure
+    object: Measure
+    action: qlik_update_measure
+    description: "Modifies an existing library measure."
+    category: Master Items
+    risk: medium
+    business_impact: "Changes a measure's calculation expression; alters reported figures wherever the measure is reused, reversible."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_delete_measure
+    object: Measure
+    action: qlik_delete_measure
+    description: "Removes a library measure."
+    category: Master Items
+    risk: medium
+    business_impact: "Deletes a reusable measure; breaks charts that reference it but is recreatable."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_list_measures
+    object: Measure
+    action: qlik_list_measures
+    description: "Inventories all library measures in an app."
+    category: Master Items
+    risk: low
+    business_impact: "Reads the list of measure definitions; exposes calculation logic, not data values."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Visualization & Sheets ----------
+  - id: qlik.qlik_create_sheet
+    object: Sheet
+    action: qlik_create_sheet
+    description: "Builds a new empty dashboard sheet in an app."
+    category: Visualization & Sheets
+    risk: low
+    business_impact: "Adds a new sheet to an app; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_add_chart
+    object: Chart
+    action: qlik_add_chart
+    description: "Inserts a visualization (bar, line, pie, table, KPI) onto a sheet."
+    category: Visualization & Sheets
+    risk: low
+    business_impact: "Adds a chart to a sheet; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_add_filter
+    object: Sheet
+    action: qlik_add_filter
+    description: "Places a filter panel on a sheet for user-driven filtering."
+    category: Visualization & Sheets
+    risk: low
+    business_impact: "Adds a filter panel to a sheet; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Business Glossary ----------
+  # Glossary terms/categories are business metadata (definitions), not personal data.
+  # update_term_status is a governance state change (draft/verified/deprecated).
+  - id: qlik.qlik_create_glossary
+    object: Glossary
+    action: qlik_create_glossary
+    description: "Establishes a new business glossary."
+    category: Business Glossary
+    risk: low
+    business_impact: "Creates a business glossary container; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_create_glossary_category
+    object: GlossaryCategory
+    action: qlik_create_glossary_category
+    description: "Adds a new category within a glossary."
+    category: Business Glossary
+    risk: low
+    business_impact: "Adds a glossary category; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_create_glossary_term
+    object: GlossaryTerm
+    action: qlik_create_glossary_term
+    description: "Defines a new glossary term with metadata."
+    category: Business Glossary
+    risk: low
+    business_impact: "Adds a glossary term definition; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_update_glossary_term
+    object: GlossaryTerm
+    action: qlik_update_glossary_term
+    description: "Modifies an existing glossary term."
+    category: Business Glossary
+    risk: low
+    business_impact: "Changes a glossary term definition; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_delete_glossary_term
+    object: GlossaryTerm
+    action: qlik_delete_glossary_term
+    description: "Removes a glossary term."
+    category: Business Glossary
+    risk: medium
+    business_impact: "Deletes a glossary term definition; recreatable, affects data-governance documentation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_update_term_status
+    object: GlossaryTerm
+    action: qlik_update_term_status
+    description: "Changes a term's status (draft, verified, deprecated)."
+    category: Business Glossary
+    risk: medium
+    business_impact: "Promotes or deprecates a governed glossary term; a data-governance change-control action."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_create_glossary_term_links
+    object: GlossaryTerm
+    action: qlik_create_glossary_term_links
+    description: "Connects a term to apps, datasets, and fields."
+    category: Business Glossary
+    risk: low
+    business_impact: "Links a glossary term to data assets; reversible governance metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_get_full_glossary_export
+    object: Glossary
+    action: qlik_get_full_glossary_export
+    description: "Exports the complete glossary with all terms and links."
+    category: Business Glossary
+    risk: medium
+    business_impact: "Bulk export of the entire business glossary; business-term metadata, not personal data, but a complete data-governance asset extraction."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Datasets & Data Quality ----------
+  - id: qlik.qlik_update_dataset_metadata
+    object: Dataset
+    action: qlik_update_dataset_metadata
+    description: "Modifies a dataset's name and description."
+    category: Datasets & Data Quality
+    risk: low
+    business_impact: "Edits dataset name/description metadata; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_update_dataset_quality
+    object: Dataset
+    action: qlik_update_dataset_quality
+    description: "Initiates a data-quality computation job for a dataset."
+    category: Datasets & Data Quality
+    risk: low
+    business_impact: "Triggers a data-quality computation job; consumes compute but does not alter data, reversible."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Selections & Filtering ----------
+  # Selections mutate transient session/exploration state, not stored data.
+  - id: qlik.qlik_select_values
+    object: Selection
+    action: qlik_select_values
+    description: "Applies filters to fields with exact or pattern matching."
+    category: Selections & Filtering
+    risk: low
+    business_impact: "Sets session filter state to drive analysis; transient and reversible, alters no stored data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_clear_selections
+    object: Selection
+    action: qlik_clear_selections
+    description: "Removes filters globally or per field."
+    category: Selections & Filtering
+    risk: low
+    business_impact: "Clears session filter state; transient and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Bookmarks ----------
+  - id: qlik.qlik_create_bookmark
+    object: Bookmark
+    action: qlik_create_bookmark
+    description: "Generates a new bookmark from the current selections."
+    category: Bookmarks
+    risk: low
+    business_impact: "Saves the current selection state as a bookmark; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_select_bookmark
+    object: Bookmark
+    action: qlik_select_bookmark
+    description: "Applies a saved bookmark and returns the resulting selection state."
+    category: Bookmarks
+    risk: low
+    business_impact: "Applies a saved selection state; transient and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_delete_bookmark
+    object: Bookmark
+    action: qlik_delete_bookmark
+    description: "Removes a bookmark created via MCP tools."
+    category: Bookmarks
+    risk: low
+    business_impact: "Deletes a bookmark; reversible by recreation and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Discovery & Lineage ----------
+  # Grouped under the Data Access category; metadata/catalog reads, no record values.
+  - id: qlik.qlik_search
+    object: Resource
+    action: qlik_search
+    description: "Locates Qlik resources (apps, datasets, data products, glossaries) by name or content."
+    category: Data Access
+    risk: low
+    business_impact: "Discovers resources by name/content; returns catalog metadata, not underlying record values."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: qlik.qlik_get_lineage
+    object: Lineage
+    action: qlik_get_lineage
+    description: "Traces upstream data origins and transformations for an asset."
+    category: Data Access
+    risk: low
+    business_impact: "Reads data-lineage metadata; exposes source systems and transformation flow, not record values."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

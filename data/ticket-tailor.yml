@@ -1,0 +1,289 @@
+schema_version: "1.1"
+platform: ticket-tailor
+display_name: Ticket Tailor
+source: langguard-editorial
+updated: "2026-06"
+reference: https://developers.tickettailor.com/docs/mcp/available-tools
+# NOTE: Ticket Tailor's hosted MCP server (https://mcp.tickettailor.ai/mcp and
+# .../sse) is OAuth 2.1-gated with a Ticket Tailor API key; an unauthenticated
+# tools/list POST returns 401 {"error":"invalid_token"}, and there is no anonymous
+# tools-catalog endpoint (/tools, /tools.json, /.well-known/mcp, /mcp/tools all 404
+# or 401). The vendor's first-party MCP docs (developers.tickettailor.com/docs/mcp)
+# publish only plain-language capability labels grouped by resource — NOT verbatim
+# tool ids — and the docs state the server "provides access to all Ticket Tailor API
+# endpoints as tools" without naming them. The usage-examples and authentication
+# pages likewise show only natural-language prompts. The only place granular ids
+# appear is a third-party community server (github.com/priorwave/ticket_tailor_mcp_server),
+# whose naming conflicts with the official hosted server and is therefore NOT a valid
+# source per the curator spec. These entries consequently use id_form: capability:
+# `description` carries the verbatim first-party capability label, and the id/action
+# slugs are intent-level (primary verb + resource), NOT identifier-level. confidence
+# is capped at medium throughout. Each label spans multiple CRUD operations; risk and
+# business_impact reflect the worst-case operation the label spans (delete/void where
+# the label says so). Labels were NOT expanded into per-CRUD ids, since no per-operation
+# id is attested anywhere first-party.
+actions:
+  # ---------- Membership ----------
+  - id: ticket-tailor.manage_issued_memberships
+    object: IssuedMembership
+    action: manage_issued_memberships
+    id_form: capability
+    description: "Issued Memberships: Create, update, void, and manage individual issued memberships. List memberships with filters (name, email, search, status, pagination). Get temporary signed URLs for membership photos"
+    category: Customer
+    risk: high
+    business_impact: "Creates, voids, and bulk-lists individual memberships by name/email/status and mints temporary signed URLs to members' identity photos — a directory-scale read of identifiable members' personal data plus their photographs, and an irreversible void of an active membership."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ticket-tailor.manage_membership_types
+    object: MembershipType
+    action: manage_membership_types
+    id_form: capability
+    description: "Membership Types: Create, update, delete, and manage membership types with validity settings, benefits, and photo requirements"
+    category: Customer
+    risk: medium
+    business_impact: "Creates, updates, and deletes membership-type definitions including validity, benefits, and photo requirements; reconfigures or removes a membership tier affecting every member it governs."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ticket-tailor.create_membership_redemptions
+    object: MembershipRedemption
+    action: create_membership_redemptions
+    id_form: capability
+    description: "Membership Redemptions: Create redemptions for issued memberships at events"
+    category: Customer
+    risk: low
+    business_impact: "Records a member redeeming their membership at an event; ties an identifiable member to event attendance, reversible."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Sales & Marketing ----------
+  - id: ticket-tailor.manage_orders
+    object: Order
+    action: manage_orders
+    id_form: capability
+    description: "Orders: View and manage customer orders"
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Reads and modifies customer orders containing buyer names, emails, and purchase/payment metadata; a single tool covering identifiable-buyer PII and the revenue-bearing order record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, PCI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ticket-tailor.manage_vouchers
+    object: Voucher
+    action: manage_vouchers
+    id_form: capability
+    description: "Vouchers: Set up gift cards and promotional vouchers"
+    category: Financial
+    risk: medium
+    business_impact: "Issues gift cards and promotional vouchers carrying stored monetary value; creates redeemable financial instruments against future revenue."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ticket-tailor.manage_discounts
+    object: Discount
+    action: manage_discounts
+    id_form: capability
+    description: "Discounts: Create and manage discount codes"
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Creates and manages discount codes that reduce ticket price at checkout; directly affects realised event revenue, reversible."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ticket-tailor.manage_products
+    object: Product
+    action: manage_products
+    id_form: capability
+    description: "Products: Manage merchandise and add-ons"
+    category: Operations
+    risk: low
+    business_impact: "Creates and manages merchandise and add-on products sold alongside tickets; reversible catalog change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Ticketing ----------
+  - id: ticket-tailor.create_issued_tickets
+    object: IssuedTicket
+    action: create_issued_tickets
+    id_form: capability
+    description: "Issued Tickets: Generate individual tickets for attendees. IMPORTANT: issuing tickets via the MCP is charged at one credit per issued ticket, even if the ticket is free."
+    category: Ticketing
+    risk: medium
+    business_impact: "Generates individual attendee tickets carrying identifiable attendee data and incurs a real one-credit-per-ticket charge to the account even for free tickets; a billable, PII-bearing write."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ticket-tailor.manage_ticket_groups
+    object: TicketGroup
+    action: manage_ticket_groups
+    id_form: capability
+    description: "Ticket Groups: Create ticket groups, set limits, manage ticket types and bundles in groups"
+    category: Ticketing
+    risk: medium
+    business_impact: "Creates ticket groups and sets purchase limits across ticket types and bundles; reconfigures what and how much an attendee can buy, reversible."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ticket-tailor.manage_ticket_types
+    object: TicketType
+    action: manage_ticket_types
+    id_form: capability
+    description: "Ticket Types: Create and manage different ticket categories"
+    category: Ticketing
+    risk: medium
+    business_impact: "Creates and manages ticket categories and their pricing/availability; changes what attendees can purchase for an event, reversible."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ticket-tailor.create_bundles
+    object: Bundle
+    action: create_bundles
+    id_form: capability
+    description: "Bundles: Create ticket bundles and packages"
+    category: Ticketing
+    risk: low
+    business_impact: "Creates ticket bundles and packages combining multiple ticket types into a single purchasable unit; reversible catalog change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ticket-tailor.manage_check_ins
+    object: CheckIn
+    action: manage_check_ins
+    id_form: capability
+    description: "Check-ins: Track attendance and manage entry"
+    category: Customer
+    risk: medium
+    business_impact: "Reads and updates per-attendee check-in status at the door; exposes which identifiable individuals attended an event."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ticket-tailor.manage_holds
+    object: Hold
+    action: manage_holds
+    id_form: capability
+    description: "Holds: Reserve tickets for manual sales"
+    category: Ticketing
+    risk: low
+    business_impact: "Reserves tickets out of general availability for manual or off-platform sale; reversible inventory hold."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ticket-tailor.manage_waitlists
+    object: Waitlist
+    action: manage_waitlists
+    id_form: capability
+    description: "Waitlists: Manage waitlist signups"
+    category: Customer
+    risk: medium
+    business_impact: "Reads and manages waitlist signups containing prospective attendees' names and email addresses; a list of identifiable individuals' contact data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Event Management ----------
+  - id: ticket-tailor.manage_event_series
+    object: EventSeries
+    action: manage_event_series
+    id_form: capability
+    description: "Event Series: Create, update, delete, and manage event series"
+    category: Operations
+    risk: medium
+    business_impact: "Creates, updates, and deletes event series; deleting a series removes the event and its associated ticketing configuration, a destructive operation against published events."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ticket-tailor.create_event_occurrences
+    object: EventOccurrence
+    action: create_event_occurrences
+    id_form: capability
+    description: "Event Occurrences: Add individual event instances to series"
+    category: Operations
+    risk: low
+    business_impact: "Adds individual event instances (dates/occurrences) to an existing series; reversible scheduling change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ticket-tailor.update_event_status
+    object: Event
+    action: update_event_status
+    id_form: capability
+    description: "Event Status: Change publication status (draft, published, closed)"
+    category: Operations
+    risk: medium
+    business_impact: "Changes an event's publication status between draft, published, and closed; publishing or closing an event makes it publicly purchasable or halts all sales, reversible."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Reporting & Analytics ----------
+  - id: ticket-tailor.get_order_reports
+    object: OrderReport
+    action: get_order_reports
+    id_form: capability
+    description: "Order Reports: Analyse sales data"
+    category: Financial
+    risk: medium
+    business_impact: "Returns order-level sales data for analysis, including buyer-attributable purchase records; surfaces revenue figures and identifiable-buyer transaction history."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ticket-tailor.get_overview
+    object: Overview
+    action: get_overview
+    id_form: capability
+    description: "Overview: Get box office summary statistics"
+    category: Financial
+    risk: low
+    business_impact: "Returns aggregate box-office summary statistics (sales totals, ticket counts) for an event; aggregate financial figures with no individual-level PII."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ticket-tailor.get_attendance_tracking
+    object: Attendance
+    action: get_attendance_tracking
+    id_form: capability
+    description: "Attendance Tracking: Monitor check-in data"
+    category: Customer
+    risk: medium
+    business_impact: "Returns check-in/attendance data showing which identifiable attendees entered an event; a read of individuals' event-attendance records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

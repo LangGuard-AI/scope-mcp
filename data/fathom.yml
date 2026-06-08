@@ -1,0 +1,64 @@
+schema_version: "1.1"
+platform: fathom
+display_name: Fathom
+source: langguard-editorial
+updated: "2026-06"
+reference: https://developers.fathom.ai/mcp-docs/
+
+# ---------------------------------------------------------------------------
+# STATUS: SKIPPED — tool surface could not be verified.
+#
+# The official Fathom MCP server (https://api.fathom.ai/mcp) is OAuth-gated.
+# An anonymous JSON-RPC `tools/list` returns HTTP 401 {"error":"unauthorized"}
+# with `www-authenticate: Bearer resource_metadata=".../oauth-protected-resource/mcp"`
+# (live-probed 2026-06-04). OAuth metadata confirms authorization_servers:
+# ["https://api.fathom.ai"]. No bearer token is available to this curator, so
+# verbatim MCP tool ids cannot be obtained via live introspection.
+#
+# No vendor-controlled source publishes verbatim MCP tool ids OR verbatim
+# per-tool capability labels:
+#   - claude.com/connectors/fathom            -> Read-only intent examples only,
+#                                                no tool names, no count.
+#   - developers.fathom.ai/mcp-docs/{index,claude,chatgpt,troubleshooting}
+#                                             -> server URL + setup steps only;
+#                                                zero tool ids, zero labels.
+#   - Fathom help article (11497793)          -> states "each of the 7 tools has
+#                                                its own on/off" toggle but
+#                                                explicitly does NOT disclose
+#                                                their names; only example prompts.
+#   - claude.ai/directory/connectors/fathom   -> HTTP 403 (auth-gated, unreadable).
+#
+# The only place tool-name-like strings appear is THIRD-PARTY / community
+# sources (e.g. the MIT-licensed agencyenterprise/fathom-mcp-server and blogs),
+# which assert: list_meetings, search_meetings, get_transcript, get_summary.
+# Those four strings are verbatim Fathom *REST* operation slugs published at
+# developers.fathom.ai/api-reference/{meetings/list-meetings,
+# recordings/get-transcript, recordings/get-summary, teams/list-teams,
+# team-members/list-team-members} — NOT confirmed official MCP tool ids. The
+# prior YAML for this slug failed adversarial verification for exactly this
+# reason (REST-op ids dressed as MCP ids; descriptions that were help-article
+# example prompts rather than verbatim per-tool labels).
+#
+# Per the curator hard rules, fabrication is the worst failure: when neither
+# verbatim ids nor verbatim capability labels exist in any authoritative
+# (vendor- or Anthropic-published) source, the connector is SKIPPED rather than
+# populated from REST endpoints or community-server names. The capability-form
+# (`id_form: capability`) escape hatch is NOT available here because it requires
+# verbatim vendor-published capability labels, which Fathom does not publish,
+# and it must never be used for community-server cases.
+#
+# TO COMPLETE: re-run with an OAuth bearer token for api.fathom.ai/mcp, e.g.
+#   python3 .claude/agents/compliance-curator/mcp-introspect.py \
+#     --slug fathom --url https://api.fathom.ai/mcp --bearer-env FATHOM_MCP_TOKEN
+# then curate the verbatim `tools/list` names (expected ~6–7 read-only tools
+# over meetings/recordings/transcripts/summaries; the connector is Read-only).
+# ---------------------------------------------------------------------------
+status: skipped
+skip_reason: >-
+  Official MCP server (api.fathom.ai/mcp) is OAuth-gated (anonymous tools/list
+  returns 401); no vendor- or Anthropic-published source exposes verbatim MCP
+  tool ids or verbatim per-tool capability labels. The only tool-name-like
+  strings available are third-party/community names that are verbatim Fathom
+  REST operation slugs, which are not valid MCP tool ids. Capability-form
+  fallback is unavailable (no vendor capability labels; community-server case).
+actions: []

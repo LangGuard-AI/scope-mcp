@@ -1,0 +1,230 @@
+schema_version: "1.1"
+platform: melon
+display_name: Melon
+source: langguard-editorial
+updated: "2026-06"
+reference: https://tech.kakaoent.com/ai/using-melon-mcp-server-en/
+# Tool surface verified via live introspection of https://mcp.melon.com/mcp
+# (tools/list, anonymous, streamable-http) — 18 tools. The vendor doc's
+# "complete list" (2025-09) is stale relative to the running server: several
+# tools were renamed and two doc-only tools no longer exist. Live names win.
+actions:
+  # ---------- Personalization & My Music ----------
+  # User-scoped personal data: listening history, likes, play counts, taste.
+  - id: melon.get_my_most_listened_songs
+    object: ListeningHistory
+    action: get_my_most_listened_songs
+    description: "Retrieves the ranking of the user's most played songs over a specified period."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads the authenticated user's personal listening-frequency history, identifiable behavioral PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: melon.get_recently_played_music_contents
+    object: ListeningHistory
+    action: get_recently_played_music_contents
+    description: "Retrieves the user's recently played songs and recently viewed playlists."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads the user's recent listening and browsing activity, identifiable behavioral PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: melon.get_my_liked_music_contents
+    object: UserLibrary
+    action: get_my_liked_music_contents
+    description: "Retrieves all content the user has 'liked' across songs, albums, playlists, videos, genres, and tags."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads the user's liked-content library, revealing personal taste and preferences as identifiable PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: melon.get_my_created_playlists
+    object: Playlist
+    action: get_my_created_playlists
+    description: "Retrieves the list of playlists the user has created and owns."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads the user's own playlist collection, personal data tied to the account."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: melon.recommend_personalized_songs_by_dj_mallang
+    object: Recommendation
+    action: recommend_personalized_songs_by_dj_mallang
+    description: "Returns personalized song recommendations by analyzing the user's listening history, likes, and playlists."
+    category: Data Access
+    risk: medium
+    business_impact: "Profiles the user's listening history and preferences to generate recommendations; behavioral profiling of an identifiable individual."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: melon.recommend_similar_songs_by_dj_mallang
+    object: Recommendation
+    action: recommend_similar_songs_by_dj_mallang
+    description: "Recommends songs with a similar mood or genre to a specified reference song."
+    category: Catalog
+    risk: low
+    business_impact: "Returns catalog songs similar to a supplied track ID; operates on a song reference, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: melon.get_song_streaming_report
+    object: ListeningHistory
+    action: get_song_streaming_report
+    description: "Returns either public streaming statistics for a song or the user's personal play count and first-played date for it."
+    category: Data Access
+    risk: medium
+    business_impact: "In 'my' mode reads the user's personal per-song play history; in 'public' mode returns aggregate stats with no PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Playback ----------
+  - id: melon.create_playback_url
+    object: PlaybackUrl
+    action: create_playback_url
+    description: "Generates a playback URL for given songs, albums, playlists, or a music video."
+    category: Operations
+    risk: low
+    business_impact: "Generates a URL that initiates playback of selected content; reversible and low-impact, but the vendor recommends user confirmation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Music Search & Discovery (public catalog) ----------
+  - id: melon.search_melon_music_contents
+    object: Content
+    action: search_melon_music_contents
+    description: "Searches songs, albums, artists, videos, and playlists across the Melon catalog by keyword."
+    category: Catalog
+    risk: low
+    business_impact: "Reads the public music catalog by keyword; returns no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: melon.get_music_chart
+    object: Chart
+    action: get_music_chart
+    description: "Retrieves official Melon ranking charts such as TOP 100, Daily/Weekly, and HOT TRACK."
+    category: Catalog
+    risk: low
+    business_impact: "Reads public music ranking charts; returns no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: melon.get_music_content_details
+    object: Content
+    action: get_music_content_details
+    description: "Fetches detailed information for songs, albums, and artists by their IDs."
+    category: Catalog
+    risk: low
+    business_impact: "Reads public catalog detail records by ID; returns no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: melon.get_artist_contents
+    object: Artist
+    action: get_artist_contents
+    description: "Lists tracks or albums for a specific artist, with participation-type filters."
+    category: Catalog
+    risk: low
+    business_impact: "Reads a public artist's track and album list; returns no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: melon.get_latest_music_contents
+    object: Content
+    action: get_latest_music_contents
+    description: "Retrieves newly released songs, albums, and videos sorted by release date."
+    category: Catalog
+    risk: low
+    business_impact: "Reads the public catalog of recent releases; returns no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: melon.get_music_contents_by_genre
+    object: Content
+    action: get_music_contents_by_genre
+    description: "Retrieves songs, playlists, or classic albums belonging to a specific genre."
+    category: Catalog
+    risk: low
+    business_impact: "Reads public catalog content filtered by genre; returns no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: melon.get_genres
+    object: Genre
+    action: get_genres
+    description: "Retrieves main genres and their sub-genres as a nested structure."
+    category: Catalog
+    risk: low
+    business_impact: "Reads the public genre taxonomy; returns no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: melon.get_melon_curated_playlists
+    object: Playlist
+    action: get_melon_curated_playlists
+    description: "Retrieves official playlists curated and recommended by Melon."
+    category: Catalog
+    risk: low
+    business_impact: "Reads Melon's official editorial playlists; returns no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: melon.get_playlist_tracks
+    object: Playlist
+    action: get_playlist_tracks
+    description: "Retrieves all tracks in a specific playlist by its ID."
+    category: Catalog
+    risk: low
+    business_impact: "Reads the tracklist of a playlist by ID; returns no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: melon.get_music_content_url
+    object: Content
+    action: get_music_content_url
+    description: "Returns detail-page web URLs for songs, albums, or playlists."
+    category: Catalog
+    risk: low
+    business_impact: "Generates public detail-page URLs for catalog content; returns no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

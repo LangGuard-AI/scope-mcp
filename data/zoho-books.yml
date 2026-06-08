@@ -1,0 +1,158 @@
+schema_version: "1.1"
+platform: zoho-books
+display_name: Zoho Books
+source: langguard-editorial
+updated: "2026-06"
+# Capability-form fallback: Zoho's first-party Books MCP server (https://books.zoho.com/mcp)
+# is OAuth-gated (live tools/list returns 401; no anonymous /tools catalog path exists) and
+# Zoho publishes ONLY plain-language capability labels for the connector — no verbatim tool
+# ids anywhere reachable. Entries below use id_form: capability with first-party capability
+# labels from the Anthropic connector page and Zoho's own Books-MCP help/announcement docs.
+# Third-party servers (CData/Zapier/MCPBundles) expose conflicting counts (16/64/708) and
+# naming conventions and are deliberately NOT used as a verbatim-id source.
+reference: https://www.zoho.com/us/books/help/mcp/zoho-books-mcp.html
+actions:
+  # ---------- Receivables ----------
+  - id: zoho-books.create_and_manage_invoices
+    object: Invoice
+    action: create_and_manage_invoices
+    id_form: capability
+    description: "Create and manage invoices"
+    reference: https://claude.com/connectors/zoho-books
+    category: Financial
+    risk: medium
+    business_impact: "Creates and edits accounts-receivable invoices that recognize revenue and feed the general ledger; reviewable and individually audited in Zoho Books."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoho-books.send_invoices
+    object: Invoice
+    action: send_invoices
+    id_form: capability
+    description: "create and send invoices"
+    reference: https://www.zoho.com/blog/books/model-context-protocol-accounting-software.html
+    category: Financial
+    risk: medium
+    business_impact: "Emails a finalized invoice to a customer, externalizing a billing demand and the customer's contact PII; not recallable once sent."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoho-books.track_receivables
+    object: Invoice
+    action: track_receivables
+    id_form: capability
+    description: "Track receivables"
+    reference: https://claude.com/connectors/zoho-books
+    category: Financial
+    risk: medium
+    business_impact: "Reads outstanding accounts-receivable balances and overdue invoices, exposing customer financial and contact data."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoho-books.send_payment_reminders
+    object: Invoice
+    action: send_payment_reminders
+    id_form: capability
+    description: "track overdue invoices and follow up with customers"
+    reference: https://www.zoho.com/blog/books/model-context-protocol-accounting-software.html
+    category: Financial
+    risk: low
+    business_impact: "Sends payment-reminder communications to customers about overdue invoices; externalizes customer contact PII and dunning notices."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Payments ----------
+  - id: zoho-books.reconcile_bank_transactions
+    object: BankTransaction
+    action: reconcile_bank_transactions
+    id_form: capability
+    description: "reconcile bank transactions"
+    reference: https://www.zoho.com/blog/books/model-context-protocol-accounting-software.html
+    category: Financial
+    risk: high
+    business_impact: "Matches and reconciles bank-feed transactions against ledger entries, directly affecting reported cash balances and the books of record."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GLBA]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Expenses ----------
+  - id: zoho-books.expense_management
+    object: Expense
+    action: expense_management
+    id_form: capability
+    description: "Expense management"
+    reference: https://claude.com/connectors/zoho-books
+    category: Financial
+    risk: medium
+    business_impact: "Records and edits expense transactions that post to the general ledger and affect reported costs; reviewable in Zoho Books."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Master Data ----------
+  - id: zoho-books.manage_customers
+    object: Customer
+    action: manage_customers
+    id_form: capability
+    description: "Updating business data (customers, vendors, items)"
+    reference: https://www.zoho.com/us/books/help/mcp/zoho-books-mcp.html
+    category: Customer
+    risk: medium
+    business_impact: "Creates or updates customer master records holding contact and financial PII used for billing across the organization."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoho-books.manage_vendors
+    object: Vendor
+    action: manage_vendors
+    id_form: capability
+    description: "Updating business data (customers, vendors, items)"
+    reference: https://www.zoho.com/us/books/help/mcp/zoho-books-mcp.html
+    category: Operations
+    risk: medium
+    business_impact: "Creates or updates vendor master records (including banking/payment details) that drive payables; a vendor-data change is a classic payment-fraud vector."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoho-books.manage_items
+    object: Item
+    action: manage_items
+    id_form: capability
+    description: "Updating business data (customers, vendors, items)"
+    reference: https://www.zoho.com/us/books/help/mcp/zoho-books-mcp.html
+    category: Operations
+    risk: low
+    business_impact: "Creates or updates the item/price catalog used on invoices and bills; reversible and non-personal."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Reporting ----------
+  - id: zoho-books.financial_reporting
+    object: Report
+    action: financial_reporting
+    id_form: capability
+    description: "Financial reporting"
+    reference: https://claude.com/connectors/zoho-books
+    category: Financial
+    risk: high
+    business_impact: "Generates and exports financial reports (P&L, balance sheet, aged receivables) aggregating the full ledger and customer financial data."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

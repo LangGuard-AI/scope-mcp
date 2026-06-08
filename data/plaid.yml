@@ -1,60 +1,55 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: plaid
 display_name: Plaid
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://plaid.com/docs/resources/mcp/
 actions:
   # ---------- Operations ----------
   - id: plaid.plaid_debug_item
     object: Item
     action: plaid_debug_item
+    description: "Diagnose a Plaid Item by retrieving related metadata explaining why an Item may not be working properly."
     category: Operations
-    risk: medium
-    business_impact: "Returns metadata and connection diagnostics for a financial-account Plaid item."
-    compliance: [GLBA, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    risk: low
+    business_impact: "Read-only diagnostic that returns connection/institution/status metadata for a single Plaid Item; the Item links to an identifiable consumer's financial-institution connection, placing it in a GLBA-covered context."
+    compliance: [GLBA]
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: plaid.plaid_get_link_analytics
     object: LinkAnalytics
     action: plaid_get_link_analytics
+    description: "Retrieves Plaid Link analytics data for analyzing user conversion funnels and error rates."
     category: Operations
     risk: low
-    business_impact: "Retrieves aggregate Plaid Link conversion and error metrics."
-    compliance: [SOC2]
+    business_impact: "Read-only retrieval of aggregated Link conversion and error-rate metrics; no individual consumer records are returned."
+    compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
   - id: plaid.plaid_get_usages
-    object: Usage
+    object: UsageMetric
     action: plaid_get_usages
+    description: "Retrieves usage metrics for Plaid products and services over a time period."
     category: Operations
     risk: low
-    business_impact: "Returns API request volume and product usage metrics for the Plaid account."
-    compliance: [SOC2]
+    business_impact: "Read-only retrieval of aggregated API usage and consumption telemetry; operational metrics only, no personal data."
+    compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
+  # ---------- Org & Access ----------
   - id: plaid.plaid_list_teams
     object: Team
     action: plaid_list_teams
-    category: Identity & Access
+    description: "List all teams associated with the OAuth token."
+    category: Org & Access
     risk: low
-    business_impact: "Lists teams associated with the OAuth token; no privilege change."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: plaid.plaid_get_tools_introduction
-    object: Documentation
-    action: plaid_get_tools_introduction
-    category: Operations
-    risk: low
-    business_impact: "Returns onboarding text describing available MCP tools."
+    business_impact: "Read-only listing of dashboard team names associated with the caller's OAuth token; may surface team-membership identifiers."
     compliance: []
     sod_concern: false
     confidence: medium

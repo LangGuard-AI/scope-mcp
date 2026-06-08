@@ -1,46 +1,87 @@
-# NOTE: Webflow's MCP server (github.com/webflow/mcp-server) groups its API
-# behind a small set of generic dispatcher tools rather than one tool per
-# action. Each Data API tool (e.g. data_cms_tool, data_sites_tool) takes an
-# `action` parameter that maps to many CRUD verbs, and Designer tools
-# (element_tool, style_tool, etc.) similarly multiplex many designer-canvas
-# operations. We curate the registered tool ids here; downstream verb
-# selection happens at call time.
-schema_version: "1.0"
+schema_version: "1.1"
 platform: webflow
 display_name: Webflow
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://developers.webflow.com/mcp/reference/overview
+# Tool ids are verbatim from the official webflow/mcp-server source
+# (github.com/webflow/mcp-server, src/tools/*.ts server.registerTool calls).
+# The hosted connector exposes the Data API tools (REST-backed) plus the
+# Designer extension tools (Designer RPC bridge — MCP-only, no REST). The
+# OSS-only `get_designer_app_connection_info` tool is intentionally excluded.
+# Each generic `data_*`/designer tool bundles many CRUD verbs behind one tool
+# name and is scored at the highest-risk action it can perform.
 actions:
-  # ---------- Data API ----------
-  - id: webflow.data_sites_tool
-    object: Site
-    action: data_sites_tool
-    category: Data API
+  # ---------- Platform & DevOps ----------
+  - id: webflow.data_scripts_tool
+    object: "*"
+    action: data_scripts_tool
+    description: "Lists registered/applied scripts, adds inline site custom code, and deletes all site scripts."
+    category: Platform & DevOps
     risk: critical
-    business_impact: "Lists sites, reads details, and publishes sites to production; publish action ships content live with no review gate."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Injects arbitrary JavaScript custom code into the published site, executing in every visitor's browser — a client-side compromise and data-skimming (Magecart) vector; also deletes all site scripts."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
     sod_concern: true
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: webflow.data_cms_tool
-    object: CmsItem
-    action: data_cms_tool
-    category: Data API
+  - id: webflow.data_sites_tool
+    object: Site
+    action: data_sites_tool
+    description: "Lists sites, gets site details, and publishes a site to its live domains."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Publishes the site to its production domains, pushing current content and changes live to the public; reversible only by re-publishing."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: webflow.data_webhook_tool
+    object: Webhook
+    action: data_webhook_tool
+    description: "Lists, creates, gets details for, and deletes webhooks for a Webflow site."
+    category: Platform & DevOps
     risk: high
-    business_impact: "Generic dispatcher for CMS collections, fields, and items; can create or delete published content and any PII stored in CMS items."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    business_impact: "Creates an outbound webhook that streams site events to an arbitrary external URL — a standing data-egress channel; also deletes existing webhooks."
+    compliance: [SOC2, ISO_27001, NIST_CSF, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: true
     confidence: high
+    access_methods: [REST, MCP]
+
+  - id: webflow.data_enterprise_tool
+    object: Site
+    action: data_enterprise_tool
+    description: "Enterprise-plan tool to manage 301 redirects and robots.txt for a site."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Rewrites 301 redirects and robots.txt, changing where production traffic and crawlers are routed; affects SEO and live-site availability."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Content ----------
+  - id: webflow.data_cms_tool
+    object: "*"
+    action: data_cms_tool
+    description: "Full CRUD over CMS collections and items, including create, update, publish, and delete collection items and fields."
+    category: Content
+    risk: high
+    business_impact: "Deletes and publishes CMS collection items and fields, which may contain member, contact, or form-submission personal data; deletes are destructive and publishing pushes content live."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: webflow.data_pages_tool
     object: Page
     action: data_pages_tool
-    category: Data API
-    risk: high
-    business_impact: "Manages pages and SEO metadata; can alter live URLs and indexing."
-    compliance: [SOC2]
+    description: "Lists pages, gets page metadata and content, updates page settings, and updates static content."
+    category: Content
+    risk: medium
+    business_impact: "Updates page settings and static content on the site, changing what is rendered to visitors; reversible by re-editing."
+    compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
@@ -48,76 +89,47 @@ actions:
   - id: webflow.data_components_tool
     object: Component
     action: data_components_tool
-    category: Data API
+    description: "Lists components, gets and updates component content, and gets and updates component properties."
+    category: Content
     risk: medium
-    business_impact: "Reads and modifies reusable components used across the site."
-    compliance: [SOC2]
+    business_impact: "Updates shared component content and properties, propagating changes to every page instance of the component."
+    compliance: [SOC2, ISO_27001]
     sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: webflow.data_scripts_tool
-    object: CustomScript
-    action: data_scripts_tool
-    category: Data API
-    risk: critical
-    business_impact: "Adds or removes custom scripts on site or page level; arbitrary client-side code execution path for every visitor."
-    compliance: [SOC2, ISO_27001, NIST_CSF, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: true
     confidence: high
     access_methods: [REST, MCP]
 
   - id: webflow.data_comments_tool
     object: Comment
     action: data_comments_tool
-    category: Data API
-    risk: low
-    business_impact: "Manages designer-surface comments on a site."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: webflow.data_enterprise_tool
-    object: SiteConfig
-    action: data_enterprise_tool
-    category: Data API
-    risk: high
-    business_impact: "Manages 301 redirects, robots.txt, well-known files, and activity log; misuse can break SEO or hide audit context."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: webflow.data_webhook_tool
-    object: Webhook
-    action: data_webhook_tool
-    category: Data API
-    risk: high
-    business_impact: "Creates and modifies outbound webhooks that exfiltrate site events to arbitrary URLs."
-    compliance: [SOC2, ISO_27001, NIST_CSF, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: webflow.data_workflows_tool
-    object: Workflow
-    action: data_workflows_tool
-    category: Data API
+    description: "Reads site comment threads — user feedback attached to pages and elements, including author info and content."
+    category: Content
     risk: medium
-    business_impact: "Lists and executes Webflow AI workflows; effects depend on the underlying workflow definition."
-    compliance: [SOC2]
+    business_impact: "Reads comment threads containing author identities and free-text feedback that may include personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: medium
     access_methods: [REST, MCP]
 
-  # ---------- AI & Guidance ----------
+  # ---------- Operations ----------
+  - id: webflow.data_workflows_tool
+    object: Workflow
+    action: data_workflows_tool
+    description: "Lists AI workflows, runs a workflow, lists workflow runs, and gets a workflow run."
+    category: Operations
+    risk: medium
+    business_impact: "Triggers execution of an AI workflow that can take automated site-level actions; effects depend on the workflow's configured steps."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
   - id: webflow.ask_webflow_ai
     object: Documentation
     action: ask_webflow_ai
-    category: AI & Guidance
+    description: "Ask Webflow AI about anything related to the Webflow API."
+    category: Operations
     risk: low
-    business_impact: "Asks Webflow's AI assistant; documentation-style read."
+    business_impact: "Returns informational answers about the Webflow API; read-only, no site state is changed."
     compliance: []
     sod_concern: false
     confidence: high
@@ -126,147 +138,148 @@ actions:
   - id: webflow.webflow_guide_tool
     object: Documentation
     action: webflow_guide_tool
-    category: AI & Guidance
+    description: "Provides guidelines and best practices for using the Webflow tools."
+    category: Operations
     risk: low
-    business_impact: "Returns guidelines for using Webflow tools."
+    business_impact: "Returns static guidance text on recommended workflows; read-only, no site state is changed."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  # ---------- Designer (Asset) ----------
-  - id: webflow.asset_tool
-    object: Asset
-    action: asset_tool
-    category: Designer (Asset)
-    risk: medium
-    business_impact: "Manages site assets in the Designer canvas; can replace live media."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: webflow.get_image_preview
-    object: Asset
-    action: get_image_preview
-    category: Designer (Asset)
-    risk: low
-    business_impact: "Returns a preview of an image asset."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Designer (Components) ----------
-  - id: webflow.de_component_tool
-    object: Component
-    action: de_component_tool
-    category: Designer (Components)
-    risk: medium
-    business_impact: "Creates and edits Designer components on the canvas."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: webflow.component_builder
-    object: Component
-    action: component_builder
-    category: Designer (Components)
-    risk: medium
-    business_impact: "Builds reusable components programmatically."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Designer (Elements) ----------
+  # ---------- Design ----------
+  # Designer tools run through the Designer extension RPC bridge, not the REST
+  # Data API — access_methods is [MCP] only. They manipulate the in-canvas
+  # design (elements, styles, components, variables, assets, pages); reversible
+  # design edits with no personal-data exposure.
   - id: webflow.element_builder
     object: Element
     action: element_builder
-    category: Designer (Elements)
+    description: "Creates elements on the current active page."
+    category: Design
     risk: medium
-    business_impact: "Constructs canvas elements (containers, blocks, layouts)."
+    business_impact: "Creates new elements on the active page's design canvas; reversible design edit."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [MCP]
 
   - id: webflow.element_tool
     object: Element
     action: element_tool
-    category: Designer (Elements)
+    description: "Gets all elements, gets the selected element, selects an element, and more on the active page."
+    category: Design
     risk: medium
-    business_impact: "Manipulates existing canvas elements; can move or delete published structure."
-    compliance: [SOC2]
+    business_impact: "Inspects and modifies element selection and properties on the active design canvas; reversible design edit."
+    compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [MCP]
 
   - id: webflow.whtml_builder
     object: Element
     action: whtml_builder
-    category: Designer (Elements)
+    description: "Inserts elements from HTML and CSS strings into a parent element on the active page."
+    category: Design
     risk: medium
-    business_impact: "Generates Webflow HTML markup for canvas insertion."
+    business_impact: "Constructs and inserts elements from arbitrary HTML/CSS markup into the design canvas; reversible design edit."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [MCP]
 
   - id: webflow.element_snapshot_tool
     object: Element
     action: element_snapshot_tool
-    category: Designer (Elements)
+    description: "Gets a visual snapshot of an element for debugging and visual feedback."
+    category: Design
     risk: low
-    business_impact: "Returns a snapshot of canvas element state for diffing."
+    business_impact: "Returns a visual snapshot of an element on the canvas; read-only design inspection."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Designer (Pages, Style, Variables) ----------
-  - id: webflow.de_page_tool
-    object: Page
-    action: de_page_tool
-    category: Designer (Pages, Style, Variables)
-    risk: high
-    business_impact: "Creates, deletes, and modifies designer pages on the live site."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [MCP]
 
   - id: webflow.style_tool
     object: Style
     action: style_tool
-    category: Designer (Pages, Style, Variables)
+    description: "Creates styles, gets all styles, updates styles, and removes styles."
+    category: Design
     risk: medium
-    business_impact: "Manages CSS classes and applied styles."
+    business_impact: "Creates, updates, and removes design styles applied across the site's canvas; reversible design edit."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [MCP]
+
+  - id: webflow.de_component_tool
+    object: Component
+    action: de_component_tool
+    description: "Creates component instances, gets all components, and more on the design canvas."
+    category: Design
+    risk: medium
+    business_impact: "Creates and manages component instances on the active page's design canvas; reversible design edit."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  - id: webflow.component_builder
+    object: Component
+    action: component_builder
+    description: "Inserts component instances into an element or into a component instance's slot on the active page."
+    category: Design
+    risk: medium
+    business_impact: "Inserts component instances into the design canvas; reversible design edit."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  - id: webflow.de_page_tool
+    object: Page
+    action: de_page_tool
+    description: "Creates pages, creates page folders, gets the current page, and switches pages in the Designer."
+    category: Design
+    risk: medium
+    business_impact: "Creates pages and page folders and switches the active page in the Designer; reversible design edit."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
 
   - id: webflow.variable_tool
     object: Variable
     action: variable_tool
-    category: Designer (Pages, Style, Variables)
-    risk: medium
-    business_impact: "Manages design variables (tokens) consumed across the site."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Connection ----------
-  - id: webflow.get_designer_app_connection_info
-    object: Connection
-    action: get_designer_app_connection_info
-    category: Connection
+    description: "Creates variables, gets all variables, and updates variables in the design system."
+    category: Design
     risk: low
-    business_impact: "Returns local Designer app connection info for the current session."
+    business_impact: "Creates and updates design-system variables (tokens) on the canvas; reversible design edit."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [MCP]
+
+  - id: webflow.asset_tool
+    object: Asset
+    action: asset_tool
+    description: "Creates asset folders, gets all assets and folders, and updates assets and folders."
+    category: Design
+    risk: low
+    business_impact: "Creates and updates assets and asset folders in the site library; reversible content edit."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  - id: webflow.get_image_preview
+    object: Asset
+    action: get_image_preview
+    description: "Gets an image preview from a URL (JPG, PNG, GIF, WEBP, AVIF)."
+    category: Design
+    risk: low
+    business_impact: "Fetches and returns an image preview from a supplied URL; read-only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]

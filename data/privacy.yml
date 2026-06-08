@@ -1,0 +1,134 @@
+schema_version: "1.1"
+platform: privacy
+display_name: Privacy.com
+source: langguard-editorial
+updated: "2026-06"
+reference: https://developers.privacy.com/docs/mcp-server
+# PROVENANCE: tool ids verbatim from the vendor's MCP docs tool-reference table
+# at https://developers.privacy.com/docs/mcp-server (10 tools, "Total Tools: 10",
+# no additional/beta/preview/extension section). Live introspection of
+# https://mcp.privacy.com returned auth/401 (OAuth-gated, as documented), so the
+# vendor docs table is the authoritative source. All 10 tools written; none trimmed.
+actions:
+  # ---------- Card Credentials ----------
+  - id: privacy.get_pan
+    object: Card
+    action: get_pan
+    description: "Retrieve full card number, CVV, and expiration."
+    category: Card Credentials
+    risk: critical
+    business_impact: "Returns the full PAN, CVV, and expiration for a card; raw cardholder and sensitive-authentication data extraction that is a PCI data-exfiltration event regardless of intent."
+    compliance: [PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Cards ----------
+  - id: privacy.create_card
+    object: Card
+    action: create_card
+    description: "Create a new virtual card."
+    category: Cards
+    risk: medium
+    business_impact: "Issues a new spendable virtual card bound to the account's funding source; creates a live payment instrument and cardholder data."
+    compliance: [PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: privacy.update_card_spend_limit
+    object: Card
+    action: update_card_spend_limit
+    description: "Update a card's spend limit."
+    category: Cards
+    risk: medium
+    business_impact: "Changes the spend authority on a card; raising the limit unilaterally expands how much can be charged before controls trigger."
+    compliance: [PCI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: privacy.close_card
+    object: Card
+    action: close_card
+    description: "Permanently close a card."
+    category: Cards
+    risk: medium
+    business_impact: "Permanently closes a card so it can no longer be charged; irreversible for that card but a new card can be issued in its place."
+    compliance: [PCI]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: privacy.pause_card
+    object: Card
+    action: pause_card
+    description: "Temporarily pause a card."
+    category: Cards
+    risk: low
+    business_impact: "Temporarily blocks charges on a card; fully reversible by unpausing."
+    compliance: [PCI]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: privacy.unpause_card
+    object: Card
+    action: unpause_card
+    description: "Reactivate a paused card."
+    category: Cards
+    risk: low
+    business_impact: "Re-enables charges on a previously paused card; reversible spend-control change."
+    compliance: [PCI]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: privacy.update_card_memo
+    object: Card
+    action: update_card_memo
+    description: "Update a card's friendly name."
+    category: Cards
+    risk: low
+    business_impact: "Updates the human-readable memo on a card; cosmetic metadata change with no financial or data-exposure effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: privacy.list_cards
+    object: Card
+    action: list_cards
+    description: "List all cards with pagination."
+    category: Cards
+    risk: medium
+    business_impact: "Reads the account's issued cards and their metadata; card numbers are masked (last-4) but the listing exposes cardholder and spend context."
+    compliance: [PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: privacy.get_card
+    object: Card
+    action: get_card
+    description: "Get details for a specific card."
+    category: Cards
+    risk: medium
+    business_impact: "Reads a single card's details and metadata; card number is masked (last-4) but exposes cardholder and spend context."
+    compliance: [PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Financial ----------
+  - id: privacy.list_transactions
+    object: Transaction
+    action: list_transactions
+    description: "List transactions with filters."
+    category: Financial
+    risk: medium
+    business_impact: "Reads card transaction history including amounts, merchants, and status; transaction-record exposure of cardholder financial activity."
+    compliance: [PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

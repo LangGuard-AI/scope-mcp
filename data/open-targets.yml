@@ -1,0 +1,74 @@
+schema_version: "1.1"
+platform: open-targets
+display_name: Open Targets
+source: langguard-editorial
+updated: "2026-06"
+reference: https://platform-docs.opentargets.org/data-access/model-context-protocol
+actions:
+  # ---------- Data Access ----------
+  # The Open Targets Platform MCP server exposes a read-only surface over a
+  # PUBLIC drug-target/disease-association research database (aggregate, curated
+  # public datasets — no PII, no PHI, no financial data). All five tools are
+  # registered readOnlyHint: true; none mutate state. Privacy/HIPAA/SOC2/AI
+  # regimes do not apply: there is no identifiable personal data, no automated
+  # decisioning, and no customer system being configured or exported. compliance
+  # is correctly empty across the board.
+  - id: open-targets.query_open_targets_graphql
+    object: "*"
+    action: query_open_targets_graphql
+    description: "Execute GraphQL queries to retrieve data about targets, diseases, drugs, and their associations."
+    category: Data Access
+    risk: low
+    business_impact: "Reads public target/disease/drug association data via an arbitrary GraphQL query; the underlying API is read-only with no mutation root."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: open-targets.batch_query_open_targets_graphql
+    object: "*"
+    action: batch_query_open_targets_graphql
+    description: "Execute the same GraphQL query multiple times with different variable sets for efficient batch processing."
+    category: Data Access
+    risk: low
+    business_impact: "Runs a GraphQL query repeatedly over many variable sets against the public read-only API; bulk reads of non-personal research data only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: open-targets.search_entities
+    object: Entity
+    action: search_entities
+    description: "Search for entities across multiple types (targets, diseases, drugs, variants, studies) and retrieve their standardized IDs."
+    category: Data Access
+    risk: low
+    business_impact: "Resolves common names to standardized public identifiers; read-only lookup against non-personal research data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: open-targets.get_open_targets_graphql_schema
+    object: Schema
+    action: get_open_targets_graphql_schema
+    description: "Fetch category-based subschemas from the Open Targets Platform API, including documentation for relevant types and fields."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a subset of the public GraphQL schema; metadata-only read with no data or state exposure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: open-targets.get_type_dependencies
+    object: Schema
+    action: get_type_dependencies
+    description: "Explore schema type relationships by fetching the exact GraphQL SDL subset for specified types and their recursively reachable dependencies."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the GraphQL SDL dependency tree for given types; schema-metadata read with no data or state exposure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

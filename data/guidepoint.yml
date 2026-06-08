@@ -1,0 +1,20 @@
+schema_version: "1.1"
+platform: guidepoint
+display_name: Guidepoint
+source: langguard-editorial
+updated: "2026-06"
+reference: https://clapi-developer.guidepoint.io/mcp/docs
+actions:
+  # ---------- Data Access ----------
+  - id: guidepoint.search_library
+    object: Transcript
+    action: search_library
+    description: "Performs semantic search over Guidepoint's library of expert interview transcripts and returns ranked Q&A excerpts with respondent names, dates, and source links."
+    reference: https://clapi-developer.guidepoint.io/mcp/docs
+    category: Data Access
+    risk: medium
+    business_impact: "Returns licensed expert-transcript content including named respondents' verbatim commentary; bounded per-call (1-30 results) and read-only, but surfaces third-party personal data and proprietary research subject to content-licensing terms."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

@@ -1,0 +1,72 @@
+schema_version: "1.1"
+platform: verisk-xactrestore
+display_name: Verisk XactRestore
+source: langguard-editorial
+updated: "2026-06"
+# The Verisk XactRestore connector provides a natural-language layer over
+# Xactware's XactRestore / XactRemodel property-restoration estimating, letting
+# contractors describe damage and get a structured, Verisk-priced estimate back.
+# It does NOT publish a verbatim tools/list: the live MCP endpoint is OAuth 2.0 +
+# MFA gated (sign-in happens on Verisk's IdP and no server URL is published), so
+# anonymous live introspection is impossible and no token exists here. The
+# vendor's capability doc (the Salesforce-hosted help article) is 403-gated, and
+# no Verisk developer/MCP reference enumerating tool identifiers is reachable.
+# The only published capability surface is the claude.com connector page, which
+# names three plain-language capabilities, each paired with an illustrative
+# natural-language prompt — never a tool identifier:
+#   "Generate Rebuild Estimates with Upgrade Options"
+#   "Generate Roofing Estimates from Basic Inputs"
+#   "Modify Estimates with Real-Time Pricing"
+# (The page's "Read & write" / "Interactive" are permission badges, not
+# capabilities, so they are not enumerated.) Per Step 3's capability-form
+# fallback, every entry below uses `id_form: capability` with a slugged id and
+# the verbatim connector-page label in `description`; confidence is capped at
+# medium because the match is intent-level, not identifier-level.
+# Classification note: XactRestore estimates attach to insured property-damage
+# claims and therefore carry policyholder PII and claim/financial data, so the
+# estimate-producing capabilities are tagged with the privacy regimes plus GLBA
+# (US insurance is a GLBA-covered financial-services sector). These are
+# reversible draft-estimate writes, not ledger postings, so risk is medium, not
+# critical. When Verisk publishes a real tools/list for this connector (or a
+# token enables live introspection), refresh to `id_form: verbatim`.
+reference: https://claude.com/connectors/verisk-xactrestore
+actions:
+  # ---------- Estimating ----------
+  - id: verisk-xactrestore.generate_rebuild_estimates_with_upgrade_options
+    object: Estimate
+    action: generate_rebuild_estimates_with_upgrade_options
+    id_form: capability
+    description: "Generate Rebuild Estimates with Upgrade Options"
+    category: Estimating
+    risk: medium
+    business_impact: "Produces a structured, Verisk-priced rebuild estimate (rooms and line items) for an insured property-damage claim; the estimate carries policyholder PII and claim-tied figures and feeds downstream claim settlement."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: verisk-xactrestore.generate_roofing_estimates_from_basic_inputs
+    object: Estimate
+    action: generate_roofing_estimates_from_basic_inputs
+    id_form: capability
+    description: "Generate Roofing Estimates from Basic Inputs"
+    category: Estimating
+    risk: medium
+    business_impact: "Produces a structured, Verisk-priced roofing estimate from basic roof inputs; the estimate is tied to an insured property and claim and feeds downstream claim settlement."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: verisk-xactrestore.modify_estimates_with_real_time_pricing
+    object: Estimate
+    action: modify_estimates_with_real_time_pricing
+    id_form: capability
+    description: "Modify Estimates with Real-Time Pricing"
+    category: Estimating
+    risk: medium
+    business_impact: "Adjusts line items on an existing claim-attached estimate and reprices them against live Verisk/Xactimate pricing, changing the dollar amount that flows to claim settlement."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

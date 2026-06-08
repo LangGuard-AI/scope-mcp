@@ -1,0 +1,72 @@
+schema_version: "1.1"
+platform: candid
+display_name: Candid
+source: langguard-editorial
+updated: "2026-06"
+reference: https://support.claude.com/en/articles/12923235-using-the-candid-connector-in-claude
+# Tool surface is OAuth-gated (server: https://mcp.candid.org/mcp returns 401 to
+# anonymous tools/list; vendor user guide at learning.candid.org is paywalled).
+# No verbatim MCP tool identifiers are published anywhere reachable, so every
+# action below uses id_form: capability with the verbatim "Available tools"
+# labels from the Claude help-center article as the `description`. Slugs in `id`
+# are best-effort (intent-level, not identifier-level); confidence is capped at
+# medium per the curator capability-form rule. The connector is read-only.
+#
+# The help-center "Available tools" section also describes undescribed
+# background technical tools by example ("...like converting location
+# descriptions into searchable geographic codes, or identifying the current
+# date..."). Those are NOT enumerated as discrete labelled tools, so they are
+# omitted as actions rather than fabricating identifier slugs for them.
+actions:
+  # ---------- Data Access ----------
+  - id: candid.search_organizations
+    object: Organization
+    action: search_organizations
+    id_form: capability
+    description: "Search organizations"
+    category: Data Access
+    risk: low
+    business_impact: "Returns a filtered list of nonprofits and foundations from Candid's published registry; read-only query whose filters can include leadership demographics, surfacing personal data of identifiable individuals (board members, officers)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: candid.find_mentioned_organizations
+    object: Organization
+    action: find_mentioned_organizations
+    id_form: capability
+    description: "Find mentioned organizations"
+    category: Data Access
+    risk: low
+    business_impact: "Detects organization names already present in a response and links them to public Candid profiles; read-only enrichment that adds no new data exposure."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: candid.knowledge_search
+    object: KnowledgeArticle
+    action: knowledge_search
+    id_form: capability
+    description: "Knowledge search"
+    category: Data Access
+    risk: low
+    business_impact: "Returns matches from Candid's published knowledge base (research reports, training materials, blog posts, curated news); read-only query over public editorial content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: candid.find_relevant_taxonomic_terms
+    object: TaxonomyTerm
+    action: find_relevant_taxonomic_terms
+    id_form: capability
+    description: "Find relevant taxonomic terms"
+    category: Data Access
+    risk: low
+    business_impact: "Maps a free-text description to terms in Candid's Philanthropy Classification System (PCS) taxonomy; read-only lookup with no personal or business-critical data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

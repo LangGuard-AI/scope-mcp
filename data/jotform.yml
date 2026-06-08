@@ -1,0 +1,141 @@
+schema_version: "1.1"
+platform: jotform
+display_name: Jotform
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.jotform.com/developers/mcp
+actions:
+  # ---------- Data Access ----------
+  - id: jotform.get_submissions
+    object: Submission
+    action: get_submissions
+    description: "Get all submissions of a form."
+    category: Data Access
+    risk: high
+    business_impact: "Returns every respondent-entered submission for a form in one call; bulk PII extraction that, on a HIPAA-enabled plan, can include protected health information, and on payment-collecting forms can surface transaction data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, HIPAA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: jotform.list_submissions
+    object: Submission
+    action: list_submissions
+    description: "Get the list of your submissions."
+    category: Data Access
+    risk: medium
+    business_impact: "Lists respondent submissions across forms, commonly surfacing contact PII and, on HIPAA-enabled or payment-collecting forms, health or payment data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, HIPAA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: jotform.analyze_submissions
+    object: Submission
+    action: analyze_submissions
+    description: "Analyze your submissions with various metrics and insights."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads respondent submission data to compute metrics and insights; aggregates PII and, on regulated forms, health or payment data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, HIPAA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: jotform.fetch
+    object: Resource
+    action: fetch
+    description: "Fetch details of a specific form or submission."
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves a single form or submission record; when it targets a submission it returns respondent PII, including health or payment data on regulated forms."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: jotform.search
+    object: Form
+    action: search
+    description: "Get the list of your forms."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the account's forms by name and metadata; returns creator-defined form structure, not respondent submission data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: jotform.form_list
+    object: Form
+    action: form_list
+    description: "Get the list of your forms."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the account's forms; returns form titles and structure rather than respondent data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: jotform.display_form
+    object: Form
+    action: display_form
+    description: "Display your form with all its fields."
+    category: Data Access
+    risk: low
+    business_impact: "Renders a form's fields and layout; exposes creator-defined form structure, not submitted responses."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: jotform.create_submission
+    object: Submission
+    action: create_submission
+    description: "Make a submission to an existing form."
+    category: Operations
+    risk: medium
+    business_impact: "Writes a new respondent submission to a form; persists PII and, on HIPAA-enabled or payment forms, health or payment data, though the single record is individually deletable."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: jotform.create_form
+    object: Form
+    action: create_form
+    description: "Create a new form."
+    category: Operations
+    risk: low
+    business_impact: "Creates a new form definition; reversible and holds no respondent data until submissions arrive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: jotform.edit_form
+    object: Form
+    action: edit_form
+    description: "Edit an existing form."
+    category: Operations
+    risk: low
+    business_impact: "Modifies an existing form's fields and settings; changes creator-defined structure and is reversible, but can alter which fields collect sensitive data going forward."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: jotform.assign_form
+    object: Form
+    action: assign_form
+    description: "Assign a form to a user or group."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Grants a user or group access to a form and its submissions; widens who can view respondent data, and is reversible."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

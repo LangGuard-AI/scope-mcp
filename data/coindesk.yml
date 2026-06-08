@@ -1,0 +1,431 @@
+schema_version: "1.1"
+platform: coindesk
+display_name: CoinDesk
+source: langguard-editorial
+updated: "2026-06"
+reference: https://mcp.coindesk.com/
+actions:
+  # ---------- Spot & Index Market Data ----------
+  - id: coindesk.fetch_spot_instruments
+    object: SpotInstrument
+    action: fetch_spot_instruments
+    description: "Lists the spot-market trading instruments available across exchanges."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a read-only catalog of spot instruments; aggregate market metadata, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_spot_instrument_details
+    object: SpotInstrument
+    action: fetch_spot_instrument_details
+    description: "Returns metadata for a specific spot-market instrument."
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only metadata for one spot instrument; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_spot_tick
+    object: SpotTick
+    action: fetch_spot_tick
+    description: "Returns the latest spot tick (current price snapshot) for an instrument."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a read-only live spot price; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_spot_ohlcv
+    object: SpotCandle
+    action: fetch_spot_ohlcv
+    description: "Returns historical spot OHLCV (open/high/low/close/volume) candles."
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only historical spot price candles; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_spot_orderbook_metrics
+    object: SpotOrderbook
+    action: fetch_spot_orderbook_metrics
+    description: "Returns aggregated spot order-book depth and liquidity metrics."
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only spot order-book metrics; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_spot_orderbook_snapshot
+    object: SpotOrderbook
+    action: fetch_spot_orderbook_snapshot
+    description: "Returns a point-in-time snapshot of the spot order book."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a read-only spot order-book snapshot; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_spot_trades
+    object: SpotTrade
+    action: fetch_spot_trades
+    description: "Returns recent executed spot trades for an instrument."
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only spot trade history; aggregate exchange data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_spot_toplist
+    object: SpotInstrument
+    action: fetch_spot_toplist
+    description: "Returns the top spot instruments ranked by a metric such as 24h volume."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a read-only ranked list of spot instruments; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_index_tick
+    object: IndexTick
+    action: fetch_index_tick
+    description: "Returns the latest tick for a CoinDesk index."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a read-only index value snapshot; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_index_ohlcv
+    object: IndexCandle
+    action: fetch_index_ohlcv
+    description: "Returns historical OHLCV candles for a CoinDesk index."
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only historical index candles; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Futures Market Data ----------
+  - id: coindesk.fetch_futures_instruments
+    object: FuturesInstrument
+    action: fetch_futures_instruments
+    description: "Lists the futures trading instruments available across exchanges."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a read-only catalog of futures instruments; aggregate market metadata, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_futures_instrument_details
+    object: FuturesInstrument
+    action: fetch_futures_instrument_details
+    description: "Returns metadata for a specific futures instrument."
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only metadata for one futures instrument; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_futures_tick
+    object: FuturesTick
+    action: fetch_futures_tick
+    description: "Returns the latest futures tick (current price snapshot) for an instrument."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a read-only live futures price; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_futures_ohlcv
+    object: FuturesCandle
+    action: fetch_futures_ohlcv
+    description: "Returns historical futures OHLCV candles."
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only historical futures price candles; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_futures_oi_tick
+    object: OpenInterest
+    action: fetch_futures_oi_tick
+    description: "Returns the latest futures open-interest tick."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a read-only futures open-interest snapshot; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_futures_oi_ohlcv
+    object: OpenInterest
+    action: fetch_futures_oi_ohlcv
+    description: "Returns historical futures open-interest OHLCV candles."
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only historical futures open-interest series; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_futures_fr_tick
+    object: FundingRate
+    action: fetch_futures_fr_tick
+    description: "Returns the latest futures funding-rate tick."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a read-only futures funding-rate snapshot; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_futures_fr_ohlcv
+    object: FundingRate
+    action: fetch_futures_fr_ohlcv
+    description: "Returns historical futures funding-rate OHLCV candles."
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only historical futures funding-rate series; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_futures_oi_by_hour
+    object: OpenInterest
+    action: fetch_futures_oi_by_hour
+    description: "Returns hourly-bucketed futures open-interest data."
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only hourly futures open-interest data; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_futures_fr_by_hour
+    object: FundingRate
+    action: fetch_futures_fr_by_hour
+    description: "Returns hourly-bucketed futures funding-rate data."
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only hourly futures funding-rate data; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_futures_orderbook_metrics
+    object: FuturesOrderbook
+    action: fetch_futures_orderbook_metrics
+    description: "Returns aggregated futures order-book depth and liquidity metrics."
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only futures order-book metrics; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_futures_orderbook_snapshot
+    object: FuturesOrderbook
+    action: fetch_futures_orderbook_snapshot
+    description: "Returns a point-in-time snapshot of the futures order book."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a read-only futures order-book snapshot; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_futures_trades
+    object: FuturesTrade
+    action: fetch_futures_trades
+    description: "Returns recent executed futures trades for an instrument."
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only futures trade history; aggregate exchange data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Options Market Data ----------
+  - id: coindesk.fetch_options_instruments
+    object: OptionsInstrument
+    action: fetch_options_instruments
+    description: "Lists the options trading instruments available across exchanges."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a read-only catalog of options instruments; aggregate market metadata, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_options_instrument_details
+    object: OptionsInstrument
+    action: fetch_options_instrument_details
+    description: "Returns metadata for a specific options instrument."
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only metadata for one options instrument; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_options_tick
+    object: OptionsTick
+    action: fetch_options_tick
+    description: "Returns the latest options tick (current price snapshot) for an instrument."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a read-only live options price; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_options_ohlcv
+    object: OptionsCandle
+    action: fetch_options_ohlcv
+    description: "Returns historical options OHLCV candles."
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only historical options price candles; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_options_oi_tick
+    object: OpenInterest
+    action: fetch_options_oi_tick
+    description: "Returns the latest options open-interest tick."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a read-only options open-interest snapshot; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_options_oi_ohlcv
+    object: OpenInterest
+    action: fetch_options_oi_ohlcv
+    description: "Returns historical options open-interest OHLCV candles."
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only historical options open-interest series; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_options_oi_by_hour
+    object: OpenInterest
+    action: fetch_options_oi_by_hour
+    description: "Returns hourly-bucketed options open-interest data."
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only hourly options open-interest data; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_options_orderbook_metrics
+    object: OptionsOrderbook
+    action: fetch_options_orderbook_metrics
+    description: "Returns aggregated options order-book depth and liquidity metrics."
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only options order-book metrics; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_options_orderbook_snapshot
+    object: OptionsOrderbook
+    action: fetch_options_orderbook_snapshot
+    description: "Returns a point-in-time snapshot of the options order book."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a read-only options order-book snapshot; aggregate market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coindesk.fetch_options_trades
+    object: OptionsTrade
+    action: fetch_options_trades
+    description: "Returns recent executed options trades for an instrument."
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only options trade history; aggregate exchange data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- News ----------
+  - id: coindesk.fetch_news
+    object: NewsArticle
+    action: fetch_news
+    description: "Returns the latest crypto news articles from CoinDesk."
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only published news content; editorial data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Onchain Data ----------
+  - id: coindesk.fetch_onchain_historical_supply
+    object: OnchainSupply
+    action: fetch_onchain_historical_supply
+    description: "Returns historical circulating and staked token-supply data for an asset."
+    category: Data Access
+    risk: low
+    business_impact: "Returns read-only aggregate on-chain supply metrics; no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

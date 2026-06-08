@@ -1,0 +1,104 @@
+schema_version: "1.1"
+platform: unthread
+display_name: Unthread
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.unthread.io/docs/unthread-ai/unthread-mcp
+actions:
+  # ---------- Service ----------
+  - id: unthread.update_conversation
+    object: Conversation
+    action: update_conversation
+    description: "Updates an existing support conversation (ticket) — status, priority, and fields."
+    category: Service
+    risk: medium
+    business_impact: "Mutates a customer support ticket's state and fields; reversible but touches customer-identifiable records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: unthread.create_conversation_comment
+    object: Conversation
+    action: create_conversation_comment
+    description: "Posts a comment to a support conversation thread (supports Slack block format)."
+    category: Service
+    risk: low
+    business_impact: "Adds a comment to a support ticket thread; reversible and individually audited, but may reference customer personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: unthread.create_approval_request
+    object: ApprovalRequest
+    action: create_approval_request
+    description: "Creates an approval request tied to a support workflow."
+    category: Service
+    risk: medium
+    business_impact: "Initiates an approval-request workflow item against a support conversation; routes a business decision but does not itself approve it."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: unthread.list_survey_responses
+    object: SurveyResponse
+    action: list_survey_responses
+    description: "Lists individual customer survey responses."
+    category: Data Access
+    risk: high
+    business_impact: "Bulk read of individual customer survey responses, including respondent identity and free-text feedback; data-exfiltration surface."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: unthread.list_outbound_survey_responses
+    object: SurveyResponse
+    action: list_outbound_survey_responses
+    description: "Lists individual responses to outbound surveys."
+    category: Data Access
+    risk: high
+    business_impact: "Bulk read of individual outbound-survey responses tied to identifiable customers; data-exfiltration surface."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: unthread.get_survey_analytics
+    object: SurveyAnalytics
+    action: get_survey_analytics
+    description: "Returns aggregated survey analytics for a date range (requires startDate and endDate together)."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregated survey metrics over a date range; non-individual, no direct PII exposure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: unthread.list_surveys
+    object: Survey
+    action: list_surveys
+    description: "Lists survey definitions configured in the workspace."
+    category: Data Access
+    risk: low
+    business_impact: "Reads survey definitions (configuration metadata); no individual customer data exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: unthread.get_outbound_survey
+    object: Survey
+    action: get_outbound_survey
+    description: "Retrieves a single outbound survey definition."
+    category: Data Access
+    risk: low
+    business_impact: "Reads a single outbound-survey definition (configuration metadata); no individual customer data exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

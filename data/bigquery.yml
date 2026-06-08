@@ -1,17 +1,46 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: bigquery
 display_name: Google BigQuery
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://docs.cloud.google.com/bigquery/docs/use-bigquery-mcp
 actions:
+  # ---------- Query Execution ----------
+  - id: bigquery.execute_sql
+    object: Query
+    action: execute_sql
+    description: "Runs any SQL the project supports — SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, and AI/ML functions."
+    reference: https://docs.cloud.google.com/bigquery/docs/reference/mcp/tools_list/execute_sql
+    category: Data Access
+    risk: critical
+    business_impact: "Executes arbitrary DML/DDL against the warehouse — can drop tables, delete rows, mutate or exfiltrate warehouse-scale PII and financial records with no review gate."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  - id: bigquery.execute_sql_readonly
+    object: Query
+    action: execute_sql_readonly
+    description: "Runs a read-only SELECT query (no DML/DDL); returns rows the principal is authorized to read."
+    reference: https://docs.cloud.google.com/bigquery/docs/reference/mcp/tools_list/execute_sql
+    category: Data Access
+    risk: high
+    business_impact: "Reads any data the principal is authorized for, including warehouse-scale PII and financial records; bulk-read data-exfiltration surface even though it cannot mutate data."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
   # ---------- Catalog Discovery ----------
-  - id: bigquery.list_dataset_ids
-    object: Dataset
-    action: list_dataset_ids
+  - id: bigquery.get_table_info
+    object: Table
+    action: get_table_info
+    description: "Get metadata information about a BigQuery table."
     category: Data Access
     risk: low
-    business_impact: "Enumerates BigQuery dataset IDs in a project."
-    compliance: [SOC2]
+    business_impact: "Returns table schema, partitioning, and metadata; exposes column names and structure but no row-level data."
+    compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP, CLI]
@@ -19,10 +48,11 @@ actions:
   - id: bigquery.get_dataset_info
     object: Dataset
     action: get_dataset_info
+    description: "Get metadata information about a BigQuery dataset."
     category: Data Access
     risk: low
-    business_impact: "Returns dataset-level metadata (location, labels, ACL summary)."
-    compliance: [SOC2]
+    business_impact: "Returns dataset-level metadata (location, labels, ACL summary); no row-level data."
+    compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP, CLI]
@@ -30,33 +60,23 @@ actions:
   - id: bigquery.list_table_ids
     object: Table
     action: list_table_ids
+    description: "List table ids in a BigQuery dataset."
     category: Data Access
     risk: low
-    business_impact: "Enumerates tables within a BigQuery dataset."
+    business_impact: "Enumerates table identifiers within a dataset; reveals naming/structure but no data."
     compliance: [SOC2]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP, CLI]
 
-  - id: bigquery.get_table_info
-    object: Table
-    action: get_table_info
+  - id: bigquery.list_dataset_ids
+    object: Dataset
+    action: list_dataset_ids
+    description: "List BigQuery dataset IDs in a Google Cloud project."
     category: Data Access
     risk: low
-    business_impact: "Returns table schema, partitioning, and row-count metadata."
+    business_impact: "Enumerates dataset identifiers in a project; reveals naming/structure but no data."
     compliance: [SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP, CLI]
-
-  # ---------- Query Execution ----------
-  - id: bigquery.execute_sql
-    object: Query
-    action: execute_sql
-    category: Data Access
-    risk: high
-    business_impact: "Runs a SQL query against BigQuery; can read any data the principal is authorized for, including warehouse-scale PII and financial records."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP, CLI]

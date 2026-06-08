@@ -1,16 +1,318 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: ahrefs
 display_name: Ahrefs
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://docs.ahrefs.com/docs/mcp/reference/introduction
 actions:
-  # ---------- Documentation ----------
-  - id: ahrefs.doc
-    object: Documentation
-    action: doc
+  # ---------- Site Explorer ----------
+  - id: ahrefs.site-explorer-metrics
+    object: Site
+    action: site-explorer-metrics
+    description: "Provides SEO performance metrics for a specified domain, URL, or site section as of a given date."
     category: Data Access
     risk: low
-    business_impact: "Returns Ahrefs API documentation context to the agent."
+    business_impact: "Returns top-line organic and paid SEO metrics for a target; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-metrics-by-country
+    object: Site
+    action: site-explorer-metrics-by-country
+    description: "Provides organic and paid search performance metrics for a specified website, broken down by country, for a specific date."
+    category: Data Access
+    risk: low
+    business_impact: "Returns site SEO metrics segmented by country; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-metrics-history
+    object: Site
+    action: site-explorer-metrics-history
+    description: "Retrieves historical organic and paid search traffic and cost metrics for a domain, URL, or path over a date range."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a historical SEO-metrics time series for a target; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-domain-rating
+    object: Site
+    action: site-explorer-domain-rating
+    description: "Retrieves the domain rating and related metrics for a specified domain or URL as of a specific date."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the current Domain Rating for a target; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-domain-rating-history
+    object: Site
+    action: site-explorer-domain-rating-history
+    description: "Retrieves historical domain rating data for a specified domain or URL over a date range and grouping interval."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the Domain Rating history for a target; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-url-rating-history
+    object: Page
+    action: site-explorer-url-rating-history
+    description: "Retrieves historical URL rating data for a specified domain or URL over a date range, grouped by time interval."
+    category: Data Access
+    risk: low
+    business_impact: "Returns URL Rating history for a target page; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-backlinks-stats
+    object: Backlink
+    action: site-explorer-backlinks-stats
+    description: "Provides backlink statistics for a specified URL or domain as of a given date."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregate backlink statistics for a target; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-all-backlinks
+    object: Backlink
+    action: site-explorer-all-backlinks
+    description: "Retrieves detailed information about all backlinks pointing to a specified URL or domain, with filtering, sorting, and aggregation."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the full backlink set for a target; bulk but read-only public-web link data, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-broken-backlinks
+    object: Backlink
+    action: site-explorer-broken-backlinks
+    description: "Retrieves broken backlinks (links pointing to non-functioning pages) for a specified domain or URL."
+    category: Data Access
+    risk: low
+    business_impact: "Returns backlinks that resolve to non-200 pages; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-refdomains
+    object: Site
+    action: site-explorer-refdomains
+    description: "Retrieves referring domains that link to a specified target domain or URL, with filtering and sorting."
+    category: Data Access
+    risk: low
+    business_impact: "Returns referring domains for a target; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-refdomains-history
+    object: Site
+    action: site-explorer-refdomains-history
+    description: "Provides historical referring-domain counts for a target over a defined date range."
+    category: Data Access
+    risk: low
+    business_impact: "Returns historical referring-domain counts; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-anchors
+    object: Backlink
+    action: site-explorer-anchors
+    description: "Retrieves anchor text and associated backlink metrics for a specified domain or URL."
+    category: Data Access
+    risk: low
+    business_impact: "Returns anchor-text distribution for inbound links; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-linked-anchors-external
+    object: Backlink
+    action: site-explorer-linked-anchors-external
+    description: "Retrieves external anchor text used in outbound links from a specified domain, subdomain, or URL."
+    category: Data Access
+    risk: low
+    business_impact: "Returns anchor text used on external pages linking out from the target; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-linked-anchors-internal
+    object: Backlink
+    action: site-explorer-linked-anchors-internal
+    description: "Retrieves internal anchor text data detailing how anchors are used in links between pages on the same site."
+    category: Data Access
+    risk: low
+    business_impact: "Returns anchor text used on internal pages of the target; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-linkeddomains
+    object: Site
+    action: site-explorer-linkeddomains
+    description: "Retrieves external domains that are linked from a specified target domain or URL."
+    category: Data Access
+    risk: low
+    business_impact: "Returns external domains linked to from the target; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-outlinks-stats
+    object: Site
+    action: site-explorer-outlinks-stats
+    description: "Retrieves statistical data about the outbound links from a specified URL, domain, or site section."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregate outbound-link statistics; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-best-by-external-links
+    object: Page
+    action: site-explorer-best-by-external-links
+    description: "Returns a site's or URL's best-performing pages ranked by referring external link count."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the top pages on a site ranked by external link count; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-best-by-internal-links
+    object: Page
+    action: site-explorer-best-by-internal-links
+    description: "Retrieves internal link metrics showing how pages within a domain are interconnected."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the top pages on a site ranked by internal link count; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-organic-keywords
+    object: Site
+    action: site-explorer-organic-keywords
+    description: "Retrieves organic keyword data for a domain, URL, or path, including rankings, intent, SERP features, traffic, and CPC."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the organic keywords a site ranks for; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-organic-competitors
+    object: Site
+    action: site-explorer-organic-competitors
+    description: "Retrieves organic search competitors for a website or URL with comparative SEO metrics."
+    category: Data Access
+    risk: low
+    business_impact: "Returns sites competing with the target on organic search; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-keywords-history
+    object: Site
+    action: site-explorer-keywords-history
+    description: "Retrieves historical counts of organic keywords a site has ranked for, segmented by search position ranges."
+    category: Data Access
+    risk: low
+    business_impact: "Returns historical keyword-ranking counts for a site; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-pages-by-traffic
+    object: Page
+    action: site-explorer-pages-by-traffic
+    description: "Retrieves pages from a domain or URL ranked by estimated organic search traffic for a country and protocol."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the top pages on a site ranked by estimated traffic; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-pages-history
+    object: Page
+    action: site-explorer-pages-history
+    description: "Retrieves historical page data from a domain, URL, or site section, grouped by time interval."
+    category: Data Access
+    risk: low
+    business_impact: "Returns historical page-count metrics for a site; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-paid-pages
+    object: Page
+    action: site-explorer-paid-pages
+    description: "Returns pages on a site or URL ranking in paid search results, with traffic, keyword, and ad data."
+    category: Data Access
+    risk: low
+    business_impact: "Returns pages from a site visible in paid search; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-top-pages
+    object: Page
+    action: site-explorer-top-pages
+    description: "Returns the top-performing pages for a website or URL with detailed SEO metrics and date comparison."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the top traffic-driving pages on a site; read-only public-web intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.site-explorer-total-search-volume-history
+    object: Site
+    action: site-explorer-total-search-volume-history
+    description: "Retrieves historical total organic search volume, traffic, and traffic value for a site or URL."
+    category: Data Access
+    risk: low
+    business_impact: "Returns historical aggregate search volume for a site's ranked terms; read-only public-web intelligence."
     compliance: []
     sod_concern: false
     confidence: high
@@ -20,53 +322,10 @@ actions:
   - id: ahrefs.keywords-explorer-overview
     object: Keyword
     action: keywords-explorer-overview
+    description: "Provides keyword metrics including search volume, CPC, ranking difficulty, traffic potential, and intent for a country."
     category: Data Access
     risk: low
-    business_impact: "Returns aggregate metrics for a list of keywords."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.keywords-explorer-matching-terms
-    object: Keyword
-    action: keywords-explorer-matching-terms
-    category: Data Access
-    risk: low
-    business_impact: "Returns keyword variations that include the seed term."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.keywords-explorer-related-terms
-    object: Keyword
-    action: keywords-explorer-related-terms
-    category: Data Access
-    risk: low
-    business_impact: "Returns semantically related keywords."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.keywords-explorer-search-suggestions
-    object: Keyword
-    action: keywords-explorer-search-suggestions
-    category: Data Access
-    risk: low
-    business_impact: "Returns autocomplete-style search suggestions."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.keywords-explorer-volume-by-country
-    object: Keyword
-    action: keywords-explorer-volume-by-country
-    category: Data Access
-    risk: low
-    business_impact: "Returns search volume per country for a keyword."
+    business_impact: "Returns aggregate metrics for a list of keywords; read-only public-web intelligence."
     compliance: []
     sod_concern: false
     confidence: high
@@ -75,296 +334,58 @@ actions:
   - id: ahrefs.keywords-explorer-volume-history
     object: Keyword
     action: keywords-explorer-volume-history
+    description: "Retrieves historical search volume data for a keyword within a country and date range."
     category: Data Access
     risk: low
-    business_impact: "Returns historical search-volume time series."
+    business_impact: "Returns a historical search-volume time series for a keyword; read-only public-web intelligence."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  # ---------- Site Explorer ----------
-  - id: ahrefs.site-explorer-metrics
-    object: Site
-    action: site-explorer-metrics
+  - id: ahrefs.keywords-explorer-volume-by-country
+    object: Keyword
+    action: keywords-explorer-volume-by-country
+    description: "Retrieves search volume metrics for a keyword broken down by country."
     category: Data Access
     risk: low
-    business_impact: "Returns top-line traffic and authority metrics for a target URL."
+    business_impact: "Returns search volume per country for a keyword; read-only public-web intelligence."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: ahrefs.site-explorer-metrics-by-country
-    object: Site
-    action: site-explorer-metrics-by-country
+  - id: ahrefs.keywords-explorer-matching-terms
+    object: Keyword
+    action: keywords-explorer-matching-terms
+    description: "Retrieves keyword ideas and SEO metrics by matching input terms or phrases in a country."
     category: Data Access
     risk: low
-    business_impact: "Returns site metrics broken down by country."
+    business_impact: "Returns keyword variations that include the seed term; read-only public-web intelligence."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: ahrefs.site-explorer-metrics-history
-    object: Site
-    action: site-explorer-metrics-history
+  - id: ahrefs.keywords-explorer-related-terms
+    object: Keyword
+    action: keywords-explorer-related-terms
+    description: "Returns related terms such as 'also rank for' and 'also talk about' keywords for a keyword or list."
     category: Data Access
     risk: low
-    business_impact: "Returns historical site metrics time series."
+    business_impact: "Returns semantically related keywords; read-only public-web intelligence."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: ahrefs.site-explorer-domain-rating
-    object: Site
-    action: site-explorer-domain-rating
+  - id: ahrefs.keywords-explorer-search-suggestions
+    object: Keyword
+    action: keywords-explorer-search-suggestions
+    description: "Provides keyword search suggestions and related metrics for queries or keyword lists, by country."
     category: Data Access
     risk: low
-    business_impact: "Returns the current Domain Rating for a target."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.site-explorer-domain-rating-history
-    object: Site
-    action: site-explorer-domain-rating-history
-    category: Data Access
-    risk: low
-    business_impact: "Returns the Domain Rating history for a target."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.site-explorer-url-rating-history
-    object: Site
-    action: site-explorer-url-rating-history
-    category: Data Access
-    risk: low
-    business_impact: "Returns URL Rating history for a target page."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.site-explorer-all-backlinks
-    object: Backlink
-    action: site-explorer-all-backlinks
-    category: Data Access
-    risk: low
-    business_impact: "Returns the full backlink set for a target URL or domain."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.site-explorer-broken-backlinks
-    object: Backlink
-    action: site-explorer-broken-backlinks
-    category: Data Access
-    risk: low
-    business_impact: "Returns backlinks that resolve to non-200 pages."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.site-explorer-backlinks-stats
-    object: Backlink
-    action: site-explorer-backlinks-stats
-    category: Data Access
-    risk: low
-    business_impact: "Returns aggregate backlink statistics."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.site-explorer-anchors
-    object: Backlink
-    action: site-explorer-anchors
-    category: Data Access
-    risk: low
-    business_impact: "Returns anchor-text distribution for inbound links."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.site-explorer-linked-anchors-external
-    object: Backlink
-    action: site-explorer-linked-anchors-external
-    category: Data Access
-    risk: low
-    business_impact: "Returns anchor text used on external pages linking to the target."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.site-explorer-linked-anchors-internal
-    object: Backlink
-    action: site-explorer-linked-anchors-internal
-    category: Data Access
-    risk: low
-    business_impact: "Returns anchor text used on internal pages linking to the target."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.site-explorer-linkeddomains
-    object: Site
-    action: site-explorer-linkeddomains
-    category: Data Access
-    risk: low
-    business_impact: "Returns external domains linked to from the target."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.site-explorer-refdomains
-    object: Site
-    action: site-explorer-refdomains
-    category: Data Access
-    risk: low
-    business_impact: "Returns referring domains for a target URL or domain."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.site-explorer-refdomains-history
-    object: Site
-    action: site-explorer-refdomains-history
-    category: Data Access
-    risk: low
-    business_impact: "Returns historical referring-domain counts."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.site-explorer-best-by-external-links
-    object: Page
-    action: site-explorer-best-by-external-links
-    category: Data Access
-    risk: low
-    business_impact: "Returns the top pages on a site ranked by external link count."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.site-explorer-best-by-internal-links
-    object: Page
-    action: site-explorer-best-by-internal-links
-    category: Data Access
-    risk: low
-    business_impact: "Returns the top pages on a site ranked by internal link count."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.site-explorer-keywords-history
-    object: Site
-    action: site-explorer-keywords-history
-    category: Data Access
-    risk: low
-    business_impact: "Returns historical keyword-ranking counts for a site."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.site-explorer-organic-keywords
-    object: Site
-    action: site-explorer-organic-keywords
-    category: Data Access
-    risk: low
-    business_impact: "Returns the organic keywords a site ranks for."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.site-explorer-organic-competitors
-    object: Site
-    action: site-explorer-organic-competitors
-    category: Data Access
-    risk: low
-    business_impact: "Returns sites competing with the target on organic search."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.site-explorer-outlinks-stats
-    object: Site
-    action: site-explorer-outlinks-stats
-    category: Data Access
-    risk: low
-    business_impact: "Returns aggregate outbound-link statistics."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.site-explorer-pages-by-traffic
-    object: Page
-    action: site-explorer-pages-by-traffic
-    category: Data Access
-    risk: low
-    business_impact: "Returns the top pages on a site ranked by estimated traffic."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.site-explorer-pages-history
-    object: Page
-    action: site-explorer-pages-history
-    category: Data Access
-    risk: low
-    business_impact: "Returns historical page-count metrics for a site."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.site-explorer-paid-pages
-    object: Page
-    action: site-explorer-paid-pages
-    category: Data Access
-    risk: low
-    business_impact: "Returns pages from a site visible in paid search."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.site-explorer-top-pages
-    object: Page
-    action: site-explorer-top-pages
-    category: Data Access
-    risk: low
-    business_impact: "Returns the top traffic-driving pages on a site."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: ahrefs.site-explorer-total-search-volume-history
-    object: Site
-    action: site-explorer-total-search-volume-history
-    category: Data Access
-    risk: low
-    business_impact: "Returns historical aggregate search volume for a site's ranked terms."
+    business_impact: "Returns autocomplete-style search suggestions; read-only public-web intelligence."
     compliance: []
     sod_concern: false
     confidence: high
@@ -374,9 +395,10 @@ actions:
   - id: ahrefs.serp-overview-serp-overview
     object: SERP
     action: serp-overview-serp-overview
+    description: "Returns an overview of the top search results (SERP) for a keyword and country with per-result metrics."
     category: Data Access
     risk: low
-    business_impact: "Returns the SERP composition for a query."
+    business_impact: "Returns the SERP composition for a query; read-only public-web intelligence."
     compliance: []
     sod_concern: false
     confidence: high
@@ -385,9 +407,10 @@ actions:
   - id: ahrefs.batch-analysis-batch-analysis
     object: BatchAnalysis
     action: batch-analysis-batch-analysis
+    description: "Performs a batch analysis of multiple URLs, domains, or subdomains to retrieve selected SEO, backlink, and traffic metrics."
     category: Data Access
     risk: low
-    business_impact: "Returns metrics for many URLs or keywords in one call."
+    business_impact: "Returns metrics for many URLs or keywords in one call; bulk but read-only public-web intelligence, not personal data."
     compliance: []
     sod_concern: false
     confidence: high
@@ -397,9 +420,10 @@ actions:
   - id: ahrefs.rank-tracker-overview
     object: RankTracker
     action: rank-tracker-overview
+    description: "Provides an overview of tracked keyword rankings and search metrics for a project and date."
     category: Data Access
     risk: low
-    business_impact: "Returns top-line rank-tracking metrics for the user's tracked project."
+    business_impact: "Returns top-line rank-tracking metrics for the user's tracked project; read-only."
     compliance: []
     sod_concern: false
     confidence: high
@@ -408,9 +432,119 @@ actions:
   - id: ahrefs.rank-tracker-competitors-overview
     object: RankTracker
     action: rank-tracker-competitors-overview
+    description: "Provides an overview of competitor rankings and keyword metrics for a project and date."
     category: Data Access
     risk: low
-    business_impact: "Returns rank-tracker metrics for tracked competitors."
+    business_impact: "Returns rank-tracker metrics for tracked competitors; read-only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Brand Radar (AI Visibility) ----------
+  - id: ahrefs.brand-radar-ai-responses
+    object: BrandRadar
+    action: brand-radar-ai-responses
+    description: "Retrieves AI-assistant responses where a tracked brand, product, or entity appears, across monitored AI platforms."
+    category: Data Access
+    risk: low
+    business_impact: "Returns sampled AI-platform responses mentioning a tracked brand or topic; read-only aggregate AI-visibility intelligence, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.brand-radar-cited-domains
+    object: BrandRadar
+    action: brand-radar-cited-domains
+    description: "Retrieves domains cited by AI platforms in responses related to a tracked brand or topic."
+    category: Data Access
+    risk: low
+    business_impact: "Returns domains AI platforms cite for a tracked brand or topic; read-only public-web/AI-visibility intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.brand-radar-cited-pages
+    object: BrandRadar
+    action: brand-radar-cited-pages
+    description: "Retrieves individual pages cited by AI platforms in responses related to a tracked brand or topic."
+    category: Data Access
+    risk: low
+    business_impact: "Returns pages AI platforms cite for a tracked brand or topic; read-only public-web/AI-visibility intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.brand-radar-impressions-overview
+    object: BrandRadar
+    action: brand-radar-impressions-overview
+    description: "Provides an overview of estimated AI-platform impressions for a tracked brand, product, or entity."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregate AI-impression metrics for a tracked brand; read-only AI-visibility intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.brand-radar-impressions-history
+    object: BrandRadar
+    action: brand-radar-impressions-history
+    description: "Retrieves historical AI-platform impression metrics for a tracked brand over a date range."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a historical AI-impression time series for a tracked brand; read-only AI-visibility intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.brand-radar-mentions-overview
+    object: BrandRadar
+    action: brand-radar-mentions-overview
+    description: "Provides an overview of how often a tracked brand, product, or entity is mentioned across AI platforms."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregate AI-mention metrics for a tracked brand; read-only AI-visibility intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.brand-radar-mentions-history
+    object: BrandRadar
+    action: brand-radar-mentions-history
+    description: "Retrieves historical AI-platform mention metrics for a tracked brand over a date range."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a historical AI-mention time series for a tracked brand; read-only AI-visibility intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.brand-radar-sov-overview
+    object: BrandRadar
+    action: brand-radar-sov-overview
+    description: "Provides an overview of a tracked brand's share of voice across AI platforms relative to competitors."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregate AI share-of-voice metrics for a tracked brand and its competitors; read-only AI-visibility intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.brand-radar-sov-history
+    object: BrandRadar
+    action: brand-radar-sov-history
+    description: "Retrieves historical AI-platform share-of-voice metrics for a tracked brand over a date range."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a historical AI share-of-voice time series for a tracked brand; read-only AI-visibility intelligence."
     compliance: []
     sod_concern: false
     confidence: high
@@ -420,9 +554,10 @@ actions:
   - id: ahrefs.site-audit-projects
     object: AuditProject
     action: site-audit-projects
+    description: "Retrieves the list of site audit projects available in the workspace."
     category: Data Access
     risk: low
-    business_impact: "Returns the user's site-audit projects."
+    business_impact: "Returns the user's site-audit projects; read-only listing of first-party project config."
     compliance: []
     sod_concern: false
     confidence: high
@@ -432,9 +567,10 @@ actions:
   - id: ahrefs.management-projects
     object: Project
     action: management-projects
+    description: "Retrieves existing projects including ownership, access type, Rank Tracker keyword presence, and project ID."
     category: Operations
     risk: low
-    business_impact: "Lists Ahrefs projects accessible to the workspace."
+    business_impact: "Lists the workspace's Ahrefs projects and their access config; read-only first-party account data."
     compliance: []
     sod_concern: false
     confidence: high
@@ -443,9 +579,10 @@ actions:
   - id: ahrefs.management-locations
     object: Project
     action: management-locations
+    description: "Retrieves management locations filtered by country code and optionally US state."
     category: Operations
     risk: low
-    business_impact: "Lists tracked locations for a project."
+    business_impact: "Lists tracked locations for a project; read-only first-party account data."
     compliance: []
     sod_concern: false
     confidence: high
@@ -454,9 +591,10 @@ actions:
   - id: ahrefs.management-project-keywords
     object: Project
     action: management-project-keywords
+    description: "Retrieves keywords associated with a specific Rank Tracker project by project ID."
     category: Operations
     risk: low
-    business_impact: "Lists keywords tracked under a project."
+    business_impact: "Lists keywords tracked under a project; read-only first-party account data."
     compliance: []
     sod_concern: false
     confidence: high
@@ -465,9 +603,61 @@ actions:
   - id: ahrefs.management-project-competitors
     object: Project
     action: management-project-competitors
+    description: "Retrieves competitors associated with a specific Rank Tracker project by project ID."
     category: Operations
     risk: low
-    business_impact: "Lists competitors tracked under a project."
+    business_impact: "Lists competitors tracked under a project; read-only first-party account data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Public Crawler ----------
+  - id: ahrefs.public-crawler-ips
+    object: CrawlerIP
+    action: public-crawler-ips
+    description: "Returns the list of IP addresses currently used by AhrefsBot, the Ahrefs web crawler."
+    category: Operations
+    risk: low
+    business_impact: "Returns Ahrefs' published crawler IP addresses; free public infrastructure data, no account or personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: ahrefs.public-crawler-ip-ranges
+    object: CrawlerIP
+    action: public-crawler-ip-ranges
+    description: "Returns the IP address ranges (CIDR blocks) currently used by AhrefsBot, the Ahrefs web crawler."
+    category: Operations
+    risk: low
+    business_impact: "Returns Ahrefs' published crawler IP ranges; free public infrastructure data, no account or personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Account ----------
+  - id: ahrefs.subscription-info-limits-and-usage
+    object: Subscription
+    action: subscription-info-limits-and-usage
+    description: "Returns the account's subscription plan, API-unit limits, and current key- and workspace-level usage for the billing period."
+    category: Operations
+    risk: low
+    business_impact: "Returns first-party subscription plan, API-unit limits, and usage metadata for the account; no personal data and no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Documentation ----------
+  - id: ahrefs.doc
+    object: Documentation
+    action: doc
+    description: "Full documentation for Ahrefs tools; returns the input schema for any other tool."
+    category: Data Access
+    risk: low
+    business_impact: "Returns Ahrefs tool documentation and input schemas to the agent; no platform data accessed."
     compliance: []
     sod_concern: false
     confidence: high

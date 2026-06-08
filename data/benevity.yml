@@ -1,16 +1,18 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: benevity
 display_name: Benevity
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://causeshelp.benevity.org/hc/en-us/articles/43364091494164-Benevity-nonprofit-MCP-server
 actions:
-  # ---------- Nonprofit Discovery ----------
+  # ---------- Data Access ----------
   - id: benevity.benevity_nonprofit_search
     object: Nonprofit
     action: benevity_nonprofit_search
+    description: "Searches Benevity's public database of validated nonprofits by keyword, location, or cause type and returns up to 10 organizations."
     category: Data Access
     risk: low
-    business_impact: "Searches Benevity's public directory of validated nonprofits by location and cause."
+    business_impact: "Read-only search of Benevity's public nonprofit directory; returns organization names, missions, and locations with no personal data involved."
     compliance: []
     sod_concern: false
     confidence: high
@@ -19,9 +21,10 @@ actions:
   - id: benevity.benevity_nonprofit_details
     object: Nonprofit
     action: benevity_nonprofit_details
+    description: "Retrieves the full mission, programs, geographic reach, verification status, and verified website link for specific nonprofits by their cause identifiers."
     category: Data Access
     risk: low
-    business_impact: "Returns mission, programs, and impact details for a specific nonprofit."
+    business_impact: "Read-only lookup of public profile details for a specific nonprofit; returns organizational information only, no personal data."
     compliance: []
     sod_concern: false
     confidence: high

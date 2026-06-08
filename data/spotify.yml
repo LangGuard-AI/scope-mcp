@@ -1,0 +1,73 @@
+schema_version: "1.1"
+platform: spotify
+display_name: Spotify
+source: langguard-editorial
+updated: "2026-06"
+# No official Spotify-operated MCP server URL or verbatim tools/list is published
+# anywhere reachable (developer.spotify.com/.../mcp returns 404; no mcp.spotify.com).
+# The official "Made by Spotify" connector publishes only plain-language capability
+# labels, quoted verbatim below in each action's `description`. Community Spotify MCP
+# servers exist but use conflicting naming conventions and are NOT authoritative for
+# this official connector, so they are not used as id sources. Per the curator spec's
+# capability-form fallback, ids below are intent-level slugs (id_form: capability) and
+# confidence is capped at medium.
+reference: https://claude.com/connectors/spotify
+actions:
+  # ---------- Playback ----------
+  - id: spotify.play_in_spotify
+    object: Playback
+    action: play_in_spotify
+    id_form: capability
+    description: "Ask for songs, artists, albums, or playlists and play them in Spotify"
+    reference: https://claude.com/connectors/spotify
+    category: Operations
+    risk: low
+    business_impact: "Starts or queues playback of requested content on the user's account; reversible and limited to consumer listening state."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: spotify.switch_devices
+    object: Device
+    action: switch_devices
+    id_form: capability
+    description: "Easily see where Spotify is playing and switch devices to keep listening wherever you are"
+    reference: https://claude.com/connectors/spotify
+    category: Operations
+    risk: low
+    business_impact: "Reads the user's active-device list and transfers playback between their devices; exposes device-presence data tied to the identifiable user."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Library & Personalization ----------
+  - id: spotify.generate_personalized_playlist
+    object: Playlist
+    action: generate_personalized_playlist
+    id_form: capability
+    description: "Spotify Premium listeners can describe a vibe and get a personalized playlist made to match"
+    reference: https://claude.com/connectors/spotify
+    category: Operations
+    risk: low
+    business_impact: "Builds a new playlist in the user's library from a free-text vibe, profiling listening preferences to personalize the result; reversible and individually owned."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Discovery ----------
+  - id: spotify.find_podcasts
+    object: Show
+    action: find_podcasts
+    id_form: capability
+    description: "Find podcasts for any topic you are exploring"
+    reference: https://claude.com/connectors/spotify
+    category: Data Access
+    risk: low
+    business_impact: "Searches Spotify's public podcast catalog by topic; read-only over non-personal catalog data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

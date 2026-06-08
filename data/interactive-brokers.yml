@@ -1,0 +1,91 @@
+schema_version: "1.1"
+platform: interactive-brokers
+display_name: Interactive Brokers (IBKR)
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/connectors/interactive-brokers
+# PROVENANCE: IBKR's certified connector routes through IBKR infrastructure and
+# is OAuth-gated; the live MCP server publishes NO anonymous tools/list, and
+# IBKR publishes no verbatim MCP tool-id reference anywhere reachable. The
+# official connector page lists only plain-language capability labels and
+# example prompts (confirmed via the live page on 2026-06). Community GitHub
+# IBKR MCP servers exist but use conflicting, unofficial names (place_order,
+# get_account_summary, etc.) and are NOT this certified connector, so their ids
+# are deliberately NOT used. Entries below are therefore capability-form
+# (id_form: capability): ids are slugified from the verbatim capability labels,
+# every description is the verbatim label / example prompt, and confidence is
+# capped at medium (intent-level, not identifier-level, matching).
+# TAGGING NOTE: only 5 actions exist, so each regime is held to <=3 actions to
+# stay under the 60% over-tag ceiling. SOX+COSO ride the one financial-
+# transaction-shaped action (draft_trade_instructions). GLBA + the global
+# privacy stack ride the three financial-account-data reads. NY_DFS_500 is
+# tagged because IBKR is a NY-licensed broker-dealer handling NY consumer
+# financial data (covers MFA, audit logs, transaction integrity).
+actions:
+  # ---------- Trading ----------
+  - id: interactive-brokers.draft_trade_instructions
+    object: Order
+    action: draft_trade_instructions
+    id_form: capability
+    description: "draft trade instructions — for example, 'Buy 100 shares of AAPL at a limit of $200'"
+    category: Trading
+    risk: medium
+    business_impact: "Drafts an equity/ETF order that is sent to the IBKR account for mandatory human review and approval; Claude never submits to the market, so the order is reviewable and rejectable before execution, but a drafted financial transaction is created on the brokerage account."
+    compliance: [SOX, COSO, NY_DFS_500, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Financial ----------
+  - id: interactive-brokers.check_portfolio
+    object: Position
+    action: check_portfolio
+    id_form: capability
+    description: "What are my current positions and unrealized P&L?"
+    category: Financial
+    risk: medium
+    business_impact: "Reads the account holder's positions, allocations, and unrealized P&L; exposes individual brokerage financial holdings."
+    compliance: [GLBA, NY_DFS_500, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: interactive-brokers.review_account_balances
+    object: Account
+    action: review_account_balances
+    id_form: capability
+    description: "Show my cash balances and buying power across all accounts."
+    category: Financial
+    risk: medium
+    business_impact: "Reads cash balances and buying power across all linked accounts; exposes individual financial-account details subject to financial-privacy obligations."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: interactive-brokers.review_activity
+    object: Trade
+    action: review_activity
+    id_form: capability
+    description: "List my trades from the past week and any open orders."
+    category: Financial
+    risk: medium
+    business_impact: "Reads the account holder's trade history and open orders; exposes individual transaction-level brokerage activity."
+    compliance: [GLBA, NY_DFS_500, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: interactive-brokers.get_market_data
+    object: Instrument
+    action: get_market_data
+    id_form: capability
+    description: "Give me a price snapshot and 30-day history for AAPL."
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves public price snapshots and historical market data for an instrument; no account-holder personal or financial data is involved."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

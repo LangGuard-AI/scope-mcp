@@ -1,0 +1,46 @@
+schema_version: "1.1"
+platform: microsoft-learn
+display_name: Microsoft Learn
+source: langguard-editorial
+updated: "2026-06"
+reference: https://learn.microsoft.com/en-us/training/support/mcp
+actions:
+  # ---------- Data Access ----------
+  - id: microsoft-learn.microsoft_docs_search
+    object: Documentation
+    action: microsoft_docs_search
+    description: "Searches official, publicly available Microsoft/Azure documentation and returns up to 10 ranked content excerpts."
+    reference: https://learn.microsoft.com/en-us/training/support/mcp
+    category: Data Access
+    risk: low
+    business_impact: "Read-only semantic search over public Microsoft Learn content; returns no personal, account, or training data and changes no state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: microsoft-learn.microsoft_code_sample_search
+    object: CodeSample
+    action: microsoft_code_sample_search
+    description: "Searches official Microsoft Learn documentation for public code snippets, optionally filtered by programming language."
+    reference: https://learn.microsoft.com/en-us/training/support/mcp
+    category: Data Access
+    risk: low
+    business_impact: "Read-only retrieval of public Microsoft/Azure code samples; returns no personal or proprietary data and changes no state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: microsoft-learn.microsoft_docs_fetch
+    object: Documentation
+    action: microsoft_docs_fetch
+    description: "Fetches a Microsoft.com documentation page and converts its full content to markdown."
+    reference: https://learn.microsoft.com/en-us/training/support/mcp
+    category: Data Access
+    risk: low
+    business_impact: "Read-only fetch of a single public microsoft.com documentation page; server constrains input to microsoft.com HTML pages and changes no state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

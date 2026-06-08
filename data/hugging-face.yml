@@ -1,0 +1,193 @@
+schema_version: "1.1"
+platform: hugging-face
+display_name: Hugging Face
+source: langguard-editorial
+updated: "2026-06"
+reference: https://huggingface.co/docs/hub/en/hf-mcp-server
+actions:
+  # ---------- Compute & Execution ----------
+  - id: hugging-face.hf_jobs
+    object: Job
+    action: hf_jobs
+    description: "Remote compute for Hugging Face workflows; runs Python/UV or Docker jobs and supports submit, logs, inspect, cancel, and scheduled run/delete/suspend/resume operations."
+    reference: https://huggingface.co/docs/hub/en/hf-mcp-server
+    category: Platform & DevOps
+    risk: critical
+    business_impact: "Executes arbitrary remote code (Python/UV or Docker) on Hugging Face infrastructure and can cancel or delete scheduled jobs; unilateral compute execution with no review gate."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: hugging-face.dynamic_space
+    object: Space
+    action: dynamic_space
+    description: "Dynamically discovers and calls MCP-compatible community Gradio Spaces at runtime without adding them manually."
+    reference: https://huggingface.co/docs/hub/en/hf-mcp-server
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Invokes arbitrary third-party community Spaces on the fly, executing untrusted code and potentially sending inputs to external Space owners; open-world supply-chain and data-egress surface."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Repository ----------
+  - id: hugging-face.create_repo
+    object: Repository
+    action: create_repo
+    description: "Creates a Hugging Face model, dataset, space, or bucket repository, optionally private."
+    reference: https://huggingface.co/docs/hub/en/hf-mcp-server
+    category: Repository
+    risk: medium
+    business_impact: "Creates a new model, dataset, space, or bucket repository under the account; reversible by deletion but publishes a new artifact namespace."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: hugging-face.duplicate_space
+    object: Space
+    action: duplicate_space
+    description: "Duplicates an existing Hugging Face Space into the user's namespace."
+    reference: https://huggingface.co/docs/hub/en/hf-mcp-server
+    category: Repository
+    risk: low
+    business_impact: "Clones an existing Space into the user's namespace; reversible by deletion and low-impact."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: hugging-face.use_space
+    object: Space
+    action: use_space
+    description: "Returns a user-accessible link to a Hugging Face Space via mcp-ui."
+    reference: https://huggingface.co/docs/hub/en/hf-mcp-server
+    category: Repository
+    risk: low
+    business_impact: "Returns a link granting the user access to a Space via mcp-ui; read-only and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: hugging-face.space_files
+    object: Space
+    action: space_files
+    description: "Lists the files contained in a Hugging Face Space."
+    reference: https://huggingface.co/docs/hub/en/hf-mcp-server
+    category: Repository
+    risk: low
+    business_impact: "Lists the file tree of a Space; read-only discovery over Hub content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: hugging-face.space_info
+    object: Space
+    action: space_info
+    description: "Returns metadata and details for a Hugging Face Space."
+    reference: https://huggingface.co/docs/hub/en/hf-mcp-server
+    category: Repository
+    risk: low
+    business_impact: "Reads public metadata for a Space; read-only discovery."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: hugging-face.hub_repo_search
+    object: Repository
+    action: hub_repo_search
+    description: "Searches Hugging Face repositories (models, datasets, spaces) with a shared query interface, optionally aggregating across repo types."
+    reference: https://huggingface.co/docs/hub/en/hf-mcp-server
+    category: Data Access
+    risk: low
+    business_impact: "Searches the public Hub catalog of models, datasets, and spaces; read-only over public metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: hugging-face.hub_repo_details
+    object: Repository
+    action: hub_repo_details
+    description: "Returns details for one or more Hub repos and can preview dataset structure, schema, and sample rows via the dataset viewer."
+    reference: https://huggingface.co/docs/hub/en/hf-mcp-server
+    category: Data Access
+    risk: low
+    business_impact: "Reads repo metadata and can preview dataset rows; read-only over Hub-hosted content, which may include third-party data subject to the dataset's own license."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: hugging-face.space_search
+    object: Space
+    action: space_search
+    description: "Finds Hugging Face Spaces using semantic search."
+    reference: https://huggingface.co/docs/hub/en/hf-mcp-server
+    category: Data Access
+    risk: low
+    business_impact: "Semantic search over public Spaces; read-only over public metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: hugging-face.paper_search
+    object: Paper
+    action: paper_search
+    description: "Finds machine-learning research papers on the Hugging Face hub."
+    reference: https://huggingface.co/docs/hub/en/hf-mcp-server
+    category: Data Access
+    risk: low
+    business_impact: "Searches public ML research papers; read-only over public metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Documentation ----------
+  - id: hugging-face.hf_doc_search
+    object: Document
+    action: hf_doc_search
+    description: "Searches and discovers Hugging Face product and library documentation via semantic search."
+    reference: https://huggingface.co/docs/hub/en/hf-mcp-server
+    category: Data Access
+    risk: low
+    business_impact: "Searches public Hugging Face documentation; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: hugging-face.hf_doc_fetch
+    object: Document
+    action: hf_doc_fetch
+    description: "Fetches a document from the Hugging Face or Gradio documentation library."
+    reference: https://huggingface.co/docs/hub/en/hf-mcp-server
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves public documentation pages; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: hugging-face.hf_whoami
+    object: User
+    action: hf_whoami
+    description: "Returns the current Hugging Face account identity and authentication status, or instructions for joining and authenticating when used anonymously."
+    reference: https://huggingface.co/docs/hub/en/hf-mcp-server
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads the authenticated account's own identity; minimal exposure limited to the calling user's profile."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

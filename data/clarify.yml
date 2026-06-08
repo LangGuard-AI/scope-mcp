@@ -1,0 +1,264 @@
+schema_version: "1.1"
+platform: clarify
+display_name: Clarify
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+actions:
+  # ---------- Prospecting & Lead Sourcing ----------
+  - id: clarify.find-leads
+    object: Lead
+    action: find-leads
+    description: "Search Clarify's built-in prospect database of 28M+ companies and 175M+ people."
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Searches a third-party prospect database of 175M+ individuals; surfaces contact PII the workspace did not itself collect."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: clarify.import-leads
+    object: Lead
+    action: import-leads
+    description: "Import leads from a Clarify prospect search into your workspace."
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Bulk-ingests prospect PII sourced from a third-party database into the workspace; lawful-basis and consent obligations attach to the imported individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Records ----------
+  - id: clarify.query-data
+    object: "*"
+    action: query-data
+    description: "Search and analyze data across companies, people, deals, meetings, tasks, and users."
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Searches and analyzes across all CRM entities; can return bulk personal data of contacts and prospects in a single call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: clarify.get-records
+    object: Record
+    action: get-records
+    description: "Get full details for specific records by ID, including relationships and AI summaries."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Returns full record detail including contact PII, relationships, and AI-generated summaries for named records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: clarify.create-or-update-records
+    object: Record
+    action: create-or-update-records
+    description: "Create or update records in bulk (companies, people, deals, meetings, tasks, messages, and custom objects)."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Bulk-writes CRM records including personal data of companies and people; reversible but affects pipeline state at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: clarify.merge-records
+    object: Record
+    action: merge-records
+    description: "Merge duplicate records into a single primary record."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Collapses duplicate records into one; consolidates personal data and discards the merged record's distinct fields."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: clarify.delete-records
+    object: Record
+    action: delete-records
+    description: "Delete one or more records by ID."
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Deletes one or more CRM records containing personal data; removes pipeline and contact history for the targeted individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: clarify.add-comment
+    object: Comment
+    action: add-comment
+    description: "Add a comment to any supported record."
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Adds a comment to a record; reversible and individually scoped."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Campaigns ----------
+  - id: clarify.get-campaigns
+    object: Campaign
+    action: get-campaigns
+    description: "List campaigns in your workspace, or fetch a single campaign by ID."
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reads email campaign metadata in the workspace; reversible read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: clarify.create-or-update-campaign
+    object: Campaign
+    action: create-or-update-campaign
+    description: "Create a new email campaign or update an existing one."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Configures an outbound email campaign targeting contacts; downstream sends carry marketing-consent and anti-spam obligations not enforced by this tool."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: clarify.delete-campaign
+    object: Campaign
+    action: delete-campaign
+    description: "Delete a campaign by ID."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Deletes an email campaign and its configuration; reversible only by rebuilding the campaign."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Lists & Views ----------
+  - id: clarify.get-lists
+    object: List
+    action: get-lists
+    description: "Browse saved lists (views) for an entity type, or fetch a single list by ID."
+    category: Operations
+    risk: low
+    business_impact: "Reads saved list (view) definitions; reversible read of saved filters over CRM entities."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: clarify.create-or-update-list
+    object: List
+    action: create-or-update-list
+    description: "Create a new list (saved view) or update an existing one."
+    category: Operations
+    risk: low
+    business_impact: "Creates or updates a saved view over CRM entities; reversible configuration change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: clarify.delete-list
+    object: List
+    action: delete-list
+    description: "Delete a list by ID."
+    category: Operations
+    risk: medium
+    business_impact: "Deletes a saved list (view) definition; underlying records are unaffected but the curated view is lost."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Schema & Custom Objects ----------
+  - id: clarify.get-schema
+    object: Schema
+    action: get-schema
+    description: "Get the schema for Clarify entities (built-in and custom)."
+    category: Configuration
+    risk: low
+    business_impact: "Reads entity schema metadata; no record data is returned."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: clarify.create-or-update-custom-object
+    object: CustomObject
+    action: create-or-update-custom-object
+    description: "Create a new custom object type or update an existing one."
+    category: Configuration
+    risk: medium
+    business_impact: "Defines or alters a custom object type tenant-wide; changes the data model all records of that type conform to."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: clarify.delete-custom-object
+    object: CustomObject
+    action: delete-custom-object
+    description: "Delete a custom object type."
+    category: Configuration
+    risk: high
+    business_impact: "Removes an entire custom object type tenant-wide; cascades to the records and personal data stored under that type."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: clarify.create-or-update-fields
+    object: Field
+    action: create-or-update-fields
+    description: "Create or update fields on any entity (company, person, deal, or custom object)."
+    category: Configuration
+    risk: medium
+    business_impact: "Adds or alters custom fields on an entity tenant-wide; changes the shape of data captured for every record of that entity."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: clarify.delete-fields
+    object: Field
+    action: delete-fields
+    description: "Delete one or more custom fields from an entity."
+    category: Configuration
+    risk: high
+    business_impact: "Drops custom fields tenant-wide; destroys the data held in those fields across every record of the entity."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Account & Feedback ----------
+  - id: clarify.get-current-user
+    object: User
+    action: get-current-user
+    description: "Get your user profile, timezone, and current local time."
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns the calling user's own profile, timezone, and local time."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: clarify.submit-feedback
+    object: Feedback
+    action: submit-feedback
+    description: "Send feedback or feature requests about the MCP connector to the Clarify team."
+    category: Operations
+    risk: low
+    business_impact: "Sends connector feedback to the Clarify team; touches no CRM record data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

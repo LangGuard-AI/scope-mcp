@@ -1,0 +1,46 @@
+schema_version: "1.1"
+platform: kiwi-com
+display_name: Kiwi.com
+source: langguard-editorial
+updated: "2026-06"
+reference: https://mcp-install-instructions.alpic.cloud/servers/kiwi-com-flight-search
+# PROVENANCE: Live tools/list introspection of the hosted Kiwi.com MCP server
+# (https://mcp.kiwi.com/mcp, streamable-http, anonymous — no auth required)
+# returned exactly 2 tools. Both ids below are verbatim from that response
+# (see mcp-server/data/_sources/kiwi-com/introspect.cache.json). Note: vendor
+# blog posts and third-party catalogs claimed a single `search-flight` tool;
+# live introspection found a second tool (`feedback-to-devs`), which is why the
+# ground-truth introspection is authoritative here. The hyphenated tool names
+# are preserved exactly. Both tools are read-only-equivalent: the search tool is
+# annotated readOnlyHint:true and returns kiwi.com booking deep links (no booking
+# or payment occurs through the tool); the feedback tool is a one-way write with
+# destructiveHint:false. Passenger inputs are integer counts (adults/children/
+# infants), never identifiable personal records, so no privacy regime applies.
+actions:
+  # ---------- Data Access ----------
+  - id: kiwi-com.search-flight
+    object: Flight
+    action: search-flight
+    description: "Uses the Kiwi API to search for available flights between two locations on a specific date."
+    reference: https://mcp-install-instructions.alpic.cloud/servers/kiwi-com-flight-search
+    category: Data Access
+    risk: low
+    business_impact: "Performs a stateless, read-only flight search by origin, destination, dates, and passenger counts; returns a curated list of options with kiwi.com booking deep links, makes no booking or payment, and stores nothing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: kiwi-com.feedback-to-devs
+    object: Feedback
+    action: feedback-to-devs
+    description: "Send feedback to the dev of the Kiwi MCP server."
+    reference: https://mcp-install-instructions.alpic.cloud/servers/kiwi-com-flight-search
+    category: Operations
+    risk: low
+    business_impact: "Sends user-authored free-text feedback one-way to the Kiwi MCP maintainers; non-destructive, but any text the user includes (which could incidentally contain personal data) leaves the workspace to a third party."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

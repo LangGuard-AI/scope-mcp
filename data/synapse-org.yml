@@ -1,0 +1,100 @@
+schema_version: "1.1"
+platform: synapse-org
+display_name: Synapse.org
+source: langguard-editorial
+updated: "2026-06"
+reference: https://github.com/susheel/synapse-mcp
+# ---------------------------------------------------------------------------
+# PROVENANCE / id_form NOTE
+# Tool ids below are VERBATIM ground truth from the MCP server's own source.
+# The Synapse.org connector (made by Sage Bionetworks; biomedical research-data
+# repository) points at the open-source MCP server github.com/susheel/synapse-mcp.
+# The hosted endpoint https://mcp.synapse.org/mcp is OAuth-2.1-gated and returned
+# 401 to anonymous live introspection (no token available or invented), so the
+# tool surface was harvested from the server source instead:
+#   src/synapse_mcp/tools.py — five @mcp.tool() decorators.
+# FastMCP uses the decorated function name as the tool id (no name= override is
+# passed), so the registered ids are exactly the function names. The repo
+# README "Available Tools" table corroborates the same five, with no
+# "additional / remote-only / insiders" section anywhere on the page.
+#
+# SURFACE: the entire surface is READ-ONLY. Every tool carries
+# annotations.readOnlyHint=true and destructiveHint=false in source. There are
+# NO create / update / delete / write tools — Synapse entity mutation is not
+# exposed via this MCP. Tools fetch metadata/annotations/provenance for a single
+# entity by ID, list a container's children, or keyword-search the repository;
+# get_entity per the docstring "Only retrieves metadata information - does not
+# download file content." Full discovered count = 5; all 5 written; nothing
+# trimmed.
+#
+# COMPLIANCE NOTE: Synapse hosts human-subjects biomedical/genomic research
+# data, much of it controlled-access. Metadata, annotations, and search results
+# can plausibly surface or reference personal / health-related research data, so
+# the content-surfacing reads carry the privacy stack and HIPAA at medium
+# confidence (research data is often de-identified / Common-Rule rather than
+# HIPAA-covered — context-dependent). The vendor's own README ToS notice warns
+# that data sent to external AI may be stored or used for training and that
+# Synapse ToS prohibits redistribution; that data-governance concern is not a
+# canonical regime code and is captured in business_impact prose only.
+# ---------------------------------------------------------------------------
+actions:
+  # ---------- Data Access ----------
+  - id: synapse-org.search_synapse
+    object: Entity
+    action: search_synapse
+    description: "Search Synapse entities using keyword queries with optional name/type/parent filters."
+    category: Data Access
+    risk: medium
+    business_impact: "Keyword search across the Synapse repository as data custodian; the broadest data-access surface here, returning entity metadata for everything the authenticated user can see and able to surface human-subjects research records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: synapse-org.get_entity
+    object: Entity
+    action: get_entity
+    description: "Return Synapse entity metadata by ID (projects, folders, files, tables, etc.); retrieves metadata only, does not download file content."
+    category: Data Access
+    risk: low
+    business_impact: "Reads metadata for a single Synapse entity by ID; metadata of a biomedical research entity may reference or describe human-subjects data, but no file content is downloaded."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: synapse-org.get_entity_annotations
+    object: Entity
+    action: get_entity_annotations
+    description: "Return custom annotation key/value pairs for a Synapse entity."
+    category: Data Access
+    risk: low
+    business_impact: "Reads custom annotations on a single entity; free-form annotation values on a biomedical research entity may contain personal or health-related descriptors."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: synapse-org.get_entity_children
+    object: Entity
+    action: get_entity_children
+    description: "List children for Synapse container entities such as projects and folders."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the child entities of a project or folder; returns structural metadata (names/ids) of contained entities rather than their content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: synapse-org.get_entity_provenance
+    object: Entity
+    action: get_entity_provenance
+    description: "Return provenance (activity) metadata for a Synapse entity, including inputs and code executed, optionally scoped to a version."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the activity/provenance lineage of an entity — inputs and code executed; describes how a research artifact was produced rather than its subject-level content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

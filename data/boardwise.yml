@@ -1,0 +1,129 @@
+schema_version: "1.1"
+platform: boardwise
+display_name: BoardWise
+source: langguard-editorial
+updated: "2026-06"
+reference: https://boardwise.online/mcp
+actions:
+  # ---------- Guidance ----------
+  - id: boardwise.get_board_guidance
+    object: Guidance
+    action: get_board_guidance
+    description: "Get general educational guidance for a licensed professional facing a state licensing board matter; read-only, does not transmit user data."
+    category: Data Access
+    risk: low
+    business_impact: "Returns static educational guidance keyed on categorical inputs (state, profession, issue type); read-only and retains nothing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  - id: boardwise.get_response_letter_guidance
+    object: Guidance
+    action: get_response_letter_guidance
+    description: "Returns a structured outline for a written response letter to a licensing board; read-only, does not draft the letter or transmit user data."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a generic response-letter outline from categorical inputs; read-only and retains nothing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  - id: boardwise.get_ceu_audit_guidance
+    object: Guidance
+    action: get_ceu_audit_guidance
+    description: "Returns profession- and state-specific guidance for responding to a CEU/CE audit notice; retrieval-based, read-only, does not transmit user data."
+    category: Data Access
+    risk: low
+    business_impact: "Returns static CEU-audit guidance from categorical inputs; read-only and retains nothing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  - id: boardwise.explain_notice_of_investigation
+    object: Guidance
+    action: explain_notice_of_investigation
+    description: "Explains what a notice of investigation generally means for a licensed professional; retrieval-based, read-only."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a generic explanation of investigation notices from categorical inputs; read-only and retains nothing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  - id: boardwise.identify_required_documents
+    object: Guidance
+    action: identify_required_documents
+    description: "Returns a structured list of documents commonly requested for a given profession/state/issue; retrieval-based, read-only."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a generic 'commonly requested documents' list from categorical inputs; read-only and retains nothing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  - id: boardwise.explain_possible_next_steps
+    object: Guidance
+    action: explain_possible_next_steps
+    description: "Explains common procedural next steps for a licensed professional facing a board matter; retrieval-based, read-only."
+    category: Data Access
+    risk: low
+    business_impact: "Returns generic procedural-next-step guidance from categorical inputs; read-only and retains nothing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  # ---------- Resources ----------
+  - id: boardwise.find_relevant_guide
+    object: Guide
+    action: find_relevant_guide
+    description: "Find the most relevant BoardWise educational guide URL for a given topic, profession, or situation; returns up to 3 matching guides; read-only."
+    category: Data Access
+    risk: low
+    business_impact: "Returns links to public educational guides from categorical inputs; read-only and retains nothing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  - id: boardwise.get_resources
+    object: Resource
+    action: get_resources
+    description: "Get curated BoardWise resources (educational guides and tools) for a specific situation type; read-only."
+    category: Data Access
+    risk: low
+    business_impact: "Returns links to public educational resources from categorical inputs; read-only and retains nothing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  - id: boardwise.get_boardwise_capabilities
+    object: Capability
+    action: get_boardwise_capabilities
+    description: "Returns a complete list of situations BoardWise can help with and the privacy and product features available; read-only, no input."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a static catalog of supported situations and product features; read-only and retains nothing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  # ---------- Document Parsing ----------
+  - id: boardwise.extract_deadlines
+    object: Document
+    action: extract_deadlines
+    description: "Extracts likely deadlines from pasted notice text using deterministic regex/keyword parsing; no LLM call by default; read-only."
+    category: Data Access
+    risk: low
+    business_impact: "Accepts pasted notice text that may contain the licensee's name, license number, allegation details, and potentially PHI; processed read-only with no retention per vendor, but personal data is transmitted to a third party."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]

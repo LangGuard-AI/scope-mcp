@@ -1,0 +1,53 @@
+schema_version: "1.1"
+platform: graphos-tools
+display_name: GraphOS MCP Tools
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.apollographql.com/docs/graphos/platform/graphos-mcp-tools
+# Apollo GraphQL's "GraphOS MCP Tools" connector. Tool ids below are GROUND TRUTH
+# from live introspection of the hosted server (https://mcp.apollographql.com,
+# streamable-http) via mcp-introspect.py on 2026-06-03 — all three names copied
+# verbatim, preserving PascalCase. The server is anonymous (no OAuth gate) and
+# exposes exactly three tools, every one annotated readOnlyHint:true and
+# destructiveHint:false. All three only search/read Apollo's PUBLIC technical
+# documentation and the static Apollo Connectors specification — no customer data,
+# no PII, no financial or admin state. No destructive or write tools exist on this
+# surface; none are invented. (Distinct from the apollo.yml connector, which is
+# Apollo.io sales-intelligence — unrelated vendor and tool surface.)
+actions:
+  # ---------- Data Access ----------
+  - id: graphos-tools.ApolloDocsSearch
+    object: Documentation
+    action: ApolloDocsSearch
+    description: "Searches Apollo's official public GraphQL/GraphOS documentation and returns url, slug, and markdown excerpts."
+    category: Data Access
+    risk: low
+    business_impact: "Read-only search over Apollo's public documentation corpus; returns no customer, personal, or proprietary data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: graphos-tools.ApolloDocsRead
+    object: Documentation
+    action: ApolloDocsRead
+    description: "Fetches the full markdown content of an Apollo public documentation page by slug, returned in chunks."
+    category: Data Access
+    risk: low
+    business_impact: "Read-only retrieval of a public Apollo documentation page; returns no customer, personal, or proprietary data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: graphos-tools.ApolloConnectorsSpec
+    object: Specification
+    action: ApolloConnectorsSpec
+    description: "Returns the static Apollo Connectors specification used to guide authoring of @connect/@source GraphQL schema files."
+    category: Data Access
+    risk: low
+    business_impact: "Read-only retrieval of a static published specification document; returns no customer, personal, or proprietary data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

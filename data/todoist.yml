@@ -1,0 +1,615 @@
+schema_version: "1.1"
+platform: todoist
+display_name: Todoist
+source: langguard-editorial
+updated: "2026-06"
+reference: https://github.com/Doist/todoist-mcp
+actions:
+  # ---------- Data Access ----------
+  - id: todoist.delete-object
+    object: "*"
+    action: delete-object
+    description: "Deletes an entity (project, section, task, comment, label, filter, goal, reminder, or location_reminder) by its ID."
+    category: Data Access
+    risk: high
+    business_impact: "Single-actor destruction of any entity type with no documented soft-delete or recovery window; the highest-blast-radius tool in the connector."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.fetch-object
+    object: "*"
+    action: fetch-object
+    description: "Fetches a single object by its type and ID."
+    category: Data Access
+    risk: low
+    business_impact: "Reads one object by ID; may surface personal data if the object is a comment, collaborator, or assignment."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: todoist.fetch
+    object: Object
+    action: fetch
+    description: "OpenAI-compatibility tool that fetches a record by ID."
+    category: Data Access
+    risk: low
+    business_impact: "Reads a single record by ID; may surface personal data depending on the record type."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: todoist.search
+    object: Object
+    action: search
+    description: "OpenAI-compatibility tool that searches across the account for matching records."
+    category: Data Access
+    risk: low
+    business_impact: "Searches account-wide content; may return personal data contained in tasks, comments, or collaborator records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Tasks ----------
+  - id: todoist.add-tasks
+    object: Task
+    action: add-tasks
+    description: "Creates one or more tasks."
+    category: Tasks
+    risk: low
+    business_impact: "Adds tasks to the account; reversible and individually scoped, though free-text fields may contain personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.update-tasks
+    object: Task
+    action: update-tasks
+    description: "Updates one or more existing tasks by ID."
+    category: Tasks
+    risk: low
+    business_impact: "Modifies existing tasks; reversible and individually scoped."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.complete-tasks
+    object: Task
+    action: complete-tasks
+    description: "Marks one or more tasks complete by their IDs."
+    category: Tasks
+    risk: low
+    business_impact: "Completes tasks; reversible via uncomplete-tasks."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.uncomplete-tasks
+    object: Task
+    action: uncomplete-tasks
+    description: "Reopens one or more completed tasks by their IDs."
+    category: Tasks
+    risk: low
+    business_impact: "Reopens previously completed tasks; fully reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.reschedule-tasks
+    object: Task
+    action: reschedule-tasks
+    description: "Changes the due date/time of one or more tasks."
+    category: Tasks
+    risk: low
+    business_impact: "Reschedules existing tasks; reversible business write."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.find-tasks
+    object: Task
+    action: find-tasks
+    description: "Searches for tasks matching a query or filter."
+    category: Tasks
+    risk: low
+    business_impact: "Reads tasks matching a query; free-text content may contain personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.find-tasks-by-date
+    object: Task
+    action: find-tasks-by-date
+    description: "Lists tasks due within a date range."
+    category: Tasks
+    risk: low
+    business_impact: "Reads tasks by date; free-text content may contain personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.find-completed-tasks
+    object: Task
+    action: find-completed-tasks
+    description: "Lists completed tasks matching a filter."
+    category: Tasks
+    risk: low
+    business_impact: "Reads completed-task history; free-text content may contain personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.reorder-objects
+    object: "*"
+    action: reorder-objects
+    description: "Reorders a set of objects (tasks, sections, or projects) within their parent."
+    category: Tasks
+    risk: low
+    business_impact: "Changes display ordering of objects; cosmetic and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Projects & Sections ----------
+  - id: todoist.add-projects
+    object: Project
+    action: add-projects
+    description: "Creates one or more projects."
+    category: Operations
+    risk: low
+    business_impact: "Adds projects to the account; reversible business write."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.update-projects
+    object: Project
+    action: update-projects
+    description: "Updates one or more existing projects by ID."
+    category: Operations
+    risk: low
+    business_impact: "Modifies existing projects; reversible business write."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.project-management
+    object: Project
+    action: project-management
+    description: "Archive or unarchive a project by its ID."
+    category: Operations
+    risk: medium
+    business_impact: "Archives or unarchives a project, hiding or restoring all of its tasks for the workspace; reversible but workspace-wide in effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.project-move
+    object: Project
+    action: project-move
+    description: "Moves a project to a new parent or workspace location."
+    category: Operations
+    risk: medium
+    business_impact: "Relocates a project within the hierarchy or across workspaces; reversible but changes access scope."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: todoist.find-projects
+    object: Project
+    action: find-projects
+    description: "Lists or searches projects."
+    category: Operations
+    risk: low
+    business_impact: "Reads project metadata; low sensitivity."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.add-sections
+    object: Section
+    action: add-sections
+    description: "Creates one or more sections within a project."
+    category: Operations
+    risk: low
+    business_impact: "Adds sections to a project; reversible business write."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.update-sections
+    object: Section
+    action: update-sections
+    description: "Updates one or more existing sections by ID."
+    category: Operations
+    risk: low
+    business_impact: "Modifies existing sections; reversible business write."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.find-sections
+    object: Section
+    action: find-sections
+    description: "Lists or searches sections within a project."
+    category: Operations
+    risk: low
+    business_impact: "Reads section metadata; low sensitivity."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Collaboration ----------
+  - id: todoist.add-comments
+    object: Comment
+    action: add-comments
+    description: "Adds one or more comments to a task or project."
+    category: Messaging
+    risk: low
+    business_impact: "Posts interpersonal comments visible to collaborators; free-text content may contain personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.update-comments
+    object: Comment
+    action: update-comments
+    description: "Updates one or more existing comments by ID."
+    category: Messaging
+    risk: low
+    business_impact: "Edits interpersonal comments; free-text content may contain personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.find-comments
+    object: Comment
+    action: find-comments
+    description: "Lists or searches comments on a task or project."
+    category: Messaging
+    risk: low
+    business_impact: "Reads interpersonal comment threads; free-text content may contain personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.manage-assignments
+    object: Task
+    action: manage-assignments
+    description: "Assigns or unassigns tasks to project collaborators."
+    category: Collaboration
+    risk: low
+    business_impact: "Assigns tasks to identifiable collaborators, linking work to named individuals; reversible."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.find-project-collaborators
+    object: Collaborator
+    action: find-project-collaborators
+    description: "Lists the collaborators (people) on a project."
+    category: Collaboration
+    risk: medium
+    business_impact: "Returns a directory of identifiable people (names and account identities) on a project; a personal-data read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.view-attachment
+    object: Attachment
+    action: view-attachment
+    description: "Retrieves the contents of a file attachment on a task or comment."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads arbitrary user-uploaded file contents, which can contain personal or sensitive data of any type."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Labels & Filters ----------
+  - id: todoist.add-labels
+    object: Label
+    action: add-labels
+    description: "Creates one or more labels."
+    category: Operations
+    risk: low
+    business_impact: "Adds labels to the account; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.update-labels
+    object: Label
+    action: update-labels
+    description: "Updates one or more existing labels by ID."
+    category: Operations
+    risk: low
+    business_impact: "Modifies existing labels; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.find-labels
+    object: Label
+    action: find-labels
+    description: "Lists or searches labels."
+    category: Operations
+    risk: low
+    business_impact: "Reads label metadata; non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.add-filters
+    object: Filter
+    action: add-filters
+    description: "Creates one or more saved filters."
+    category: Operations
+    risk: low
+    business_impact: "Adds saved filters; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.update-filters
+    object: Filter
+    action: update-filters
+    description: "Updates one or more existing filters by ID."
+    category: Operations
+    risk: low
+    business_impact: "Modifies existing saved filters; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.find-filters
+    object: Filter
+    action: find-filters
+    description: "Lists or searches saved filters."
+    category: Operations
+    risk: low
+    business_impact: "Reads filter definitions; non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Reminders ----------
+  - id: todoist.add-reminders
+    object: Reminder
+    action: add-reminders
+    description: "Creates one or more reminders on tasks."
+    category: Operations
+    risk: low
+    business_impact: "Adds reminders; reversible and low-impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.update-reminders
+    object: Reminder
+    action: update-reminders
+    description: "Updates one or more existing reminders by ID."
+    category: Operations
+    risk: low
+    business_impact: "Modifies existing reminders; reversible and low-impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.find-reminders
+    object: Reminder
+    action: find-reminders
+    description: "Lists or searches reminders."
+    category: Operations
+    risk: low
+    business_impact: "Reads reminder metadata; low sensitivity."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Goals ----------
+  - id: todoist.add-goals
+    object: Goal
+    action: add-goals
+    description: "Creates one or more goals."
+    category: Operations
+    risk: low
+    business_impact: "Adds goals to the account; reversible business write."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.update-goals
+    object: Goal
+    action: update-goals
+    description: "Updates one or more existing goals by ID."
+    category: Operations
+    risk: low
+    business_impact: "Modifies existing goals; reversible business write."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.complete-goals
+    object: Goal
+    action: complete-goals
+    description: "Marks one or more goals complete by their IDs."
+    category: Operations
+    risk: low
+    business_impact: "Completes goals; reversible business write."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.link-goal-tasks
+    object: Goal
+    action: link-goal-tasks
+    description: "Links or unlinks tasks to/from a goal."
+    category: Operations
+    risk: low
+    business_impact: "Associates or disassociates tasks with a goal; reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.find-goals
+    object: Goal
+    action: find-goals
+    description: "Lists or searches goals."
+    category: Operations
+    risk: low
+    business_impact: "Reads goal metadata; low sensitivity."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Insights & Reporting ----------
+  - id: todoist.get-overview
+    object: Workspace
+    action: get-overview
+    description: "Returns a high-level overview of the user's tasks and projects."
+    category: Operations
+    risk: low
+    business_impact: "Reads an aggregate summary of the account; low sensitivity."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.find-activity
+    object: Activity
+    action: find-activity
+    description: "Returns the account/project activity log of actions taken over time."
+    category: Operations
+    risk: medium
+    business_impact: "Reads an activity log attributing actions to identifiable individuals over time; a behavioral-monitoring read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: todoist.get-productivity-stats
+    object: Activity
+    action: get-productivity-stats
+    description: "Returns the user's productivity statistics (completed-task streaks and counts)."
+    category: Operations
+    risk: low
+    business_impact: "Reads personal productivity metrics for the authenticated user; low sensitivity."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: todoist.get-project-health
+    object: Project
+    action: get-project-health
+    description: "Returns a health summary for a project."
+    category: Operations
+    risk: low
+    business_impact: "Reads aggregate project-health metrics; low sensitivity."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.analyze-project-health
+    object: Project
+    action: analyze-project-health
+    description: "Analyzes a project's health and returns recommendations."
+    category: Operations
+    risk: low
+    business_impact: "Reads and analyzes project metrics; low sensitivity."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: todoist.get-project-activity-stats
+    object: Project
+    action: get-project-activity-stats
+    description: "Returns activity statistics for a project."
+    category: Operations
+    risk: medium
+    business_impact: "Reads per-project activity statistics that can attribute work to identifiable collaborators."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: todoist.get-workspace-insights
+    object: Workspace
+    action: get-workspace-insights
+    description: "Returns workspace-wide insights and aggregate metrics."
+    category: Operations
+    risk: medium
+    business_impact: "Reads workspace-wide aggregate metrics that may reflect identifiable members' activity."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Workspace & Identity ----------
+  - id: todoist.list-workspaces
+    object: Workspace
+    action: list-workspaces
+    description: "Lists the workspaces the user belongs to."
+    category: Org & Access
+    risk: low
+    business_impact: "Reads workspace membership metadata for the authenticated user; low sensitivity."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: todoist.user-info
+    object: User
+    action: user-info
+    description: "Returns the authenticated user's profile information."
+    category: Org & Access
+    risk: low
+    business_impact: "Reads the authenticated user's own profile (name, account settings); a personal-data read scoped to self."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

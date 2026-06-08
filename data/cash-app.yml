@@ -1,0 +1,56 @@
+schema_version: "1.1"
+platform: cash-app
+display_name: Order by Cash App
+source: langguard-editorial
+updated: "2026-06"
+reference: https://goose-docs.ai/docs/mcp/cash-app-mcp/
+actions:
+  # ---------- Ordering ----------
+  - id: cash-app.create-cart
+    object: Cart
+    action: create-cart
+    description: "Create a cart for a restaurant location using unit token and a list of item selections."
+    category: Ordering
+    risk: low
+    business_impact: "Builds a pre-checkout cart of menu items, modifiers, and optional pickup/delivery fulfillment; reversible and does not commit an order or move money."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: cash-app.discover-nearby-restaurants
+    object: Restaurant
+    action: discover-nearby-restaurants
+    description: "Discover restaurants near a given location; returns names, locations, fulfillment hours, and descriptions."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the user-supplied search location to return nearby restaurants; the location input is transient personal geolocation data, though no stored individual records are accessed."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: cash-app.get-single-menu
+    object: Menu
+    action: get-single-menu
+    description: "Get menu items, prices, and a unit token for a single restaurant location by brand name and address."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a single restaurant's public menu and a unit token for ordering; no personal data is read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cash-app.get-multiple-menus
+    object: Menu
+    action: get-multiple-menus
+    description: "Research tool that returns plain-text menus for up to 10 restaurant locations for comparison and analysis."
+    category: Data Access
+    risk: low
+    business_impact: "Bulk-reads public menu data for up to 10 restaurant locations; menus are non-personal reference data, not PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

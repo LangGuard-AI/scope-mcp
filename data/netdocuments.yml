@@ -1,0 +1,31 @@
+schema_version: "1.1"
+platform: netdocuments
+display_name: NetDocuments
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/connectors/netdocuments
+actions:
+  # ---------- Data Access ----------
+  - id: netdocuments.fetch
+    object: Document
+    action: fetch
+    description: "Fetches a NetDocuments file by id and returns its full content as plaintext (PDF/DOCX/TXT converted)."
+    category: Data Access
+    risk: high
+    business_impact: "Returns the full plaintext content of a stored legal document; matter files routinely contain privileged client PII, contracts, and financial or health records regardless of intent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: netdocuments.search
+    object: Document
+    action: search
+    description: "Searches the NetDocuments repository with a query string and returns matching document ids, titles, and URLs."
+    category: Data Access
+    risk: medium
+    business_impact: "Queries the accessible document corpus and surfaces matching titles and identifiers across matters; can locate documents containing client PII or regulated data, though it returns metadata rather than full content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

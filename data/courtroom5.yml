@@ -1,0 +1,43 @@
+schema_version: "1.1"
+platform: courtroom5
+display_name: Courtroom5
+source: langguard-editorial
+updated: "2026-06"
+reference: https://courtroom5.com/claude
+actions:
+  # ---------- Legal Guidance ----------
+  - id: courtroom5.case_intake_assessment
+    object: CaseAssessment
+    action: case_intake_assessment
+    description: "Assesses a self-represented litigant's civil legal situation from their narrative and returns viability, likely claims, the correct court, and concrete first steps."
+    category: Legal Guidance
+    risk: low
+    business_impact: "Returns read-only advisory legal information from a user-supplied narrative of their own civil matter; the narrative can include sensitive personal circumstances (wage, family-civil, or injury details) but is transient input, not stored or exported, and the response carries a not-legal-advice disclaimer."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  - id: courtroom5.next_step_guidance
+    object: CaseGuidance
+    action: next_step_guidance
+    description: "Returns the two to three most important next actions for a self-represented litigant already in active civil litigation, based on case stage, party role, and state."
+    category: Legal Guidance
+    risk: low
+    business_impact: "Returns read-only advisory next-step guidance from user-supplied case details that can include sensitive personal circumstances; input is transient and the response carries a not-legal-advice disclaimer."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  - id: courtroom5.deadline_calculator
+    object: Deadline
+    action: deadline_calculator
+    description: "Returns critical procedural deadlines and consequences for a specific civil triggering event using a precomputed state lookup table, not LLM inference."
+    category: Legal Guidance
+    risk: low
+    business_impact: "Returns read-only procedural deadlines from enum and date inputs only; processes no identifying personal narrative and stores nothing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]

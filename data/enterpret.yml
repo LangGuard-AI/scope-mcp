@@ -1,0 +1,91 @@
+schema_version: "1.1"
+platform: enterpret
+display_name: Enterpret
+source: langguard-editorial
+updated: "2026-06"
+reference: https://helpcenter.enterpret.com/en/articles/12665166-wisdom-mcp-server
+actions:
+  # ---------- Data Access ----------
+  - id: enterpret.run_graph_query
+    object: Feedback
+    action: run_graph_query
+    description: "Pulls the feedback that answers your question, with citation links back to source records."
+    category: Data Access
+    risk: high
+    business_impact: "Returns filtered customer-feedback records across the dataset; bulk read of customer PII drawn from support tickets, reviews, and call transcripts."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: enterpret.find_user_quote
+    object: Quote
+    action: find_user_quote
+    description: "Surfaces verbatim customer quotes from the records behind your answer."
+    category: Data Access
+    risk: high
+    business_impact: "Returns verbatim customer quotes from source communications; reads individual customers' personal data and statements."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: enterpret.search_graph_values
+    object: TaxonomyValue
+    action: search_graph_values
+    description: "Looks up the exact themes, accounts, sources, or taxonomy values in your data."
+    category: Data Access
+    risk: low
+    business_impact: "Returns concrete data values including account and source names that may identify individual customers; light identifier read."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: enterpret.search_graph_fields
+    object: GraphField
+    action: search_graph_fields
+    description: "Surfaces integration-specific data points like Zendesk tags, App Store ratings, or Gong call metadata."
+    category: Data Access
+    risk: low
+    business_impact: "Returns field-level metadata describing available data points; no record-level personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: enterpret.get_graph_schema
+    object: Schema
+    action: get_graph_schema
+    description: "Lets the assistant see what kinds of feedback you track and how it's organized."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the knowledge-graph schema describing how feedback is organized; structural metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: enterpret.get_query_examples
+    object: QueryExample
+    action: get_query_examples
+    description: "Gives the assistant reference patterns for common kinds of feedback questions before it answers."
+    category: Data Access
+    risk: low
+    business_impact: "Returns example query patterns to guide question construction; no customer data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: enterpret.get_organization_details
+    object: Organization
+    action: get_organization_details
+    description: "Identifies your Enterpret organization, so answers link back to your dashboard."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the tenant's own organization name, ID, and dashboard URL; no data-subject personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

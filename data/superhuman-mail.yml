@@ -1,0 +1,239 @@
+schema_version: "1.1"
+platform: superhuman-mail
+display_name: Superhuman Mail
+source: langguard-editorial
+updated: "2026-06"
+reference: https://help.superhuman.com/hc/en-us/articles/49810745762067-Superhuman-Mail-MCP-Server
+actions:
+  # ---------- Messaging ----------
+  - id: superhuman-mail.send_email
+    object: Message
+    action: send_email
+    description: "Send an email directly (From, To, Cc, Bcc, Subject, HTML body) rather than drafting; per-use approval is required and the connector can be set to read-only mode."
+    category: Messaging
+    risk: high
+    business_impact: "Sends email to external recipients on the user's behalf; irreversible once the Undo window closes and carries impersonation and data-exfiltration risk."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: superhuman-mail.send_draft
+    object: Draft
+    action: send_draft
+    description: "Send an email (From, To, Cc, Bcc, Subject, HTML body); supports Smart Send, Scheduled Send, and Undo Send."
+    category: Messaging
+    risk: high
+    business_impact: "Dispatches a previously composed draft to its recipients; reaches external parties and is irreversible past the Undo Send window."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: superhuman-mail.create_or_update_draft
+    object: Draft
+    action: create_or_update_draft
+    description: "Create or edit an email draft using the user's voice and tone; drafts appear in Superhuman Mail but are not sent."
+    category: Messaging
+    risk: medium
+    business_impact: "Composes or edits an email draft on the user's behalf; not auto-sent, but reachable to recipients once sent and may embed PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: superhuman-mail.discard_draft
+    object: Draft
+    action: discard_draft
+    description: "Delete a draft from the user's drafts."
+    category: Messaging
+    risk: low
+    business_impact: "Deletes an unsent draft; low impact since the content never left the mailbox."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: superhuman-mail.undo_send
+    object: Message
+    action: undo_send
+    description: "Cancel a recently sent email within the Undo window."
+    category: Messaging
+    risk: low
+    business_impact: "Retracts a just-sent message within the Undo window; a corrective action that reduces rather than increases exposure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: superhuman-mail.unsubscribe
+    object: Thread
+    action: unsubscribe
+    description: "Unsubscribe from a mailing list, with options to Trash and Block the sender."
+    category: Messaging
+    risk: medium
+    business_impact: "Unsubscribes from a sender and can unilaterally Trash and Block it, altering future mail flow from that party."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Messaging (Read) ----------
+  - id: superhuman-mail.query_email_and_calendar
+    object: Mailbox
+    action: query_email_and_calendar
+    description: "Use natural-language semantic search to ask a question about the user's email and calendar."
+    category: Messaging
+    risk: high
+    business_impact: "Semantically searches the entire mailbox and calendar; can surface PII, credentials, contracts, and material non-public information across all correspondence."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: superhuman-mail.list_threads
+    object: Thread
+    action: list_threads
+    description: "Search email threads with structured filters (From, To, Subject, Labels, Split, date)."
+    category: Messaging
+    risk: high
+    business_impact: "Searches threads across the mailbox; surfaces senders, recipients, subjects, and dates of all correspondence matching the filter."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: superhuman-mail.get_thread
+    object: Thread
+    action: get_thread
+    description: "Fetch a full email thread with messages, drafts, and comments."
+    category: Messaging
+    risk: high
+    business_impact: "Reads an entire thread of correspondence into agent context; full message bodies can expose sensitive negotiations or PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: superhuman-mail.get_message
+    object: Message
+    action: get_message
+    description: "Fetch a single email message by ID for targeted operations."
+    category: Messaging
+    risk: high
+    business_impact: "Pulls a full message body into agent context; high exposure if the mail contains PII, financial, or regulated data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: superhuman-mail.get_attachment
+    object: Attachment
+    action: get_attachment
+    description: "Get an email attachment."
+    category: Messaging
+    risk: high
+    business_impact: "Retrieves an email attachment, which can contain contracts, PII, financial documents, or regulated files."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: superhuman-mail.get_read_statuses
+    object: Message
+    action: get_read_statuses
+    description: "See who opened the user's emails, when, and on what device."
+    category: Messaging
+    risk: high
+    business_impact: "Exposes recipient open-tracking data — who opened a message, when, and on which device — which is behavioral PII about third parties."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Labels & Organization ----------
+  - id: superhuman-mail.update_thread
+    object: Thread
+    action: update_thread
+    description: "Add or remove a Label, Star or Unstar, move to or remove from Trash, mark Done or not Done, mark Read or Unread for email thread(s)."
+    category: Labels
+    risk: medium
+    business_impact: "Mutates thread state — labels, stars, trash, done, and read/unread — across one or more threads; reversible but alters the user's inbox organization."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: superhuman-mail.trash_thread
+    object: Thread
+    action: trash_thread
+    description: "Move a thread to Trash."
+    category: Labels
+    risk: medium
+    business_impact: "Moves a thread to Trash; recoverable from Trash but removes it from the active inbox."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: superhuman-mail.list_labels
+    object: Label
+    action: list_labels
+    description: "List all available Labels on the account."
+    category: Labels
+    risk: low
+    business_impact: "Lists mailbox label names; reveals inbox taxonomy but no message content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: superhuman-mail.list_splits
+    object: Split
+    action: list_splits
+    description: "List Split Inboxes from Mail (e.g., Important, Other)."
+    category: Labels
+    risk: low
+    business_impact: "Lists the account's Split Inbox names; reveals inbox structure but no message content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Calendar ----------
+  - id: superhuman-mail.create_or_update_event
+    object: Event
+    action: create_or_update_event
+    description: "Create and update calendar events."
+    category: Calendar
+    risk: medium
+    business_impact: "Creates or modifies calendar events and can invite participants; reversible but reaches attendees and exposes meeting details."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: superhuman-mail.get_availability
+    object: Event
+    action: get_availability
+    description: "Find available meeting times for a group of participants."
+    category: Calendar
+    risk: medium
+    business_impact: "Reads free/busy availability for a set of participants, exposing other individuals' calendar patterns."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Configuration ----------
+  - id: superhuman-mail.update_personalization
+    object: Personalization
+    action: update_personalization
+    description: "Update writing style, event-creation preferences, and facts used to draft emails and calendar events in Superhuman Mail's Personalization settings."
+    category: Configuration
+    risk: medium
+    business_impact: "Writes the user's writing-style, preferences, and personal facts that steer how the agent drafts mail and events; persists personal data in account settings."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

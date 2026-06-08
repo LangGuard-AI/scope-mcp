@@ -1,128 +1,67 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: zoominfo
 display_name: ZoomInfo
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://docs.zoominfo.com/docs/zi-api-mcp-overview
+# Official ZoomInfo connector. The hosted MCP server (https://mcp.zoominfo.com/mcp)
+# is OAuth-gated: POST tools/list returns 401 (ZI0001 "Authorization token is
+# required"), GET /tools returns 404, and the server advertises
+# /.well-known/oauth-protected-resource (scopes include zi_mcp, api:data:mcp).
+# Verbatim tool identifiers are therefore not reachable without a user token, and
+# none was available. The vendor's llms.txt indexes only the REST API Reference
+# (controller method names like accountsummaryinterface_getaccountsummary), which
+# the curator spec forbids using as MCP tool ids. The MCP overview page publishes
+# a clean 14-tool "Tools at a Glance" capability table (Finding x7, Enriching x5,
+# Researching x2) as plain-language labels only — no code identifiers anywhere.
+# Every action below therefore uses id_form: capability with the verbatim doc
+# label in `description` and a slugified id; confidence is capped at medium
+# (intent-level, not identifier-level matching). ZoomInfo's core function is
+# revealing verified contact PII (work email, direct-dial/mobile phone, employment
+# history) for named individuals, so contact-touching tools carry the full privacy
+# stack; tools that return lists of individuals (search/find/recommend/batch-enrich
+# contacts) additionally carry SOC2 + ISO_27001 as bulk-PII-read data-exfil events.
+# Company-only firmographics carry none. The connector exposes no
+# delete/write/export-list/destructive operations in its published surface; none
+# are invented here. (Supersedes a prior 1.0 seed that included an unverified
+# `zoominfo.lookup` action absent from the vendor's published tool surface.)
 actions:
-  # ---------- Data Access ----------
-  - id: zoominfo.lookup
-    object: "*"
-    action: lookup
-    category: Data Access
-    risk: medium
-    business_impact: "Generic ZoomInfo lookup that resolves a query against multiple data domains; may return contact PII."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: zoominfo.search_companies
-    object: Company
-    action: search_companies
-    category: Data Access
-    risk: low
-    business_impact: "Searches ZoomInfo's company graph; firmographic data only, no individual PII."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: zoominfo.search_contacts
-    object: Contact
-    action: search_contacts
-    category: Data Access
-    risk: high
-    business_impact: "Searches ZoomInfo's contact database; returns identifiable individuals' work email, phone, and title at scale."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: zoominfo.find_similar_companies
-    object: Company
-    action: find_similar_companies
-    category: Data Access
-    risk: low
-    business_impact: "Returns companies similar to a seed company; firmographic enrichment only."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: zoominfo.find_similar_contacts
-    object: Contact
-    action: find_similar_contacts
-    category: Data Access
-    risk: high
-    business_impact: "Returns individuals matching a seed contact's profile; identifiable PII expansion."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: zoominfo.find_recommended_contacts
-    object: Contact
-    action: find_recommended_contacts
-    category: Data Access
-    risk: high
-    business_impact: "AI-ranked contact recommendations; profiles individuals to suggest outreach targets."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: zoominfo.search_intent
-    object: IntentSignal
-    action: search_intent
-    category: Data Access
-    risk: medium
-    business_impact: "Returns buyer-intent signals tied to companies and topics; may include trackable individual research signals."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: zoominfo.search_scoops
-    object: Scoop
-    action: search_scoops
-    category: Data Access
-    risk: low
-    business_impact: "Surfaces ZoomInfo Scoops (org change signals); largely public business event data."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Enrichment ----------
-  - id: zoominfo.enrich_companies
-    object: Company
-    action: enrich_companies
-    category: Enrichment
-    risk: low
-    business_impact: "Appends firmographic fields to provided company records."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+  # ---------- Enriching ----------
   - id: zoominfo.enrich_contacts
     object: Contact
     action: enrich_contacts
-    category: Enrichment
+    id_form: capability
+    description: "Enrich Contacts"
+    category: Customer
     risk: high
-    business_impact: "Bulk appends PII (work email, phone, title) to caller-provided contact records; data-broker enrichment of identifiable individuals."
+    business_impact: "Returns complete contact PII for one or more named individuals — verified email, phone, employment history, education, and social profiles; plural 'Enrich Contacts' tool plausibly accepts a batch."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
-    confidence: high
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoominfo.enrich_companies
+    object: Company
+    action: enrich_companies
+    id_form: capability
+    description: "Enrich Companies"
+    category: Customer
+    risk: low
+    business_impact: "Returns firmographics for a company — revenue, headcount, funding, tech stack, leadership, subsidiaries; company data, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: zoominfo.enrich_intent
     object: IntentSignal
     action: enrich_intent
-    category: Enrichment
-    risk: medium
-    business_impact: "Adds intent-signal context to provided records; can profile prospect research behavior."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    id_form: capability
+    description: "Enrich Intent"
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Returns the intent picture for a specific company — topics researched, intensity, and duration; company-level signal data, not personal data."
+    compliance: []
     sod_concern: false
     confidence: medium
     access_methods: [REST, MCP]
@@ -130,33 +69,131 @@ actions:
   - id: zoominfo.enrich_scoops
     object: Scoop
     action: enrich_scoops
-    category: Enrichment
+    id_form: capability
+    description: "Enrich Scoops"
+    category: Revenue & Pipeline
     risk: low
-    business_impact: "Adds ZoomInfo Scoops context to provided records."
+    business_impact: "Returns the latest intelligence behind a company signal — leadership changes, initiatives, and strategic context; company-level data."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: zoominfo.enrich_news
-    object: NewsItem
+    object: NewsArticle
     action: enrich_news
-    category: Enrichment
+    id_form: capability
+    description: "Enrich News"
+    category: Revenue & Pipeline
     risk: low
-    business_impact: "Attaches news-mention context to provided company records; public news content."
+    business_impact: "Returns recent news coverage for a company curated for outreach relevance; public company-level data."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
-  # ---------- Research ----------
+  # ---------- Finding ----------
+  - id: zoominfo.search_contacts
+    object: Contact
+    action: search_contacts
+    id_form: capability
+    description: "Search Contacts"
+    category: Customer
+    risk: high
+    business_impact: "Returns a list of named individuals matching title, seniority, department, or company criteria; surfaces contact PII at list scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoominfo.find_similar_contacts
+    object: Contact
+    action: find_similar_contacts
+    id_form: capability
+    description: "Find Similar Contacts"
+    category: Customer
+    risk: high
+    business_impact: "Returns named individuals similar to a specified contact, replicating a persona across companies; surfaces contact PII at list scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoominfo.find_recommended_contacts
+    object: Contact
+    action: find_recommended_contacts
+    id_form: capability
+    description: "Find Recommended Contacts"
+    category: Customer
+    risk: high
+    business_impact: "Returns a ranked list of named individuals to contact at a company based on sales motion; surfaces contact PII at list scale with automated targeting suggestions."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoominfo.search_companies
+    object: Company
+    action: search_companies
+    id_form: capability
+    description: "Search Companies"
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Returns a list of companies matching industry, size, location, growth, or tech-stack criteria; company firmographics, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoominfo.find_similar_companies
+    object: Company
+    action: find_similar_companies
+    id_form: capability
+    description: "Find Similar Companies"
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Returns companies similar to a specified account for territory expansion; company firmographics, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoominfo.search_intent
+    object: IntentSignal
+    action: search_intent
+    id_form: capability
+    description: "Search Intent"
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Returns companies actively researching topics relevant to your solution; company-level intent signals, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoominfo.search_scoops
+    object: Scoop
+    action: search_scoops
+    id_form: capability
+    description: "Search Scoops"
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Returns company signals such as leadership changes, new initiatives, and strategic moves; company-level data, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Researching ----------
   - id: zoominfo.account_research
     object: Company
     action: account_research
-    category: Research
+    id_form: capability
+    description: "Account Research"
+    category: Revenue & Pipeline
     risk: medium
-    business_impact: "Context-agent that compiles a deep account profile; aggregates many signals into a single dossier."
-    compliance: [SOC2]
+    business_impact: "Returns strategic account intelligence — financials, competitors, relationship status, deal health, buying committee, and engagement activity; blends company data with named buying-committee individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: medium
     access_methods: [REST, MCP]
@@ -164,10 +201,12 @@ actions:
   - id: zoominfo.contact_research
     object: Contact
     action: contact_research
-    category: Research
+    id_form: capability
+    description: "Contact Research"
+    category: Customer
     risk: high
-    business_impact: "Context-agent that compiles a deep individual profile (work history, signals, contact details); creates a comprehensive PII dossier."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    business_impact: "Returns professional background on a specific named person — career history, expertise, publications, and outreach context; detailed individual profiling."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: medium
     access_methods: [REST, MCP]

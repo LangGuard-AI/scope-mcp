@@ -1,0 +1,214 @@
+schema_version: "1.1"
+platform: lusha
+display_name: Lusha
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.lusha.com/mcp-docs
+actions:
+  # ---------- Contact Intelligence ----------
+  - id: lusha.contacts_search
+    object: Contact
+    action: contacts_search
+    description: "Enriches contact data using email, LinkedIn URL, or name + company."
+    category: Data Access
+    risk: high
+    business_impact: "Reveals a third party's work email, phone, and profile from a partial identifier; surfaces personal data of an individual who is not the requesting user."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: lusha.prospecting_contact_search
+    object: Contact
+    action: prospecting_contact_search
+    description: "Searches contacts by job title, seniority, location, department, and more."
+    category: Data Access
+    risk: high
+    business_impact: "Returns a filtered, paginated list of individuals matching prospecting criteria; bulk access to third-party personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: lusha.prospecting_contact_enrich
+    object: Contact
+    action: prospecting_contact_enrich
+    description: "Enriches contacts by ID to reveal emails and phones (credits consumed)."
+    category: Data Access
+    risk: high
+    business_impact: "Reveals direct emails and phone numbers for prospected individuals; exposes contactable personal data and consumes paid credits."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: lusha.lookalike_contacts
+    object: Contact
+    action: lookalike_contacts
+    description: "Locates contacts similar to a seed contact."
+    category: Data Access
+    risk: high
+    business_impact: "Expands from one seed individual to a list of similar people; bulk discovery of third-party personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: lusha.prospecting_contact_filters
+    object: Contact
+    action: prospecting_contact_filters
+    description: "Provides available filter values for contact prospecting (no credits charged)."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the filter vocabulary (titles, locations, departments) used to build a contact query; no personal data returned."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Buyer Signals ----------
+  - id: lusha.signals_contacts_search
+    object: Contact
+    action: signals_contacts_search
+    description: "Resolves contacts and returns recent activity signals."
+    category: Data Access
+    risk: high
+    business_impact: "Returns individuals plus recent behavioral/intent signals about them; profiling-adjacent third-party personal data (a sales-targeting use, not an automated consequential decision)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lusha.signals_contacts_get
+    object: Contact
+    action: signals_contacts_get
+    description: "Retrieves signals for known contacts by ID."
+    category: Data Access
+    risk: high
+    business_impact: "Returns recent activity signals for specified individuals; profiling-adjacent personal data tied to named contacts."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lusha.signals_contact_filters
+    object: Contact
+    action: signals_contact_filters
+    description: "Provides available filter values for contact signals (no credits charged)."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the filter vocabulary for contact-signal queries; no personal data returned."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Company Intelligence ----------
+  - id: lusha.companies_search
+    object: Company
+    action: companies_search
+    description: "Retrieves company data using domain or company name."
+    category: Data Access
+    risk: low
+    business_impact: "Returns firmographic data for a company entity; not personal data of an individual."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: lusha.prospecting_company_search
+    object: Company
+    action: prospecting_company_search
+    description: "Searches companies by firmographic and technographic filters."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a filtered list of company entities matching firmographic/technographic criteria; entity-level data, not personal."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: lusha.prospecting_company_enrich
+    object: Company
+    action: prospecting_company_enrich
+    description: "Enriches companies by ID for detailed firmographic data."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns detailed firmographic data for specified companies; entity-level, but boundary case if enriched output names individual personnel."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lusha.lookalike_companies
+    object: Company
+    action: lookalike_companies
+    description: "Locates companies similar to a seed company."
+    category: Data Access
+    risk: low
+    business_impact: "Expands from one seed company to a list of similar company entities; entity-level data, not personal."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: lusha.prospecting_company_filters
+    object: Company
+    action: prospecting_company_filters
+    description: "Provides available filter values for company prospecting (no credits charged)."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the filter vocabulary for company prospecting; no personal data returned."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: lusha.signals_companies_search
+    object: Company
+    action: signals_companies_search
+    description: "Resolves companies and returns recent activity signals."
+    category: Data Access
+    risk: low
+    business_impact: "Returns company entities plus recent activity/intent signals; entity-level data, not personal."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lusha.signals_companies_get
+    object: Company
+    action: signals_companies_get
+    description: "Retrieves signals for known companies by ID."
+    category: Data Access
+    risk: low
+    business_impact: "Returns recent activity signals for specified company entities; entity-level data, not personal."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lusha.signals_company_filters
+    object: Company
+    action: signals_company_filters
+    description: "Provides available filter values for company signals (no credits charged)."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the filter vocabulary for company-signal queries; no personal data returned."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Account ----------
+  - id: lusha.account_usage
+    object: Account
+    action: account_usage
+    description: "Displays credit balance, rate-limit status, and plan information."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the caller's own credit balance, rate-limit status, and plan tier; no third-party or personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

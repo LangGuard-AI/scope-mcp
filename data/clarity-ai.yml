@@ -1,0 +1,79 @@
+schema_version: "1.1"
+platform: clarity-ai
+display_name: Clarity AI
+source: langguard-editorial
+updated: "2026-06"
+reference: https://clarity-sfdr20-mcp.pro.clarity.ai/
+actions:
+  # ---------- Data Access ----------
+  - id: clarity-ai.search_securities
+    object: Security
+    action: search_securities
+    description: "Search securities by keyword, ISIN, or CUSIP through the upstream Clarity SFDR demo API."
+    category: Data Access
+    risk: low
+    business_impact: "Reads public fund and security identity/metadata; transmits an optional caller-supplied email upstream to the Clarity demo API but changes no state."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: clarity-ai.sfdr20_assess_fund_name
+    object: FundAssessment
+    action: sfdr20_assess_fund_name
+    description: "Resolves a fund from free-text, runs the SFDR 2.0 check, and returns an interpreted assessment in one step."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a simulated SFDR 2.0 article-classification assessment of a proposed (not yet final) EU framework; advisory output that changes no state and transmits an optional caller-supplied email upstream to the Clarity demo API."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: clarity-ai.sfdr20_check_by_isin
+    object: FundAssessment
+    action: sfdr20_check_by_isin
+    description: "Runs the SFDR 2.0 check for an explicitly supplied ISIN."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a simulated SFDR 2.0 classification for a known ISIN; advisory output that changes no state and transmits a required caller-supplied email upstream to the Clarity demo API."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: clarity-ai.sfdr20_check_by_query
+    object: FundAssessment
+    action: sfdr20_check_by_query
+    description: "Deprecated alias for sfdr20_assess_fund_name; kept for backward compatibility."
+    category: Data Access
+    risk: low
+    business_impact: "Legacy alias returning a simulated SFDR 2.0 fund-name classification; advisory output that changes no state and transmits an optional caller-supplied email upstream to the Clarity demo API."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: clarity-ai.sfdr20_check
+    object: FundAssessment
+    action: sfdr20_check
+    description: "Deprecated alias for sfdr20_check_by_isin; kept for backward compatibility."
+    category: Data Access
+    risk: low
+    business_impact: "Legacy alias returning a simulated SFDR 2.0 classification for a known ISIN; advisory output that changes no state and transmits a required caller-supplied email upstream to the Clarity demo API."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: clarity-ai.interpret_sfdr20_result
+    object: FundAssessment
+    action: interpret_sfdr20_result
+    description: "Normalizes raw SFDR 2.0 contribution and exclusion flags into a plain-language category assessment."
+    category: Data Access
+    risk: low
+    business_impact: "Transforms caller-supplied SFDR 2.0 flags into a category-level interpretation; pure stateless computation with no data access."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

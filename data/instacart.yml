@@ -1,0 +1,44 @@
+schema_version: "1.1"
+platform: instacart
+display_name: Instacart
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.instacart.com/developer_platform_api/guide/tutorials/mcp/
+# Tool surface confirmed via live tools/list introspection of the production
+# Instacart MCP server (https://mcp.instacart.com/mcp, anonymous/streamable-http,
+# 2026-06) and independently corroborated by the vendor tutorial above, which
+# states "you should see the following tools: create-recipe and
+# create-shopping-list". Both ids are verbatim ground truth. The server exposes
+# exactly these two content-authoring tools; nothing was trimmed. The Composio
+# "Get Nearby Retailers" tool is a third-party implementation, not the official
+# connector, and was deliberately excluded. Both tools publish reversible public
+# marketplace content pages from supplied recipe/shopping-list data; they do not
+# place orders, move money, touch cardholder data, or manage third-party
+# data-subject records, so compliance arrays are empty. The optional free-text
+# `author` byline on create-recipe is a content credit, not data-subject record
+# ingestion, and does not trigger the privacy stack.
+actions:
+  # ---------- Catalog & Content ----------
+  - id: instacart.create-recipe
+    object: Recipe
+    action: create-recipe
+    description: "Create a recipe page on Instacart Marketplace"
+    category: Catalog & Content
+    risk: low
+    business_impact: "Publishes a public recipe page on Instacart Marketplace from supplied title, ingredients, and instructions; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: instacart.create-shopping-list
+    object: ShoppingList
+    action: create-shopping-list
+    description: "Create a shopping list page on Instacart Marketplace"
+    category: Catalog & Content
+    risk: low
+    business_impact: "Publishes a public shopping-list page on Instacart Marketplace from supplied line items; reversible, optionally auto-expiring, and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

@@ -1,0 +1,31 @@
+schema_version: "1.1"
+platform: solve-intelligence
+display_name: Solve Intelligence
+source: langguard-editorial
+updated: "2026-06"
+reference: https://api.solveintelligence.com/guide/mcp/intro/
+actions:
+  # ---------- Data Access ----------
+  # Solve Intelligence's hosted MCP server (https://api.solveintelligence.com/mcp/)
+  # is OAuth-gated, so tools/list is not anonymously enumerable. The vendor docs are
+  # a client-rendered SPA that publishes no verbatim tool identifiers, and the server's
+  # WWW-Authenticate header advertises a single MCP scope: `mcp:ask_solve`. The connector
+  # is declared "Read"-only and the product is framed as a single "ask Solve" query
+  # surface over patent literature, legal texts, case law, and SEP standards. The six
+  # items on the connector page (Legal Research, Invalidity Searching, Freedom-to-Operate,
+  # SEP Mapping, Infringement Detection, Patent Document Analysis & Drafting) are use-cases
+  # of that one ask tool, not separate tools. Modeled as one capability-form action keyed
+  # off the verbatim OAuth scope. confidence capped at medium per id_form: capability.
+  - id: solve-intelligence.ask_solve
+    object: PatentQuery
+    action: ask_solve
+    id_form: capability
+    description: "Ask Solve to research and analyze patents — search global patent and non-patent literature, legal texts, case law, and SEP standards for prior art, invalidity, freedom-to-operate, SEP mapping, infringement detection, and drafting."
+    reference: https://api.solveintelligence.com/guide/mcp/intro/
+    category: Data Access
+    risk: low
+    business_impact: "Runs read-only research queries against public patent literature, legal texts, case law, and standards; returns no third-party PII, but a user's query prompt may embed an unpublished invention disclosure or other trade-secret material that leaves the customer boundary."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

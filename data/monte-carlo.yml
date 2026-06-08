@@ -1,0 +1,361 @@
+schema_version: "1.1"
+platform: monte-carlo
+display_name: Monte Carlo
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.getmontecarlo.com/docs/mcp-server
+actions:
+  # ---------- Alerts ----------
+  - id: monte-carlo.update_alert
+    object: Alert
+    action: update_alert
+    description: "Modify an alert's status, severity, or metadata."
+    category: Operations
+    risk: medium
+    business_impact: "Changes an alert's status or severity, which can resolve, reopen, or suppress a data-quality incident; reviewable and reversible."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: monte-carlo.set_alert_owner
+    object: Alert
+    action: set_alert_owner
+    description: "Assign or remove alert ownership; an empty owner clears it."
+    category: Operations
+    risk: low
+    business_impact: "Reassigns or clears responsibility for an alert; affects workflow routing and accountability only and is fully reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: monte-carlo.create_or_update_alert_comment
+    object: Alert
+    action: create_or_update_alert_comment
+    description: "Add or edit a triage comment on an alert for collaboration."
+    category: Operations
+    risk: low
+    business_impact: "Adds or edits collaborative commentary on an alert; reversible and low-impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: monte-carlo.get_alerts
+    object: Alert
+    action: get_alerts
+    description: "Retrieve alerts and incidents with filtering options."
+    category: Operations
+    risk: low
+    business_impact: "Reads data-quality alerts and incident history; exposes operational metadata including table and asset names, not source data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Monitor & Dashboard Authoring (config artifacts) ----------
+  - id: monte-carlo.create_table_monitor_mac
+    object: Monitor
+    action: create_table_monitor_mac
+    description: "Generate Monitor-as-Code YAML for a table monitor."
+    category: Operations
+    risk: low
+    business_impact: "Generates a reviewable Monitor-as-Code YAML config artifact for a table monitor; does not deploy live monitoring state on its own."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  - id: monte-carlo.create_metric_monitor_mac
+    object: Monitor
+    action: create_metric_monitor_mac
+    description: "Generate Monitor-as-Code YAML for a metric monitor."
+    category: Operations
+    risk: low
+    business_impact: "Generates a reviewable Monitor-as-Code YAML config artifact for a metric monitor; does not deploy live monitoring state on its own."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  - id: monte-carlo.create_validation_monitor_mac
+    object: Monitor
+    action: create_validation_monitor_mac
+    description: "Generate Monitor-as-Code YAML for a validation monitor."
+    category: Operations
+    risk: low
+    business_impact: "Generates a reviewable Monitor-as-Code YAML config artifact for a validation monitor; does not deploy live monitoring state on its own."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  - id: monte-carlo.create_custom_sql_monitor_mac
+    object: Monitor
+    action: create_custom_sql_monitor_mac
+    description: "Generate Monitor-as-Code YAML for a custom-SQL monitor."
+    category: Operations
+    risk: low
+    business_impact: "Generates a reviewable Monitor-as-Code YAML config artifact for a custom-SQL monitor; does not deploy live monitoring state on its own."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  - id: monte-carlo.create_comparison_monitor_mac
+    object: Monitor
+    action: create_comparison_monitor_mac
+    description: "Generate Monitor-as-Code YAML for a comparison monitor."
+    category: Operations
+    risk: low
+    business_impact: "Generates a reviewable Monitor-as-Code YAML config artifact for a comparison monitor; does not deploy live monitoring state on its own."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  - id: monte-carlo.create_custom_dashboard_widget
+    object: Dashboard
+    action: create_custom_dashboard_widget
+    description: "Generate validated widget JSON config for a custom dashboard."
+    category: Operations
+    risk: low
+    business_impact: "Generates a reviewable dashboard-widget JSON config artifact; does not publish a live dashboard on its own."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Coverage & Discovery (reads) ----------
+  - id: monte-carlo.get_monitors
+    object: Monitor
+    action: get_monitors
+    description: "Retrieve monitors based on specified filters, including an mcons filter for specific tables."
+    category: Operations
+    risk: low
+    business_impact: "Reads existing monitor configurations; exposes monitoring posture and asset names, not source data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: monte-carlo.get_audiences
+    object: Audience
+    action: get_audiences
+    description: "List notification audiences configured for alerting."
+    category: Operations
+    risk: low
+    business_impact: "Reads notification-audience configuration, which can include recipient names and contact details."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  - id: monte-carlo.get_validation_predicates
+    object: Monitor
+    action: get_validation_predicates
+    description: "List available validation rule predicates."
+    category: Operations
+    risk: low
+    business_impact: "Reads the catalog of validation predicate types; exposes capability metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: monte-carlo.get_use_cases
+    object: UseCase
+    action: get_use_cases
+    description: "List use cases with criticality, descriptions, table counts, and precomputed tag names."
+    category: Operations
+    risk: low
+    business_impact: "Reads business use-case definitions and criticality; exposes governance metadata, not source data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: monte-carlo.get_use_case_table_summary
+    object: UseCase
+    action: get_use_case_table_summary
+    description: "Get the HIGH/MEDIUM/LOW criticality distribution of tables for a use case."
+    category: Operations
+    risk: low
+    business_impact: "Reads aggregate criticality counts for a use case; exposes governance metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: monte-carlo.get_use_case_tables
+    object: UseCase
+    action: get_use_case_tables
+    description: "List paginated tables for a use case with criticality, golden-table status, and MCONs."
+    category: Operations
+    risk: low
+    business_impact: "Reads the table membership of a use case; exposes asset metadata and criticality, not row-level data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: monte-carlo.get_current_time
+    object: Workspace
+    action: get_current_time
+    description: "Get the current time in ISO format."
+    category: Operations
+    risk: low
+    business_impact: "Returns the current server time; no business or data impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Connectivity & Identity ----------
+  - id: monte-carlo.test_connection
+    object: Workspace
+    action: test_connection
+    description: "Verifies connectivity and authentication with the Monte Carlo API."
+    category: Operations
+    risk: low
+    business_impact: "Probes connectivity and authentication; returns no business data and has no state impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: monte-carlo.get_user
+    object: User
+    action: get_user
+    description: "Get the current user's identity and permissions."
+    category: Operations
+    risk: low
+    business_impact: "Returns the calling user's own identity and permission set; a self-identity lookup, not a directory dump."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Query & Data Access ----------
+  - id: monte-carlo.get_queries_for_table
+    object: Query
+    action: get_queries_for_table
+    description: "Retrieve query logs (source/destination) for a table."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads warehouse query logs for a table, which can expose query text and embedded literal values referencing personal or regulated data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  - id: monte-carlo.get_query_data
+    object: Query
+    action: get_query_data
+    description: "Get full query text and metadata for a query."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns full query text, which can contain literal values and predicates referencing personal or regulated data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Catalog & Lineage ----------
+  - id: monte-carlo.get_table
+    object: Asset
+    action: get_table
+    description: "Retrieve detailed table information including fields, stats, and domain membership."
+    category: Data Access
+    risk: low
+    business_impact: "Reads table schema and statistics metadata; exposes structural information, not row-level data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: monte-carlo.search
+    object: Asset
+    action: search
+    description: "Search the catalog for tables, views, and dashboards; supports an is_monitored filter."
+    category: Data Access
+    risk: low
+    business_impact: "Searches the data catalog and returns matching asset metadata; exposes asset names and structure, not row-level data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: monte-carlo.get_domains
+    object: Domain
+    action: get_domains
+    description: "List Monte Carlo domains."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the list of configured domains; exposes organizational grouping metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: monte-carlo.get_asset_lineage
+    object: Asset
+    action: get_asset_lineage
+    description: "Trace upstream and downstream dependencies for tables by MCON and direction."
+    category: Data Access
+    risk: low
+    business_impact: "Reads data lineage relationships; exposes structural dependency metadata, not row-level data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: monte-carlo.get_downstream_bi_reports
+    object: Asset
+    action: get_downstream_bi_reports
+    description: "Find BI dashboards and reports that depend on a given asset."
+    category: Data Access
+    risk: low
+    business_impact: "Reads downstream BI dependency metadata; exposes report names and links, not their data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Agent Observability ----------
+  - id: monte-carlo.get_agent_metadata
+    object: AgentTrace
+    action: get_agent_metadata
+    description: "List AI agents and return agent names, trace-table MCONs, and source types."
+    category: Data Access
+    risk: low
+    business_impact: "Reads agent inventory metadata; exposes which agents are instrumented, not their conversation content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: monte-carlo.get_agent_conversation
+    object: AgentTrace
+    action: get_agent_conversation
+    description: "Retrieve the ordered thread of LLM spans (prompts and completions) for an agent conversation."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads recorded LLM conversations for an agent, which can contain user-submitted personal data or sensitive prompt/response content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+
+  - id: monte-carlo.get_agent_trace
+    object: AgentTrace
+    action: get_agent_trace
+    description: "Inspect an AI agent's execution traces and span trees."
+    category: Data Access
+    risk: low
+    business_impact: "Reads agent execution traces and span trees; can surface span-level inputs/outputs but is primarily structural telemetry."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]

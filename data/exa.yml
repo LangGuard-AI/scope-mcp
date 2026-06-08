@@ -1,0 +1,158 @@
+schema_version: "1.1"
+platform: exa
+display_name: Exa
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.exa.ai/reference/exa-mcp
+# Exa web-search / content-extraction connector listed at claude.com/connectors/exa.
+# Tool ids are verbatim from the vendor's open-source MCP server registry
+# (exa-labs/exa-mcp-server @ ad888a1, src/mcp-handler.ts availableTools + each
+# tool file's server.tool("<name>", ...) first arg). Live introspection of the
+# hosted endpoint (https://mcp.exa.ai/mcp, anonymous) returned the 2 default-enabled
+# tools — web_search_exa and web_fetch_exa — with annotations readOnlyHint:true,
+# destructiveHint:false, confirming the names verbatim. The other 9 are real
+# registrations served only when explicitly enabled via the tools config; 8 of
+# those carry a "Deprecated" label in the vendor registry (noted per-description).
+# This connector is ENTIRELY read-only: web search + URL content extraction. There
+# is no write / delete / admin / money-movement surface — none is invented here.
+# Risk stays low across the board (reads); PII exposure is carried in the
+# compliance array, not the risk level. People- and LinkedIn-oriented searches
+# target identifiable natural persons and carry the privacy-regime stack;
+# general web search / fetch / code search do not inherently process personal
+# data and are left untagged per "when in doubt, omit".
+actions:
+  # ---------- Data Access (Web Search) ----------
+  - id: exa.web_search_exa
+    object: WebResult
+    action: web_search_exa
+    description: "Search the web for any topic and get clean, ready-to-use content from top results."
+    category: Data Access
+    risk: low
+    business_impact: "Performs a real-time public web search and returns extracted page content; read-only and non-destructive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: exa.web_search_advanced_exa
+    object: WebResult
+    action: web_search_advanced_exa
+    description: "Advanced web search with full Exa API control including category filters (category:people / category:company), domain restrictions, date ranges, highlights, summaries, and subpage crawling."
+    category: Data Access
+    risk: medium
+    business_impact: "Runs filtered/aggregated web search that can be scoped to people or companies, surfacing personal data of identifiable individuals when category:people is used."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: exa.deep_search_exa
+    object: WebResult
+    action: deep_search_exa
+    description: "Deprecated: use web_search_advanced_exa instead. Deep web search with smart query expansion and synthesized high-quality summaries (requires API key)."
+    category: Data Access
+    risk: low
+    business_impact: "Runs an expanded multi-query public web search and returns synthesized summaries; read-only and non-destructive."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access (Content Extraction) ----------
+  - id: exa.web_fetch_exa
+    object: WebPage
+    action: web_fetch_exa
+    description: "Read a webpage's full content as clean markdown from one or more supplied URLs."
+    category: Data Access
+    risk: low
+    business_impact: "Fetches and extracts the full content of caller-supplied URLs; read-only retrieval of already-public pages."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: exa.crawling_exa
+    object: WebPage
+    action: crawling_exa
+    description: "Deprecated: use web_fetch_exa instead. Extract content from specific URLs."
+    category: Data Access
+    risk: low
+    business_impact: "Fetches and extracts the full content of caller-supplied URLs; read-only retrieval of already-public pages."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: exa.get_code_context_exa
+    object: CodeSnippet
+    action: get_code_context_exa
+    description: "Deprecated: use web_search_exa instead. Search for code snippets, examples, and documentation from open-source repositories."
+    category: Data Access
+    risk: low
+    business_impact: "Searches public open-source code and documentation and returns snippets; read-only and non-destructive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Customer (People & Company Intelligence) ----------
+  - id: exa.people_search_exa
+    object: Person
+    action: people_search_exa
+    description: "Deprecated: use web_search_advanced_exa instead. Search for people and professional profiles."
+    category: Customer
+    risk: medium
+    business_impact: "Returns professional-profile data for named, identifiable individuals; processing of personal data of natural persons regardless of public sourcing."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: exa.linkedin_search_exa
+    object: Person
+    action: linkedin_search_exa
+    description: "Deprecated: use web_search_advanced_exa instead. Search LinkedIn for companies and people using Exa AI."
+    category: Customer
+    risk: medium
+    business_impact: "Surfaces LinkedIn profile data for identifiable individuals (name, title, employer, history); processing of personal data of natural persons."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: exa.company_research_exa
+    object: Company
+    action: company_research_exa
+    description: "Deprecated: use web_search_advanced_exa instead. Research companies and organizations by crawling their websites."
+    category: Customer
+    risk: low
+    business_impact: "Crawls a company's public web presence and returns firmographic profile data; company data, though named staff may appear incidentally."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access (Autonomous Research) ----------
+  - id: exa.deep_researcher_start
+    object: ResearchTask
+    action: deep_researcher_start
+    description: "Deprecated: start a comprehensive AI research task that autonomously runs multiple web searches and reads to answer a complex question."
+    category: Data Access
+    risk: medium
+    business_impact: "Kicks off an autonomous multi-step web-research task that can aggregate information across many people, companies, and sources from a single prompt."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: exa.deep_researcher_check
+    object: ResearchTask
+    action: deep_researcher_check
+    description: "Deprecated: check status and retrieve results of a previously started research task."
+    category: Data Access
+    risk: low
+    business_impact: "Polls the status of and retrieves results for an existing research task; read-only retrieval of work already initiated."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

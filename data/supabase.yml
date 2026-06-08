@@ -1,16 +1,42 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: supabase
 display_name: Supabase
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://supabase.com/docs/guides/getting-started/mcp
 actions:
-  # ---------- Database ----------
+  # ---------- Data Access ----------
+  - id: supabase.execute_sql
+    object: Database
+    action: execute_sql
+    description: "Executes raw SQL in the Postgres database."
+    category: Data Access
+    risk: critical
+    business_impact: "Runs arbitrary SQL against the project database — can read or exfiltrate any stored personal data, write or destroy rows, and alter database-level grants in a single call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: supabase.apply_migration
+    object: Migration
+    action: apply_migration
+    description: "Applies a migration to the database; used for DDL operations."
+    category: Data Access
+    risk: high
+    business_impact: "Applies a schema-changing migration to the production database; alters tables/constraints and is reversible only by a compensating migration."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
   - id: supabase.list_tables
     object: Table
     action: list_tables
-    category: Database
+    description: "Lists all tables in one or more schemas, optionally with column and key details."
+    category: Data Access
     risk: low
-    business_impact: "Enumerates database tables; schema-level read."
+    business_impact: "Reads database schema metadata (table names, row counts, columns); exposes the data model structure but not the underlying records."
     compliance: []
     sod_concern: false
     confidence: high
@@ -19,9 +45,10 @@ actions:
   - id: supabase.list_extensions
     object: Extension
     action: list_extensions
-    category: Database
+    description: "Lists all extensions installed in the database."
+    category: Data Access
     risk: low
-    business_impact: "Lists installed Postgres extensions."
+    business_impact: "Reads the list of installed Postgres extensions; configuration metadata only."
     compliance: []
     sod_concern: false
     confidence: high
@@ -30,134 +57,108 @@ actions:
   - id: supabase.list_migrations
     object: Migration
     action: list_migrations
-    category: Database
+    description: "Lists all migrations applied to the database."
+    category: Data Access
     risk: low
-    business_impact: "Lists database migrations applied to the project."
+    business_impact: "Reads the migration history of the project; schema change-log metadata only."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: supabase.apply_migration
-    object: Migration
-    action: apply_migration
-    category: Database
-    risk: critical
-    business_impact: "Applies a DDL migration to the live database; can alter or drop schema with no review gate."
-    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: supabase.execute_sql
-    object: Query
-    action: execute_sql
-    category: Database
-    risk: critical
-    business_impact: "Runs arbitrary SQL with project privileges; full read/write access to all tables including PII."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Debugging ----------
-  - id: supabase.get_logs
-    object: Log
-    action: get_logs
-    category: Debugging
-    risk: medium
-    business_impact: "Returns service logs; may contain user identifiers, IPs, and request payloads."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: supabase.get_advisors
-    object: Advisor
-    action: get_advisors
-    category: Debugging
-    risk: low
-    business_impact: "Reads security and performance advisor findings for the project."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Development ----------
-  - id: supabase.get_project_url
-    object: Project
-    action: get_project_url
-    category: Development
-    risk: low
-    business_impact: "Returns the project API URL."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: supabase.get_publishable_keys
-    object: Project
-    action: get_publishable_keys
-    category: Development
-    risk: medium
-    business_impact: "Returns the project's anon/publishable keys; intended for client use but still credentials."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
     access_methods: [REST, MCP]
 
   - id: supabase.generate_typescript_types
-    object: Project
+    object: Database
     action: generate_typescript_types
-    category: Development
+    description: "Generates TypeScript types for a project from its schema."
+    category: Data Access
     risk: low
-    business_impact: "Generates TypeScript types from the database schema."
+    business_impact: "Derives TypeScript type definitions from the database schema; emits structural metadata, not record data."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  # ---------- Edge Functions ----------
-  - id: supabase.list_edge_functions
+  # ---------- Code & Release ----------
+  - id: supabase.deploy_edge_function
     object: EdgeFunction
-    action: list_edge_functions
-    category: Edge Functions
-    risk: low
-    business_impact: "Lists deployed edge functions for the project."
-    compliance: []
-    sod_concern: false
+    action: deploy_edge_function
+    description: "Deploys an Edge Function to a project, creating a new version if it already exists."
+    category: Code & Release
+    risk: high
+    business_impact: "Ships arbitrary server-side code to the project's production edge runtime — effectively code execution within project scope, bypassing any external review gate."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
     confidence: high
     access_methods: [REST, MCP]
 
   - id: supabase.get_edge_function
     object: EdgeFunction
     action: get_edge_function
-    category: Edge Functions
+    description: "Retrieves file contents for an Edge Function in a project."
+    category: Code & Release
     risk: medium
-    business_impact: "Returns the source of an edge function; may expose business logic and embedded secrets."
+    business_impact: "Reads the full source of a deployed Edge Function, which may embed credentials or business logic; single-function disclosure."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: supabase.list_edge_functions
+    object: EdgeFunction
+    action: list_edge_functions
+    description: "Lists all Edge Functions in a project."
+    category: Code & Release
+    risk: low
+    business_impact: "Reads the inventory of deployed Edge Functions; names and metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Platform & DevOps ----------
+  - id: supabase.create_project
+    object: Project
+    action: create_project
+    description: "Creates a new Supabase project in an organization."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Provisions a new project (and its database), incurring cost and creating infrastructure under the organization."
     compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: supabase.deploy_edge_function
-    object: EdgeFunction
-    action: deploy_edge_function
-    category: Edge Functions
-    risk: critical
-    business_impact: "Deploys server-side function code to production; arbitrary code execution path with database access."
-    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
+  - id: supabase.pause_project
+    object: Project
+    action: pause_project
+    description: "Pauses a Supabase project."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Pauses a project, taking its database and APIs offline; an availability-impacting change that is reversible via restore."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  # ---------- Account Management ----------
+  - id: supabase.restore_project
+    object: Project
+    action: restore_project
+    description: "Restores a paused Supabase project."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Brings a paused project back online, restoring database and API availability; reversible via pause."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
   - id: supabase.list_projects
     object: Project
     action: list_projects
-    category: Account Management
+    description: "Lists all Supabase projects for the user."
+    category: Platform & DevOps
     risk: low
-    business_impact: "Lists projects in the connected organization."
+    business_impact: "Reads the inventory of projects the principal can access; account-structure metadata only."
     compliance: []
     sod_concern: false
     confidence: high
@@ -166,43 +167,11 @@ actions:
   - id: supabase.get_project
     object: Project
     action: get_project
-    category: Account Management
+    description: "Gets details for a Supabase project."
+    category: Platform & DevOps
     risk: low
-    business_impact: "Returns details of a single project."
+    business_impact: "Reads configuration and status details for a single project; account metadata only."
     compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: supabase.create_project
-    object: Project
-    action: create_project
-    category: Account Management
-    risk: medium
-    business_impact: "Provisions a new Postgres project; incurs cost and expands the org's footprint."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: supabase.pause_project
-    object: Project
-    action: pause_project
-    category: Account Management
-    risk: high
-    business_impact: "Pauses a project; takes the database offline and breaks any apps depending on it."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: supabase.restore_project
-    object: Project
-    action: restore_project
-    category: Account Management
-    risk: medium
-    business_impact: "Restores a paused project back to active; resumes billing."
-    compliance: [SOC2]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
@@ -210,9 +179,10 @@ actions:
   - id: supabase.list_organizations
     object: Organization
     action: list_organizations
-    category: Account Management
+    description: "Lists all organizations that the user is a member of."
+    category: Platform & DevOps
     risk: low
-    business_impact: "Lists organizations the user belongs to."
+    business_impact: "Reads the list of organizations the principal belongs to; account-structure metadata only."
     compliance: []
     sod_concern: false
     confidence: high
@@ -221,9 +191,10 @@ actions:
   - id: supabase.get_organization
     object: Organization
     action: get_organization
-    category: Account Management
+    description: "Gets details for an organization, including its subscription plan."
+    category: Platform & DevOps
     risk: low
-    business_impact: "Returns details of a single organization including plan."
+    business_impact: "Reads organization details including subscription plan; billing-tier metadata only."
     compliance: []
     sod_concern: false
     confidence: high
@@ -232,9 +203,10 @@ actions:
   - id: supabase.get_cost
     object: Cost
     action: get_cost
-    category: Account Management
+    description: "Gets the cost of creating a new project or branch."
+    category: Platform & DevOps
     risk: low
-    business_impact: "Returns the cost estimate for a planned action."
+    business_impact: "Reads the projected cost of provisioning a project or branch; pricing-quote metadata only."
     compliance: []
     sod_concern: false
     confidence: high
@@ -243,34 +215,72 @@ actions:
   - id: supabase.confirm_cost
     object: Cost
     action: confirm_cost
-    category: Account Management
-    risk: medium
-    business_impact: "Acknowledges projected cost; precondition for paid resource creation."
-    compliance: [SOX, COSO]
+    description: "Records the user's confirmation of provisioning cost, returning an ID required to create a project or branch."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Records cost acknowledgement and returns a confirmation token; a gating step that itself provisions nothing."
+    compliance: []
     sod_concern: false
     confidence: medium
     access_methods: [REST, MCP]
 
-  # ---------- Docs ----------
-  - id: supabase.search_docs
-    object: Documentation
-    action: search_docs
-    category: Docs
-    risk: low
-    business_impact: "Searches Supabase documentation."
-    compliance: []
+  # ---------- Branching ----------
+  - id: supabase.merge_branch
+    object: Branch
+    action: merge_branch
+    description: "Merges migrations and Edge Functions from a development branch to production."
+    category: Branching
+    risk: high
+    business_impact: "Promotes a development branch's migrations and functions into production, mutating the live database and edge runtime without an external review gate."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: supabase.delete_branch
+    object: Branch
+    action: delete_branch
+    description: "Deletes a development branch."
+    category: Branching
+    risk: medium
+    business_impact: "Destroys a development branch and its branch database; any untracked branch-only data is unrecoverable."
+    compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  # ---------- Branching ----------
+  - id: supabase.reset_branch
+    object: Branch
+    action: reset_branch
+    description: "Resets migrations of a development branch; untracked data or schema changes are lost."
+    category: Branching
+    risk: medium
+    business_impact: "Resets a development branch to a prior migration state; untracked branch data and schema changes are permanently lost."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: supabase.rebase_branch
+    object: Branch
+    action: rebase_branch
+    description: "Rebases a development branch on production to handle migration drift."
+    category: Branching
+    risk: medium
+    business_impact: "Replays newer production migrations onto a development branch, mutating the branch database to resolve drift."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
   - id: supabase.create_branch
     object: Branch
     action: create_branch
+    description: "Creates a development branch on a project, applying all main-project migrations to a fresh branch database."
     category: Branching
     risk: medium
-    business_impact: "Creates an isolated database branch (paid feature); incurs cost."
-    compliance: [SOC2]
+    business_impact: "Provisions a new development branch database from the main project's migrations, incurring cost; production data does not carry over."
+    compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
@@ -278,88 +288,109 @@ actions:
   - id: supabase.list_branches
     object: Branch
     action: list_branches
+    description: "Lists all development branches of a project."
     category: Branching
     risk: low
-    business_impact: "Lists project branches."
+    business_impact: "Reads the inventory of development branches for a project; branch metadata only."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: supabase.delete_branch
-    object: Branch
-    action: delete_branch
-    category: Branching
+  # ---------- Secrets & Workflows ----------
+  - id: supabase.update_storage_config
+    object: StorageConfig
+    action: update_storage_config
+    description: "Updates the storage configuration for a project."
+    category: Secrets & Workflows
     risk: high
-    business_impact: "Deletes a branch and its data; irreversible."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Changes project-wide storage settings (e.g. upload limits, public access); can broaden exposure of stored objects across the whole project."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
     sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: supabase.merge_branch
-    object: Branch
-    action: merge_branch
-    category: Branching
-    risk: critical
-    business_impact: "Promotes branch migrations and edge functions into production."
-    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: supabase.reset_branch
-    object: Branch
-    action: reset_branch
-    category: Branching
-    risk: high
-    business_impact: "Resets branch migration state; destroys any uncommitted schema work."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: supabase.rebase_branch
-    object: Branch
-    action: rebase_branch
-    category: Branching
-    risk: medium
-    business_impact: "Rebases a branch onto production; can introduce migration conflicts."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Storage ----------
-  - id: supabase.list_storage_buckets
-    object: Bucket
-    action: list_storage_buckets
-    category: Storage
-    risk: low
-    business_impact: "Lists storage buckets."
-    compliance: []
-    sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
   - id: supabase.get_storage_config
     object: StorageConfig
     action: get_storage_config
-    category: Storage
+    description: "Gets the storage configuration for a project."
+    category: Secrets & Workflows
     risk: low
-    business_impact: "Reads storage configuration including limits."
-    compliance: [SOC2]
+    business_impact: "Reads project storage settings; configuration metadata only."
+    compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: supabase.update_storage_config
-    object: StorageConfig
-    action: update_storage_config
-    category: Storage
-    risk: high
-    business_impact: "Modifies storage limits and policies; can broaden public access to user-uploaded content."
+  - id: supabase.list_storage_buckets
+    object: StorageBucket
+    action: list_storage_buckets
+    description: "Lists all storage buckets in a project."
+    category: Secrets & Workflows
+    risk: low
+    business_impact: "Reads the inventory of storage buckets; bucket names and metadata only, not their contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: supabase.get_publishable_keys
+    object: ApiKey
+    action: get_publishable_keys
+    description: "Gets all publishable (client-side) API keys for a project, including legacy anon keys."
+    category: Secrets & Workflows
+    risk: low
+    business_impact: "Returns publishable, client-side-safe API keys (anon / sb_publishable_); these are public-by-design and do not include the secret service-role key."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: supabase.get_project_url
+    object: Project
+    action: get_project_url
+    description: "Gets the API URL for a project."
+    category: Secrets & Workflows
+    risk: low
+    business_impact: "Reads the project's public API endpoint URL; non-sensitive connection metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: supabase.get_logs
+    object: Log
+    action: get_logs
+    description: "Gets logs for a project by service type, covering the last 24 hours."
+    category: Operations
+    risk: medium
+    business_impact: "Reads up to 24 hours of service logs, which may contain end-user identifiers (emails, IP addresses) and request payloads."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: true
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: supabase.get_advisors
+    object: Advisory
+    action: get_advisors
+    description: "Gets security and performance advisory notices for a project."
+    category: Operations
+    risk: low
+    business_impact: "Reads security and performance advisories (e.g. missing RLS policies); surfaces risk findings without changing state."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: supabase.search_docs
+    object: Documentation
+    action: search_docs
+    description: "Searches the Supabase documentation via GraphQL."
+    category: Operations
+    risk: low
+    business_impact: "Queries public Supabase documentation; no access to customer or project data."
+    compliance: []
+    sod_concern: false
     confidence: high
     access_methods: [REST, MCP]

@@ -1,16 +1,18 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: notion
 display_name: Notion
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://developers.notion.com/guides/mcp/mcp-supported-tools
 actions:
   # ---------- Data Access ----------
   - id: notion.notion-search
     object: "*"
     action: notion-search
+    description: "Searches across the Notion workspace and connected tools like Slack, Google Drive, and Jira."
     category: Data Access
     risk: medium
-    business_impact: "Searches across pages, databases, and other workspace content; can surface confidential material."
+    business_impact: "Returns ranked results across the workspace and connected systems (Slack, Google Drive, Jira); can surface confidential material from multiple sources in one call."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: high
@@ -19,21 +21,22 @@ actions:
   - id: notion.notion-fetch
     object: "*"
     action: notion-fetch
+    description: "Retrieves the full content of a Notion page, database, or data source by URL or ID, including schema and templates."
     category: Data Access
     risk: medium
-    business_impact: "Retrieves the full content of a page, database, or block by URL or id."
+    business_impact: "Returns the full content of a page, database, or data source; can expose confidential or PII-bearing material."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  # ---------- Pages ----------
   - id: notion.notion-create-pages
     object: Page
     action: notion-create-pages
+    description: "Creates one or more Notion pages with specified properties and content."
     category: Data Access
     risk: low
-    business_impact: "Creates one or more pages in the workspace."
+    business_impact: "Creates one or more pages in the workspace; reversible and individually attributed."
     compliance: []
     sod_concern: false
     confidence: high
@@ -42,6 +45,7 @@ actions:
   - id: notion.notion-update-page
     object: Page
     action: notion-update-page
+    description: "Updates a page's properties, content, icon, or cover image."
     category: Data Access
     risk: medium
     business_impact: "Edits page properties or content; can overwrite knowledge-base material."
@@ -53,9 +57,10 @@ actions:
   - id: notion.notion-move-pages
     object: Page
     action: notion-move-pages
+    description: "Moves one or more pages or databases to a new parent location."
     category: Data Access
     risk: medium
-    business_impact: "Relocates pages within the workspace tree; can change visibility/inheritance."
+    business_impact: "Relocates pages within the workspace tree; can change permission inheritance and visibility."
     compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: medium
@@ -64,21 +69,22 @@ actions:
   - id: notion.notion-duplicate-page
     object: Page
     action: notion-duplicate-page
+    description: "Duplicates a Notion page within the workspace; completes asynchronously."
     category: Data Access
     risk: low
-    business_impact: "Creates a copy of an existing page; may duplicate sensitive content into a new location."
+    business_impact: "Creates a copy of an existing page; may replicate sensitive content into a new location."
     compliance: [SOC2]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  # ---------- Databases ----------
   - id: notion.notion-create-database
     object: Database
     action: notion-create-database
+    description: "Creates a new database with an initial data source and view from the specified properties."
     category: Data Access
     risk: low
-    business_impact: "Creates a new database with a defined schema."
+    business_impact: "Creates a new database with a defined schema; structural addition with no existing data affected."
     compliance: []
     sod_concern: false
     confidence: high
@@ -87,6 +93,7 @@ actions:
   - id: notion.notion-update-data-source
     object: DataSource
     action: notion-update-data-source
+    description: "Updates a data source's properties, name, description, or other attributes."
     category: Data Access
     risk: medium
     business_impact: "Modifies database/data-source schema; can break dependent views and integrations."
@@ -98,9 +105,10 @@ actions:
   - id: notion.notion-create-view
     object: View
     action: notion-create-view
+    description: "Creates a new view (table, board, list, calendar, timeline, gallery, form, chart, map, or dashboard) on a database."
     category: Data Access
     risk: low
-    business_impact: "Adds a new view to a database; presentation-layer change."
+    business_impact: "Adds a new view to a database; presentation-layer change with no data mutation."
     compliance: []
     sod_concern: false
     confidence: high
@@ -109,9 +117,10 @@ actions:
   - id: notion.notion-update-view
     object: View
     action: notion-update-view
+    description: "Updates a view's name, filters, sorts, or display configuration."
     category: Data Access
     risk: low
-    business_impact: "Edits an existing database view's filters or columns."
+    business_impact: "Edits an existing database view's filters or columns; presentation-layer change."
     compliance: []
     sod_concern: false
     confidence: high
@@ -120,10 +129,11 @@ actions:
   - id: notion.notion-query-data-sources
     object: DataSource
     action: notion-query-data-sources
+    description: "Queries across multiple data sources with structured summaries, grouping, and filters."
     category: Data Access
     risk: medium
-    business_impact: "Runs filtered queries against database content; can return rows containing PII."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Runs filtered queries across database content; can return rows containing PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
@@ -131,21 +141,22 @@ actions:
   - id: notion.notion-query-database-view
     object: View
     action: notion-query-database-view
+    description: "Queries data from a database using a pre-defined view's filters and sorts."
     category: Data Access
     risk: medium
-    business_impact: "Returns rows visible through a specific database view."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Returns rows visible through a specific database view; can return rows containing PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  # ---------- Comments ----------
   - id: notion.notion-create-comment
     object: Comment
     action: notion-create-comment
+    description: "Adds a page-level, block-level, or reply comment under the authenticated user's identity."
     category: Data Access
     risk: low
-    business_impact: "Posts a comment on a page or block under the authenticated user's identity."
+    business_impact: "Posts a comment on a page or block under the authenticated user's identity; reversible."
     compliance: []
     sod_concern: false
     confidence: high
@@ -154,9 +165,10 @@ actions:
   - id: notion.notion-get-comments
     object: Comment
     action: notion-get-comments
+    description: "Lists all comments and discussions on a page, including resolved threads and full content."
     category: Data Access
     risk: low
-    business_impact: "Reads comments on pages or blocks; may contain user-generated PII."
+    business_impact: "Reads comments and discussions on pages or blocks; may contain user-generated PII."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: high
@@ -166,6 +178,7 @@ actions:
   - id: notion.notion-get-teams
     object: Team
     action: notion-get-teams
+    description: "Retrieves a list of teams (teamspaces) in the current workspace."
     category: Identity & Access
     risk: low
     business_impact: "Reads team / teamspace membership in the workspace."
@@ -177,10 +190,11 @@ actions:
   - id: notion.notion-get-users
     object: User
     action: notion-get-users
+    description: "Lists all users in the workspace with their details."
     category: Identity & Access
     risk: medium
-    business_impact: "Reads workspace user list including names and emails."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    business_impact: "Bulk read of the entire workspace user directory including names and email addresses; aggregates PII across all members in one call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
@@ -188,6 +202,7 @@ actions:
   - id: notion.notion-get-user
     object: User
     action: notion-get-user
+    description: "Retrieves a single user's information by ID."
     category: Identity & Access
     risk: low
     business_impact: "Reads a single user record including name and email."
@@ -199,9 +214,10 @@ actions:
   - id: notion.notion-get-self
     object: User
     action: notion-get-self
+    description: "Retrieves the authenticated bot user's own profile and connected workspace details."
     category: Identity & Access
     risk: low
-    business_impact: "Reads the authenticated bot/user's own profile."
+    business_impact: "Reads the authenticated bot/user's own profile and workspace metadata."
     compliance: []
     sod_concern: false
     confidence: high

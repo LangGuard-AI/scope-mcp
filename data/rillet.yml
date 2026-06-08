@@ -1,0 +1,959 @@
+schema_version: "1.1"
+platform: rillet
+display_name: Rillet
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.api.rillet.com/docs/mcp
+# Tool ids are the operationId values from Rillet's published OpenAPI spec
+# (https://docs.api.rillet.com/openapi/rillet-accounting-api.json). The MCP docs
+# state the server "offers tools that implement the same features exposed by
+# Rillet Public API"; the spec carries no x-mcp-tool-name overrides, so the
+# documented default (operationId -> tool name) governs. The live MCP endpoint
+# (https://api.rillet.com/mcp) is OAuth2-gated, so the exact tool-name string
+# could not be confirmed via tools/list — every entry is confidence: medium.
+actions:
+  # ---------- Financial ----------
+  - id: rillet.create-a-journal-entry
+    object: JournalEntry
+    action: create-a-journal-entry
+    description: "Creates a journal entry."
+    category: Financial
+    risk: critical
+    business_impact: "Posts a debit/credit pair to the general ledger; directly affects financial statements and is in scope for SOX ITGCs."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.update-a-journal-entry
+    object: JournalEntry
+    action: update-a-journal-entry
+    description: "Updates a journal entry."
+    category: Financial
+    risk: critical
+    business_impact: "Alters a posted general-ledger entry; changes financial-statement figures and is a SOX-controlled change."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.delete-a-journal-entry
+    object: JournalEntry
+    action: delete-a-journal-entry
+    description: "Deletes a journal entry."
+    category: Financial
+    risk: critical
+    business_impact: "Removes a general-ledger entry; single-actor reversal of a financial-statement posting that bypasses two-person GL controls."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.create-a-charge
+    object: Charge
+    action: create-a-charge
+    description: "Create a charge."
+    category: Financial
+    risk: critical
+    business_impact: "Initiates a payment charge; a money-movement and revenue event that may involve cardholder data."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.delete-a-charge
+    object: Charge
+    action: delete-a-charge
+    description: "Deletes a charge."
+    category: Financial
+    risk: critical
+    business_impact: "Removes a recorded charge; single-actor reversal of a money-movement record affecting the GL and reconciliation."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.setup-auto-payment
+    object: PaymentMethod
+    action: setup-auto-payment
+    description: "Sets up auto-payment for a customer."
+    category: Financial
+    risk: high
+    business_impact: "Configures recurring automatic payment collection against a customer; standing money-movement authorization that may touch payment-instrument data."
+    compliance: [SOX, COSO, PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Accounts Payable ----------
+  - id: rillet.create-a-bill
+    object: Bill
+    action: create-a-bill
+    description: "Creates a bill."
+    category: Financial
+    risk: high
+    business_impact: "Accrues a new accounts-payable liability against a vendor; affects payables and is revenue/expense-recognition relevant."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.update-a-bill
+    object: Bill
+    action: update-a-bill
+    description: "Updates a bill."
+    category: Financial
+    risk: high
+    business_impact: "Modifies an accounts-payable bill; changes the recorded liability and downstream payment amount."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.delete-a-bill
+    object: Bill
+    action: delete-a-bill
+    description: "Deletes a bill."
+    category: Financial
+    risk: high
+    business_impact: "Removes an accounts-payable bill; erases a recorded liability from the ledger."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.upload-document
+    object: Bill
+    action: upload-document
+    description: "Uploads a document to a bill."
+    category: Financial
+    risk: medium
+    business_impact: "Attaches supporting documentation to an accounts-payable bill; the document may contain vendor PII or financial detail."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.create-a-bill-payment
+    object: BillPayment
+    action: create-a-bill-payment
+    description: "Creates a bill payment."
+    category: Financial
+    risk: critical
+    business_impact: "Disburses cash to settle a payable; a money-movement event that updates treasury and the cash subledger."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.delete-a-bill-payment
+    object: BillPayment
+    action: delete-a-bill-payment
+    description: "Deletes a bill payment."
+    category: Financial
+    risk: critical
+    business_impact: "Reverses a recorded disbursement, restoring the payable; single-actor voiding of a treasury transaction."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.create-a-reimbursement
+    object: Reimbursement
+    action: create-a-reimbursement
+    description: "Create a reimbursement."
+    category: Financial
+    risk: high
+    business_impact: "Records a reimbursement owed to an individual; a payable and money-movement event tied to employee/contractor PII."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.delete-a-reimbursement
+    object: Reimbursement
+    action: delete-a-reimbursement
+    description: "Deletes a reimbursement."
+    category: Financial
+    risk: medium
+    business_impact: "Removes a recorded reimbursement; erases a payable owed to an individual."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Accounts Receivable ----------
+  - id: rillet.create-an-invoice
+    object: Invoice
+    action: create-an-invoice
+    description: "Creates an invoice."
+    category: Financial
+    risk: high
+    business_impact: "Creates a customer receivable; revenue-recognition relevant once issued and may carry customer PII."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.update-an-invoice
+    object: Invoice
+    action: update-an-invoice
+    description: "Updates an invoice."
+    category: Financial
+    risk: high
+    business_impact: "Modifies a customer invoice; changes the recorded receivable amount and revenue figures."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.delete-an-invoice
+    object: Invoice
+    action: delete-an-invoice
+    description: "Deletes an invoice."
+    category: Financial
+    risk: high
+    business_impact: "Removes a customer invoice; erases a recorded receivable and its revenue impact from the ledger."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.update-invoice-sent-status
+    object: Invoice
+    action: update-invoice-sent-status
+    description: "Updates invoice sent status."
+    category: Financial
+    risk: medium
+    business_impact: "Marks an invoice as sent, advancing it in the collections workflow."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.update-taxes-for-an-invoice
+    object: Invoice
+    action: update-taxes-for-an-invoice
+    description: "Updates invoice taxes."
+    category: Financial
+    risk: medium
+    business_impact: "Recalculates tax on an invoice; changes the receivable total and tax-liability figures."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.create-an-invoice-payment
+    object: InvoicePayment
+    action: create-an-invoice-payment
+    description: "Creates an invoice payment."
+    category: Financial
+    risk: critical
+    business_impact: "Records receipt of customer cash against an invoice; a money-movement and revenue event updating the cash subledger."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.create-a-credit-memo
+    object: CreditMemo
+    action: create-a-credit-memo
+    description: "Creates a credit memo."
+    category: Financial
+    risk: high
+    business_impact: "Issues a customer credit that reduces receivables and revenue; a contra-revenue event."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.update-a-credit-memo
+    object: CreditMemo
+    action: update-a-credit-memo
+    description: "Updates a credit memo."
+    category: Financial
+    risk: high
+    business_impact: "Modifies a customer credit memo; changes the contra-revenue and receivable adjustment recorded."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.delete-a-credit-memo
+    object: CreditMemo
+    action: delete-a-credit-memo
+    description: "Deletes a credit memo."
+    category: Financial
+    risk: high
+    business_impact: "Removes a customer credit memo; erases a recorded contra-revenue adjustment."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.update-taxes-for-a-credit-memo
+    object: CreditMemo
+    action: update-taxes-for-a-credit-memo
+    description: "Updates credit memo taxes."
+    category: Financial
+    risk: medium
+    business_impact: "Recalculates tax on a credit memo; changes the credited total and tax-liability figures."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Vendor Credits ----------
+  - id: rillet.create-a-vendor-credit
+    object: VendorCredit
+    action: create-a-vendor-credit
+    description: "Creates a vendor credit."
+    category: Financial
+    risk: high
+    business_impact: "Records a credit from a vendor that reduces payables; affects AP balances and the ledger."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.update-a-vendor-credit
+    object: VendorCredit
+    action: update-a-vendor-credit
+    description: "Updates a vendor credit."
+    category: Financial
+    risk: medium
+    business_impact: "Modifies a vendor credit; changes the recorded payable reduction."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.delete-a-vendor-credit
+    object: VendorCredit
+    action: delete-a-vendor-credit
+    description: "Deletes a vendor credit."
+    category: Financial
+    risk: medium
+    business_impact: "Removes a vendor credit; erases a recorded payable reduction from the ledger."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.apply-vendor-credit
+    object: VendorCredit
+    action: apply-vendor-credit
+    description: "Applies a vendor credit to bills."
+    category: Financial
+    risk: high
+    business_impact: "Applies a vendor credit against outstanding bills; reduces payables and reallocates cash settlement."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Treasury & Banking ----------
+  - id: rillet.create-a-bank-account
+    object: BankAccount
+    action: create-a-bank-account
+    description: "Creates a bank account."
+    category: Financial
+    risk: high
+    business_impact: "Registers a treasury bank account mapped to a GL cash account; routes all future payments and bank feeds."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.delete-a-bank-account
+    object: BankAccount
+    action: delete-a-bank-account
+    description: "Deletes a bank account."
+    category: Financial
+    risk: high
+    business_impact: "Removes a treasury bank account mapping; breaks downstream reconciliation and payment routing for that account."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.create-a-bank-transaction
+    object: BankTransaction
+    action: create-a-bank-transaction
+    description: "Creates a bank transaction."
+    category: Financial
+    risk: high
+    business_impact: "Inserts a bank feed line (wire, ACH, or adjustment) affecting cash reporting and reconciliation."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.update-a-bank-transaction
+    object: BankTransaction
+    action: update-a-bank-transaction
+    description: "Updates a bank transaction."
+    category: Financial
+    risk: medium
+    business_impact: "Adjusts categorization or reconciliation metadata on a bank transaction; affects cash reconciliation state."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.delete-a-bank-transaction
+    object: BankTransaction
+    action: delete-a-bank-transaction
+    description: "Deletes a bank transaction."
+    category: Financial
+    risk: high
+    business_impact: "Removes a bank transaction row; alters reconciled cash balances if the underlying activity returns on a feed."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Contracts & Revenue ----------
+  - id: rillet.create-a-contract
+    object: Contract
+    action: create-a-contract
+    description: "Creates a contract."
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Creates a revenue contract driving recognition schedules and ARR; downstream financial-statement impact."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.amend-a-contract
+    object: Contract
+    action: amend-a-contract
+    description: "Amends a contract."
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Amends an active revenue contract; changes recognition schedules and ARR figures on the ledger."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.preview-contract-amendment
+    object: Contract
+    action: preview-contract-amendment
+    description: "Previews contract amendment."
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Computes a preview of a contract amendment without persisting changes; read-only projection."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.end-an-open-ended-contract
+    object: Contract
+    action: end-an-open-ended-contract
+    description: "Ends an open-ended contract."
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Terminates an open-ended revenue contract; stops recognition and adjusts ARR on the ledger."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.delete-a-contract
+    object: Contract
+    action: delete-a-contract
+    description: "Deletes a contract."
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Removes a revenue contract; erases its recognition schedule and ARR contribution from the books."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.create-a-draft-contract
+    object: DraftContract
+    action: create-a-draft-contract
+    description: "Creates a draft contract."
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Creates a draft (unbooked) contract; no ledger or recognition impact until activated."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.update-a-draft-contract
+    object: DraftContract
+    action: update-a-draft-contract
+    description: "Updates a draft contract."
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Modifies a draft (unbooked) contract; no ledger impact until activated."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.delete-a-draft-contract
+    object: DraftContract
+    action: delete-a-draft-contract
+    description: "Deletes a draft contract."
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Removes a draft (unbooked) contract; no ledger or recognition impact."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.upsert-a-usage-record
+    object: UsageRecord
+    action: upsert-a-usage-record
+    description: "Upserts a usage record."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Records or updates metered usage on a contract item; drives usage-based billing and revenue amounts."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.delete-a-usage-record
+    object: UsageRecord
+    action: delete-a-usage-record
+    description: "Deletes a usage record."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Removes a metered usage record; alters usage-based billing and recognized revenue for the contract item."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Customers & Vendors (Master Data) ----------
+  - id: rillet.create-a-customer
+    object: Customer
+    action: create-a-customer
+    description: "Creates a customer."
+    category: Customer
+    risk: medium
+    business_impact: "Adds a customer master record; stores customer PII and anchors invoicing and revenue."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.update-a-customer
+    object: Customer
+    action: update-a-customer
+    description: "Updates a customer."
+    category: Customer
+    risk: medium
+    business_impact: "Modifies a customer master record; changes stored customer PII and downstream billing routing."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.delete-a-customer
+    object: Customer
+    action: delete-a-customer
+    description: "Deletes a customer."
+    category: Customer
+    risk: high
+    business_impact: "Removes a customer master record and its PII; breaks linkage for invoices and revenue tied to that customer."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.create-a-vendor
+    object: Vendor
+    action: create-a-vendor
+    description: "Creates a vendor."
+    category: Customer
+    risk: medium
+    business_impact: "Adds a vendor master record holding payment and contact details; anchors AP and disbursements."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.update-a-vendor
+    object: Vendor
+    action: update-a-vendor
+    description: "Updates a vendor."
+    category: Customer
+    risk: high
+    business_impact: "Modifies a vendor master record including payment details; altering bank/remittance data redirects disbursements."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.delete-a-vendor
+    object: Vendor
+    action: delete-a-vendor
+    description: "Deletes a vendor."
+    category: Customer
+    risk: high
+    business_impact: "Removes a vendor master record and its PII; breaks linkage for bills and payments tied to that vendor."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.create-a-product
+    object: Product
+    action: create-a-product
+    description: "Creates a product."
+    category: Operations
+    risk: low
+    business_impact: "Adds a product/SKU definition used in invoicing and contracts; reference-data write."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.update-a-product
+    object: Product
+    action: update-a-product
+    description: "Updates a product."
+    category: Operations
+    risk: low
+    business_impact: "Modifies a product/SKU definition; affects how future invoices and contracts price line items."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.delete-a-product
+    object: Product
+    action: delete-a-product
+    description: "Deletes a product."
+    category: Operations
+    risk: low
+    business_impact: "Removes a product/SKU definition; reference-data deletion that may affect future line-item pricing."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Configuration ----------
+  - id: rillet.create-field
+    object: Field
+    action: create-field
+    description: "Creates a field."
+    category: Configuration
+    risk: medium
+    business_impact: "Adds a custom field to the data model; tenant-wide schema change affecting records across the ERP."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.update-field
+    object: Field
+    action: update-field
+    description: "Updates a field."
+    category: Configuration
+    risk: medium
+    business_impact: "Modifies a custom field definition; tenant-wide schema change affecting how records store data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.create-field-value
+    object: FieldValue
+    action: create-field-value
+    description: "Creates a field value."
+    category: Configuration
+    risk: low
+    business_impact: "Adds an allowed value to a custom field; low-impact reference-data write."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.update-field-value
+    object: FieldValue
+    action: update-field-value
+    description: "Updates a field value."
+    category: Configuration
+    risk: low
+    business_impact: "Modifies an allowed value on a custom field; low-impact reference-data write."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.delete-field-value
+    object: FieldValue
+    action: delete-field-value
+    description: "Deletes a field value."
+    category: Configuration
+    risk: low
+    business_impact: "Removes an allowed value from a custom field; low-impact reference-data deletion."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Financial Reports (sensitive reads) ----------
+  - id: rillet.retrieve-balance-sheet-report
+    object: Report
+    action: retrieve-balance-sheet-report
+    description: "Retrieves balance sheet report."
+    category: Financial
+    risk: high
+    business_impact: "Returns the full balance sheet; exposes consolidated financial-position figures for the entity."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.retrieve-income-statement-report
+    object: Report
+    action: retrieve-income-statement-report
+    description: "Retrieves income statement report."
+    category: Financial
+    risk: high
+    business_impact: "Returns the full income statement; exposes consolidated revenue, expense, and profit figures."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.retrieve-cash-flow-statement-report
+    object: Report
+    action: retrieve-cash-flow-statement-report
+    description: "Retrieves cash flow statement report."
+    category: Financial
+    risk: high
+    business_impact: "Returns the full cash-flow statement; exposes consolidated cash movement and liquidity figures."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.retrieve-trial-balance-report
+    object: Report
+    action: retrieve-trial-balance-report
+    description: "Retrieves trial balance report."
+    category: Financial
+    risk: high
+    business_impact: "Returns the full trial balance; exposes every account balance underlying the financial statements."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.retrieve-executive-pl-report
+    object: Report
+    action: retrieve-executive-pl-report
+    description: "Retrieves executive P&L report."
+    category: Financial
+    risk: high
+    business_impact: "Returns the executive profit-and-loss view; exposes consolidated, board-level financial performance."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.retrieve-waterfall-report
+    object: Report
+    action: retrieve-waterfall-report
+    description: "Retrieves ARR waterfall report."
+    category: Financial
+    risk: high
+    business_impact: "Returns the ARR waterfall; exposes recurring-revenue movement, churn, and expansion metrics."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.list-reports-journal-entries
+    object: JournalEntry
+    action: list-reports-journal-entries
+    description: "Lists journal entries with reporting currency amounts."
+    category: Financial
+    risk: high
+    business_impact: "Streams general-ledger journal entries in reporting currency; bulk read of the transaction detail behind the financials."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Bulk Reads (financial / PII lists) ----------
+  - id: rillet.list-all-journal-entries
+    object: JournalEntry
+    action: list-all-journal-entries
+    description: "Lists all journal entries."
+    category: Financial
+    risk: high
+    business_impact: "Streams all general-ledger journal entries; bulk read of the full transaction history behind the financials."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.list-all-customers
+    object: Customer
+    action: list-all-customers
+    description: "Lists all customers."
+    category: Customer
+    risk: high
+    business_impact: "Streams the full customer directory; bulk read of customer PII across the organization."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.list-all-vendors
+    object: Vendor
+    action: list-all-vendors
+    description: "Lists all vendors."
+    category: Customer
+    risk: high
+    business_impact: "Streams the full vendor directory including payment details; bulk read of vendor PII and remittance data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.list-all-invoices
+    object: Invoice
+    action: list-all-invoices
+    description: "Lists all invoices."
+    category: Financial
+    risk: high
+    business_impact: "Streams all customer invoices; bulk read of receivables and embedded customer PII."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.list-all-bills
+    object: Bill
+    action: list-all-bills
+    description: "Lists all bills."
+    category: Financial
+    risk: high
+    business_impact: "Streams all accounts-payable bills; bulk read of payables and embedded vendor detail."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.list-all-bank-transactions
+    object: BankTransaction
+    action: list-all-bank-transactions
+    description: "Lists all bank transactions."
+    category: Financial
+    risk: high
+    business_impact: "Streams all imported and manual cash activity; bulk read of treasury and bank-feed detail."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.list-all-credit-memos
+    object: CreditMemo
+    action: list-all-credit-memos
+    description: "Lists all credit memos."
+    category: Financial
+    risk: medium
+    business_impact: "Streams all customer credit memos; bulk read of contra-revenue adjustments and customer references."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.list-all-reimbursements
+    object: Reimbursement
+    action: list-all-reimbursements
+    description: "Lists all reimbursements."
+    category: Financial
+    risk: medium
+    business_impact: "Streams all reimbursements; bulk read of amounts owed to individuals and associated PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.list-all-charges
+    object: Charge
+    action: list-all-charges
+    description: "Lists all charges."
+    category: Financial
+    risk: medium
+    business_impact: "Streams all payment charges; bulk read of money-movement records and transaction detail."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.list-all-contracts
+    object: Contract
+    action: list-all-contracts
+    description: "Lists all contracts."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Streams all revenue contracts; bulk read of recognition schedules and ARR figures."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.list-all-invoice-payments
+    object: InvoicePayment
+    action: list-all-invoice-payments
+    description: "Lists payments for a given invoice."
+    category: Financial
+    risk: medium
+    business_impact: "Streams the payment history for an invoice; bulk read of customer cash-receipt detail."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.list-all-invoices-payments
+    object: InvoicePayment
+    action: list-all-invoices-payments
+    description: "Lists all invoice payments."
+    category: Financial
+    risk: high
+    business_impact: "Streams all customer invoice payments; bulk read of cash receipts across the organization."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.list-bill-payments
+    object: BillPayment
+    action: list-bill-payments
+    description: "Lists bill payments."
+    category: Financial
+    risk: medium
+    business_impact: "Streams the disbursement history for a bill; bulk read of vendor cash-payment detail."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: rillet.list-all-vendor-credits
+    object: VendorCredit
+    action: list-all-vendor-credits
+    description: "Lists all vendor credits."
+    category: Financial
+    risk: medium
+    business_impact: "Streams all vendor credits; bulk read of payable-reduction records and vendor references."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

@@ -1,0 +1,153 @@
+schema_version: "1.1"
+platform: magic-patterns
+display_name: Magic Patterns
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+actions:
+  # ---------- Design ----------
+  - id: magic-patterns.create_design
+    object: Design
+    action: create_design
+    description: "Initiates a new design project, either blank or AI-generated from a prompt with optional template and design-system selection."
+    category: Operations
+    risk: low
+    business_impact: "Creates a new design project in the workspace; reversible and isolated from existing designs."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: magic-patterns.send_prompt
+    object: Design
+    action: send_prompt
+    description: "Submits natural-language instructions that update an existing design's content via background AI processing."
+    category: Operations
+    risk: medium
+    business_impact: "Mutates an existing design via AI generation; reversible through version history but changes the active working content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: magic-patterns.publish_artifact
+    object: Artifact
+    action: publish_artifact
+    description: "Compiles source files and activates an artifact as the design's current working version."
+    category: Operations
+    risk: medium
+    business_impact: "Promotes an artifact to the live working version of a design; reversible by republishing a prior version from history."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Artifacts ----------
+  - id: magic-patterns.write_artifact_files
+    object: Artifact
+    action: write_artifact_files
+    description: "Creates or overwrites source files within an artifact; requires a separate publish step to take effect."
+    category: Operations
+    risk: medium
+    business_impact: "Overwrites source files inside an artifact; reversible via version history and gated behind a separate publish."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: magic-patterns.create_new_artifact
+    object: Artifact
+    action: create_new_artifact
+    description: "Clones an existing artifact into a new named version."
+    category: Operations
+    risk: low
+    business_impact: "Clones an artifact into a new version; additive and non-destructive to the source."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: magic-patterns.get_artifact
+    object: Artifact
+    action: get_artifact
+    description: "Retrieves the active artifact's ID and file listing for a design."
+    category: Operations
+    risk: low
+    business_impact: "Reads the active artifact's identifier and file listing; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: magic-patterns.read_artifact_files
+    object: Artifact
+    action: read_artifact_files
+    description: "Reads the full contents of specified files within an artifact."
+    category: Operations
+    risk: low
+    business_impact: "Reads source file contents from an artifact; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Design Metadata & History ----------
+  - id: magic-patterns.list_design_systems
+    object: DesignSystem
+    action: list_design_systems
+    description: "Lists available design systems, including built-in presets and custom options, with IDs, names, and active status."
+    category: Operations
+    risk: low
+    business_impact: "Reads the list of available design systems; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: magic-patterns.get_editor_id_from_url
+    object: Design
+    action: get_editor_id_from_url
+    description: "Converts a Magic Patterns URL into an editor ID for use with other tools."
+    category: Operations
+    risk: low
+    business_impact: "Resolves a design URL to an editor identifier; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: magic-patterns.get_design_status
+    object: Design
+    action: get_design_status
+    description: "Retrieves current design state including generation status, active artifact ID, and available files."
+    category: Operations
+    risk: low
+    business_impact: "Reads the current generation status and file listing for a design; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: magic-patterns.list_version_history
+    object: Artifact
+    action: list_version_history
+    description: "Retrieves up to 20 recent artifact versions, with pagination."
+    category: Operations
+    risk: low
+    business_impact: "Reads recent artifact version history for a design; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: magic-patterns.read_recent_message_history
+    object: Message
+    action: read_recent_message_history
+    description: "Fetches the last 10 chat items — user prompts, AI responses, and artifact versions — with pagination."
+    category: Operations
+    risk: low
+    business_impact: "Reads recent chat history between the user and the AI; prompt text may contain user-entered personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

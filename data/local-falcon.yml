@@ -1,0 +1,459 @@
+schema_version: "1.1"
+platform: local-falcon
+display_name: Local Falcon
+source: langguard-editorial
+updated: "2026-06"
+reference: https://github.com/local-falcon/mcp
+actions:
+  # ---------- Rank Tracking ----------
+  - id: local-falcon.runLocalFalconScan
+    object: Scan
+    action: runLocalFalconScan
+    description: "Runs a new geo-grid ranking scan at specified coordinates; consumes account credits."
+    category: Rank Tracking
+    risk: medium
+    business_impact: "Spends account scan credits to run a new ranking scan; credit consumption is non-refundable, though no business records are destroyed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.listLocalFalconScanReports
+    object: Scan
+    action: listLocalFalconScanReports
+    description: "Lists all existing geo-grid scan reports."
+    category: Rank Tracking
+    risk: low
+    business_impact: "Returns a list of past ranking-scan reports; read-only business-SEO data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.getLocalFalconReport
+    object: Scan
+    action: getLocalFalconReport
+    description: "Retrieves a specific scan report by report key, including ranking data, competitor summary, and grid visualization."
+    reference: https://www.localfalcon.com/features/mcp
+    category: Rank Tracking
+    risk: low
+    business_impact: "Returns a single ranking-scan report; read-only business-SEO data rendered as a geo-grid heatmap widget."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.getLocalFalconGrid
+    object: Grid
+    action: getLocalFalconGrid
+    description: "Helper that generates grid coordinates for a single-point ranking check."
+    category: Rank Tracking
+    risk: low
+    business_impact: "Computes grid coordinates for a scan; no data written and no credits consumed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.getLocalFalconRankingAtCoordinate
+    object: Ranking
+    action: getLocalFalconRankingAtCoordinate
+    description: "Performs a single-point ranking check at one coordinate."
+    category: Rank Tracking
+    risk: low
+    business_impact: "Returns a single-coordinate ranking result; read-only business-SEO data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.getLocalFalconKeywordAtCoordinate
+    object: Ranking
+    action: getLocalFalconKeywordAtCoordinate
+    description: "Performs a single-point keyword search at one coordinate."
+    category: Rank Tracking
+    risk: low
+    business_impact: "Returns single-coordinate keyword-ranking results; read-only business-SEO data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.listLocalFalconAutoScans
+    object: AutoScan
+    action: listLocalFalconAutoScans
+    description: "Lists individually scheduled automatic scans."
+    category: Rank Tracking
+    risk: low
+    business_impact: "Returns the list of scheduled auto-scans; read-only configuration data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Campaigns ----------
+  - id: local-falcon.createLocalFalconCampaign
+    object: Campaign
+    action: createLocalFalconCampaign
+    description: "Creates a new campaign with scheduled recurring scans."
+    category: Campaigns
+    risk: medium
+    business_impact: "Creates a recurring-scan campaign that will spend credits on each scheduled run; reversible by pausing or deactivating."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.runLocalFalconCampaign
+    object: Campaign
+    action: runLocalFalconCampaign
+    description: "Manually triggers a campaign to run immediately."
+    category: Campaigns
+    risk: medium
+    business_impact: "Triggers an immediate campaign run that consumes scan credits; credit spend is non-refundable."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.pauseLocalFalconCampaign
+    object: Campaign
+    action: pauseLocalFalconCampaign
+    description: "Pauses a campaign's scheduled runs."
+    category: Campaigns
+    risk: low
+    business_impact: "Pauses scheduled campaign runs; fully reversible by resuming."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.resumeLocalFalconCampaign
+    object: Campaign
+    action: resumeLocalFalconCampaign
+    description: "Resumes a paused campaign."
+    category: Campaigns
+    risk: low
+    business_impact: "Resumes a paused campaign so scheduled scans run again; reversible by pausing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.reactivateLocalFalconCampaign
+    object: Campaign
+    action: reactivateLocalFalconCampaign
+    description: "Reactivates a campaign deactivated due to insufficient credits."
+    category: Campaigns
+    risk: low
+    business_impact: "Reactivates a credit-deactivated campaign; resumes scheduled scan spend, reversible by pausing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.listLocalFalconCampaignReports
+    object: Campaign
+    action: listLocalFalconCampaignReports
+    description: "Lists all campaign reports."
+    category: Campaigns
+    risk: low
+    business_impact: "Returns the list of campaign reports; read-only business-SEO data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.getLocalFalconCampaignReport
+    object: Campaign
+    action: getLocalFalconCampaignReport
+    description: "Retrieves a specific campaign report."
+    category: Campaigns
+    risk: low
+    business_impact: "Returns a single campaign report; read-only business-SEO data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- GBP Monitoring ----------
+  - id: local-falcon.addLocationsToFalconGuard
+    object: GuardLocation
+    action: addLocationsToFalconGuard
+    description: "Adds locations to Falcon Guard Google Business Profile monitoring."
+    category: GBP Monitoring
+    risk: low
+    business_impact: "Enrolls business locations into twice-daily GBP-change monitoring; reversible by removing protection."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.pauseFalconGuardProtection
+    object: GuardLocation
+    action: pauseFalconGuardProtection
+    description: "Pauses Falcon Guard protection for specified locations."
+    category: GBP Monitoring
+    risk: low
+    business_impact: "Suspends GBP monitoring for the named locations; reversible by resuming."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.resumeFalconGuardProtection
+    object: GuardLocation
+    action: resumeFalconGuardProtection
+    description: "Resumes Falcon Guard protection for paused locations."
+    category: GBP Monitoring
+    risk: low
+    business_impact: "Re-enables GBP monitoring for paused locations; reversible by pausing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.removeFalconGuardProtection
+    object: GuardLocation
+    action: removeFalconGuardProtection
+    description: "Removes locations from Falcon Guard entirely, deleting their Guard monitoring."
+    category: GBP Monitoring
+    risk: medium
+    business_impact: "Deletes Falcon Guard monitoring for one or more locations and its change-history record; the location can be re-added but accrued monitoring history is lost."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.listLocalFalconGuardReports
+    object: GuardReport
+    action: listLocalFalconGuardReports
+    description: "Lists Falcon Guard reports for monitored locations."
+    category: GBP Monitoring
+    risk: low
+    business_impact: "Returns the list of Guard-monitored locations and their status; read-only business-profile data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.getLocalFalconGuardReport
+    object: GuardReport
+    action: getLocalFalconGuardReport
+    description: "Retrieves a specific Falcon Guard report by place_id, including GBP change history and engagement metrics."
+    category: GBP Monitoring
+    risk: low
+    business_impact: "Returns a single Guard report with GBP change history and aggregate engagement metrics; read-only business-profile data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Reputation & Reviews ----------
+  - id: local-falcon.getLocalFalconReviewsAnalysisReport
+    object: ReviewsAnalysis
+    action: getLocalFalconReviewsAnalysisReport
+    description: "Retrieves a specific Reviews Analysis report with volume, quality, sentiment, and topic analysis across up to 1M reviews."
+    category: Reputation & Reviews
+    risk: medium
+    business_impact: "Returns bulk analysis of publicly-posted Google reviews including sentiment and Local-Guide reviewer signals; aggregates person-attributable public-review content at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.listLocalFalconReviewsAnalysisReports
+    object: ReviewsAnalysis
+    action: listLocalFalconReviewsAnalysisReports
+    description: "Lists all Reviews Analysis reports."
+    category: Reputation & Reviews
+    risk: low
+    business_impact: "Returns the list of Reviews Analysis reports without review content; read-only metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Reporting ----------
+  - id: local-falcon.listLocalFalconTrendReports
+    object: TrendReport
+    action: listLocalFalconTrendReports
+    description: "Lists auto-generated trend reports showing ranking changes over time."
+    category: Reporting
+    risk: low
+    business_impact: "Returns the list of ranking-trend reports; read-only business-SEO data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.getLocalFalconTrendReport
+    object: TrendReport
+    action: getLocalFalconTrendReport
+    description: "Retrieves a specific trend report."
+    category: Reporting
+    risk: low
+    business_impact: "Returns a single ranking-trend report; read-only business-SEO data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.listLocalFalconLocationReports
+    object: LocationReport
+    action: listLocalFalconLocationReports
+    description: "Lists auto-generated reports for specific locations."
+    category: Reporting
+    risk: low
+    business_impact: "Returns the list of per-location reports; read-only business-SEO data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.getLocalFalconLocationReport
+    object: LocationReport
+    action: getLocalFalconLocationReport
+    description: "Retrieves a specific location report."
+    category: Reporting
+    risk: low
+    business_impact: "Returns a single per-location report; read-only business-SEO data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.listLocalFalconKeywordReports
+    object: KeywordReport
+    action: listLocalFalconKeywordReports
+    description: "Lists auto-generated reports for specific keywords."
+    category: Reporting
+    risk: low
+    business_impact: "Returns the list of per-keyword reports; read-only business-SEO data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.getLocalFalconKeywordReport
+    object: KeywordReport
+    action: getLocalFalconKeywordReport
+    description: "Retrieves a specific keyword report."
+    category: Reporting
+    risk: low
+    business_impact: "Returns a single per-keyword report; read-only business-SEO data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.getLocalFalconCompetitorReports
+    object: CompetitorReport
+    action: getLocalFalconCompetitorReports
+    description: "Lists auto-generated competitor analysis reports."
+    category: Reporting
+    risk: low
+    business_impact: "Returns the list of competitor-analysis reports; read-only business-SEO data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.getLocalFalconCompetitorReport
+    object: CompetitorReport
+    action: getLocalFalconCompetitorReport
+    description: "Retrieves a specific competitor report."
+    category: Reporting
+    risk: low
+    business_impact: "Returns a single competitor-analysis report; read-only business-SEO data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Location Management ----------
+  - id: local-falcon.saveLocalFalconBusinessLocationToAccount
+    object: Location
+    action: saveLocalFalconBusinessLocationToAccount
+    description: "Saves a business location to the account."
+    category: Location Management
+    risk: low
+    business_impact: "Saves a business listing to the account for future scans; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.listAllLocalFalconLocations
+    object: Location
+    action: listAllLocalFalconLocations
+    description: "Lists all business locations saved in the account."
+    category: Location Management
+    risk: low
+    business_impact: "Returns the account's saved business locations; read-only business-listing data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.getLocalFalconGoogleBusinessLocations
+    object: Location
+    action: getLocalFalconGoogleBusinessLocations
+    description: "Searches Google for business listings."
+    category: Location Management
+    risk: low
+    business_impact: "Searches public Google business listings; read-only, no account state written."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.searchForLocalFalconBusinessLocation
+    object: Location
+    action: searchForLocalFalconBusinessLocation
+    description: "Searches for business locations on Google or Apple."
+    category: Location Management
+    risk: low
+    business_impact: "Searches public business listings on Google or Apple; read-only, no account state written."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Account ----------
+  - id: local-falcon.viewLocalFalconAccountInformation
+    object: Account
+    action: viewLocalFalconAccountInformation
+    description: "Retrieves account information including user, credit package, subscription, and credits."
+    category: Account
+    risk: low
+    business_impact: "Returns the account holder's own user profile plus credit and subscription details; exposes single-subject account-holder PII but no payment-card data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Knowledge Base ----------
+  - id: local-falcon.searchLocalFalconKnowledgeBase
+    object: Article
+    action: searchLocalFalconKnowledgeBase
+    description: "Searches the Local Falcon Knowledge Base for help articles and guides."
+    category: Knowledge Base
+    risk: low
+    business_impact: "Searches public help documentation; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: local-falcon.getLocalFalconKnowledgeBaseArticle
+    object: Article
+    action: getLocalFalconKnowledgeBaseArticle
+    description: "Retrieves the full content of a specific Knowledge Base article by ID."
+    category: Knowledge Base
+    risk: low
+    business_impact: "Returns the full text of a public help article; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

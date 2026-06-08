@@ -1,0 +1,115 @@
+schema_version: "1.1"
+platform: dnb-risk-analytics
+display_name: D&B Risk Analytics
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/connectors/dnb-risk-analytics
+# ----------------------------------------------------------------------------
+# CAPABILITY-FORM FALLBACK (id_form: capability) — see compliance-data-curator
+# spec Step 3.
+#
+# The official Dun & Bradstreet "D&B Risk Analytics" connector is a hosted,
+# OAuth-protected MCP server at https://agents.riskanalytics.dnb.com/mcp (URL
+# discovered embedded in the connector page). Its tools/list is genuinely
+# unreachable without an interactive D&B OAuth login: anonymous initialize /
+# GET return HTTP 401 with an RFC 9728 WWW-Authenticate Bearer challenge and a
+# resource_metadata pointer; the authorization-code flow (scopes mcp.read /
+# mcp.write) requires real D&B credentials we do not hold, so live tools/list
+# introspection returned auth-gated (no verbatim tool ids obtainable). No
+# first-party D&B developer-portal tool list or MCP source repo is reachable;
+# the Apify "D&B" MCP listings are third-party scrapers, NOT this connector, so
+# their tool names are deliberately NOT used here.
+#
+# The five actions below are the FIVE capability headings D&B publishes verbatim
+# on the connector page under "You can use D&B Risk Analytics to:". Each entry
+# uses that verbatim heading as `description`, a slugified snake_case `id`, and is
+# capped at confidence: medium — matches are intent-level, not identifier-level,
+# and these ids will NOT byte-match what an MCP client sends if D&B's real tool
+# names differ. Regenerate verbatim once the server's tools/list is reachable.
+# (KYC/KYB, entity resolution, screening, and alert triage appear only in the
+# page's descriptive prose — "execute risk workflows such as..." — NOT as
+# discrete published capabilities, so they are intentionally NOT split out into
+# separate actions; doing so previously produced fabricated tool ids.)
+#
+# Tagging note: D&B Risk Analytics trades in BUSINESS-ENTITY data anchored to the
+# D-U-N-S Number (legal entities), not consumer non-public personal information.
+# GLBA is omitted entirely: UBOs and directors are identifiable individuals in
+# their capacity as business controllers, not as consumers of financial products,
+# so they sit outside GLBA's NPI scope (whose subject is consumer financial data
+# at financial institutions). Privacy regimes are tagged only on the two actions
+# that return or compile natural-person PII — beneficial-ownership tracing
+# (UBOs/directors) and the KYB decision report (which embeds that personal data).
+# NY_DFS_500 (a cybersecurity-program regulation) and SOX/COSO (financial-
+# statement controls) do not inherently apply to these risk lookups and are
+# omitted. AI regimes are omitted: KYB decisions concern a business counterparty,
+# not an individual's rights/interests.
+# ----------------------------------------------------------------------------
+actions:
+  # ---------- Ownership & PII ----------
+  - id: dnb-risk-analytics.trace_beneficial_ownership
+    object: BeneficialOwner
+    action: trace_beneficial_ownership
+    id_form: capability
+    description: "Trace beneficial ownership"
+    category: Ownership & PII
+    risk: high
+    business_impact: "Returns the chain of ultimate beneficial owners and directors — identifiable natural persons — behind a business and flags owners in high-risk or sanctioned jurisdictions; a sensitive personal-data read that is the core UBO control for KYC/AML."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Risk & Screening ----------
+  - id: dnb-risk-analytics.initiate_third_party_screening
+    object: ThirdParty
+    action: initiate_third_party_screening
+    id_form: capability
+    description: "Initiate third-party screening"
+    category: Risk & Screening
+    risk: medium
+    business_impact: "Screens a business counterparty against risk and sanctions signals; the outcome gates onboarding or an ongoing business relationship and is an auditable KYB control on a legal entity."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: dnb-risk-analytics.assess_overall_risk
+    object: Business
+    action: assess_overall_risk
+    id_form: capability
+    description: "Assess overall risk"
+    category: Risk & Screening
+    risk: low
+    business_impact: "Reads a business entity's overall risk rating and the key drivers behind it from the D&B Commercial Graph; non-personal financial reference data used as an input to onboarding and exposure decisions."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Verification ----------
+  - id: dnb-risk-analytics.verify_and_onboard_suppliers
+    object: Supplier
+    action: verify_and_onboard_suppliers
+    id_form: capability
+    description: "Verify and onboard suppliers"
+    category: Identity & Verification
+    risk: medium
+    business_impact: "Verifies and cross-checks a supplier's business data against the D-U-N-S-anchored Commercial Graph; the result gates supplier onboarding and procurement-risk decisions on a legal entity."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Decision Reporting ----------
+  - id: dnb-risk-analytics.generate_kyb_decision_reports
+    object: DecisionReport
+    action: generate_kyb_decision_reports
+    id_form: capability
+    description: "Generate KYB decision reports"
+    category: Decision Reporting
+    risk: medium
+    business_impact: "Compiles an audit-ready KYB decision report recommending approve, refer, or decline for a business; embeds beneficial-owner personal data and becomes the compliance record relied on in regulatory examination."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

@@ -1,0 +1,125 @@
+schema_version: "1.1"
+platform: ramp-data
+display_name: Ramp Data
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.ramp.com/llms-guides/ramp-rate.txt
+actions:
+  # ---------- Data Access (Ramp Rate) ----------
+  - id: ramp-data.ramp_rate_list_categories
+    object: Category
+    action: ramp_rate_list_categories
+    description: "List all software categories. Call this first to discover valid category names."
+    reference: https://docs.ramp.com/llms-guides/ramp-rate.txt
+    category: Data Access
+    risk: low
+    business_impact: "Reads the list of public software-spend benchmark categories; aggregated, anonymized, intentionally-public data with no personal information."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: ramp-data.ramp_rate_get_category_summary
+    object: Category
+    action: ramp_rate_get_category_summary
+    description: "Get adoption stats for a category, including adoption rate, YoY change, MoM change, growth rank, vendor count, and FTE segment breakdowns."
+    reference: https://docs.ramp.com/llms-guides/ramp-rate.txt
+    category: Data Access
+    risk: low
+    business_impact: "Reads aggregate adoption statistics for a public benchmark category; no personal or customer-account data is exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: ramp-data.ramp_rate_get_category_vendors
+    object: Vendor
+    action: ramp_rate_get_category_vendors
+    description: "Get a ranked vendor leaderboard within a category, with optional limit, fte_segment, and min_share_of_spend filters."
+    reference: https://docs.ramp.com/llms-guides/ramp-rate.txt
+    category: Data Access
+    risk: low
+    business_impact: "Reads a public ranked vendor leaderboard for a benchmark category; aggregated market data, no personal information."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: ramp-data.ramp_rate_resolve_vendor
+    object: Vendor
+    action: ramp_rate_resolve_vendor
+    description: "Resolve a human-readable vendor name like Slack to its canonical vendor_slug and list its categories."
+    reference: https://docs.ramp.com/llms-guides/ramp-rate.txt
+    category: Data Access
+    risk: low
+    business_impact: "Looks up a public business-vendor identifier; references companies, not natural persons, so no privacy exposure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: ramp-data.ramp_rate_get_vendor_profile
+    object: Vendor
+    action: ramp_rate_get_vendor_profile
+    description: "Get a vendor's full Ramp Rate profile across all categories."
+    reference: https://docs.ramp.com/llms-guides/ramp-rate.txt
+    category: Data Access
+    risk: low
+    business_impact: "Reads a public benchmark profile for a software vendor across categories; aggregated market data with no personal information."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: ramp-data.ramp_rate_compare_vendors
+    object: Vendor
+    action: ramp_rate_compare_vendors
+    description: "Compare adoption metrics side by side for 2-10 vendors."
+    reference: https://docs.ramp.com/llms-guides/ramp-rate.txt
+    category: Data Access
+    risk: low
+    business_impact: "Reads side-by-side public adoption metrics for a small set of software vendors; aggregated market data, no personal information."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Data Access (AI Index) ----------
+  - id: ramp-data.ai_index_get_adoption
+    object: AdoptionMetric
+    action: ai_index_get_adoption
+    description: "Get AI adoption history with vendor breakdown. Supports months from 1 to 120."
+    reference: https://docs.ramp.com/llms-guides/ai-index.txt
+    category: Data Access
+    risk: low
+    business_impact: "Reads the public AI Index adoption time series with vendor breakdown; aggregated, anonymized economic data with no personal information."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: ramp-data.ai_index_get_adoption_by_sector
+    object: AdoptionMetric
+    action: ai_index_get_adoption_by_sector
+    description: "Get AI adoption history broken down by industry sector. Supports months from 1 to 120."
+    reference: https://docs.ramp.com/llms-guides/ai-index.txt
+    category: Data Access
+    risk: low
+    business_impact: "Reads the public AI Index adoption time series segmented by industry sector; aggregated, anonymized economic data with no personal information."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+
+  - id: ramp-data.ai_index_get_adoption_by_size
+    object: AdoptionMetric
+    action: ai_index_get_adoption_by_size
+    description: "Get AI adoption history broken down by company size. Supports months from 1 to 120."
+    reference: https://docs.ramp.com/llms-guides/ai-index.txt
+    category: Data Access
+    risk: low
+    business_impact: "Reads the public AI Index adoption time series segmented by company size; aggregated, anonymized economic data with no personal information."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]

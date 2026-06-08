@@ -1,0 +1,56 @@
+schema_version: "1.1"
+platform: send
+display_name: Send
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.send.co/mcp/docs
+actions:
+  # ---------- Data Access ----------
+  - id: send.CreateDocument
+    object: Document
+    action: CreateDocument
+    description: "Creates a new Send document from raw HTML or by copying an existing document, returning a publicly shareable link."
+    category: Data Access
+    risk: medium
+    business_impact: "Publishes author-supplied content to a publicly-accessible shareable URL; reversible via edit, but content is exposed to anyone with the link until changed."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: send.EditDocument
+    object: Document
+    action: EditDocument
+    description: "Edits an existing document the caller owns, applying a diff-style code edit and updating the share link in-place."
+    category: Data Access
+    risk: medium
+    business_impact: "Modifies an owned, publicly-shared document in-place; the existing share link immediately reflects the new author-supplied content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: send.GetDocument
+    object: Document
+    action: GetDocument
+    description: "Fetches a document's full HTML source and metadata by share ID or URL, including documents shared with the caller by others."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the full HTML and metadata of a document, including ones authored by others and shared with the caller; can expose confidential or PII-bearing content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: send.manage_images
+    object: Image
+    action: manage_images
+    description: "Browses previously uploaded images or prompts the user to upload new images for use in documents."
+    category: Operations
+    risk: low
+    business_impact: "Lists or uploads images into the workspace asset library; reversible and individually attributed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

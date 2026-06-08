@@ -1,0 +1,453 @@
+schema_version: "1.1"
+platform: workable
+display_name: Workable
+source: langguard-editorial
+updated: "2026-06"
+reference: https://workable.readme.io/reference/workable-mcp-server
+# Verbatim MCP tool ids from the Workable MCP server docs (snake_case, unprefixed).
+# Server exposes 59 tools total; this file curates the full write/destructive
+# surface (24 tools) plus the sensitive/bulk-PII and audit reads (12 tools).
+# Pure config/metadata getters and most singular detail-getters were trimmed
+# (see provenance notes). Recruitment is an EU AI Act Annex III high-risk domain,
+# so candidate-decisioning tools carry AI-regime tags.
+actions:
+  # ---------- Candidates ----------
+  - id: workable.create_candidate
+    object: Candidate
+    action: create_candidate
+    description: "Source a new candidate and attach them to a specific job (resume, social profiles, education, experience, application answers)."
+    category: Customer
+    risk: medium
+    business_impact: "Writes a new candidate PII record (resume, contact, education, work history) into the hiring pipeline."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: workable.create_talent_pool_candidate
+    object: Candidate
+    action: create_talent_pool_candidate
+    description: "Add a candidate to the talent pool without attaching to a specific job."
+    category: Customer
+    risk: medium
+    business_impact: "Stores a new candidate PII record in the talent pool for future outreach."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: workable.move_candidate
+    object: Candidate
+    action: move_candidate
+    description: "Move a candidate to a different pipeline stage (supports requisition linking on hire)."
+    category: Customer
+    risk: high
+    business_impact: "Advances or hires a candidate, an automated decision affecting an identifiable person's employment outcome."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, EU_AI_ACT, NIST_AI_RMF, CO_AI_ACT]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: workable.disqualify_candidate
+    object: Candidate
+    action: disqualify_candidate
+    description: "Disqualify a candidate with a reason (rejected or withdrew)."
+    category: Customer
+    risk: high
+    business_impact: "Rejects a candidate, an automated adverse hiring decision affecting an identifiable person."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, EU_AI_ACT, NIST_AI_RMF, CO_AI_ACT]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: workable.add_review
+    object: Candidate
+    action: add_review
+    description: "Add a rating/review to a candidate (thumbs, stars, or numeric scale)."
+    category: Customer
+    risk: high
+    business_impact: "Records a scored evaluation that feeds hiring decisions about an identifiable candidate."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, EU_AI_ACT, NIST_AI_RMF, CO_AI_ACT]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: workable.add_comment
+    object: Candidate
+    action: add_comment
+    description: "Add a comment to a candidate with visibility controls."
+    category: Customer
+    risk: medium
+    business_impact: "Adds a free-text comment to a candidate profile that may contain personal data or evaluative opinion."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: workable.update_candidate_tags
+    object: Candidate
+    action: update_candidate_tags
+    description: "Replace the full set of tags on a candidate; the provided array overwrites all existing tags."
+    category: Customer
+    risk: medium
+    business_impact: "Overwrites all tags on a candidate; an empty array silently clears existing classification data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: workable.get_candidates
+    object: Candidate
+    action: get_candidates
+    description: "List candidates for a job with filtering by stage, email, and date."
+    category: Customer
+    risk: high
+    business_impact: "Bulk read of candidate PII across a job's pipeline; a data-exfiltration surface regardless of intent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: workable.get_candidate
+    object: Candidate
+    action: get_candidate
+    description: "Get full profile details for a specific candidate."
+    category: Customer
+    risk: high
+    business_impact: "Reads a single candidate's full PII profile including resume, contact details, and application answers."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: workable.get_candidate_activities
+    object: Candidate
+    action: get_candidate_activities
+    description: "Get the activity log for a candidate (stage changes, comments, etc.)."
+    category: Customer
+    risk: medium
+    business_impact: "Reads the audit trail of a candidate including stage changes and evaluative comments."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Offers ----------
+  - id: workable.approve_offer
+    object: Offer
+    action: approve_offer
+    description: "Approve an offer."
+    category: Customer
+    risk: high
+    business_impact: "Unilaterally approves a job offer, finalizing a hiring decision and committing future compensation spend."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, EU_AI_ACT, NIST_AI_RMF, CO_AI_ACT, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: workable.reject_offer
+    object: Offer
+    action: reject_offer
+    description: "Reject an offer with an optional rejection reason."
+    category: Customer
+    risk: high
+    business_impact: "Unilaterally rejects a job offer, an adverse decision affecting an identifiable candidate."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, EU_AI_ACT, NIST_AI_RMF, CO_AI_ACT, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Requisitions ----------
+  - id: workable.create_requisition
+    object: Requisition
+    action: create_requisition
+    description: "Create a new headcount requisition with job title, owner, hiring manager, salary, and department."
+    category: Operations
+    risk: medium
+    business_impact: "Creates a headcount requisition specifying salary and ownership; reviewable but commits planned spend."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: workable.approve_requisition
+    object: Requisition
+    action: approve_requisition
+    description: "Approve a requisition by code."
+    category: Operations
+    risk: medium
+    business_impact: "Unilaterally approves a headcount requisition, authorizing recruitment and associated budget."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: workable.reject_requisition
+    object: Requisition
+    action: reject_requisition
+    description: "Reject a requisition with an optional rejection reason."
+    category: Operations
+    risk: medium
+    business_impact: "Unilaterally rejects a headcount requisition, blocking a hiring plan."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Employees & Org ----------
+  - id: workable.get_employees
+    object: Employee
+    action: get_employees
+    description: "List employees with search, status filtering, and ordering by department or division."
+    category: Customer
+    risk: high
+    business_impact: "Bulk read of employee PII across the organization; a data-exfiltration surface regardless of intent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: workable.get_employee
+    object: Employee
+    action: get_employee
+    description: "Get full details for a specific employee."
+    category: Customer
+    risk: high
+    business_impact: "Reads a single employee's full HR PII record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: workable.get_orgchart
+    object: Employee
+    action: get_orgchart
+    description: "Get the organization chart, optionally scoped to a legal entity, department, or employee subtree."
+    category: Customer
+    risk: high
+    business_impact: "Bulk read of the organizational structure exposing employee names, roles, and reporting lines."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: workable.get_members
+    object: Member
+    action: get_members
+    description: "List account members, filterable by role, status, email, and job."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Reads the account's member directory including emails and roles; an access-enumeration surface."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Departments ----------
+  - id: workable.create_department
+    object: Department
+    action: create_department
+    description: "Create a new department, optionally under a parent department."
+    category: Operations
+    risk: low
+    business_impact: "Adds a department to the org structure; reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: workable.update_department
+    object: Department
+    action: update_department
+    description: "Update a department's name or parent."
+    category: Operations
+    risk: medium
+    business_impact: "Changes a department's name or position in the org hierarchy, affecting reporting structure."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: workable.delete_department
+    object: Department
+    action: delete_department
+    description: "Delete a department by id (supports force to delete even when the department has data)."
+    category: Operations
+    risk: critical
+    business_impact: "Deletes a department; the force flag allows single-actor destruction even when associated data exists."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: workable.merge_department
+    object: Department
+    action: merge_department
+    description: "Merge a source department into a target department, moving all associated data."
+    category: Operations
+    risk: high
+    business_impact: "Irreversibly merges one department into another, relocating all associated employee and job data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Time Off ----------
+  - id: workable.create_timeoff_request
+    object: TimeOffRequest
+    action: create_timeoff_request
+    description: "Create a new time off request (supports half-day entries and notes)."
+    category: Operations
+    risk: medium
+    business_impact: "Files a leave request on behalf of an employee; notes may reference health or family reasons."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: workable.update_timeoff_approval
+    object: TimeOffRequest
+    action: update_timeoff_approval
+    description: "Approve or reject a pending approval from the pending_approvals array."
+    category: Operations
+    risk: medium
+    business_impact: "Unilaterally approves or rejects an employee leave request, bypassing the normal approver gate."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: workable.get_timeoff_requests
+    object: TimeOffRequest
+    action: get_timeoff_requests
+    description: "Get time off requests within a date range, filterable by employee, category, and state."
+    category: Operations
+    risk: medium
+    business_impact: "Reads employee leave records, which can reveal health or family circumstances by category."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: workable.get_timeoff_balances
+    object: TimeOffRequest
+    action: get_timeoff_balances
+    description: "Get time off balances for a specific employee or all employees."
+    category: Operations
+    risk: medium
+    business_impact: "Reads accrued leave balances for one or all employees; an HR-data read surface."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Time Tracking ----------
+  - id: workable.create_time_entry
+    object: TimeEntry
+    action: create_time_entry
+    description: "Create a complete time entry (both clock_in_time and clock_out_time) for an employee."
+    category: Operations
+    risk: medium
+    business_impact: "Writes an employee timesheet record that feeds payroll and labor-hour reporting."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: workable.clock_in
+    object: TimeEntry
+    action: clock_in
+    description: "Open a clock-in for an employee at the supplied UTC timestamp."
+    category: Operations
+    risk: medium
+    business_impact: "Opens a timesheet clock-in for an employee, contributing to payroll-relevant labor records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: workable.clock_out
+    object: TimeEntry
+    action: clock_out
+    description: "Close the currently open clock-in for an employee at the supplied UTC timestamp."
+    category: Operations
+    risk: medium
+    business_impact: "Closes an employee's open clock-in, finalizing a payroll-relevant labor record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: workable.bulk_create_time_entries
+    object: TimeEntry
+    action: bulk_create_time_entries
+    description: "Create complete time entries for multiple employees in one request (max 500)."
+    category: Operations
+    risk: high
+    business_impact: "Bulk-writes up to 500 employee timesheet records in one call, materially affecting payroll inputs."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: workable.update_time_entry
+    object: TimeEntry
+    action: update_time_entry
+    description: "Update an existing entry's clock-in/out times or note."
+    category: Operations
+    risk: medium
+    business_impact: "Edits an existing employee timesheet record, altering payroll-relevant labor data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: workable.list_time_entries
+    object: TimeEntry
+    action: list_time_entries
+    description: "List time tracking entries with filters for date range, employees, type, and duration."
+    category: Operations
+    risk: medium
+    business_impact: "Bulk read of employee timesheet records across the organization."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Performance Reviews ----------
+  - id: workable.create_review_cycle_template
+    object: ReviewCycleTemplate
+    action: create_review_cycle_template
+    description: "Create a performance review cycle template with sections and questions and rating semantics."
+    category: Operations
+    risk: medium
+    business_impact: "Defines a performance-review template whose rating structure drives evaluations of identifiable employees."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Accounts & Audit ----------
+  - id: workable.get_accounts
+    object: Account
+    action: get_accounts
+    description: "List all Workable accounts accessible to the authenticated user; call first to obtain the subdomain."
+    category: Identity & Access
+    risk: low
+    business_impact: "Enumerates the Workable accounts the authenticated identity can reach; required bootstrap read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: workable.get_job_activities
+    object: Job
+    action: get_job_activities
+    description: "Get the activity log for a specific job."
+    category: Operations
+    risk: medium
+    business_impact: "Reads the audit trail for a job, exposing hiring actions and the members who performed them."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

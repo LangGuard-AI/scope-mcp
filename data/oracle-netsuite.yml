@@ -1,27 +1,42 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: oracle-netsuite
 display_name: Oracle NetSuite
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/article_0902023508.html
 actions:
   # ---------- Records ----------
   - id: oracle-netsuite.ns_createRecord
-    object: Record
+    object: "*"
     action: ns_createRecord
-    category: Records
+    description: "Creates a new record in NetSuite."
+    category: Financial
     risk: high
-    business_impact: "Creates a new record (transaction, customer, item, etc.) in NetSuite; depending on type, posts directly to the GL."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
+    business_impact: "Creates a new NetSuite record; for transaction types this posts to the general ledger and affects financial statements, and for entity types it writes customer/vendor/employee PII."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: oracle-netsuite.ns_updateRecord
+    object: "*"
+    action: ns_updateRecord
+    description: "Updates an existing record in NetSuite."
+    category: Financial
+    risk: high
+    business_impact: "Updates an existing NetSuite record; for transaction types this can change posted financial-statement amounts and for entity types it alters stored PII."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: true
     confidence: medium
     access_methods: [REST, MCP]
 
   - id: oracle-netsuite.ns_getRecord
-    object: Record
+    object: "*"
     action: ns_getRecord
-    category: Records
+    description: "Retrieves a record in NetSuite."
+    category: Financial
     risk: medium
-    business_impact: "Reads a single record; may include customer PII or financial detail depending on type."
+    business_impact: "Reads a single NetSuite record; depending on type it returns customer/vendor/employee PII or transaction-level financial detail."
     compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: medium
@@ -30,44 +45,60 @@ actions:
   - id: oracle-netsuite.ns_getRecordTypeMetadata
     object: Record
     action: ns_getRecordTypeMetadata
-    category: Records
+    description: "Retrieves metadata for all NetSuite record types or for a specific record type, including available fields and their data types."
+    category: Financial
     risk: low
-    business_impact: "Returns the schema for a NetSuite record type; metadata-only."
+    business_impact: "Returns the schema (fields and data types) for NetSuite record types; metadata only, no record data."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: oracle-netsuite.ns_updateRecord
-    object: Record
-    action: ns_updateRecord
-    category: Records
-    risk: high
-    business_impact: "Updates an existing NetSuite record; for transactional records this can change financial-statement amounts."
-    compliance: [SOX, COSO, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: medium
     access_methods: [REST, MCP]
 
   # ---------- Reporting ----------
+  - id: oracle-netsuite.ns_runReport
+    object: Report
+    action: ns_runReport
+    description: "Runs a report in your NetSuite account and displays the results."
+    category: Financial
+    risk: medium
+    business_impact: "Executes a NetSuite report; output can include financial statements and customer data and is in scope for SOX financial reporting."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
   - id: oracle-netsuite.ns_listAllReports
     object: Report
     action: ns_listAllReports
-    category: Reporting
+    description: "Returns a list of all standard and custom reports in your NetSuite account."
+    category: Financial
     risk: low
-    business_impact: "Enumerates available NetSuite reports."
+    business_impact: "Enumerates available standard and custom report names; no report data is returned."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: oracle-netsuite.ns_runReport
-    object: Report
-    action: ns_runReport
-    category: Reporting
-    risk: medium
-    business_impact: "Runs a NetSuite report; output can include financial statements and customer data subject to SOX."
-    compliance: [SOX, COSO, SOC2, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+  - id: oracle-netsuite.ns_getAccountingBooks
+    object: AccountingBook
+    action: ns_getAccountingBooks
+    description: "Returns a list of accounting books in your NetSuite account that can be used to filter report results."
+    category: Financial
+    risk: low
+    business_impact: "Lists accounting books used as report filters; exposes financial-reporting configuration but no transaction data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: oracle-netsuite.ns_getAccountingContexts
+    object: AccountingContext
+    action: ns_getAccountingContexts
+    description: "Returns a list of accounting contexts in your NetSuite account that can be used to filter report results."
+    category: Financial
+    risk: low
+    business_impact: "Lists accounting contexts used as report filters; exposes financial-reporting configuration but no transaction data."
+    compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
@@ -75,44 +106,60 @@ actions:
   - id: oracle-netsuite.ns_getSubsidiaries
     object: Subsidiary
     action: ns_getSubsidiaries
-    category: Reporting
+    description: "Returns a list of subsidiaries in your NetSuite account that can be used to filter report results."
+    category: Financial
     risk: low
-    business_impact: "Lists subsidiaries in the OneWorld account."
-    compliance: [SOX]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Saved Searches ----------
-  - id: oracle-netsuite.ns_listSavedSearches
-    object: SavedSearch
-    action: ns_listSavedSearches
-    category: Saved Searches
-    risk: low
-    business_impact: "Lists saved searches accessible to the user."
+    business_impact: "Lists subsidiaries in the OneWorld account used as report filters; exposes legal-entity consolidation structure but no transaction data."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
+  - id: oracle-netsuite.ns_getNexusIds
+    object: Nexus
+    action: ns_getNexusIds
+    description: "Returns a list of nexuses in your NetSuite account that can be used to filter report results."
+    category: Financial
+    risk: low
+    business_impact: "Lists tax nexuses used as report filters; configuration metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Saved Searches ----------
   - id: oracle-netsuite.ns_runSavedSearch
     object: SavedSearch
     action: ns_runSavedSearch
-    category: Saved Searches
-    risk: medium
-    business_impact: "Executes a saved search; result set can range from trivial to bulk PII/financial extracts."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    description: "Runs an existing saved search from your NetSuite account."
+    category: Data Access
+    risk: high
+    business_impact: "Executes an existing saved search whose result set can range from trivial to a bulk extract of customer PII or financial detail."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
     confidence: medium
     access_methods: [REST, MCP]
 
-  # ---------- Platform & DevOps ----------
+  - id: oracle-netsuite.ns_listSavedSearches
+    object: SavedSearch
+    action: ns_listSavedSearches
+    description: "Returns a list of all saved searches in your NetSuite account."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates saved-search names accessible to the user; no result data is returned."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- SuiteQL ----------
   - id: oracle-netsuite.ns_runCustomSuiteQL
     object: SuiteQLQuery
     action: ns_runCustomSuiteQL
-    category: Platform & DevOps
+    description: "Runs a custom SuiteQL query in NetSuite. Only read-only queries are supported."
+    category: Data Access
     risk: high
-    business_impact: "Executes arbitrary SuiteQL across the NetSuite data model; can read any table the role permits, including GL detail."
+    business_impact: "Executes an arbitrary read-only SuiteQL query across the NetSuite data model; can read any table the role permits, including GL detail and full customer/employee PII."
     compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
@@ -121,9 +168,10 @@ actions:
   - id: oracle-netsuite.ns_getSuiteQLMetadata
     object: SuiteQLQuery
     action: ns_getSuiteQLMetadata
-    category: Platform & DevOps
+    description: "Retrieves metadata for NetSuite records that you can access with SuiteQL, including available fields, data types, and joinable fields."
+    category: Data Access
     risk: low
-    business_impact: "Returns SuiteQL schema metadata."
+    business_impact: "Returns SuiteQL schema metadata (fields, data types, joinable fields); no record data is returned."
     compliance: []
     sod_concern: false
     confidence: high

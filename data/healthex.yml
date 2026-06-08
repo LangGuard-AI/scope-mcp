@@ -1,0 +1,228 @@
+schema_version: "1.1"
+platform: healthex
+display_name: HealthEx
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.healthex.io/mcp-server/mcp-tools
+# ---------------------------------------------------------------------------
+# PROVENANCE / classification notes
+#
+# SOURCE: vendor_mcp_docs. HealthEx (HDX Labs, Inc.) publishes a verbatim
+# tools/list reference at https://docs.healthex.io/mcp-server/mcp-tools. All
+# 15 tool ids below are copied verbatim from that page (consistent snake_case
+# convention throughout). The hosted MCP server at https://api.healthex.io/mcp
+# is OAuth-2.0 (Authorization Code + PKCE) gated; live introspection returned
+# HTTP 401 with no token available (none was invented), and no anonymous
+# tools-catalog endpoint is reachable. The verbatim list is therefore taken
+# from the vendor docs, not live introspection — but the ids ARE verbatim, so
+# id_form is `verbatim`, not capability.
+#
+# SURFACE: 14 active tools + 1 deprecated (`update_and_check_recent_records`,
+# retained for backward compatibility and still callable, so it is modeled).
+# 13 of 15 are read-only PHI getters/searches; only `update_records` (and its
+# deprecated combined variant) has a side effect: it requests a server-side
+# background refresh that ingests PHI from connected care providers. No
+# create/update/delete of clinical records, no admin/identity, no money
+# movement — the connector is read-oriented and patient-facing.
+#
+# PRIVACY-STACK SCOPING (conscious departure from the spec's "default to all 8"
+# privacy regimes): that default is conditioned on platforms holding data
+# globally. HealthEx is explicitly US-only (US care providers; Claude Pro/Max
+# in the United States only), so EU/UK/BR/JP/CN/ZA regimes (GDPR, UK_GDPR,
+# LGPD, APPI, PIPL, POPIA) do NOT apply and are omitted. The data is PHI in a
+# US covered-entity-adjacent context, so HIPAA is the governing privacy regime
+# and carries the privacy weight on every PHI-touching tool. CCPA is omitted:
+# medical information governed by HIPAA/CMIA is carved out of CCPA, so HIPAA
+# already covers the California PHI case without double-tagging.
+#
+# RISK GRADIENT: comprehensive / cross-record reads (`search`,
+# `get_health_summary`) reach the whole record and sit at `high`; narrow
+# single-category PHI getters sit at `medium`; the no-PHI sync-status read sits
+# at `low`. Nothing is `critical`: this is a single-subject, patient-consented
+# OAuth flow over the user's OWN records, not bulk multi-subject PII exfil.
+# sod_concern is false everywhere — a patient acting on their own data cannot
+# bypass a two-principal control.
+# ---------------------------------------------------------------------------
+actions:
+  # ---------- Data Access (cross-record) ----------
+  - id: healthex.search
+    object: HealthRecord
+    action: search
+    description: "Semantically search across all patient health record categories using natural language queries."
+    category: Data Access
+    risk: high
+    business_impact: "Free-form semantic read across the entire health record; surfaces PHI from every category (conditions, meds, labs, notes) in one query."
+    compliance: [HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: healthex.get_health_summary
+    object: HealthRecord
+    action: get_health_summary
+    description: "Retrieve a comprehensive current health snapshot including age, date of birth, gender, active conditions, current medications with dosages, and allergies."
+    category: Data Access
+    risk: high
+    business_impact: "Returns a comprehensive PHI snapshot spanning demographics, active conditions, medications, and allergies in a single read."
+    compliance: [HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: healthex.search_clinical_notes
+    object: ClinicalNote
+    action: search_clinical_notes
+    description: "Search across all clinical notes for specific keywords or phrases, or retrieve notes for a specific encounter."
+    category: Data Access
+    risk: high
+    business_impact: "Keyword search across all free-text clinical notes; can surface narrative PHI spanning the full visit history."
+    compliance: [HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Clinical Records (single-category PHI reads) ----------
+  - id: healthex.get_conditions
+    object: Condition
+    action: get_conditions
+    description: "Retrieve all medical conditions with start dates and end dates for resolved, treated, or inactive conditions."
+    category: Clinical Records
+    risk: medium
+    business_impact: "Reads the patient's diagnosed medical conditions; sensitive PHI (diagnoses) for one subject."
+    compliance: [HIPAA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: healthex.get_medications
+    object: Medication
+    action: get_medications
+    description: "Access detailed medication information including dosing instructions, prescribing provider, indication, start date, and pharmacy information."
+    category: Clinical Records
+    risk: medium
+    business_impact: "Reads the patient's medication list with dosing, prescriber, and indication; sensitive PHI for one subject."
+    compliance: [HIPAA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: healthex.get_allergies
+    object: Allergy
+    action: get_allergies
+    description: "Retrieve patient allergy and intolerance information including allergen name, clinical status, verification status, and type."
+    category: Clinical Records
+    risk: medium
+    business_impact: "Reads the patient's allergy and intolerance records; sensitive PHI for one subject."
+    compliance: [HIPAA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: healthex.get_labs
+    object: LabResult
+    action: get_labs
+    description: "Access laboratory test results including test name, value with units, reference range, date performed, and ordering provider."
+    category: Clinical Records
+    risk: medium
+    business_impact: "Reads the patient's laboratory results; sensitive PHI for one subject."
+    compliance: [HIPAA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: healthex.get_vitals
+    object: VitalSign
+    action: get_vitals
+    description: "Access vital sign measurements including blood pressure, heart rate, body temperature, respiratory rate, and oxygen saturation."
+    category: Clinical Records
+    risk: medium
+    business_impact: "Reads the patient's vital-sign measurements; sensitive PHI for one subject."
+    compliance: [HIPAA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: healthex.get_procedures
+    object: Procedure
+    action: get_procedures
+    description: "Retrieve medical procedures including surgeries, diagnostic procedures, biopsies, and interventions."
+    category: Clinical Records
+    risk: medium
+    business_impact: "Reads the patient's procedure and surgical history; sensitive PHI for one subject."
+    compliance: [HIPAA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: healthex.get_immunizations
+    object: Immunization
+    action: get_immunizations
+    description: "Access complete vaccination history including vaccine name, date administered, dose number, and series completion status."
+    category: Clinical Records
+    risk: medium
+    business_impact: "Reads the patient's immunization history; sensitive PHI for one subject."
+    compliance: [HIPAA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: healthex.get_visits
+    object: Visit
+    action: get_visits
+    description: "Retrieve complete clinical visit history including visit date, visit type, provider name, location, and chief complaint."
+    category: Clinical Records
+    risk: medium
+    business_impact: "Reads the patient's clinical visit history including provider, location, and chief complaint; sensitive PHI for one subject."
+    compliance: [HIPAA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: healthex.get_notes_by_visit
+    object: ClinicalNote
+    action: get_notes_by_visit
+    description: "Get all clinical notes and documentation for exactly one specific visit. (Deprecated.)"
+    category: Clinical Records
+    risk: medium
+    business_impact: "Reads the full clinical notes for one visit; sensitive narrative PHI for one subject."
+    compliance: [HIPAA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Records Sync ----------
+  - id: healthex.update_records
+    object: HealthRecord
+    action: update_records
+    description: "Requests a server-side background refresh of health records from connected care-provider locations."
+    category: Records Sync
+    risk: medium
+    business_impact: "Triggers ingestion of PHI from connected care providers into HealthEx; a data-movement event, reversible/repeatable and scoped to the patient's own record."
+    compliance: [HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: healthex.update_and_check_recent_records
+    object: HealthRecord
+    action: update_and_check_recent_records
+    description: "Requests a background refresh of records and returns sync status in one call. (Deprecated in favor of update_records and check_records_status.)"
+    category: Records Sync
+    risk: medium
+    business_impact: "Triggers PHI ingestion from connected providers and reports sync status; a data-movement event scoped to the patient's own record."
+    compliance: [HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: healthex.check_records_status
+    object: HealthRecord
+    action: check_records_status
+    description: "Returns the current sync status of connected health records."
+    category: Records Sync
+    risk: low
+    business_impact: "Reads only the connection/sync status of records; no PHI in the response."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

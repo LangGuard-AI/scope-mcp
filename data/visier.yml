@@ -1,0 +1,168 @@
+schema_version: "1.1"
+platform: visier
+display_name: Visier
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.visier.com/developer/agents/mcp/mcp-server.htm
+actions:
+  # ---------- Provenance ----------
+  # Visier Query MCP is a READ-ONLY people/workforce-analytics connector ("Ask Vee").
+  # The server exposes no write/state-changing tools (vendor docs confirm read-only).
+  # Verbatim tool ids are sourced from two authoritative captures of Visier's live
+  # tools/list:
+  #   - The Anthropic MCP registry tool_names array (source="anthropic-mcp-registry"),
+  #     captured in the frumu-ai/tandem mcp-catalog at servers/visier.toml — supplies
+  #     the 8 "data out" tools verbatim.
+  #   - The official visier/sample-langchain-mcp-client source (client/messages.py)
+  #     — supplies ask_vee_question and sample_vee_questions verbatim.
+  # One documented capability ("Get an object reference graph") has no verbatim id in
+  # either capture and is recorded id_form: capability, confidence medium.
+
+  # ---------- Data Access ----------
+  # Row-level / aggregate people-data reads. These return employee analytics over
+  # identifiable-worker populations and carry the full privacy-regime stack.
+
+  - id: visier.ask_vee_question
+    object: PeopleData
+    action: ask_vee_question
+    description: "Ask the Vee AI agent a natural-language question about people and work data; returns insights including headcount, attrition, and retention analysis."
+    category: Data Access
+    risk: high
+    business_impact: "Returns workforce analytics including attrition and retention assessments about identifiable employees; an automated worker-evaluation read over workforce PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, EU_AI_ACT, NIST_AI_RMF, CO_AI_ACT, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: visier.list_analytic_object_property_values
+    object: AnalyticObject
+    action: list_analytic_object_property_values
+    description: "Runs a list query returning per-record property values for an analytic object, such as individual employee rows."
+    category: Data Access
+    risk: high
+    business_impact: "Reads individual employee-level records and property values; a bulk workforce-PII read that is a data-exfiltration vector regardless of intent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: visier.aggregate_metric_values
+    object: Metric
+    action: aggregate_metric_values
+    description: "Runs an aggregate metric query and returns computed metric values over the workforce population."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns aggregated workforce metrics; lower re-identification risk than row-level reads but still exposes derived people analytics over employee data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Analytics ----------
+  # Structural / schema-discovery reads. These return Visier model metadata
+  # (metric, dimension, object, property, and member definitions) rather than
+  # personal data, so they carry no privacy-regime exposure on their own.
+
+  - id: visier.search_metrics
+    object: Metric
+    action: search_metrics
+    description: "Searches and returns available Visier metrics matching a search string, with their data date ranges."
+    category: Analytics
+    risk: low
+    business_impact: "Reads metric definitions from the analytic model; returns schema metadata, not employee records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: visier.search_analytic_objects
+    object: AnalyticObject
+    action: search_analytic_objects
+    description: "Searches and returns analytic objects defined in the Visier model."
+    category: Analytics
+    risk: low
+    business_impact: "Reads analytic-object definitions; returns model schema, not employee records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: visier.search_analytic_object_properties
+    object: AnalyticObject
+    action: search_analytic_object_properties
+    description: "Searches the properties defined for a given analytic object."
+    category: Analytics
+    risk: low
+    business_impact: "Reads the property definitions of an analytic object; returns model schema, not employee records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: visier.search_dimensions_for_metric
+    object: Dimension
+    action: search_dimensions_for_metric
+    description: "Searches the dimensions available to slice a given metric."
+    category: Analytics
+    risk: low
+    business_impact: "Reads dimension definitions for a metric; returns model schema, not employee records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: visier.search_dimensions_for_analytic_object
+    object: Dimension
+    action: search_dimensions_for_analytic_object
+    description: "Searches the dimensions available for a given analytic object."
+    category: Analytics
+    risk: low
+    business_impact: "Reads dimension definitions for an analytic object; returns model schema, not employee records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: visier.search_filter_dimension_members
+    object: Dimension
+    action: search_filter_dimension_members
+    description: "Searches dimension members to use as filter values when constructing a query."
+    category: Analytics
+    risk: low
+    business_impact: "Reads dimension member values used for filtering; member lists may include organizational attribute names but not individual employee records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: visier.sample_vee_questions
+    object: PeopleData
+    action: sample_vee_questions
+    description: "Returns a set of sample questions that can be asked of the Vee AI agent."
+    category: Analytics
+    risk: low
+    business_impact: "Returns static example questions; no personal data and no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Capability-form (no verbatim id published) ----------
+  # "Get an object reference graph" is listed as a tool in Visier's MCP docs but
+  # its verbatim identifier is NOT present in the Anthropic MCP registry tool_names
+  # array (8 data-out tools) nor in the visier sample-client source. Recorded
+  # intent-level with a slugified id and the verbatim vendor capability label in
+  # description; confidence capped at medium per the capability-form rule.
+
+  - id: visier.get_object_reference_graph
+    object: AnalyticObject
+    action: get_object_reference_graph
+    id_form: capability
+    description: "Get an object reference graph"
+    category: Analytics
+    risk: low
+    business_impact: "Reads the reference relationships between analytic objects; returns model topology, not employee records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

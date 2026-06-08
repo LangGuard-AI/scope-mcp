@@ -1,0 +1,109 @@
+schema_version: "1.1"
+platform: tool-universe
+display_name: ToolUniverse
+source: langguard-editorial
+updated: "2026-06"
+reference: https://zitniklab.hms.harvard.edu/ToolUniverse/guide/building_ai_scientists/mcp_support.html
+# ---------------------------------------------------------------------------
+# PROVENANCE / tool-surface NOTE
+# ToolUniverse (Zitnik Lab, Harvard Medical School; mims-harvard/ToolUniverse)
+# is an open-source, locally-run scientific MCP server distributed via PyPI
+# (`uvx tooluniverse`) and an MCPB bundle — there is no hosted/remote endpoint
+# (default transport is stdio; HTTP mode binds localhost:8000). Tool names were
+# taken VERBATIM from the vendor's own source repository, which is the
+# authoritative primary source (introspection had no reachable hosted URL).
+#
+# CRITICAL — COMPACT MODE IS THE DISTRIBUTED SURFACE:
+# The connector as shipped runs in `--compact-mode`, forced on by EVERY
+# distribution path:
+#   * console script `tooluniverse` -> run_default_stdio_server appends
+#     "--compact-mode" (smcp_server.py:1040-1041) — this is what the Claude
+#     plugin's .mcp.json invokes via `uvx tooluniverse`.
+#   * MCPB bundle entry mcpb/src/run_stdio.py forces "--compact-mode".
+#   * registry server.json packageArguments: tooluniverse-smcp-stdio --compact-mode.
+# In compact mode the server's tools/list exposes EXACTLY 5 tools:
+#   list_tools, grep_tools, get_tool_info, execute_tool, find_tools.
+# The repo also defines ~2200 individual scientific tools (ChEMBL, UniProt,
+# OpenTargets, PubMed, ClinicalTrials.gov, FDA labels, etc.); these are NOT
+# exposed as MCP tools in the distributed config — they are loaded in the
+# background and reached only INDIRECTLY through `execute_tool`. They are
+# therefore deliberately NOT enumerated here: an MCP client never sends their
+# names. This file is COMPLETE for the distributed surface (5 of 5), not a
+# trimmed subset. (Verified: all ~2200 underlying names are <=55 chars, so the
+# server's 64-char name-shortening never fires; were full mode ever enabled the
+# exposed ids would equal the stored `name` fields verbatim.)
+#
+# COMPLIANCE-TAGGING NOTE:
+# The underlying scientific tools query PUBLIC / de-identified research
+# databases (ChEMBL, OpenTargets, FDA drug labels, ClinicalTrials.gov, GDC,
+# cBioPortal, FAERS aggregates, etc.). This is not PHI in a covered-entity
+# context and does not trigger the GDPR privacy stack or HIPAA, so the privacy
+# and health regimes are intentionally NOT applied. The genuine compliance
+# signal is the `execute_tool` arbitrary-dispatch surface, which can reach
+# local code/compute (run_deseq2_analysis, read_executed_notebook) and an
+# external-transfer vector (embedding_sync_upload to Hugging Face Hub) — a
+# security/processing-integrity concern (SOC2 / ISO_27001), content-dependent.
+# The discovery/metadata tools are benign reads over a static tool catalog.
+actions:
+  # ---------- Platform & DevOps ----------
+  - id: tool-universe.execute_tool
+    object: Tool
+    action: execute_tool
+    description: "Execute a ToolUniverse tool directly with custom arguments; the primary way to run any of the 1000+ background tools."
+    reference: https://zitniklab.hms.harvard.edu/ToolUniverse/guide/building_ai_scientists/mcp_support.html
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Arbitrary-dispatch gateway that runs any of the 1000+ background tools with caller-supplied arguments, including local code/compute (DESeq2 analysis, notebook reads) and outbound transfer of a local datastore to Hugging Face Hub."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: tool-universe.find_tools
+    object: Tool
+    action: find_tools
+    description: "Find and search available ToolUniverse tools using AI-powered search."
+    category: Data Access
+    risk: low
+    business_impact: "Returns matching tools from the static scientific-tool catalog; read-only discovery with no access to underlying data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: tool-universe.list_tools
+    object: Tool
+    action: list_tools
+    description: "List tools with multiple output modes (names, categories, summaries) for catalog scanning."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the static scientific-tool catalog; read-only metadata with no access to underlying data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: tool-universe.grep_tools
+    object: Tool
+    action: grep_tools
+    description: "Search tools using simple text matching or regex patterns over the tool catalog."
+    category: Data Access
+    risk: low
+    business_impact: "Pattern-searches the static scientific-tool catalog; read-only metadata with no access to underlying data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: tool-universe.get_tool_info
+    object: Tool
+    action: get_tool_info
+    description: "Get tool information at a configurable detail level (description only, or full parameter schema)."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the definition/parameter schema for one or more catalog tools; read-only metadata with no access to underlying data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

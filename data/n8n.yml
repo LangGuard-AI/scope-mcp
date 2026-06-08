@@ -1,0 +1,336 @@
+schema_version: "1.1"
+platform: n8n
+display_name: n8n
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.n8n.io/advanced-ai/mcp/mcp_tools_reference/
+actions:
+  # ---------- Operations ----------
+  - id: n8n.execute_workflow
+    object: Workflow
+    action: execute_workflow
+    description: "Execute a workflow by ID by mapping data from user prompt to trigger inputs; performs a full execution without mocking or skipping any nodes."
+    category: Operations
+    risk: high
+    business_impact: "Runs the live workflow end-to-end with unbounded side effects — whatever external systems, APIs, or data stores the workflow touches are actually acted on, irreversibly in many cases."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: n8n.test_workflow
+    object: Workflow
+    action: test_workflow
+    description: "Test a workflow using pin data to bypass external services; trigger, credentialed, and HTTP Request nodes are simulated while logic nodes execute normally."
+    category: Operations
+    risk: medium
+    business_impact: "Runs a workflow in test mode with external calls pinned; logic and credential-free I/O nodes still execute, so non-mocked side effects can occur."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: n8n.prepare_test_pin_data
+    object: Workflow
+    action: prepare_test_pin_data
+    description: "Prepare test pin data for a workflow, identifying which nodes need pinned (simulated) data before a test run."
+    category: Operations
+    risk: low
+    business_impact: "Generates simulated input data for a test run; no production side effects."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Code & Release ----------
+  - id: n8n.publish_workflow
+    object: Workflow
+    action: publish_workflow
+    description: "Publish (activate) a workflow to make it available for production execution by creating an active version from the current draft."
+    category: Code & Release
+    risk: medium
+    business_impact: "Promotes a draft to the live production version, enabling automated execution against real systems without a second reviewer."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: n8n.unpublish_workflow
+    object: Workflow
+    action: unpublish_workflow
+    description: "Unpublish (deactivate) a workflow to stop it from being available for production execution."
+    category: Code & Release
+    risk: medium
+    business_impact: "Deactivates the live version of a workflow, halting its automated runs; reversible by republishing."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: n8n.create_workflow_from_code
+    object: Workflow
+    action: create_workflow_from_code
+    description: "Create a workflow in n8n from validated Workflow SDK code by parsing it into a workflow and saving it."
+    category: Code & Release
+    risk: medium
+    business_impact: "Adds a new automation definition to the instance; reversible, but becomes a production hazard once published."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: n8n.update_workflow
+    object: Workflow
+    action: update_workflow
+    description: "Update an existing workflow by applying an ordered batch of targeted partial updates to its nodes and connections."
+    category: Code & Release
+    risk: medium
+    business_impact: "Modifies an existing automation's logic; change-management event that alters how a workflow behaves once next executed."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: n8n.archive_workflow
+    object: Workflow
+    action: archive_workflow
+    description: "Archive a workflow in n8n by its ID, removing it from active use."
+    category: Code & Release
+    risk: medium
+    business_impact: "Archives a workflow, taking it out of active rotation; reversible by unarchiving."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: n8n.validate_workflow
+    object: Workflow
+    action: validate_workflow
+    description: "Validate n8n Workflow SDK code by parsing it into a workflow and checking for errors, returning the workflow JSON or detailed error messages."
+    category: Code & Release
+    risk: low
+    business_impact: "Validates workflow SDK code without persisting anything; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Tables ----------
+  - id: n8n.delete_data_table_column
+    object: DataTable
+    action: delete_data_table_column
+    description: "Delete a column from a data table; permanently removes the column and all of its data."
+    category: Data Tables
+    risk: high
+    business_impact: "Permanently destroys a data-table column and every value stored in it, with no documented soft-delete or recovery path."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: n8n.create_data_table
+    object: DataTable
+    action: create_data_table
+    description: "Create a new data table with the specified columns."
+    category: Data Tables
+    risk: low
+    business_impact: "Creates a new data table in the instance; reversible and may later hold user-supplied data of any type, possibly personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: n8n.add_data_table_column
+    object: DataTable
+    action: add_data_table_column
+    description: "Add a new column to an existing data table."
+    category: Data Tables
+    risk: low
+    business_impact: "Adds a column to a data table; reversible schema change with no immediate data impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: n8n.rename_data_table_column
+    object: DataTable
+    action: rename_data_table_column
+    description: "Rename a column in a data table."
+    category: Data Tables
+    risk: low
+    business_impact: "Renames a data-table column; reversible metadata change that may break workflows referencing the old name."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: n8n.rename_data_table
+    object: DataTable
+    action: rename_data_table
+    description: "Rename an existing data table."
+    category: Data Tables
+    risk: low
+    business_impact: "Renames a data table; reversible metadata change that may break workflows referencing the old name."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: n8n.add_data_table_rows
+    object: DataTable
+    action: add_data_table_rows
+    description: "Insert rows into an existing data table, each row mapping column names to values."
+    category: Data Tables
+    risk: low
+    business_impact: "Writes arbitrary rows into a data table; the inserted values may contain personal data depending on how the instance is used."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: n8n.search_data_tables
+    object: DataTable
+    action: search_data_tables
+    description: "Search for data tables accessible to the current user to find a data table ID before modifying or adding data to it."
+    category: Data Tables
+    risk: low
+    business_impact: "Lists data tables the caller can access; returns table metadata, not row contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Execution & Monitoring ----------
+  - id: n8n.get_execution
+    object: Execution
+    action: get_execution
+    description: "Get execution details by execution ID and workflow ID; by default returns metadata only."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads a workflow run's details; full execution data can include whatever the workflow processed, which may be personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: n8n.search_executions
+    object: Execution
+    action: search_executions
+    description: "Search for workflow executions with optional filters, returning execution metadata including status, timing, and workflow ID."
+    category: Data Access
+    risk: low
+    business_impact: "Lists execution metadata (status, timing, workflow ID); does not return processed payloads."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: n8n.list_credentials
+    object: Credential
+    action: list_credentials
+    description: "List credentials the current user can access to find a credential ID before referencing it from a workflow node; never returns credential secret data."
+    category: Identity & Access
+    risk: low
+    business_impact: "Discloses the inventory of credential names and IDs the caller can access; secret values are explicitly never returned."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Discovery & Reference ----------
+  - id: n8n.search_workflows
+    object: Workflow
+    action: search_workflows
+    description: "Search for workflows with optional filters, returning a preview of each workflow."
+    category: Data Access
+    risk: low
+    business_impact: "Lists workflow previews the caller can access; metadata only, not full workflow definitions."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: n8n.get_workflow_details
+    object: Workflow
+    action: get_workflow_details
+    description: "Get detailed information about a specific workflow including trigger details, with credential data stripped from nodes."
+    category: Data Access
+    risk: low
+    business_impact: "Reads a single workflow's definition and trigger details; sensitive credential data is stripped before returning."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: n8n.search_projects
+    object: Project
+    action: search_projects
+    description: "Search for projects accessible to the current user."
+    category: Data Access
+    risk: low
+    business_impact: "Lists projects the caller can access; organizational metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: n8n.search_folders
+    object: Folder
+    action: search_folders
+    description: "Search for folders within a project."
+    category: Data Access
+    risk: low
+    business_impact: "Lists folders within a project; organizational metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: n8n.search_nodes
+    object: Node
+    action: search_nodes
+    description: "Search for n8n nodes by service name, trigger type, or utility function, returning node IDs and discriminators for use with get_node_types."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the catalog of available node types; reference data with no tenant-specific content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: n8n.get_node_types
+    object: Node
+    action: get_node_types
+    description: "Get TypeScript type definitions for n8n nodes, returning exact parameter names and structures."
+    category: Data Access
+    risk: low
+    business_impact: "Returns static node type definitions; reference data only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: n8n.get_suggested_nodes
+    object: Node
+    action: get_suggested_nodes
+    description: "Get curated node recommendations for workflow technique categories, with pattern hints and configuration guidance."
+    category: Data Access
+    risk: low
+    business_impact: "Returns static node recommendations; reference data only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: n8n.get_sdk_reference
+    object: Documentation
+    action: get_sdk_reference
+    description: "Get the n8n Workflow SDK reference documentation including patterns, expression syntax, and functions."
+    category: Data Access
+    risk: low
+    business_impact: "Returns static SDK reference documentation; no tenant data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

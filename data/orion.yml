@@ -1,0 +1,270 @@
+schema_version: "1.1"
+platform: orion
+display_name: Orion by Gravity
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.runorion.com/mcp/tools
+actions:
+  # ---------- Data Access ----------
+  - id: orion.ask_orion
+    object: Conversation
+    action: ask_orion
+    description: "Send a natural language question to Orion and get an AI-powered data analysis response."
+    reference: https://docs.runorion.com/mcp/tools
+    category: Data Access
+    risk: low
+    business_impact: "Triggers an AI data-analysis run over connected business data; reversible and individually logged as a conversation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: orion.create_conversation
+    object: Conversation
+    action: create_conversation
+    description: "Start a new Orion conversation."
+    reference: https://docs.runorion.com/mcp/tools
+    category: Data Access
+    risk: low
+    business_impact: "Creates an empty conversation thread; benign and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: orion.get_conversation_history
+    object: Conversation
+    action: get_conversation_history
+    description: "Read messages from an existing Orion conversation."
+    reference: https://docs.runorion.com/mcp/tools
+    category: Data Access
+    risk: medium
+    business_impact: "Reads prior conversation messages, which may contain personal data surfaced during analysis."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: orion.list_conversations
+    object: Conversation
+    action: list_conversations
+    description: "List chat conversations for a user."
+    reference: https://docs.runorion.com/mcp/tools
+    category: Data Access
+    risk: low
+    business_impact: "Lists a user's conversation threads by title and metadata; low-sensitivity index read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: orion.search_wiki
+    object: WikiPage
+    action: search_wiki
+    description: "Search the Orion wiki/knowledge base."
+    reference: https://docs.runorion.com/mcp/tools
+    category: Data Access
+    risk: medium
+    business_impact: "Searches the organization knowledge base, which may surface personal data embedded in wiki content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: orion.list_recommendations
+    object: Recommendation
+    action: list_recommendations
+    description: "Get AI-generated recommendations for a project with suggested analysis prompts."
+    reference: https://docs.runorion.com/mcp/tools
+    category: Data Access
+    risk: low
+    business_impact: "Returns suggested analysis prompts for a project; no business-state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: orion.execute_metric
+    object: Metric
+    action: execute_metric
+    description: "Trigger execution of a metric to refresh its current value."
+    reference: https://docs.runorion.com/mcp/tools
+    category: Operations
+    risk: low
+    business_impact: "Recomputes a business KPI's current value; reversible computation with no financial-statement impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: orion.run_workflow
+    object: Workflow
+    action: run_workflow
+    description: "Trigger execution of a workflow (insight maker)."
+    reference: https://docs.runorion.com/mcp/tools
+    category: Operations
+    risk: low
+    business_impact: "Runs an analysis workflow and produces results; reversible compute with no irreversible side effects."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: orion.list_metrics
+    object: Metric
+    action: list_metrics
+    description: "List metrics (KPIs) for a project."
+    reference: https://docs.runorion.com/mcp/tools
+    category: Operations
+    risk: low
+    business_impact: "Lists the KPI definitions configured for a project; non-sensitive metadata read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: orion.get_metric
+    object: Metric
+    action: get_metric
+    description: "Get full metric detail including definition, Python code, data sources, and latest result."
+    reference: https://docs.runorion.com/mcp/tools
+    category: Operations
+    risk: low
+    business_impact: "Reads a metric's full definition, query code, and data-source references; exposes internal analytics configuration."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: orion.get_metric_results
+    object: Metric
+    action: get_metric_results
+    description: "Get historical execution results for a metric."
+    reference: https://docs.runorion.com/mcp/tools
+    category: Operations
+    risk: low
+    business_impact: "Reads historical KPI result values for a metric; aggregate business data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: orion.get_metric_insights
+    object: Metric
+    action: get_metric_insights
+    description: "Get auto-detected metric insights showing significant changes and anomalies for a project."
+    reference: https://docs.runorion.com/mcp/tools
+    category: Operations
+    risk: low
+    business_impact: "Reads auto-detected anomaly and change insights for project KPIs; aggregate analytics output."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: orion.list_workflows
+    object: Workflow
+    action: list_workflows
+    description: "List workflows (insight makers) for a project."
+    reference: https://docs.runorion.com/mcp/tools
+    category: Operations
+    risk: low
+    business_impact: "Lists the analysis workflows configured for a project; non-sensitive metadata read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: orion.get_workflow
+    object: Workflow
+    action: get_workflow
+    description: "Get workflow detail including notebook data, sources, and metric references."
+    reference: https://docs.runorion.com/mcp/tools
+    category: Operations
+    risk: low
+    business_impact: "Reads a workflow's notebook contents, data sources, and metric references; exposes internal analytics configuration."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: orion.get_workflow_results
+    object: Workflow
+    action: get_workflow_results
+    description: "Get execution results for a workflow."
+    reference: https://docs.runorion.com/mcp/tools
+    category: Operations
+    risk: low
+    business_impact: "Reads workflow execution output; aggregate analytics results."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Reports & Artifacts ----------
+  - id: orion.delete_artifact
+    object: Artifact
+    action: delete_artifact
+    description: "Delete a slide deck, dashboard, or report artifact. This is a destructive action."
+    reference: https://docs.runorion.com/mcp/tools
+    category: Reports & Artifacts
+    risk: medium
+    business_impact: "Deletes a single slide deck, dashboard, or report; destructive, with recovery not documented."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: orion.list_artifacts
+    object: Artifact
+    action: list_artifacts
+    description: "List slide decks, dashboards, or reports for a project."
+    reference: https://docs.runorion.com/mcp/tools
+    category: Reports & Artifacts
+    risk: low
+    business_impact: "Lists report and dashboard artifacts for a project; non-sensitive metadata read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: orion.get_artifact
+    object: Artifact
+    action: get_artifact
+    description: "Get the content of a slide deck, dashboard, or report as markdown."
+    reference: https://docs.runorion.com/mcp/tools
+    category: Reports & Artifacts
+    risk: medium
+    business_impact: "Reads full report or dashboard content, which may contain personal data presented in the analysis."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Org & Access ----------
+  - id: orion.list_users
+    object: User
+    action: list_users
+    description: "List all users in the Orion organization. Returns user ID, name, and role."
+    reference: https://docs.runorion.com/mcp/tools
+    category: Org & Access
+    risk: medium
+    business_impact: "Returns the full organization directory with names and roles; bulk read of identifiable personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: orion.list_projects
+    object: Project
+    action: list_projects
+    description: "List Orion projects the user has access to."
+    reference: https://docs.runorion.com/mcp/tools
+    category: Org & Access
+    risk: low
+    business_impact: "Lists projects the user can access; non-sensitive metadata read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

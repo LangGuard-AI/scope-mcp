@@ -1,0 +1,611 @@
+schema_version: "1.1"
+platform: govtribe
+display_name: GovTribe
+source: langguard-editorial
+updated: "2026-06"
+# GovTribe's hosted MCP server (https://govtribe.com/mcp) is OAuth-gated: an
+# anonymous tools/list returns 401, so the running server cannot be introspected.
+# The vendor, however, publishes a complete, per-tool MCP catalog at
+# https://govtribe.com/docs/govtribe-for-agents/tools/ where each tool has its
+# own doc page. The verbatim tool identifiers are rendered in each tool page body
+# in the server's native convention: Title_Case_With_Underscores
+# (e.g. Create_Tag, Delete_Saved_Search, Add_To_Vector_Store, Test_Run_Automation).
+# Acronym casing is NOT uniform and was verified per page: FCV, GAO, GSA, BLS,
+# IDV/IDVs and GovTribe stay upper-case, while NAICS/NIGP/PSC/UNSPSC render as
+# Naics/Nigp/Psc/Unspsc; the refresh tool renders verbatim as Refresh_Show_Document.
+# Because these are exact identifier-level strings (not paraphrased labels), this
+# file uses id_form: verbatim. The catalog exposes 85 tools; per the spec's
+# write-surface-first trim (>25 tools), this file keeps EVERY state-changing /
+# destructive write (full CRUD for pipelines, stages, pursuits, tasks, saved
+# searches, tags, AI automations, durable memories, plus Test_Run_Automation,
+# Add_To_Container, Add_To_Vector_Store) and ALL PII/file-bearing reads, then a
+# representative slice of workspace + procurement reads. The ~45 routine
+# public-record procurement search getters (NAICS/PSC/agency/award/IDV/grant/
+# state-local/news/category lookups) and the read-only interactive display
+# renderers (Show_*) were trimmed — they are read-only, public/non-sensitive, and
+# near-duplicate; see report. Refresh to a live tools/list if GovTribe ever opens
+# anonymous introspection.
+reference: https://govtribe.com/docs/govtribe-for-agents/tools/
+actions:
+  # ---------- AI Automations (state-changing) ----------
+  - id: govtribe.Create_Automation
+    object: Automation
+    action: Create_Automation
+    description: "Creates a GovTribe AI automation in a new GovTribe AI project."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/create-automation-mcp-tool/
+    category: Operations
+    risk: medium
+    business_impact: "Stands up a recurring AI automation that runs unattended against workspace data; reversible but creates autonomous activity until archived."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Update_Automation
+    object: Automation
+    action: Update_Automation
+    description: "Updates an existing GovTribe AI automation and optionally renames its linked GovTribe AI project."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/update-automation-mcp-tool/
+    category: Operations
+    risk: medium
+    business_impact: "Changes what an unattended AI automation does or which project it targets; reversible internal workspace change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Delete_Automation
+    object: Automation
+    action: Delete_Automation
+    description: "Archives a GovTribe AI automation so it stops running."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/delete-automation-mcp-tool/
+    category: Operations
+    risk: medium
+    business_impact: "Archives an AI automation so it stops running; halts an automated process but is reversible from archive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Test_Run_Automation
+    object: Automation
+    action: Test_Run_Automation
+    description: "Starts a manual test run for an existing automation and returns the started conversation."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/test-run-automation-mcp-tool/
+    category: Operations
+    risk: medium
+    business_impact: "Triggers an on-demand execution of an AI automation against workspace and procurement data; produces real automation activity and output."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Pipelines, Stages, Pursuits, Tasks (capture CRM writes) ----------
+  - id: govtribe.Create_Pipeline
+    object: Pipeline
+    action: Create_Pipeline
+    description: "Creates a GovTribe workspace pipeline."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/create-pipeline-mcp-tool/
+    category: Operations
+    risk: low
+    business_impact: "Adds a new capture pipeline to the workspace; reversible internal CRM state with no external effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Update_Pipeline
+    object: Pipeline
+    action: Update_Pipeline
+    description: "Updates a GovTribe pipeline."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/update-pipeline-mcp-tool/
+    category: Operations
+    risk: low
+    business_impact: "Modifies a capture pipeline's fields; reversible internal workspace change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Delete_Pipeline
+    object: Pipeline
+    action: Delete_Pipeline
+    description: "Deletes a GovTribe pipeline and its pursuits."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/delete-pipeline-mcp-tool/
+    category: Operations
+    risk: high
+    business_impact: "Cascading delete that removes a capture pipeline AND every child pursuit it contains; destroys all tracked business-development work under that pipeline in one call."
+    compliance: []
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Create_Stage
+    object: Stage
+    action: Create_Stage
+    description: "Creates a stage inside a GovTribe pipeline."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/create-stage-mcp-tool/
+    category: Operations
+    risk: low
+    business_impact: "Adds a stage to a capture pipeline; reversible internal workspace structure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Update_Stage
+    object: Stage
+    action: Update_Stage
+    description: "Updates a GovTribe pipeline stage."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/update-stage-mcp-tool/
+    category: Operations
+    risk: low
+    business_impact: "Modifies a pipeline stage's fields; reversible internal workspace change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Delete_Stage
+    object: Stage
+    action: Delete_Stage
+    description: "Deletes a GovTribe pipeline stage."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/delete-stage-mcp-tool/
+    category: Operations
+    risk: medium
+    business_impact: "Removes a stage from a capture pipeline and may strand or reassign its pursuits; destructive within internal workspace state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Create_Pursuit
+    object: Pursuit
+    action: Create_Pursuit
+    description: "Creates a pursuit in a pipeline stage, optionally linked to a GovTribe record."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/create-pursuit-mcp-tool/
+    category: Operations
+    risk: low
+    business_impact: "Adds a tracked pursuit (opportunity) to a pipeline stage; reversible internal workspace state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Update_Pursuit
+    object: Pursuit
+    action: Update_Pursuit
+    description: "Updates a GovTribe pursuit."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/update-pursuit-mcp-tool/
+    category: Operations
+    risk: low
+    business_impact: "Modifies a tracked pursuit's fields, stage, or owner; reversible internal workspace change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Delete_Pursuit
+    object: Pursuit
+    action: Delete_Pursuit
+    description: "Deletes a GovTribe pursuit."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/delete-pursuit-mcp-tool/
+    category: Operations
+    risk: medium
+    business_impact: "Removes a tracked pursuit and its linkages and attachments from a pipeline; destructive within internal workspace state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Create_Task
+    object: Task
+    action: Create_Task
+    description: "Creates a task in a pipeline and pursuit."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/create-task-mcp-tool/
+    category: Operations
+    risk: low
+    business_impact: "Adds a task to a pursuit; reversible internal workspace state with no external effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Update_Task
+    object: Task
+    action: Update_Task
+    description: "Updates an existing GovTribe task."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/update-task-mcp-tool/
+    category: Operations
+    risk: low
+    business_impact: "Modifies a task's fields, owner, or status; reversible internal workspace change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Delete_Task
+    object: Task
+    action: Delete_Task
+    description: "Deletes a GovTribe task."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/delete-task-mcp-tool/
+    category: Operations
+    risk: low
+    business_impact: "Removes a single task from a pursuit; destructive but limited to one internal workspace record."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Tags (workspace metadata writes) ----------
+  - id: govtribe.Create_Tag
+    object: Tag
+    action: Create_Tag
+    description: "Creates a reusable workspace tag for pipelines, pursuits, and tasks."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/create-tag-mcp-tool/
+    category: Operations
+    risk: low
+    business_impact: "Adds a reusable workspace tag; reversible internal metadata with no external effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Update_Tag
+    object: Tag
+    action: Update_Tag
+    description: "Updates a GovTribe workspace tag."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/update-tag-mcp-tool/
+    category: Operations
+    risk: low
+    business_impact: "Renames or re-scopes a workspace tag applied across records; reversible internal metadata change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Delete_Tag
+    object: Tag
+    action: Delete_Tag
+    description: "Deletes a GovTribe workspace tag."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/delete-tag-mcp-tool/
+    category: Operations
+    risk: low
+    business_impact: "Removes a workspace tag and its assignments across pipelines, pursuits, and tasks; destructive but limited to internal metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Saved Searches (alerting writes) ----------
+  - id: govtribe.Create_Saved_Search
+    object: SavedSearch
+    action: Create_Saved_Search
+    description: "Creates a saved search from a search persistence ID with optional notifications."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/create-saved-search-mcp-tool/
+    category: Operations
+    risk: low
+    business_impact: "Persists a saved search and can configure recurring email notifications to workspace recipients; reversible and limited to internal alerting."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Update_Saved_Search
+    object: SavedSearch
+    action: Update_Saved_Search
+    description: "Updates a GovTribe saved search."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/update-saved-search-mcp-tool/
+    category: Operations
+    risk: low
+    business_impact: "Changes a saved search's filters or notification cadence, altering who is emailed and how often; reversible internal alerting change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Delete_Saved_Search
+    object: SavedSearch
+    action: Delete_Saved_Search
+    description: "Deletes a GovTribe saved search."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/delete-saved-search-mcp-tool/
+    category: Operations
+    risk: low
+    business_impact: "Removes a saved search and silences its recurring notifications; destructive but limited to internal alerting configuration."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Durable Memories (persistent user-data writes) ----------
+  - id: govtribe.Create_Memories
+    object: Memory
+    action: Create_Memories
+    description: "Creates durable user memory for stable preferences, facts, or long-term context."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/create-memories-mcp-tool/
+    category: Data Access
+    risk: medium
+    business_impact: "Persists durable per-user memory that may capture personal preferences and identifying facts the agent reuses across future sessions."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Update_Memories
+    object: Memory
+    action: Update_Memories
+    description: "Updates an existing durable user memory after locating the correct entry."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/update-memories-mcp-tool/
+    category: Data Access
+    risk: medium
+    business_impact: "Modifies stored per-user memory, changing personal facts the agent will rely on later; reversible but affects retained personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Delete_Memories
+    object: Memory
+    action: Delete_Memories
+    description: "Deletes a durable user memory that is no longer accurate or useful."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/delete-memories-mcp-tool/
+    category: Data Access
+    risk: medium
+    business_impact: "Removes stored per-user memory; serves data-erasure intent but destroys retained personal context within the workspace."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- File Ingestion (move workspace/government files into AI context) ----------
+  - id: govtribe.Add_To_Container
+    object: File
+    action: Add_To_Container
+    description: "Adds GovTribe files or file-backed records to the hosted shell workspace, then polls until files are ready."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/add-to-container-mcp-tool/
+    category: Data Access
+    risk: high
+    business_impact: "Copies workspace or government file content into a hosted code-execution container, broadening exposure of confidential proposal documents and any personal data they contain."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Add_To_Vector_Store
+    object: File
+    action: Add_To_Vector_Store
+    description: "Adds GovTribe files or file-backed records to a vector store, then polls until full text can be searched."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/add-to-vector-store-mcp-tool/
+    category: Data Access
+    risk: high
+    business_impact: "Indexes full file text into a vector store, making confidential proposal content and embedded personal data semantically retrievable across the workspace."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Directory & Identity Reads (PII) ----------
+  - id: govtribe.Search_Contacts
+    object: Contact
+    action: Search_Contacts
+    description: "Searches contact records with communication details and linked organizations."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/search-contacts-mcp-tool/
+    category: Data Access
+    risk: high
+    business_impact: "Returns government and vendor contact profiles including names and communication details; bulk read of identifiable personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Search_Users
+    object: User
+    action: Search_Users
+    description: "Searches workspace users by name or email."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/search-users-mcp-tool/
+    category: Data Access
+    risk: high
+    business_impact: "Returns workspace member records keyed on name or email; bulk read of the internal user directory."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Search_Vendors
+    object: Vendor
+    action: Search_Vendors
+    description: "Searches vendor profiles with identifiers, certifications, and related awards or grants."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/search-vendors-mcp-tool/
+    category: Data Access
+    risk: medium
+    business_impact: "Returns vendor profiles with business identifiers and certifications; may include personal data for sole proprietors and named principals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- File & Memory Reads ----------
+  - id: govtribe.Search_User_Files
+    object: File
+    action: Search_User_Files
+    description: "Searches team-uploaded files with metadata, summaries, and optional extracted text."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/search-user-files-mcp-tool/
+    category: Data Access
+    risk: high
+    business_impact: "Reads team-uploaded files and extracted text, which can surface confidential proposal content and any personal data those documents contain."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Search_Vector_Store
+    object: File
+    action: Search_Vector_Store
+    description: "Searches files previously uploaded to a vector store."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/search-vector-store-mcp-tool/
+    category: Data Access
+    risk: high
+    business_impact: "Semantically retrieves full text from indexed workspace files, surfacing confidential proposal content and embedded personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Search_Memories
+    object: Memory
+    action: Search_Memories
+    description: "Searches durable user memories before creating, updating, or deleting memory entries."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/search-memories-mcp-tool/
+    category: Data Access
+    risk: medium
+    business_impact: "Reads stored per-user memory that may contain personal preferences and identifying facts retained across sessions."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Search_Government_Files
+    object: GovernmentFile
+    action: Search_Government_Files
+    description: "Searches government file metadata with optional document text extracts."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/search-government-files-mcp-tool/
+    category: Data Access
+    risk: medium
+    business_impact: "Reads government solicitation and procurement document metadata and text extracts; public-record data that may incidentally include contact PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Load_Search_Results
+    object: SearchResult
+    action: Load_Search_Results
+    description: "Hydrates search-result metadata and blobs for an interactive search results display."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/load-search-results-mcp-tool/
+    category: Data Access
+    risk: medium
+    business_impact: "Hydrates full record blobs behind a prior search, which can include contact and vendor PII embedded in procurement records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Workspace Reads ----------
+  - id: govtribe.Search_Automations
+    object: Automation
+    action: Search_Automations
+    description: "Searches the caller's GovTribe AI automations and optionally embeds recent runs."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/search-automations-mcp-tool/
+    category: Operations
+    risk: low
+    business_impact: "Reads the caller's AI automations and their recent run history; internal workspace configuration metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Search_Pipelines
+    object: Pipeline
+    action: Search_Pipelines
+    description: "Searches workspace pipelines with owners, stages, and URLs."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/search-pipelines-mcp-tool/
+    category: Operations
+    risk: low
+    business_impact: "Reads the workspace's capture pipelines and their owners; internal business-development metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Search_Pursuits
+    object: Pursuit
+    action: Search_Pursuits
+    description: "Searches pursuits with pipeline placement, owners, linked items, and attachments."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/search-pursuits-mcp-tool/
+    category: Operations
+    risk: low
+    business_impact: "Reads tracked pursuits with owners, linkages, and attachments; internal business-development metadata that may reference attached documents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Search_Tasks
+    object: Task
+    action: Search_Tasks
+    description: "Searches tasks with pipeline context, owners, and linked pursuits."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/search-tasks-mcp-tool/
+    category: Operations
+    risk: low
+    business_impact: "Reads workspace tasks with owners and pursuit linkages; internal business-development metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Search_Saved_Searches
+    object: SavedSearch
+    action: Search_Saved_Searches
+    description: "Searches saved query definitions with filters, cadence, and links."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/search-saved-searches-mcp-tool/
+    category: Operations
+    risk: low
+    business_impact: "Reads saved-search definitions and their notification cadence; internal workspace configuration."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Search_Tags
+    object: Tag
+    action: Search_Tags
+    description: "Searches workspace tags by name and resolves tag IDs for assignments."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/search-tags-mcp-tool/
+    category: Operations
+    risk: low
+    business_impact: "Reads workspace tag definitions and resolves their IDs; internal metadata with no external effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Federal Procurement Reads (representative; public-record) ----------
+  - id: govtribe.Search_Federal_Contract_Opportunities
+    object: Opportunity
+    action: Search_Federal_Contract_Opportunities
+    description: "Searches federal contract opportunities with requirements, timelines, files, and contacts."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/search-federal-contract-opportunities-mcp-tool/
+    category: Data Access
+    risk: low
+    business_impact: "Returns federal solicitation records; primarily public procurement data, though embedded contacts may include identifiable individuals."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: govtribe.Search_GovTribe
+    object: "*"
+    action: Search_GovTribe
+    description: "Runs an integrated GovTribe finder search across public and workspace indexes."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/search-govtribe-mcp-tool/
+    category: Data Access
+    risk: medium
+    business_impact: "Runs a unified search spanning public procurement data and the private workspace, so a single call may return both public records and internal PII-bearing entities."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Documentation / Bootstrap ----------
+  - id: govtribe.Documentation
+    object: Documentation
+    action: Documentation
+    description: "Searches GovTribe Docs and retrieves article or section markdown by article name, URL, or part ID."
+    reference: https://govtribe.com/docs/govtribe-for-agents/tools/documentation-mcp-tool/
+    category: Operations
+    risk: low
+    business_impact: "Reads GovTribe product documentation; published reference content with no data exposure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

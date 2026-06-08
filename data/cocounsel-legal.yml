@@ -1,0 +1,55 @@
+schema_version: "1.1"
+platform: cocounsel-legal
+display_name: CoCounsel Legal
+source: langguard-editorial
+updated: "2026-06"
+reference: https://legal-mcp.thomsonreuters.com/docs/connector-guide
+actions:
+  # ---------- Legal Research ----------
+  - id: cocounsel-legal.start_deep_research
+    object: ResearchSession
+    action: start_deep_research
+    description: "Start a new deep legal research session for the given query with optional US jurisdiction targeting."
+    category: Legal Research
+    risk: low
+    business_impact: "Opens a research session over public US legal authority (statutes, case law, Westlaw/Practical Law); the free-text query can carry privileged or confidential client facts that are transmitted cross-border to Thomson Reuters."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: cocounsel-legal.follow_up_deep_research
+    object: ResearchSession
+    action: follow_up_deep_research
+    description: "Start a follow-up legal research question against an existing completed deep research conversation."
+    category: Legal Research
+    risk: low
+    business_impact: "Adds a follow-up question to an existing research session; the follow-up text can carry privileged or confidential client facts transmitted cross-border to Thomson Reuters."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: cocounsel-legal.get_deep_research_report
+    object: ResearchReport
+    action: get_deep_research_report
+    description: "Retrieve the final cited report for a completed deep legal research session."
+    category: Legal Research
+    risk: low
+    business_impact: "Returns the synthesized, citation-backed work product for a session; reflects the confidentiality of the underlying query but is built from licensed public legal sources, not a personal-data store."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: cocounsel-legal.check_deep_research_status
+    object: ResearchSession
+    action: check_deep_research_status
+    description: "Check the progress of an ongoing deep legal research session."
+    category: Legal Research
+    risk: low
+    business_impact: "Returns the progress state of a running research session; no new data is written or exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

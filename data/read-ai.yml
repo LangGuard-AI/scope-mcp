@@ -1,0 +1,62 @@
+schema_version: "1.1"
+platform: read-ai
+display_name: Read AI
+source: langguard-editorial
+updated: "2026-06"
+reference: https://support.read.ai/hc/en-us/articles/49381158409491-MCP-Server
+# CAPABILITY-FORM FILE. Read AI's hosted MCP server (https://api.read.ai/mcp)
+# gates tools/list behind OAuth — live introspection (mcp-introspect.py) and a
+# direct JSON-RPC initialize/tools-list POST both return HTTP 401
+# {"error":"invalid_token"} without a valid per-user bearer, and no token exists
+# in the environment (none was invented). No reachable vendor source publishes
+# verbatim MCP tool identifiers: the claude.com/connectors/read-ai page, the
+# official launch blog (read.ai/post/read-ai-mcp-...), the support.read.ai
+# help-center MCP/API articles (403 to anonymous fetch), and the FastAPI
+# OpenAPI path (api.read.ai/openapi.json 301-redirects to the marketing site)
+# all describe capabilities in prose only. Third-party hands-on coverage
+# (xda-developers) likewise shows no verbatim ids. The vendor consistently
+# describes exactly TWO MCP tools in plain language — "List Meetings" (browse /
+# filter meeting history, date-range + pagination, optionally inlining full
+# per-meeting detail) and "Get Meeting by ID" (one meeting's full report via its
+# ULID). Both are READS; Read AI's MCP surface exposes no writes, deletes, or
+# state changes (the connector is read-only by design). Every entry therefore
+# uses id_form: capability with the verbatim vendor capability label in
+# `description`; ids are intent-level snake_case slugs and confidence is capped
+# at medium.
+#
+# DATA TYPE: meeting reports include the full transcript, chapter summaries,
+# action items, key questions, topics, engagement/sentiment metrics, and a
+# recording_download. Transcripts of named participants are personal data, so
+# the full privacy-regime stack applies. Meeting content can plausibly carry PHI
+# (clinical / care-coordination calls) and financial PII (deal / advisory
+# calls), so HIPAA and GLBA are tagged on the bulk read where exposure is
+# broadest; both are context-dependent, hence confidence medium.
+actions:
+  # ---------- Meeting Intelligence ----------
+  - id: read-ai.list_meetings
+    object: Meeting
+    action: list_meetings
+    id_form: capability
+    description: "List Meetings"
+    reference: https://www.read.ai/post/read-ai-mcp-your-meetings-just-became-your-most-powerful-dev-tool
+    category: Data Access
+    risk: high
+    business_impact: "Browses and filters the full meeting history with pagination, optionally inlining each meeting's transcript, summaries, action items, metrics, and recording link; bulk extraction of meeting content and participant PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, GLBA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: read-ai.get_meeting
+    object: Meeting
+    action: get_meeting
+    id_form: capability
+    description: "Get Meeting by ID"
+    reference: https://www.read.ai/post/read-ai-mcp-your-meetings-just-became-your-most-powerful-dev-tool
+    category: Data Access
+    risk: high
+    business_impact: "Retrieves one meeting's full report by its ULID — transcript, chapter summaries, action items, key questions, topics, engagement metrics, and recording download — exposing the private contents of a recorded conversation and its participants' personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

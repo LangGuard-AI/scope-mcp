@@ -1,0 +1,60 @@
+schema_version: "1.1"
+platform: aurora
+display_name: Aurora
+source: langguard-editorial
+updated: "2026-06"
+reference: https://mcp-docs.ai.consilio.com/docs/quickstart/
+actions:
+  # ---------- Data Access ----------
+  - id: aurora.searchDocuments
+    object: Document
+    action: searchDocuments
+    description: "Query documents within a workspace, supporting text-based search across matter content."
+    reference: https://mcp-docs.ai.consilio.com/docs/quickstart/
+    category: Data Access
+    risk: high
+    business_impact: "Full-text reads confidential eDiscovery documents and metadata, which routinely contain PII, privileged legal communications, and — depending on the matter — health or financial records; scoped to the caller's existing Consilio permissions but surfaces sensitive content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, GLBA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: aurora.searchMatters
+    object: Matter
+    action: searchMatters
+    description: "Find active matters accessible to the authenticated user, optionally scoped by client name or other criteria."
+    reference: https://mcp-docs.ai.consilio.com/docs/quickstart/
+    category: Data Access
+    risk: medium
+    business_impact: "Reads the list of legal matters the caller can access, including client and engagement metadata that identifies parties and disputes; scoped to existing Consilio permissions."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: aurora.searchWorkspaces
+    object: Workspace
+    action: searchWorkspaces
+    description: "Retrieve workspaces within a specified matter."
+    reference: https://mcp-docs.ai.consilio.com/docs/quickstart/
+    category: Data Access
+    risk: low
+    business_impact: "Reads the structural list of workspaces inside a matter; workspace labels can reference custodians or parties but expose no document content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Service ----------
+  - id: aurora.searchTickets
+    object: Ticket
+    action: searchTickets
+    description: "Access Consilio support tickets associated with the user's account."
+    reference: https://mcp-docs.ai.consilio.com/docs/quickstart/
+    category: Service
+    risk: low
+    business_impact: "Reads the caller's Consilio support tickets, which may include contact details and account information; scoped to the user's own account."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

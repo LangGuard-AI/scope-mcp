@@ -1,0 +1,87 @@
+schema_version: "1.1"
+platform: doordash
+display_name: DoorDash
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/connectors/doordash
+# PROVENANCE: DoorDash is a hosted consumer connector in the same "everyday life"
+# wave as Uber, Instacart, and Booking.com. Its MCP server is OAuth-gated and no
+# verbatim MCP tool ids are published anywhere reachable: developer.doordash.com
+# has no MCP docs page (404), the claude.com connector page exposes only
+# plain-language capability labels, and there is no vendor MCP tools reference.
+# Live tools/list introspection was not possible (no published server URL; the
+# connector is not mounted in this session). Per Step 3 of the curator spec these
+# entries use the capability-form fallback (id_form: capability) with the verbatim
+# page labels in `description` and confidence capped at medium.
+#
+# Scope note: this consumer connector surface (browse menus, build carts, book
+# restaurant reservations) is DISTINCT from DoorDash's Drive logistics/delivery
+# REST API. The community Drive-API MCP servers (jordandalton/doordash-mcp,
+# amannm/doordash-mcp, markswendsen-code/mcp-doordash, etc.) were deliberately
+# excluded: they are unofficial, expose conflicting tool names, and cover the
+# wrong (merchant delivery) surface — the spec forbids using community-server
+# names and REST endpoint names as verbatim ids.
+#
+# Verbatim source strings (claude.com/connectors/doordash):
+#   "Browse DoorDash menus, build carts, and book local restaurant reservations
+#    — all through Claude."
+#   "Find food nearby"  /  "Make a reservation"  /  "Reorder a favorite"
+actions:
+  # ---------- Orders ----------
+  - id: doordash.reorder_a_favorite
+    object: Order
+    action: reorder_a_favorite
+    id_form: capability
+    description: "Reorder a favorite"
+    reference: https://claude.com/connectors/doordash
+    category: Orders
+    risk: medium
+    business_impact: "Re-creates a prior food order against the account's saved card and delivery address; moves money on the consumer's payment method on file (the connector never sees the card number) and is reversible only within the app's brief cancellation window."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: doordash.build_carts
+    object: Cart
+    action: build_carts
+    id_form: capability
+    description: "build carts"
+    reference: https://claude.com/connectors/doordash
+    category: Orders
+    risk: low
+    business_impact: "Assembles a draft cart of menu items tied to the consumer account; no charge or order placement occurs and the cart is fully reversible until checkout."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Reservations ----------
+  - id: doordash.make_a_reservation
+    object: Reservation
+    action: make_a_reservation
+    id_form: capability
+    description: "Make a reservation"
+    reference: https://claude.com/connectors/doordash
+    category: Reservations
+    risk: medium
+    business_impact: "Books a restaurant table by writing the diner's name, party size, and time to a third-party venue; cancellable but creates a real-world commitment under the consumer's identity."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: doordash.find_food_nearby
+    object: Restaurant
+    action: find_food_nearby
+    id_form: capability
+    description: "Find food nearby"
+    reference: https://claude.com/connectors/doordash
+    category: Data Access
+    risk: low
+    business_impact: "Performs a read-only search for nearby restaurants and menus by location and preference; returns results, places no order and stores nothing."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

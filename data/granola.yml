@@ -1,16 +1,42 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: granola
 display_name: Granola
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://docs.granola.ai/help-center/sharing/integrations/mcp
 actions:
-  # ---------- Meeting Intelligence ----------
+  # ---------- Data Access ----------
+  - id: granola.get_meeting_transcript
+    object: Transcript
+    action: get_meeting_transcript
+    description: "Paid plans only — returns the raw transcript for a meeting by meeting ID."
+    category: Data Access
+    risk: high
+    business_impact: "Returns the verbatim transcript of a private meeting; exposes word-for-word personal communications of every attendee and may include PII or PHI."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: granola.get_meetings
+    object: Meeting
+    action: get_meetings
+    description: "Searches through meeting content including meeting ID, title, date, attendees, private notes, and enhanced notes."
+    category: Data Access
+    risk: high
+    business_impact: "Returns verbatim private and enhanced meeting notes for matching meetings; exposes confidential internal discussion and attendee PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
   - id: granola.query_granola_meetings
     object: Meeting
     action: query_granola_meetings
-    category: Meeting Intelligence
+    description: "Chat with Granola — answers natural-language questions by searching across the user's meeting history."
+    category: Data Access
     risk: high
-    business_impact: "Conversational Q&A over meeting notes; answers may surface confidential discussions, customer PII, or material non-public information."
+    business_impact: "Synthesizes answers across the entire meeting corpus; can surface confidential discussion, attendee PII, or material non-public information from many meetings in one call."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
     confidence: high
@@ -19,9 +45,10 @@ actions:
   - id: granola.list_meetings
     object: Meeting
     action: list_meetings
-    category: Meeting Intelligence
+    description: "Scans the list of meetings, including meeting ID, title, date, and attendees; on paid plans includes shared notes and folder filtering."
+    category: Data Access
     risk: medium
-    business_impact: "Lists meetings with titles, dates, and attendees; titles alone can reveal sensitive context (M&A, layoffs)."
+    business_impact: "Enumerates the user's meetings with titles and attendee names; bulk read of attendee PII, and titles alone can reveal sensitive context."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
     sod_concern: false
     confidence: high
@@ -30,43 +57,24 @@ actions:
   - id: granola.list_meeting_folders
     object: Folder
     action: list_meeting_folders
-    category: Meeting Intelligence
+    description: "Paid plans only — lists folders the user is a member of, including folder ID, title, description, and note count."
+    category: Data Access
     risk: low
-    business_impact: "Lists folders the user is a member of."
-    compliance: [SOC2]
+    business_impact: "Returns folder organization metadata only; no meeting content or attendee data is exposed."
+    compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: granola.get_meetings
-    object: Meeting
-    action: get_meetings
-    category: Meeting Intelligence
-    risk: high
-    business_impact: "Returns full meeting notes (private and enhanced) for specified IDs; exposes verbatim internal discussions."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: granola.get_meeting_transcript
-    object: Transcript
-    action: get_meeting_transcript
-    category: Meeting Intelligence
-    risk: high
-    business_impact: "Returns the verbatim transcript of a meeting; raw recording of private business conversations may include PII or PHI."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+  # ---------- Identity & Admin ----------
   - id: granola.get_account_info
     object: Account
     action: get_account_info
-    category: Meeting Intelligence
+    description: "Returns the email address and active workspace for the Granola account connected to the current MCP session."
+    category: Identity & Admin
     risk: low
-    business_impact: "Returns the connected user's email and workspace identifier."
-    compliance: []
+    business_impact: "Returns the connected account's email and workspace; discloses a single identifiable user's email address."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]

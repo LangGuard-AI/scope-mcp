@@ -1,28 +1,45 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: biorender
 display_name: BioRender
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://help.biorender.com/hc/en-gb/articles/30870978672157-How-to-use-the-BioRender-MCP-connector
+# NOTE: id_form is `capability` for every action below. The BioRender hosted MCP
+# server (https://mcp.services.biorender.com/mcp) is OAuth-gated and additionally
+# Cloudflare-banned to anonymous clients, so live tools/list introspection is
+# impossible. Neither the vendor help doc nor the anthropics/life-sciences plugin
+# source publishes verbatim tool identifiers. Two third-party MCP catalogs list
+# exactly two tools and agree on the verbs/nouns but conflict on the separator
+# (search-icons/search-templates vs search_icons/search_templates), so no
+# authoritative verbatim id is recoverable. Ids below are slugified from the
+# vendor's plain-language capability labels; matching is intent-level, not
+# identifier-level. Confidence capped at medium per the capability-form rule.
 actions:
-  # ---------- Asset Search ----------
-  - id: biorender.search-icons
+  # ---------- Data Access ----------
+  - id: biorender.search_icons
     object: Icon
-    action: search-icons
+    action: search_icons
+    id_form: capability
+    description: "Search for and use scientific templates and icons"
+    reference: https://claude.com/connectors/biorender
     category: Data Access
     risk: low
-    business_impact: "Searches BioRender's library of scientific icons."
+    business_impact: "Read-only search of BioRender's public scientific-icon library; returns references to existing illustrations and changes no customer state."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
-  - id: biorender.search-templates
+  - id: biorender.search_templates
     object: Template
-    action: search-templates
+    action: search_templates
+    id_form: capability
+    description: "Search for and use scientific templates and icons"
+    reference: https://claude.com/connectors/biorender
     category: Data Access
     risk: low
-    business_impact: "Searches BioRender's library of scientific figure templates."
+    business_impact: "Read-only search of BioRender's public scientific-figure template library; returns links to open templates and changes no customer state."
     compliance: []
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]

@@ -1,0 +1,95 @@
+schema_version: "1.1"
+platform: starburst
+display_name: Starburst
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.starburst.io/latest/starburst-ai/mcp-server.html
+actions:
+  # ---------- Data Access ----------
+  # The query tool is real and is the highest-risk action the server exposes, but
+  # the vendor docs never name it the way they name the other five tools ("the
+  # tool's name in the MCP server is X"). `queryReadOnly` appears only inside the
+  # `mcp.query.max-query-execution-time` config-property description (the config
+  # namespace is `mcp.query.*`, NOT `mcp.tool.queryReadOnly.*`), so it is not
+  # established as the registered `tools/list` id. Carried as id_form: capability
+  # with a documented-capability slug; confidence capped at medium.
+  - id: starburst.run_query
+    object: Query
+    action: run_query
+    id_form: capability
+    description: "Runs read-only queries (SELECT, SHOW, EXPLAIN) against the cluster and returns structured JSON rows with column metadata."
+    reference: https://docs.starburst.io/latest/starburst-ai/mcp-server.html
+    category: Data Access
+    risk: critical
+    business_impact: "Executes arbitrary read-only SQL across all federated catalogs the caller can reach, gated only by the caller's existing grants; bulk-read / data-exfiltration vector whose result set may contain PII, financial, or health data from any connected source."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  - id: starburst.parametrizedQuery
+    object: Query
+    action: parametrizedQuery
+    description: "Executes an administrator-defined parameterized SQL template, accepting only validated parameter values, and returns the result rows."
+    reference: https://docs.starburst.io/latest/starburst-ai/mcp-server.html
+    category: Data Access
+    risk: medium
+    business_impact: "Returns data via a pre-approved SQL template; access is bounded to the template's logic but the result set may still carry personal data from the underlying catalogs."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  - id: starburst.listParametrizedQueryTools
+    object: QueryTemplate
+    action: listParametrizedQueryTools
+    description: "Lists the administrator-defined parameterized query templates available for execution, with their parameters."
+    reference: https://docs.starburst.io/latest/starburst-ai/mcp-server.html
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates available pre-approved query templates and their parameters; returns template definitions, not row data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  # ---------- AI Agent ----------
+  - id: starburst.data-product-agent
+    object: DataProduct
+    action: data-product-agent
+    description: "Opens a stateful conversational Starburst AI agent session scoped to a data product; the agent generates and runs queries under the caller's identity."
+    reference: https://docs.starburst.io/latest/starburst-ai/mcp-server.html
+    category: Data Access
+    risk: high
+    business_impact: "Drives an autonomous AI agent that generates and executes data-product queries under the caller's identity and access controls; its automated, model-driven data retrieval can surface PII, financial, or health data and warrants AI-governance review."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_AI_RMF, EU_AI_ACT]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  # ---------- Discovery & Metadata ----------
+  - id: starburst.searchDataProducts
+    object: DataProduct
+    action: searchDataProducts
+    description: "Performs a keyword search over data products by name, summary, description, and included views/materialized views."
+    reference: https://docs.starburst.io/latest/starburst-ai/mcp-server.html
+    category: Data Access
+    risk: low
+    business_impact: "Returns data-product catalog metadata matching a search term; surfaces schema and description information, not the underlying row data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+
+  - id: starburst.getDataProductDetails
+    object: DataProduct
+    action: getDataProductDetails
+    description: "Retrieves full metadata for a specific data product, including its views, materialized views, schema, and column details."
+    reference: https://docs.starburst.io/latest/starburst-ai/mcp-server.html
+    category: Data Access
+    risk: low
+    business_impact: "Returns schema and column metadata for a single data product; exposes structure for query generation, not the underlying row data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]

@@ -1,0 +1,191 @@
+schema_version: "1.1"
+platform: cms-coverage
+display_name: CMS Coverage
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/connectors/cms-coverage
+actions:
+  # ---------- National Coverage ----------
+  - id: cms-coverage.search_ncds
+    object: NationalCoverageDetermination
+    action: search_ncds
+    description: "Searches official nationwide Medicare coverage policies (National Coverage Determinations)."
+    reference: https://claude.com/resources/tutorials/using-the-cms-coverage-connector-in-claude
+    category: Data Access
+    risk: low
+    business_impact: "Returns public CMS national coverage policy documents; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cms-coverage.search_nca_cals
+    object: CoverageAnalysis
+    action: search_nca_cals
+    description: "Searches National Coverage Analyses and Coverage Analysis Letters tracking coverage decisions."
+    reference: https://claude.com/resources/tutorials/using-the-cms-coverage-connector-in-claude
+    category: Data Access
+    risk: low
+    business_impact: "Returns public CMS coverage-analysis records; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cms-coverage.search_medcac_meetings
+    object: MedcacMeeting
+    action: search_medcac_meetings
+    description: "Searches Medicare Evidence Development & Coverage Advisory Committee (MEDCAC) meeting records."
+    reference: https://claude.com/resources/tutorials/using-the-cms-coverage-connector-in-claude
+    category: Data Access
+    risk: low
+    business_impact: "Returns public advisory-committee meeting records; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cms-coverage.search_technology_assessments
+    object: TechnologyAssessment
+    action: search_technology_assessments
+    description: "Searches published clinical-evidence technology assessments used in coverage decisions."
+    reference: https://claude.com/resources/tutorials/using-the-cms-coverage-connector-in-claude
+    category: Data Access
+    risk: low
+    business_impact: "Returns public clinical-evidence review documents; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cms-coverage.get_ncd
+    object: NationalCoverageDetermination
+    action: get_ncd
+    description: "Fetches the complete document for a National Coverage Determination by ID."
+    reference: https://claude.com/resources/tutorials/using-the-cms-coverage-connector-in-claude
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves a single public national coverage policy document; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cms-coverage.get_nca
+    object: CoverageAnalysis
+    action: get_nca
+    description: "Fetches the complete document for a National Coverage Analysis by ID."
+    reference: https://claude.com/resources/tutorials/using-the-cms-coverage-connector-in-claude
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves a single public coverage-analysis document; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cms-coverage.get_cal
+    object: CoverageAnalysisLetter
+    action: get_cal
+    description: "Fetches the complete document for a Coverage Analysis Letter by ID."
+    reference: https://claude.com/resources/tutorials/using-the-cms-coverage-connector-in-claude
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves a single public coverage-analysis-letter document; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Local Coverage ----------
+  - id: cms-coverage.search_lcds
+    object: LocalCoverageDetermination
+    action: search_lcds
+    description: "Searches regional Local Coverage Determinations issued by Medicare Administrative Contractors."
+    reference: https://claude.com/resources/tutorials/using-the-cms-coverage-connector-in-claude
+    category: Data Access
+    risk: low
+    business_impact: "Returns public regional coverage policy documents; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cms-coverage.search_proposed_lcds
+    object: ProposedLocalCoverageDetermination
+    action: search_proposed_lcds
+    description: "Searches pending/proposed Local Coverage Determinations representing upcoming policy changes."
+    reference: https://claude.com/resources/tutorials/using-the-cms-coverage-connector-in-claude
+    category: Data Access
+    risk: low
+    business_impact: "Returns public proposed coverage policy documents; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cms-coverage.search_articles
+    object: BillingArticle
+    action: search_articles
+    description: "Searches billing and coding articles with CPT/HCPCS codes and ICD-10 documentation requirements."
+    reference: https://claude.com/resources/tutorials/using-the-cms-coverage-connector-in-claude
+    category: Data Access
+    risk: low
+    business_impact: "Returns public Medicare billing and coding guidance articles; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Reference & Monitoring ----------
+  - id: cms-coverage.get_contractors
+    object: MedicareAdministrativeContractor
+    action: get_contractors
+    description: "Identifies Medicare Administrative Contractors (MACs) by region."
+    reference: https://claude.com/resources/tutorials/using-the-cms-coverage-connector-in-claude
+    category: Data Access
+    risk: low
+    business_impact: "Returns public Medicare contractor/jurisdiction reference data; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cms-coverage.whats_new_national
+    object: PolicyChange
+    action: whats_new_national
+    description: "Lists recent changes to national Medicare coverage policies."
+    reference: https://claude.com/resources/tutorials/using-the-cms-coverage-connector-in-claude
+    category: Data Access
+    risk: low
+    business_impact: "Returns a public feed of recent national policy changes; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cms-coverage.whats_new_local
+    object: PolicyChange
+    action: whats_new_local
+    description: "Lists recent changes to local/regional Medicare coverage policies."
+    reference: https://claude.com/resources/tutorials/using-the-cms-coverage-connector-in-claude
+    category: Data Access
+    risk: low
+    business_impact: "Returns a public feed of recent local policy changes; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cms-coverage.sad_exclusion_list
+    object: SelfAdministeredDrugExclusion
+    action: sad_exclusion_list
+    description: "Checks self-administered drug (SAD) exclusion lists for Part B coverage."
+    reference: https://claude.com/resources/tutorials/using-the-cms-coverage-connector-in-claude
+    category: Data Access
+    risk: low
+    business_impact: "Returns public self-administered-drug exclusion reference data; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

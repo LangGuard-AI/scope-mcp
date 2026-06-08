@@ -1,0 +1,20 @@
+schema_version: "1.1"
+platform: topcounsel
+display_name: TopCounsel
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.lsuite.co/topcounsel-documentation
+actions:
+  # ---------- Data Access ----------
+  - id: topcounsel.find_outside_counsel
+    object: OutsideCounsel
+    action: find_outside_counsel
+    description: "Returns a ranked list of firms/attorneys matching a matter description, filterable by practice area, company stage, geography, and more."
+    reference: https://www.lsuite.co/topcounsel-documentation
+    category: Data Access
+    risk: low
+    business_impact: "Sends the user's matter description — potentially client-confidential or privileged legal context — to The L Suite, which logs the tool call, and returns named attorneys with peer-sourced sentiment about them; read-only, no state change."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

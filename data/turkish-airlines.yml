@@ -1,0 +1,206 @@
+schema_version: "1.1"
+platform: turkish-airlines
+display_name: Turkish Airlines
+source: langguard-editorial
+updated: "2026-06"
+reference: https://mcp.turkishtechlab.com/
+# NOTE: The official Turkish Airlines connector's MCP server
+# (https://mcp.turkishtechlab.com/mcp) is OAuth-gated — an anonymous tools/list
+# returns HTTP 401 with `WWW-Authenticate: Bearer realm="OAuth"`, live
+# introspection fails with exit 2 (auth), and the /tools path is Cloudflare-403
+# blocked, so no verbatim MCP identifiers are anonymously reachable. The vendor
+# publishes only plain-language capability labels on mcp.turkishtechlab.com
+# (e.g. "Search Flights", "Get Booking Details", "Get Current User Details").
+# These are recorded via the capability-form fallback (id_form: capability):
+# ids are intent-level snake_case slugs, NOT verbatim MCP identifiers, so every
+# entry is capped at confidence: medium. The `description` field carries the
+# vendor's verbatim label. The vendor page and blog enumerate exactly 13 labels;
+# remote-mcp and some search summaries cite "14 tools", so one tool may exist
+# behind the OAuth gate that is not represented here — the captured surface may
+# be incomplete by one tool.
+actions:
+  # ---------- Customer (member & booking PII) ----------
+  - id: turkish-airlines.get_booking_details
+    object: Booking
+    action: get_booking_details
+    id_form: capability
+    description: "Get Booking Details"
+    reference: https://mcp.turkishtechlab.com/
+    category: Customer
+    risk: medium
+    business_impact: "Retrieves a passenger's full booking and itinerary from a PNR plus surname; exposes traveler personal data for a single reservation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: turkish-airlines.get_check_in_booking_details
+    object: Booking
+    action: get_check_in_booking_details
+    id_form: capability
+    description: "Get Check-in Booking Details"
+    reference: https://mcp.turkishtechlab.com/
+    category: Customer
+    risk: medium
+    business_impact: "Returns check-in details for a check-in-eligible booking; exposes traveler personal data including flight and passenger identity for a single reservation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: turkish-airlines.get_booking_baggage_allowance
+    object: Booking
+    action: get_booking_baggage_allowance
+    id_form: capability
+    description: "Get Booking Baggage Allowance"
+    reference: https://mcp.turkishtechlab.com/
+    category: Customer
+    risk: medium
+    business_impact: "Reads baggage allowance tied to a specific booking; the underlying booking lookup exposes single-reservation traveler personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+
+  - id: turkish-airlines.get_current_user_details
+    object: Member
+    action: get_current_user_details
+    id_form: capability
+    description: "Get Current User Details"
+    reference: https://mcp.turkishtechlab.com/
+    category: Customer
+    risk: medium
+    business_impact: "Fetches the authenticated Miles&Smiles member's profile, miles balance, and identity information; exposes account-holder personal data (potentially passport/national-ID for international travel)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: turkish-airlines.get_member_flights
+    object: Member
+    action: get_member_flights
+    id_form: capability
+    description: "Get Member Flights"
+    reference: https://mcp.turkishtechlab.com/
+    category: Customer
+    risk: medium
+    business_impact: "Returns the member's upcoming and past flight history; exposes travel-history personal data for the authenticated account holder."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: turkish-airlines.get_expiring_miles
+    object: Member
+    action: get_expiring_miles
+    id_form: capability
+    description: "Get Expiring Miles"
+    reference: https://mcp.turkishtechlab.com/
+    category: Customer
+    risk: medium
+    business_impact: "Calculates and returns the member's expiring loyalty miles; exposes loyalty-balance data tied to the authenticated account holder."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: turkish-airlines.logout
+    object: Session
+    action: logout
+    id_form: capability
+    description: "Logout"
+    reference: https://mcp.turkishtechlab.com/
+    category: Identity & Access
+    risk: low
+    business_impact: "Ends the member's authenticated session within the MCP system; reversible by re-authenticating, exposes no data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Operations (booking handoff) ----------
+  - id: turkish-airlines.create_flight_booking_link
+    object: Flight
+    action: create_flight_booking_link
+    id_form: capability
+    description: "Create Flight Booking Link"
+    reference: https://mcp.turkishtechlab.com/
+    category: Operations
+    risk: low
+    business_impact: "Generates a booking deeplink URL for a selected flight option; no money moves and no payment data is handled — the actual purchase happens off-platform."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access (public, non-personal) ----------
+  - id: turkish-airlines.search_flights
+    object: Flight
+    action: search_flights
+    id_form: capability
+    description: "Search Flights"
+    reference: https://mcp.turkishtechlab.com/
+    category: Data Access
+    risk: low
+    business_impact: "Searches Turkish Airlines flight availability by origin, destination, dates, and passenger counts; read-only over public schedule and fare data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: turkish-airlines.get_flight_status_by_number
+    object: Flight
+    action: get_flight_status_by_number
+    id_form: capability
+    description: "Get Flight Status by Number"
+    reference: https://mcp.turkishtechlab.com/
+    category: Data Access
+    risk: low
+    business_impact: "Fetches real-time flight status for a given flight number and date; read-only over public operational data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: turkish-airlines.get_flight_status_by_route
+    object: Flight
+    action: get_flight_status_by_route
+    id_form: capability
+    description: "Get Flight Status by Route"
+    reference: https://mcp.turkishtechlab.com/
+    category: Data Access
+    risk: low
+    business_impact: "Fetches real-time flight status for a given route (airports and date); read-only over public operational data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: turkish-airlines.get_airline_promotions
+    object: Promotion
+    action: get_airline_promotions
+    id_form: capability
+    description: "Get Airline Promotions"
+    reference: https://mcp.turkishtechlab.com/
+    category: Data Access
+    risk: low
+    business_impact: "Returns current promotions filtered by country and airports; read-only over public marketing content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: turkish-airlines.get_city_guide
+    object: CityGuide
+    action: get_city_guide
+    id_form: capability
+    description: "Get City Guide"
+    reference: https://mcp.turkishtechlab.com/
+    category: Data Access
+    risk: low
+    business_impact: "Returns travel guide content and promotions for a specified arrival city; read-only over public destination content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

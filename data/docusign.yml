@@ -1,0 +1,455 @@
+schema_version: "1.1"
+platform: docusign
+display_name: DocuSign
+source: langguard-editorial
+updated: "2026-06"
+partial_coverage_acknowledged: true
+reference: https://developers.docusign.com/platform/mcp-server/
+actions:
+  # ---------- Identity & Access ----------
+  - id: docusign.generateAccessToken
+    object: AccessToken
+    action: generateAccessToken
+    description: "Interactive OAuth guided access-token generation flow that helps create Integration Keys, configure OAuth settings, and obtain access tokens."
+    category: Identity & Access
+    risk: critical
+    business_impact: "Mints OAuth access tokens and Integration Keys that grant ongoing programmatic access to the DocuSign account; a credential-issuance and privilege-escalation event."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.getUsers
+    object: User
+    action: getUsers
+    description: "Bulk-reads the account user directory, returning names, emails, and roles."
+    reference: https://developers.docusign.com/docs/esign-rest-api/reference/users/users/list/
+    category: Identity & Access
+    risk: critical
+    business_impact: "Bulk-reads the account user directory, returning names, emails, and roles for every user in one call; an enumerable-PII exfiltration surface."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.getUser
+    object: User
+    action: getUser
+    description: "Reads one user's profile and permission settings."
+    reference: https://developers.docusign.com/docs/esign-rest-api/reference/users/users/get/
+    category: Identity & Access
+    risk: medium
+    business_impact: "Reads a single account user's profile and permission settings, exposing employee PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.getUserInfo
+    object: User
+    action: getUserInfo
+    description: "Reads the authenticated user's profile, including name, email, and account/organization identifiers."
+    reference: https://developers.docusign.com/platform/auth/reference/user-info/
+    category: Identity & Access
+    risk: medium
+    business_impact: "Reads the authenticated user's full profile including name, email, and account/organization identifiers."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Agreements & Envelopes ----------
+  - id: docusign.createEnvelope
+    object: Envelope
+    action: createEnvelope
+    description: "Creates and sends a new envelope from a template or supplied documents."
+    reference: https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/
+    category: Agreements
+    risk: medium
+    business_impact: "Creates and sends a legally binding e-signature agreement to named recipients; reversible only by voiding before completion."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.updateEnvelope
+    object: Envelope
+    action: updateEnvelope
+    description: "Supports sending draft envelopes, voiding envelopes, modifying email content, purge operations, and workflow management."
+    reference: https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/update/
+    category: Agreements
+    risk: critical
+    business_impact: "Multi-mode envelope mutation that includes voiding an in-flight agreement and purging its documents; purge irreversibly destroys signed-agreement data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.updateEnvelopeRecipients
+    object: Recipient
+    action: updateEnvelopeRecipients
+    description: "Adds, updates, or removes recipients on an existing envelope."
+    reference: https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/enveloperecipients/update/
+    category: Agreements
+    risk: medium
+    business_impact: "Adds, updates, or removes signers on a binding agreement; unilateral recipient removal or change bypasses the intended approval chain."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.sendReminder
+    object: Envelope
+    action: sendReminder
+    description: "Sends reminder notifications to an envelope's pending recipients."
+    reference: https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/update/
+    category: Agreements
+    risk: low
+    business_impact: "Emails signing reminders to an envelope's pending recipients; exposes recipient email addresses but makes no state change to the agreement."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.getEnvelopes
+    object: Envelope
+    action: getEnvelopes
+    description: "Bulk-reads agreements account-wide using filters such as date, ID, or status."
+    reference: https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/liststatuschanges/
+    category: Agreements
+    risk: critical
+    business_impact: "Bulk-reads agreements across the account; a single call can surface signer PII and contract metadata at scale, enabling mass contract exfiltration."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.getEnvelope
+    object: Envelope
+    action: getEnvelope
+    description: "Reads the status and metadata of a single envelope, including signer identities."
+    reference: https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/get/
+    category: Agreements
+    risk: medium
+    business_impact: "Reads a single agreement's status and metadata, which can include signer identities and contract context."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.listRecipients
+    object: Recipient
+    action: listRecipients
+    description: "Reads recipient status and entered field (tab) values for a specific envelope."
+    reference: https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/enveloperecipients/list/
+    category: Agreements
+    risk: medium
+    business_impact: "Reads recipient identities and entered field (tab) values for an envelope, exposing signer PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.getAllAgreements
+    object: Agreement
+    action: getAllAgreements
+    description: "Bulk-reads every agreement in the account (Navigator / Agreement Manager)."
+    reference: https://developers.docusign.com/docs/agreement-manager-api/reference/agreementmanager/agreements/getagreementslist/
+    category: Agreements
+    risk: critical
+    business_impact: "Bulk-reads every agreement in the account; a single call can return contract content and party PII across the entire organization, a large-scale exfiltration surface."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.getAgreementDetails
+    object: Agreement
+    action: getAgreementDetails
+    description: "Reads the full content and extracted terms of one agreement (Navigator)."
+    reference: https://developers.docusign.com/docs/agreement-manager-api/reference/agreementmanager/agreements/getagreement/
+    category: Agreements
+    risk: medium
+    business_impact: "Reads the full content and extracted terms of one agreement, which routinely includes party PII and confidential contract data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Templates ----------
+  - id: docusign.getTemplates
+    object: Template
+    action: getTemplates
+    description: "Reads the account's agreement templates and their field layouts."
+    reference: https://developers.docusign.com/docs/esign-rest-api/reference/templates/templates/list/
+    category: Templates
+    risk: low
+    business_impact: "Reads the account's agreement templates and their structure; templates define reusable document and field layouts."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.assessTemplatesForDV
+    object: Template
+    action: assessTemplatesForDV
+    description: "Analyzes account templates for Data Verification fit; read-only assessment."
+    category: Templates
+    risk: low
+    business_impact: "Reads and analyzes account templates to assess Data Verification suitability; read-only assessment with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.planTemplateDataVerification
+    object: Template
+    action: planTemplateDataVerification
+    description: "Plans Data Verification field mappings for templates; read-only planning."
+    category: Templates
+    risk: low
+    business_impact: "Produces a Data Verification field-mapping plan for templates; read-only planning with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.cloneDVEnabledTemplates
+    object: Template
+    action: cloneDVEnabledTemplates
+    description: "Clones existing templates into Data Verification-enabled copies while preserving the originals."
+    category: Templates
+    risk: medium
+    business_impact: "Creates Data Verification-enabled copies of templates; additive change that preserves the originals."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Workflows ----------
+  - id: docusign.triggerWorkflow
+    object: Workflow
+    action: triggerWorkflow
+    description: "Starts a new Workflow Builder (Maestro) workflow instance."
+    reference: https://developers.docusign.com/docs/workflow-builder-api/reference/workflowbuilder/workflows/triggerworkflow/
+    category: Workflows
+    risk: medium
+    business_impact: "Launches an automated agreement workflow that can generate and dispatch binding documents to recipients without further review."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.cancelWorkflowInstance
+    object: Workflow
+    action: cancelWorkflowInstance
+    description: "Cancels a running workflow instance."
+    reference: https://developers.docusign.com/docs/workflow-builder-api/reference/workflowbuilder/workflowinstancemanagement/cancelworkflowinstance/
+    category: Workflows
+    risk: medium
+    business_impact: "Hard-stops a running agreement workflow, terminating pending automated signature or routing steps; the instance is not resumable."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.pauseNewWorkflowInstances
+    object: Workflow
+    action: pauseNewWorkflowInstances
+    description: "Pauses new instances from being created for a workflow."
+    reference: https://developers.docusign.com/docs/workflow-builder-api/reference/workflowbuilder/workflows/pausenewworkflowinstances/
+    category: Workflows
+    risk: medium
+    business_impact: "Blocks a workflow from spawning new instances; reversible operational change that can stall automated agreement processing."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.resumeWorkflow
+    object: Workflow
+    action: resumeWorkflow
+    description: "Resumes a paused workflow to allow new instances."
+    reference: https://developers.docusign.com/docs/workflow-builder-api/reference/workflowbuilder/workflows/resumepausedworkflow/
+    category: Workflows
+    risk: low
+    business_impact: "Re-enables a paused workflow so it can resume creating instances; reversible operational change."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.getWorkflowInstance
+    object: Workflow
+    action: getWorkflowInstance
+    description: "Reads the state and step history of one workflow instance."
+    reference: https://developers.docusign.com/docs/workflow-builder-api/reference/workflowbuilder/workflowinstancemanagement/getworkflowinstance/
+    category: Workflows
+    risk: low
+    business_impact: "Reads the state and step history of one workflow instance; may surface routing and recipient context."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.getWorkflowInstancesList
+    object: Workflow
+    action: getWorkflowInstancesList
+    description: "Lists all instances of a workflow with their states."
+    reference: https://developers.docusign.com/docs/workflow-builder-api/reference/workflowbuilder/workflowinstancemanagement/getworkflowinstanceslist/
+    category: Workflows
+    risk: low
+    business_impact: "Lists all instances of a workflow with their states; may surface recipient and routing context across many agreements."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.getWorkflowsList
+    object: Workflow
+    action: getWorkflowsList
+    description: "Reads the account's configured Maestro workflow definitions."
+    reference: https://developers.docusign.com/docs/workflow-builder-api/reference/workflowbuilder/workflows/getworkflowslist/
+    category: Workflows
+    risk: low
+    business_impact: "Reads the account's configured workflow definitions; reveals automation structure but no recipient data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.getWorkflowTriggerRequirements
+    object: Workflow
+    action: getWorkflowTriggerRequirements
+    description: "Reads the inputs needed to start a workflow; call before triggerWorkflow."
+    reference: https://developers.docusign.com/docs/workflow-builder-api/reference/workflowbuilder/workflows/getworkflowtriggerrequirements/
+    category: Workflows
+    risk: low
+    business_impact: "Reads the input requirements needed to start a workflow; configuration metadata with no recipient data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Account & Configuration ----------
+  - id: docusign.getAccount
+    object: Account
+    action: getAccount
+    description: "Reads account-level settings and metadata."
+    reference: https://developers.docusign.com/docs/esign-rest-api/reference/accounts/accounts/get/
+    category: Configuration
+    risk: low
+    business_impact: "Reads account-level settings and metadata; configuration data with no individual PII."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.getBrand
+    object: Brand
+    action: getBrand
+    description: "Reads one account brand profile; branding configuration."
+    category: Configuration
+    risk: low
+    business_impact: "Reads a single account brand profile; branding configuration with no individual PII."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.getBrands
+    object: Brand
+    action: getBrands
+    description: "Reads the account's brand profiles; branding configuration."
+    category: Configuration
+    risk: low
+    business_impact: "Reads the account's brand profiles; branding configuration with no individual PII."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.getBillingPlan
+    object: BillingPlan
+    action: getBillingPlan
+    description: "Reads the account's billing plan; commercial account metadata."
+    category: Configuration
+    risk: low
+    business_impact: "Reads the account's own billing plan; commercial subscription metadata with no individual PII."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.listBillingPlans
+    object: BillingPlan
+    action: listBillingPlans
+    description: "Lists available billing plans; commercial metadata."
+    category: Configuration
+    risk: low
+    business_impact: "Lists the available billing plans; commercial catalog metadata with no individual PII."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.getTabGroups
+    object: TabGroup
+    action: getTabGroups
+    description: "Reads Connected Fields tab groups; field configuration metadata."
+    category: Configuration
+    risk: low
+    business_impact: "Reads Connected Fields tab groups; field configuration metadata with no individual PII."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.discoverDVApps
+    object: DataVerificationApp
+    action: discoverDVApps
+    description: "Discovers available Data Verification apps; read-only discovery."
+    category: Configuration
+    risk: low
+    business_impact: "Discovers the Data Verification apps available to the account; read-only discovery with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.installDVApps
+    object: DataVerificationApp
+    action: installDVApps
+    description: "Installs selected Data Verification applications into the account."
+    category: Configuration
+    risk: medium
+    business_impact: "Installs selected Data Verification applications into the account; an account-level configuration change."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Developer Assistance ----------
+  - id: docusign.searchDocusignDocs
+    object: Documentation
+    action: searchDocusignDocs
+    description: "Searches and reasons over public DocuSign Developer Center documentation."
+    category: Developer Assistance
+    risk: low
+    business_impact: "Searches public DocuSign developer documentation; no access to account data or state changes."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: docusign.suggestBestPractices
+    object: Documentation
+    action: suggestBestPractices
+    description: "Provides advisory upgrade and best-practice recommendations over integration patterns."
+    category: Developer Assistance
+    risk: low
+    business_impact: "Provides advisory best-practice recommendations over integration patterns; no account access or state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

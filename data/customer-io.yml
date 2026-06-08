@@ -1,0 +1,106 @@
+schema_version: "1.1"
+platform: customer-io
+display_name: Customer.io
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.customer.io/ai/mcp/get-started/
+actions:
+  # ---------- Data Access ----------
+  - id: customer-io.cio_delete_api
+    object: "*"
+    action: cio_delete_api
+    description: "Makes authenticated DELETE requests. Use for removing resources."
+    category: Data Access
+    risk: critical
+    business_impact: "Generic DELETE tool over the entire Journeys UI and CDP Data Pipelines API; a single call can irreversibly destroy customer profiles, segments, campaigns, or workspace data with no verified soft-delete recovery."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: customer-io.cio_read_api
+    object: "*"
+    action: cio_read_api
+    description: "Makes authenticated GET requests. Use for listing, reading, and inspecting resources."
+    category: Data Access
+    risk: high
+    business_impact: "Generic GET tool over the entire Journeys UI and CDP Data Pipelines API; enables bulk extraction of customer profiles, attributes, and behavioral PII across the workspace."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: customer-io.cio_write_api
+    object: "*"
+    action: cio_write_api
+    description: "Makes authenticated POST, PUT, and PATCH requests. Use for creating and editing resources."
+    category: Data Access
+    risk: high
+    business_impact: "Generic POST/PUT/PATCH tool over the entire Journeys UI and CDP Data Pipelines API; a single call can edit customer profiles or trigger broadcasts, newsletters, and campaign sends to real customers (messaging-consent exposure under TCPA/CAN-SPAM is the auditor's concern here)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: customer-io.cio_auth_status
+    object: Token
+    action: cio_auth_status
+    description: "Shows the current authentication state, including which workspaces the token can access."
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads the current authentication state and the set of workspaces the token can reach; access-control read with no customer-record exposure."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Configuration ----------
+  - id: customer-io.cio_prime
+    object: Reference
+    action: cio_prime
+    description: "Loads the AI-ready reference for the Customer.io API."
+    category: Configuration
+    risk: low
+    business_impact: "Loads the AI-ready API reference into context; static documentation metadata only, no customer or business data accessed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: customer-io.cio_schema
+    object: Schema
+    action: cio_schema
+    description: "Discovers API endpoints—list resources, find endpoints, and inspect parameters."
+    category: Configuration
+    risk: low
+    business_impact: "Discovers available API endpoints, resources, and parameters; returns schema metadata, not record data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: customer-io.cio_skills_list
+    object: Skill
+    action: cio_skills_list
+    description: "Lists available agent skills—task-specific instructions for multi-step operations."
+    category: Operations
+    risk: low
+    business_impact: "Lists Customer.io-maintained agent skills (task instructions); returns reference metadata only, no customer data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: customer-io.cio_skills_read
+    object: Skill
+    action: cio_skills_read
+    description: "Reads the full content of a specific skill so the AI tool can follow step-by-step workflows."
+    category: Operations
+    risk: low
+    business_impact: "Reads the full text of a specific agent skill; returns Customer.io-authored instructions, no customer or business data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

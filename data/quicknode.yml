@@ -1,0 +1,239 @@
+schema_version: "1.1"
+platform: quicknode
+display_name: QuickNode
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+actions:
+  # ---------- Platform & DevOps ----------
+  - id: quicknode.delete-endpoint
+    object: Endpoint
+    action: delete-endpoint
+    description: "Delete an endpoint."
+    category: Platform & DevOps
+    risk: critical
+    business_impact: "Permanently destroys a production blockchain RPC endpoint; any application depending on it loses connectivity immediately and the endpoint URL cannot be recovered."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quicknode.create-endpoint
+    object: Endpoint
+    action: create-endpoint
+    description: "Create a new endpoint on a specified chain and network."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Provisions a new billable RPC endpoint on a chain/network; live and reachable, but reversible by deletion."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quicknode.list-endpoints
+    object: Endpoint
+    action: list-endpoints
+    description: "List all endpoints on your account."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Enumerates every endpoint on the account, exposing the full inventory of provisioned RPC infrastructure."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quicknode.get-endpoint
+    object: Endpoint
+    action: get-endpoint
+    description: "Get details for a specific endpoint."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns configuration details for a single endpoint, including its connection URL and settings."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quicknode.get-endpoint-metrics
+    object: Endpoint
+    action: get-endpoint-metrics
+    description: "Retrieve performance metrics for an endpoint."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Reads performance/throughput metrics for an endpoint; observational and non-mutating."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quicknode.list-chains
+    object: Chain
+    action: list-chains
+    description: "List all supported chains and their available networks."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns the catalog of supported chains and networks; public reference data with no account-specific exposure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: quicknode.create-security-rule
+    object: SecurityRule
+    action: create-security-rule
+    description: "Create a security rule for an endpoint (IP allowlists, JWT validation, referrer restrictions, domain masks, authentication tokens)."
+    category: Identity & Access
+    risk: high
+    business_impact: "Adds an access-control rule (IP allowlist, JWT, referrer, domain mask, or auth token) that governs who may reach the endpoint; a misconfiguration can lock out legitimate traffic or weaken endpoint authentication."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quicknode.delete-security-rule
+    object: SecurityRule
+    action: delete-security-rule
+    description: "Remove a security rule from an endpoint."
+    category: Identity & Access
+    risk: high
+    business_impact: "Removes an access-control rule from an endpoint; deleting an allowlist or auth rule can expose the endpoint to unauthorized RPC traffic."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quicknode.update-endpoint-security-options
+    object: Endpoint
+    action: update-endpoint-security-options
+    description: "Enable or disable security features (CORS, HSTS, IP filtering, etc.)."
+    category: Identity & Access
+    risk: high
+    business_impact: "Toggles endpoint-level security features such as CORS, HSTS, and IP filtering; disabling them weakens the endpoint's protective controls."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quicknode.list-endpoint-security
+    object: Endpoint
+    action: list-endpoint-security
+    description: "View current security settings and rules."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Reveals the full set of active security settings and access-control rules for an endpoint, exposing its protective posture."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: quicknode.update-endpoint-rate-limits
+    object: Endpoint
+    action: update-endpoint-rate-limits
+    description: "Set overall rate limits (RPS, RPM, RPD) for an endpoint."
+    category: Operations
+    risk: medium
+    business_impact: "Changes the endpoint-wide request rate limits, directly affecting availability and abuse protection for all consuming applications."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quicknode.create-endpoint-method-rate-limit
+    object: RateLimit
+    action: create-endpoint-method-rate-limit
+    description: "Add a rate limit for a specific RPC method."
+    category: Operations
+    risk: medium
+    business_impact: "Adds a per-method rate limit; constrains throughput for a specific RPC method and is reversible by deletion."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quicknode.update-endpoint-method-rate-limit
+    object: RateLimit
+    action: update-endpoint-method-rate-limit
+    description: "Update an existing method rate limit."
+    category: Operations
+    risk: medium
+    business_impact: "Modifies an existing per-method rate limit, altering availability characteristics for that RPC method."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quicknode.delete-endpoint-method-rate-limit
+    object: RateLimit
+    action: delete-endpoint-method-rate-limit
+    description: "Remove a method rate limit."
+    category: Operations
+    risk: medium
+    business_impact: "Removes a per-method rate limit, lifting a throughput constraint and potentially exposing the endpoint to method-level abuse."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: quicknode.list-endpoint-method-rate-limits
+    object: RateLimit
+    action: list-endpoint-method-rate-limits
+    description: "List method-specific rate limits."
+    category: Operations
+    risk: low
+    business_impact: "Reads the configured per-method rate limits for an endpoint; observational and non-mutating."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: quicknode.list-endpoint-logs
+    object: Log
+    action: list-endpoint-logs
+    description: "Fetch recent logs for an endpoint."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns recent request logs for an endpoint, which may include client IP addresses and request metadata."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: quicknode.get-endpoint-log-details
+    object: Log
+    action: get-endpoint-log-details
+    description: "Get detailed information for a specific log entry."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the full detail of a single request log entry, which may include a client IP address and request payload metadata."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: quicknode.get-rpc-usage
+    object: Usage
+    action: get-rpc-usage
+    description: "Get RPC usage with optional breakdown by endpoint, method, or chain."
+    category: Data Access
+    risk: low
+    business_impact: "Reads aggregate RPC usage statistics broken down by endpoint, method, or chain; aggregate operational data with no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Financial ----------
+  - id: quicknode.get-billing
+    object: Billing
+    action: get-billing
+    description: "View billing invoices or payment history."
+    category: Financial
+    risk: medium
+    business_impact: "Reads the account's billing invoices and payment history, exposing financial records and potentially partial payment-instrument details."
+    compliance: [PCI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

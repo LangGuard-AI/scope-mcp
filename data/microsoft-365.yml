@@ -1,0 +1,91 @@
+schema_version: "1.1"
+platform: microsoft-365
+display_name: Microsoft 365
+source: langguard-editorial
+updated: "2026-06"
+reference: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+actions:
+  # ---------- Data Access ----------
+  - id: microsoft-365.outlook_email_search
+    object: Email
+    action: outlook_email_search
+    description: "Searches email with sender/date filters, including archived messages the user can access."
+    category: Data Access
+    risk: high
+    business_impact: "Reads private email correspondence the user has access to, including archived threads; exposes the content of personal communications that may contain PII or regulated data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, HIPAA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: microsoft-365.chat_message_search
+    object: ChatMessage
+    action: chat_message_search
+    description: "Searches Teams chat messages across direct messages and channel conversations."
+    category: Data Access
+    risk: high
+    business_impact: "Reads private Teams direct messages and channel conversations the user has access to; exposes personal communications that may contain PII or regulated data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, HIPAA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: microsoft-365.read_resource
+    object: "*"
+    action: read_resource
+    description: "Reads files, emails, or chat content by URI, including SharePoint/OneDrive documents and meeting transcripts."
+    category: Data Access
+    risk: high
+    business_impact: "Returns the full content of a referenced file, email, chat thread, or meeting transcript; can expose confidential documents and PII-bearing communications in a single call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, HIPAA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: microsoft-365.sharepoint_search
+    object: Document
+    action: sharepoint_search
+    description: "Searches SharePoint and OneDrive documents and pages within the user's existing permissions."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns ranked SharePoint and OneDrive documents and pages; can surface confidential or PII-bearing material across the tenant within the user's permission scope."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: microsoft-365.sharepoint_folder_search
+    object: Folder
+    action: sharepoint_folder_search
+    description: "Finds SharePoint folders by name."
+    category: Data Access
+    risk: low
+    business_impact: "Returns SharePoint folder names and locations matching a query; surfaces structural metadata rather than document content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: microsoft-365.outlook_calendar_search
+    object: CalendarEvent
+    action: outlook_calendar_search
+    description: "Searches Outlook calendar events."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns calendar events including subjects, attendees, and times; exposes personal scheduling data and meeting participants."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: microsoft-365.find_meeting_availability
+    object: CalendarEvent
+    action: find_meeting_availability
+    description: "Finds available meeting times across calendars."
+    category: Data Access
+    risk: low
+    business_impact: "Returns free/busy availability windows for the queried calendars; surfaces scheduling metadata rather than event content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

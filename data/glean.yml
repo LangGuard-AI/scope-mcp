@@ -1,0 +1,92 @@
+schema_version: "1.1"
+platform: glean
+display_name: Glean
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.glean.com/administration/platform/mcp/about
+# NOTE: The claude.com/connectors/glean connector is Glean's REMOTE hosted MCP
+# server (registry name com.glean/mcp), endpoint https://{baseUrl}/mcp/{server-name}.
+# That endpoint is OAuth-gated and tenant-specific, so live tools/list introspection
+# was not possible without a real tenant token, and Glean does NOT publish the remote
+# server's source or a verbatim tool-id list anywhere reachable. The remote server's
+# built-in Glean platform tools are documented by display-name capability label only
+# (Search, Chat, Read Document, Code Search, People — per the MCP docs "available tools"
+# section). Per the curator spec these are therefore captured as id_form: capability
+# entries (verbatim label in description, slugified id, confidence <= medium). The
+# separate open-source LOCAL server (gleanwork/mcp-server, npm @gleanwork/local-mcp-server)
+# is a DIFFERENT, narrower implementation whose verbatim ids (company_search,
+# people_profile_search, chat, read_documents) deliberately are NOT reused here, since
+# they are not verbatim for the remote connector this file describes.
+# Tenant-configurable surfaces (Glean Agents surfaced as tools, and external/data-source
+# tools proxied through the Glean MCP Gateway) are not fixed built-ins and are not enumerated.
+actions:
+  # ---------- Data Access ----------
+  - id: glean.search
+    object: "*"
+    action: search
+    id_form: capability
+    description: "Search"
+    reference: https://docs.glean.com/administration/platform/mcp/about#available-tools
+    category: Data Access
+    risk: medium
+    business_impact: "Runs a permission-aware search across every connected enterprise source (documents, wikis, code, email, tickets) and can surface confidential or PII-bearing material from many systems in a single call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: glean.chat
+    object: "*"
+    action: chat
+    id_form: capability
+    description: "Chat"
+    reference: https://docs.glean.com/administration/platform/mcp/about#available-tools
+    category: Data Access
+    risk: medium
+    business_impact: "Returns RAG answers synthesized from the permission-aware enterprise corpus; can expose confidential or PII-bearing content drawn from multiple connected sources."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: glean.read_document
+    object: Document
+    action: read_document
+    id_form: capability
+    description: "Read Document"
+    reference: https://docs.glean.com/administration/platform/mcp/about#available-tools
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves the full content of a specific document by ID or URL; can expose confidential or PII-bearing material in that document."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: glean.code_search
+    object: Code
+    action: code_search
+    id_form: capability
+    description: "Code Search"
+    reference: https://docs.glean.com/administration/platform/mcp/about#available-tools
+    category: Data Access
+    risk: medium
+    business_impact: "Searches across connected code repositories; can surface proprietary source code, intellectual property, or secrets embedded in code."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: glean.people
+    object: Person
+    action: people
+    id_form: capability
+    description: "People"
+    reference: https://docs.glean.com/administration/platform/mcp/about#available-tools
+    category: Data Access
+    risk: medium
+    business_impact: "Returns employee profiles and org-structure data (names, departments, contact details, expertise); exposes employee personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

@@ -1,0 +1,115 @@
+schema_version: "1.1"
+platform: biorxiv
+display_name: bioRxiv
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/resources/tutorials/using-the-biorxiv-and-medrxiv-connector-in-claude
+actions:
+  # ---------- Data Access ----------
+  - id: biorxiv.search_preprints
+    object: Preprint
+    action: search_preprints
+    description: "Discover preprints by date range, subject category, or recent submissions."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a list of public bioRxiv/medRxiv preprints matching the supplied filters; read-only against already-published research."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: biorxiv.get_preprint
+    object: Preprint
+    action: get_preprint
+    description: "Retrieve comprehensive metadata for specific preprints, including abstracts, author contact information, funding details, and publication status."
+    category: Data Access
+    risk: low
+    business_impact: "Returns full metadata for a single preprint including author contact details; the data is public-by-design academic metadata, but it does include identifiable personal data of authors."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: biorxiv.get_categories
+    object: Category
+    action: get_categories
+    description: "List all bioRxiv subject categories for filtering searches across disciplines."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the static list of bioRxiv subject categories; reference data with no sensitive content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: biorxiv.search_published_articles
+    object: Publication
+    action: search_published_articles
+    description: "Track preprints that transitioned to peer-reviewed publication, with both preprint and published DOIs."
+    category: Data Access
+    risk: low
+    business_impact: "Returns public preprint-to-journal transition records; read-only against published bibliographic data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: biorxiv.search_biorxiv_publications
+    object: Publication
+    action: search_biorxiv_publications
+    description: "Provide simplified tracking of bioRxiv-specific publication outcomes."
+    category: Data Access
+    risk: low
+    business_impact: "Returns public bioRxiv publication-outcome records; read-only against published bibliographic data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: biorxiv.search_publisher_articles
+    object: Publication
+    action: search_publisher_articles
+    description: "Filter published preprints by specific journals or publishers using DOI prefixes."
+    category: Data Access
+    risk: low
+    business_impact: "Returns public published-article records filtered by publisher DOI prefix; read-only against published bibliographic data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: biorxiv.search_by_funder
+    object: Publication
+    action: search_by_funder
+    description: "Discover research funded by specific organizations using ROR IDs."
+    category: Data Access
+    risk: low
+    business_impact: "Returns public preprints associated with a given funder; read-only against published funding metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: biorxiv.get_content_statistics
+    object: Statistic
+    action: get_content_statistics
+    description: "Provide platform-wide metrics on submission volumes and growth."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregate platform submission statistics; non-sensitive reference metrics."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: biorxiv.get_usage_statistics
+    object: Statistic
+    action: get_usage_statistics
+    description: "Track abstract views, full-text views, and PDF downloads over time."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregate readership statistics (views and downloads); non-sensitive aggregate metrics."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

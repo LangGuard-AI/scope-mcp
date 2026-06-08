@@ -1,0 +1,31 @@
+schema_version: "1.1"
+platform: fever-event-discovery
+display_name: Fever Event Discovery
+source: langguard-editorial
+updated: "2026-06"
+reference: https://developer.feverup.com/
+actions:
+  # ---------- Data Access ----------
+  - id: fever-event-discovery.search_events
+    object: Event
+    action: search_events
+    description: "Search for events, activities, and experiences available in a specific city through Fever; filter by date range, sort by popularity or price, and paginate through results."
+    category: Data Access
+    risk: low
+    business_impact: "Reads Fever's public catalog of live-entertainment events; read-only, non-sensitive, and returns no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: fever-event-discovery.search_cities
+    object: City
+    action: search_cities
+    description: "Find cities where Fever operates and offers events/activities; useful for discovering available markets and looking up city codes for use with search_events."
+    category: Data Access
+    risk: low
+    business_impact: "Reads Fever's public list of operating cities and market codes; read-only and returns no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

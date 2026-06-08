@@ -1,0 +1,127 @@
+schema_version: "1.1"
+platform: zocks
+display_name: Zocks
+source: langguard-editorial
+updated: "2026-06"
+reference: https://help.zocks.io/en/articles/14075856-connect-to-the-zocks-mcp-server
+# NOTE: Zocks ships a hosted, OAuth-gated MCP server (https://mcp.zocks.io/v1/mcp)
+# that publishes NO verbatim tool ids — tools/list returns 401 without a user OAuth
+# token, and no anonymous tools catalog exists (all /tools paths 404). The vendor
+# documents only plain-language capability labels in its help center, so every
+# entry below uses id_form: capability with the verbatim label in `description`
+# and confidence capped at medium (intent-level, not identifier-level, matches).
+# Corroborating evidence — the server's OAuth scopes_supported (from
+# /.well-known/oauth-authorization-server) are ALL read-only: ext_user:list/read,
+# user:list/read, room_session:list/read, airesult:list/read,
+# ai_agent_result:list/read, ai_agent:read, insights:read. There are no
+# write/create/update/delete/destructive scopes — the entire surface is read-only,
+# so risk tops out at `high` (bulk/full-history client-data reads) and the
+# write/destructive trim priority does not apply. Zocks serves financial advisors
+# (RIAs are GLBA financial institutions), so client tax/estate/retirement/asset
+# data is non-public personal information — GLBA is tagged on every client-data read.
+actions:
+  # ---------- Client Intelligence ----------
+  - id: zocks.surface_client_motivators
+    object: Client
+    action: surface_client_motivators
+    id_form: capability
+    description: "Surface a client's motivators, concerns, and goals across all past meetings"
+    category: Data Access
+    risk: high
+    business_impact: "Reads a client's full cross-meeting history to surface motivators, concerns, and goals; aggregates non-public personal information across every prior interaction."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zocks.retrieve_household_discussions
+    object: Household
+    action: retrieve_household_discussions
+    id_form: capability
+    description: "Retrieve everything discussed with a household on any topic over a given time period"
+    category: Data Access
+    risk: high
+    business_impact: "Bulk-retrieves every discussion with a household across a time window; broad extraction of client financial and personal data from meeting transcripts."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zocks.scan_transcripts_for_compliance
+    object: Transcript
+    action: scan_transcripts_for_compliance
+    id_form: capability
+    description: "Scan meeting transcripts for compliance and suitability concerns"
+    category: Data Access
+    risk: high
+    business_impact: "Scans full meeting transcripts for compliance and suitability concerns; reads sensitive client financial conversations in bulk."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zocks.identify_planning_gaps
+    object: Household
+    action: identify_planning_gaps
+    id_form: capability
+    description: "Identify financial planning gaps for any household"
+    category: Data Access
+    risk: medium
+    business_impact: "Reads a household's meeting history to flag financial planning gaps; touches client financial data but is read-only and advisor-facing."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zocks.track_client_sentiment
+    object: Client
+    action: track_client_sentiment
+    id_form: capability
+    description: "Track client sentiment and engagement trends over time"
+    category: Data Access
+    risk: medium
+    business_impact: "Reads client interaction history to report sentiment and engagement trends; derives personal-data signals but does not modify records."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zocks.identify_referral_opportunities
+    object: Client
+    action: identify_referral_opportunities
+    id_form: capability
+    description: "Identify referral opportunities hidden in client conversations"
+    category: Data Access
+    risk: medium
+    business_impact: "Reads client conversation history to surface referral opportunities; exposes personal relationships and contacts mentioned in meetings."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Meeting Insights ----------
+  - id: zocks.score_advisor_meetings
+    object: Meeting
+    action: score_advisor_meetings
+    id_form: capability
+    description: "Score and evaluate your most recent advisor meetings"
+    category: Operations
+    risk: medium
+    business_impact: "Reads recent advisor meetings and produces scores and evaluations; advisor-facing coaching output, not an automated decision about the client."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zocks.build_discovery_talk_tracks
+    object: Meeting
+    action: build_discovery_talk_tracks
+    id_form: capability
+    description: "Build discovery talk tracks and coaching tools from real advisor meetings"
+    category: Operations
+    risk: medium
+    business_impact: "Reads real advisor meetings to generate discovery talk tracks and coaching materials; derives content from client conversation data."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

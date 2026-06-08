@@ -1,0 +1,114 @@
+schema_version: "1.1"
+platform: quo
+display_name: Quo
+source: langguard-editorial
+updated: "2026-06"
+reference: https://support.quo.com/core-concepts/integrations/mcp
+# CAPABILITY-FORM FILE. Quo's hosted MCP server (https://mcp.quo.com/mcp,
+# https://mcp.quo.com/sse) is fully OAuth-gated: the /mcp path returns HTTP 401
+# with `WWW-Authenticate: Bearer ... scope="read:conversations write:contacts
+# read:account"` (reproduced live, plus the published scopes via
+# /.well-known/oauth-protected-resource). Anonymous catalog probes are exhausted:
+# /tools, /tools/list, and /.well-known/mcp.json all 404/401, so no verbatim
+# tools/list is reachable. No vendor source publishes verbatim tool ids; the only
+# authoritative public surface is the "What you can do" accordion on the vendor's
+# MCP docs (support.quo.com/core-concepts/integrations/mcp and its /claude
+# sub-page), which lists EXACTLY SIX plain-language capability labels. Each action
+# below is one of those six labels verbatim in `description`, with id_form:
+# capability, an intent-level snake_case id slug, and confidence capped at medium.
+# A combined-surface label is collapsed to its primary verb and the merged action
+# inherits the UNION of the sub-surfaces it covers (e.g. "Look up, add, or update
+# contacts" subsumes the bulk contact read "List all my contacts", so it is rated
+# high with the security-event tags, not a write-only single-record entry).
+# Earlier drafts that split these six labels into ~11 actions (list_users,
+# list_inboxes, list_contacts, get_contact_details, add_contact_note, separate
+# create/update) were fabrications — none is a published label — and have been
+# dropped. Quo (formerly OpenPhone) is a business phone system: calls, SMS, and
+# contacts. Message/call content and contact records are personal data / private
+# communications, so privacy regimes apply broadly. HIPAA is NOT tagged: the
+# vendor docs do not scope this MCP surface to PHI/covered-entity workflows, and
+# conservative non-tagging is the defensible posture for the MCP-specific context.
+# send_message carries an implicit TCPA/CAN-SPAM messaging-consent concern that is
+# non-canonical (outside the 25-code allowlist) and is captured in business_impact
+# prose only, never in compliance.
+actions:
+  # ---------- Messaging ----------
+  - id: quo.send_message
+    object: Message
+    action: send_message
+    id_form: capability
+    description: "Text one person or your whole team"
+    category: Messaging
+    risk: medium
+    business_impact: "Sends an SMS/text from the Quo number to one contact or broadcasts it to multiple recipients; outbound customer communication that cannot be unsent and carries TCPA/CAN-SPAM consent obligations."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: quo.read_messages
+    object: Message
+    action: read_messages
+    id_form: capability
+    description: "Check messages and inboxes"
+    category: Messaging
+    risk: high
+    business_impact: "Reads private SMS/text conversation history across inboxes (and lists available inboxes); exposes customer communications and any personal data they contain."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: quo.summarize_conversations
+    object: Conversation
+    action: summarize_conversations
+    id_form: capability
+    description: "Summarize conversations"
+    category: Messaging
+    risk: high
+    business_impact: "Reads and aggregates customer conversation content across calls and texts from any inbox to produce a summary; bulk access to private communications and their personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Calls ----------
+  - id: quo.get_call_transcripts
+    object: CallTranscript
+    action: get_call_transcripts
+    id_form: capability
+    description: "Get call transcripts"
+    category: Calls
+    risk: high
+    business_impact: "Retrieves call history and verbatim voicemail/call transcripts from the Quo number; exposes private spoken communications and any personal data disclosed on the call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: quo.fetch_missed_calls
+    object: Call
+    action: fetch_missed_calls
+    id_form: capability
+    description: "Fetch missed calls"
+    category: Calls
+    risk: high
+    business_impact: "Returns missed-call records and their voicemail transcripts; exposes caller phone numbers and the private spoken content of voicemails as personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Contacts ----------
+  - id: quo.manage_contacts
+    object: Contact
+    action: manage_contacts
+    id_form: capability
+    description: "Look up, add, or update contacts"
+    category: Contacts
+    risk: high
+    business_impact: "Searches the full contact directory, reads a single contact's details, and creates or updates contact records including names and phone numbers; combines a bulk personal-data read of the customer base with single-record personal-data writes."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

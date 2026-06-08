@@ -1,0 +1,599 @@
+schema_version: "1.1"
+platform: cloudinary
+display_name: Cloudinary
+source: langguard-editorial
+updated: "2026-06"
+reference: https://github.com/cloudinary/mcp-servers
+# Cloudinary distributes four remote MCP servers whose tools are all surfaced
+# under this single platform: Asset Management
+# (https://asset-management.mcp.cloudinary.com/mcp), Environment Config
+# (https://environment-config.mcp.cloudinary.com/mcp), Structured Metadata
+# (https://structured-metadata.mcp.cloudinary.com/mcp), and Analysis
+# (https://analysis.mcp.cloudinary.com/sse). Tool names are verbatim from the
+# vendor server source: the Speakeasy SDK repos cloudinary/asset-management-js,
+# cloudinary/environment-config-js, cloudinary/structured-metadata-js, and
+# cloudinary/analysis-js (src/mcp-server/tools/*.ts `name:` registrations).
+# The MediaFlows server
+# publishes no verbatim tool ids and is not represented here.
+actions:
+  # ---------- Asset Lifecycle ----------
+  - id: cloudinary.upload-asset
+    object: Asset
+    action: upload-asset
+    description: "Uploads media assets (images, videos, raw files) to your Cloudinary product environment."
+    category: Data Access
+    risk: medium
+    business_impact: "Ingests a new media asset that may depict identifiable individuals; reversible by delete but immediately delivered via CDN URL."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.asset-update
+    object: Asset
+    action: asset-update
+    description: "Updates an existing asset's metadata, tags, and other attributes using its asset ID."
+    category: Data Access
+    risk: medium
+    business_impact: "Modifies metadata and tags on a stored media asset; reversible and individually scoped."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.asset-rename
+    object: Asset
+    action: asset-rename
+    description: "Updates an existing asset's identifier (public ID) and optionally other metadata."
+    category: Data Access
+    risk: medium
+    business_impact: "Changes an asset's public ID, breaking previously published delivery URLs that referenced the old ID."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.delete-asset
+    object: Asset
+    action: delete-asset
+    description: "Delete asset by asset ID."
+    category: Data Access
+    risk: medium
+    business_impact: "Removes a single media asset; recoverable from backup where the environment has asset backup enabled."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.delete-derived-assets
+    object: DerivedAsset
+    action: delete-derived-assets
+    description: "Delete derived resources (cached transformation outputs)."
+    category: Data Access
+    risk: low
+    business_impact: "Purges cached transformation outputs; originals are untouched and derivatives regenerate on next request."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.create-asset-relations
+    object: AssetRelation
+    action: create-asset-relations
+    description: "Add related assets by asset ID."
+    category: Data Access
+    risk: low
+    business_impact: "Links one asset to related assets; metadata-only relationship that is reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.delete-asset-relations
+    object: AssetRelation
+    action: delete-asset-relations
+    description: "Delete asset relations by asset ID."
+    category: Data Access
+    risk: low
+    business_impact: "Removes a relationship link between assets; does not affect the underlying media."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Bulk Export & Backup ----------
+  - id: cloudinary.generate-archive
+    object: Asset
+    action: generate-archive
+    description: "Creates an archive (ZIP or TGZ) containing a set of assets from your product environment."
+    category: Data Access
+    risk: high
+    business_impact: "Packages a filtered set of media assets into a single downloadable archive; bulk extraction of potentially personal imagery."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.download-asset-backup
+    object: Asset
+    action: download-asset-backup
+    description: "Download a backup copy of an asset."
+    category: Data Access
+    risk: high
+    business_impact: "Retrieves a backed-up copy of a media asset, including prior versions that may have been intentionally replaced or removed."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.search-assets
+    object: Asset
+    action: search-assets
+    description: "Powerful query interface to filter and retrieve assets and their details."
+    category: Data Access
+    risk: high
+    business_impact: "Returns arbitrary slices of the asset library with full metadata; enables bulk enumeration of personal media at query scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.visual-search-assets
+    object: Asset
+    action: visual-search-assets
+    description: "Finds images in your asset library based on visual similarity or content."
+    category: Data Access
+    risk: high
+    business_impact: "Retrieves assets by visual similarity, enabling face- or content-based lookups across the media library; may function as biometric matching when applied to images of people."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.get-asset-details
+    object: Asset
+    action: get-asset-details
+    description: "Get resource by asset ID."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the full metadata and delivery URLs for a single asset that may depict an identifiable individual."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.list-tags
+    object: Tag
+    action: list-tags
+    description: "Retrieves a list of tags currently applied to assets in your Cloudinary account."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the account-wide tag vocabulary, which can reveal how personal media is categorized."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.get-usage-details
+    object: Account
+    action: get-usage-details
+    description: "Retrieves comprehensive usage metrics and account statistics."
+    category: Operations
+    risk: low
+    business_impact: "Returns account-level consumption and billing-adjacent usage metrics; no personal data of end individuals."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Folders ----------
+  - id: cloudinary.create-folder
+    object: Folder
+    action: create-folder
+    description: "Creates a new empty folder in your Cloudinary media library."
+    category: Data Access
+    risk: low
+    business_impact: "Adds an empty folder to the media library; reversible and contains no assets at creation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.move-folder
+    object: Folder
+    action: move-folder
+    description: "Renames or moves an entire folder (along with all assets it contains) to a new location."
+    category: Data Access
+    risk: medium
+    business_impact: "Relocates a whole folder and every asset within it, changing the delivery path for all contained media at once."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.delete-folder
+    object: Folder
+    action: delete-folder
+    description: "Deletes an existing folder from your media library."
+    category: Data Access
+    risk: medium
+    business_impact: "Removes a folder and its contained assets; recoverable from backup where asset backup is enabled."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.search-folders
+    object: Folder
+    action: search-folders
+    description: "Searches for folders whose attributes match a given expression."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the folder structure of the media library; organizational metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Environment Configuration ----------
+  - id: cloudinary.create-trigger
+    object: Trigger
+    action: create-trigger
+    description: "Creates a new notification trigger (webhook) by specifying an event type and a destination."
+    category: Configuration
+    risk: high
+    business_impact: "Registers a webhook destination URL that Cloudinary posts asset and event notifications to; a standing data-egress path to an external endpoint."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.update-trigger
+    object: Trigger
+    action: update-trigger
+    description: "Updates the callback URL of an existing webhook trigger."
+    category: Configuration
+    risk: high
+    business_impact: "Repoints an existing webhook's callback URL, redirecting the notification egress stream to a different external endpoint."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.delete-trigger
+    object: Trigger
+    action: delete-trigger
+    description: "Deletes a notification trigger."
+    category: Configuration
+    risk: medium
+    business_impact: "Removes a webhook notification trigger, silently stopping an event-delivery integration that downstream systems may depend on."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.list-triggers
+    object: Trigger
+    action: list-triggers
+    description: "Lists all webhook notification triggers configured for your product environment."
+    category: Configuration
+    risk: low
+    business_impact: "Returns every configured webhook trigger and its callback URL, enumerating all external data-egress destinations for the environment."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.create-upload-preset
+    object: UploadPreset
+    action: create-upload-preset
+    description: "Creates a reusable upload preset that defines default upload behavior."
+    category: Configuration
+    risk: medium
+    business_impact: "Defines a reusable upload configuration (including unsigned-upload and moderation settings) applied to future ingests."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.update-upload-preset
+    object: UploadPreset
+    action: update-upload-preset
+    description: "Updates an existing upload preset."
+    category: Configuration
+    risk: medium
+    business_impact: "Changes default upload behavior; loosening signing or moderation on a preset weakens controls on all future uploads that use it."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.delete-upload-preset
+    object: UploadPreset
+    action: delete-upload-preset
+    description: "Deletes an upload preset."
+    category: Configuration
+    risk: low
+    business_impact: "Removes an upload preset; new uploads referencing it fail until reconfigured."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.create-upload-mapping
+    object: UploadMapping
+    action: create-upload-mapping
+    description: "Creates an upload mapping (auto-upload remote fetch rule)."
+    category: Configuration
+    risk: medium
+    business_impact: "Defines an auto-upload mapping that fetches assets from a remote origin into the environment on demand."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.update-upload-mapping
+    object: UploadMapping
+    action: update-upload-mapping
+    description: "Updates an existing upload mapping."
+    category: Configuration
+    risk: medium
+    business_impact: "Changes the remote origin an auto-upload mapping pulls from, altering which external content the environment will fetch."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.delete-upload-mapping
+    object: UploadMapping
+    action: delete-upload-mapping
+    description: "Deletes an upload mapping."
+    category: Configuration
+    risk: low
+    business_impact: "Removes an auto-upload mapping; remote-fetch URLs that relied on it stop resolving."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.create-transformation
+    object: Transformation
+    action: create-transformation
+    description: "Creates a named transformation."
+    category: Configuration
+    risk: low
+    business_impact: "Defines a reusable named transformation; affects how media is rendered, not the stored originals."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.update-transformation
+    object: Transformation
+    action: update-transformation
+    description: "Updates a named transformation."
+    category: Configuration
+    risk: low
+    business_impact: "Changes a named transformation's definition, altering rendered output for every delivery URL that references it."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.delete-transformation
+    object: Transformation
+    action: delete-transformation
+    description: "Deletes a named transformation."
+    category: Configuration
+    risk: low
+    business_impact: "Removes a named transformation; delivery URLs that reference it fail to render until restored."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.create-streaming-profile
+    object: StreamingProfile
+    action: create-streaming-profile
+    description: "Creates an adaptive-bitrate streaming profile."
+    category: Configuration
+    risk: low
+    business_impact: "Defines an adaptive-streaming profile used for video delivery; configuration only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.update-streaming-profile
+    object: StreamingProfile
+    action: update-streaming-profile
+    description: "Updates a streaming profile."
+    category: Configuration
+    risk: low
+    business_impact: "Changes how videos are packaged for adaptive streaming across all deliveries using the profile."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.delete-streaming-profile
+    object: StreamingProfile
+    action: delete-streaming-profile
+    description: "Deletes a streaming profile."
+    category: Configuration
+    risk: low
+    business_impact: "Removes a streaming profile; video deliveries that reference it fall back to defaults."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Structured Metadata ----------
+  - id: cloudinary.create-metadata-field
+    object: MetadataField
+    action: create-metadata-field
+    description: "Creates a new structured metadata field in your account."
+    category: Configuration
+    risk: low
+    business_impact: "Adds a structured metadata field definition to the account schema; definition only, no asset data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.update-metadata-field
+    object: MetadataField
+    action: update-metadata-field
+    description: "Updates the configuration of an existing metadata field."
+    category: Configuration
+    risk: low
+    business_impact: "Changes a metadata field definition; can alter validation and visibility of the values stored against every asset."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.delete-metadata-field
+    object: MetadataField
+    action: delete-metadata-field
+    description: "Deletes a structured metadata field definition from your account."
+    category: Configuration
+    risk: medium
+    business_impact: "Removes a metadata field definition and the values held against it on every asset; the stored values are lost with the field."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.update-metadata-datasource-values
+    object: MetadataDatasource
+    action: update-metadata-datasource-values
+    description: "Updates the allowed values (the datasource) for a specified metadata field."
+    category: Configuration
+    risk: medium
+    business_impact: "Edits the allowed-value set of a metadata field, which may itself encode personal data depending on how the field is used."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.delete-metadata-datasource-values
+    object: MetadataDatasource
+    action: delete-metadata-datasource-values
+    description: "Removes one or more allowed values from a metadata field's datasource."
+    category: Configuration
+    risk: medium
+    business_impact: "Removes allowed values from a metadata field's datasource, which may strip metadata classifications from assets that used them."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.create-metadata-rule
+    object: MetadataRule
+    action: create-metadata-rule
+    description: "Creates a new conditional metadata rule."
+    category: Configuration
+    risk: low
+    business_impact: "Adds a conditional metadata rule that governs how field values are required or derived; schema-level configuration."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.update-metadata-rule
+    object: MetadataRule
+    action: update-metadata-rule
+    description: "Updates an existing conditional metadata rule's definition."
+    category: Configuration
+    risk: low
+    business_impact: "Changes a conditional metadata rule, altering how metadata is enforced across the asset library."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.delete-metadata-rule
+    object: MetadataRule
+    action: delete-metadata-rule
+    description: "Deletes a conditional metadata rule by its ID."
+    category: Configuration
+    risk: low
+    business_impact: "Removes a conditional metadata rule; metadata enforcement that depended on it stops applying."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- AI Content Analysis ----------
+  - id: cloudinary.analyze-ai-vision-moderation
+    object: Analysis
+    action: analyze-ai-vision-moderation
+    description: "Analyze - AI Vision Moderation; answers content-policy questions about an image."
+    category: Data Access
+    risk: medium
+    business_impact: "Runs AI moderation over an image and returns policy judgments; processes potentially personal imagery and produces content-safety inferences about it."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.analyze-human-anatomy
+    object: Analysis
+    action: analyze-human-anatomy
+    description: "Analyze - Human Anatomy; detects human body and anatomical regions in an image."
+    category: Data Access
+    risk: medium
+    business_impact: "Runs body and anatomical-region detection over an image of a person; an inference about an identifiable individual that may approach biometric processing."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.analyze-ai-vision-tagging
+    object: Analysis
+    action: analyze-ai-vision-tagging
+    description: "Analyze - AI Vision Tagging; generates descriptive tags for an image."
+    category: Data Access
+    risk: medium
+    business_impact: "Generates AI tags describing image content, including attributes of people depicted in the media."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.analyze-ai-vision-general
+    object: Analysis
+    action: analyze-ai-vision-general
+    description: "Analyze - AI Vision General; answers free-form questions about an image."
+    category: Data Access
+    risk: medium
+    business_impact: "Answers free-form questions about an image, which can extract arbitrary attributes about people or scenes depicted in personal media."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.analyze-watermark-detection
+    object: Analysis
+    action: analyze-watermark-detection
+    description: "Analyze - Watermark Detection; detects watermarks present in an image."
+    category: Data Access
+    risk: low
+    business_impact: "Detects whether an image carries a watermark; returns a technical attribute with no personal-data inference."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: cloudinary.tasks-get-status
+    object: AnalysisTask
+    action: tasks-get-status
+    description: "Get analysis task status."
+    category: Operations
+    risk: low
+    business_impact: "Returns the status of an asynchronous analysis task; control-plane read only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

@@ -1,0 +1,128 @@
+schema_version: "1.1"
+platform: dovetail
+display_name: Dovetail
+source: langguard-editorial
+updated: "2026-06"
+reference: https://developers.dovetail.com/docs/mcp
+# Provenance: the connector at claude.com/connectors/dovetail is the HOSTED Dovetail MCP
+# server (https://dovetail.com/api/mcp), classified read-only. Its canonical tool surface
+# is the vendor MCP docs at developers.dovetail.com/docs/mcp, which enumerate exactly 9
+# verbatim tool identifiers; all 9 ids below are copied from that page (corroborated by two
+# independent doc fetches; the page declares no "additional"/"coming soon"/write sections).
+# The hosted endpoint is OAuth-gated (an unauthenticated tools/list POST returns HTTP 401),
+# so live introspection was not possible — ids are NOT dual-sourced against any binary.
+# NOTE: the separate self-hosted open-source stdio binary (github.com/dovetail/dovetail-mcp
+# @ 88a7389) registers a different 8-tool set — it OMITS search_workspace and
+# get_project_highlights and ADDS list_personal_project_insights. That binary is a distinct
+# deployment, not this connector's surface; list_personal_project_insights is therefore
+# excluded as out-of-surface for the hosted connector. No write/create tools exist in either
+# source (the connector page's "spin up projects/docs" copy is read-only-classified roadmap).
+actions:
+  # ---------- Data Access ----------
+  - id: dovetail.search_workspace
+    object: Workspace
+    action: search_workspace
+    description: "Search across all content in the workspace"
+    category: Data Access
+    risk: high
+    business_impact: "Searches every project, insight, and research artifact in the workspace; surfaces participant PII and verbatim customer quotes across the entire tenant in one call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: dovetail.get_insight_content
+    object: Insight
+    action: get_insight_content
+    description: "Get insight content in markdown format"
+    category: Data Access
+    risk: high
+    business_impact: "Exports the full markdown body of a research insight; returns verbatim participant quotes and analysis containing personal data of identifiable research subjects."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: dovetail.get_data_content
+    object: Data
+    action: get_data_content
+    description: "Get data content in markdown format"
+    category: Data Access
+    risk: high
+    business_impact: "Exports the full markdown body of a raw research data point (interview transcript or note); returns participant PII and verbatim quotes, which may include health details when used for healthcare research (HIPAA context-dependent)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: dovetail.get_project_highlights
+    object: Highlight
+    action: get_project_highlights
+    description: "Get highlights for a specific project"
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the highlighted customer quotes captured for a project; each highlight contains verbatim participant statements and personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: dovetail.list_project_data
+    object: Data
+    action: list_project_data
+    description: "List data for a specific project"
+    category: Data Access
+    risk: medium
+    business_impact: "Lists every raw data entry (notes, transcripts, recording metadata) in a project; returns a collection of records containing participant personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: dovetail.get_project_data
+    object: Data
+    action: get_project_data
+    description: "Get specific project data by ID"
+    category: Data Access
+    risk: medium
+    business_impact: "Returns a single raw research data entry by ID; the record holds participant personal data and verbatim content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: dovetail.list_project_insights
+    object: Insight
+    action: list_project_insights
+    description: "List insights for a specific project"
+    category: Data Access
+    risk: medium
+    business_impact: "Lists the insights authored for a project; insight metadata and summaries can reference participant personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: dovetail.get_project_insight
+    object: Insight
+    action: get_project_insight
+    description: "Get a specific insight by ID"
+    category: Data Access
+    risk: low
+    business_impact: "Returns a single insight record by ID; reversible read of analysis content that may reference participant personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: dovetail.get_dovetail_projects
+    object: Project
+    action: get_dovetail_projects
+    description: "Get all Dovetail projects"
+    category: Data Access
+    risk: low
+    business_impact: "Lists project metadata (titles, IDs) across the workspace; low-sensitivity inventory read that does not itself return participant content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

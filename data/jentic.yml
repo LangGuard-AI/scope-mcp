@@ -1,0 +1,66 @@
+schema_version: "1.1"
+platform: jentic
+display_name: Jentic
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.jentic.com/guides/mcp/remote-mcp/
+# Jentic is a Just-In-Time-Tooling meta-connector: a single MCP server that
+# fronts 1,500+ third-party APIs and workflows. The tool surface is generic
+# (search -> load -> execute), so the `execute` tool's true blast radius is the
+# union of every downstream API it can reach. Tool names are verbatim from the
+# server source (jentic/jentic-sdks: mcp/src/mcp/tools.py, get_all_tool_definitions).
+actions:
+  # ---------- Execution ----------
+  - id: jentic.execute
+    object: "*"
+    action: execute
+    description: "Performs the chosen action for the user by invoking the selected operation or workflow across any fronted API."
+    reference: https://docs.jentic.com/guides/mcp/remote-mcp/
+    category: Platform & DevOps
+    risk: critical
+    business_impact: "Universal execution primitive — invokes an arbitrary operation or workflow across any of 1,500+ fronted APIs, so a single call can send messages, mutate CRM/financial records, delete data, move money, or exfiltrate PII depending on the chosen target; the structured compliance tags below cover only the universally-plausible privacy/security exposure, while sector regimes (PCI for payment APIs, SOX/COSO for financial-posting APIs, HIPAA for health APIs, PSD2 for payment-initiation APIs) and segregation-of-duties concerns (a self-approval or privilege-grant path) are inherited from whichever target operation is selected and cannot be enumerated at the dispatcher level."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Diagnostics ----------
+  - id: jentic.submit_feedback
+    object: Feedback
+    action: submit_feedback
+    description: "Submits feedback and detailed error information about a previously failed tool execution to Jentic's logging endpoint."
+    reference: https://docs.jentic.com/guides/mcp/remote-mcp/
+    category: Operations
+    risk: medium
+    business_impact: "Transmits failed-execution diagnostics — including the failing inputs and an optional user-supplied email and free-text comment — to a third-party logging endpoint, an outbound data-sharing event that can carry personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Discovery ----------
+  - id: jentic.search_apis
+    object: API
+    action: search_apis
+    description: "Searches the catalog for available actions or APIs matching a natural-language description of what the user wants to do."
+    reference: https://docs.jentic.com/guides/mcp/remote-mcp/
+    category: Data Access
+    risk: low
+    business_impact: "Returns catalog matches for available APIs and operations; read-only discovery with no state change or personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: jentic.load_execution_info
+    object: Operation
+    action: load_execution_info
+    description: "Returns the execution details for a chosen operation or workflow, including required inputs, tokens, and base URLs."
+    reference: https://docs.jentic.com/guides/mcp/remote-mcp/
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces the input schema and credential requirements for a selected operation; informational read that exposes which secrets an operation needs but not their values."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

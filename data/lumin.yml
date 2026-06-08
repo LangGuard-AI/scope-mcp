@@ -1,0 +1,98 @@
+schema_version: "1.1"
+platform: lumin
+display_name: Lumin PDF
+source: langguard-editorial
+updated: "2026-06"
+reference: https://github.com/luminpdf/lumin-mcp-server
+actions:
+  # ---------- Signatures ----------
+  - id: lumin.send_signature_request_on_lumin
+    object: SignatureRequest
+    action: send_signature_request_on_lumin
+    description: "Creates and sends a new Signature Request with the submitted documents."
+    reference: https://developers.luminpdf.com/api/send-signature-request/
+    category: Signatures
+    risk: medium
+    business_impact: "Sends a binding e-signature request to named external signers; initiates a legal signing workflow and exposes signer names and emails to a third party."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: lumin.cancel_signature_request_on_lumin_by_id
+    object: SignatureRequest
+    action: cancel_signature_request_on_lumin_by_id
+    description: "Cancel Signature Request by id on Lumin."
+    reference: https://developers.luminpdf.com/api/cancel-signature-request/
+    category: Signatures
+    risk: medium
+    business_impact: "Voids an in-flight signature request by id; halts a pending legal signing workflow (flagged destructive by the server)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: lumin.get_signature_request_on_lumin_by_id
+    object: SignatureRequest
+    action: get_signature_request_on_lumin_by_id
+    description: "Get Signature Request by id on Lumin."
+    reference: https://developers.luminpdf.com/api/get-signature-request/
+    category: Signatures
+    risk: low
+    business_impact: "Reads one signature request including signer identities and document status; single-record personal-data read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Documents ----------
+  - id: lumin.upload_file_to_lumin
+    object: Document
+    action: upload_file_to_lumin
+    description: "Upload files to Lumin."
+    reference: https://developers.luminpdf.com/api/send-signature-request/
+    category: Documents
+    risk: medium
+    business_impact: "Introduces an externally-supplied document into the workspace; uploaded files may contain personal, contractual, or otherwise sensitive content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lumin.lumin_markdown2pdf
+    object: Document
+    action: lumin_markdown2pdf
+    description: "Converts markdown template to PDF url."
+    category: Documents
+    risk: low
+    business_impact: "Renders supplied markdown into a downloadable PDF; stateless format conversion that creates no persistent record."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Account ----------
+  - id: lumin.get_lumin_user_information
+    object: User
+    action: get_lumin_user_information
+    description: "Get information of current user on Lumin."
+    reference: https://developers.luminpdf.com/api/get-user-information/
+    category: Account
+    risk: low
+    business_impact: "Returns the authenticated user's own profile details including name and email; single-record personal-data read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: lumin.get_workspace_list_of_user_on_lumin
+    object: Workspace
+    action: get_workspace_list_of_user_on_lumin
+    description: "Get the list of workspaces."
+    category: Account
+    risk: low
+    business_impact: "Lists the workspaces the user belongs to; returns workspace metadata rather than personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

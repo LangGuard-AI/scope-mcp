@@ -1,0 +1,186 @@
+schema_version: "1.1"
+platform: harmonic
+display_name: Harmonic
+source: langguard-editorial
+updated: "2026-06"
+reference: https://support.harmonic.ai/en/articles/12785899-harmonic-mcp-server-getting-started-guide
+# PROVENANCE: The official Harmonic-hosted MCP server (https://mcp.api.harmonic.ai) is
+# OAuth/JWT-gated. Anonymous probes all failed: streamable-http tools/list -> 401, the
+# /sse endpoint -> 401, an anonymous /tools path -> 405, and an anonymous tools/list POST
+# returned {"error":"Unauthorized. Please provide a valid JWT token ... or use OAuth flow"}.
+# The server advertises /.well-known/oauth-protected-resource. So NO verbatim tool ids were
+# reachable without a user token.
+# CONFLICTING COMMUNITY SERVERS REJECTED: web search surfaced several THIRD-PARTY Harmonic
+# MCP implementations with mutually conflicting tool names and counts (alludium/harmonic-mcp-server
+# ~13 `harmonic_*` tools; blue-yard/harmonic-mcp-server; an MCPBundles "Managed" bundle of ~53
+# "Harmonic Title Case" tools at mcp.mcpbundles.com). These are SEPARATE implementations, not the
+# official Harmonic-hosted connector, and their names disagree with one another -- the spec's
+# explicit "multiple implementations with conflicting names" case. None were copied.
+# CAPABILITY-FORM: Harmonic's own docs (connector page + getting-started guide) publish only
+# seven plain-language TOOL CATEGORY labels, not per-tool ids. Every entry below is therefore
+# id_form: capability -- the verbatim category label is in `description`, the id/action is a
+# slugified intent, and confidence is capped at medium (intent-level, NOT identifier-level
+# matching). The seven labels were split into distinct people-vs-company and read-vs-write
+# facets the labels themselves enumerate; ids/counts were not padded beyond what the labels state.
+# RISK/REGIME NOTE: Harmonic is a company/people/investor INTELLIGENCE & ENRICHMENT platform
+# (a data-broker/enrichment category, analogous to Apollo). Tools that read, write, or map
+# PERSONAL DATA OF IDENTIFIABLE INDIVIDUALS (founders, employees, people searchable by name/
+# domain/LinkedIn URL/email, investor individuals, and your own team's relationship graph) carry
+# the 8-regime privacy stack; bulk people reads additionally carry SOC2 + ISO_27001 as data-
+# extraction events. Pure COMPANY firmographics (funding, location, headcount) are business data,
+# NOT personal data, and stay []. The vendor states "Harmonic does not currently support any
+# destructive operations" -- so no action reaches `critical`, and writes (list create/update,
+# custom-data add/manage) are reversible. No AI regimes (no automated consequential decisioning)
+# and no GLBA (funding data is not consumer financial-account data). This regime divergence from
+# the structurally-similar fmp.yml is INTENTIONAL: fmp reads public market data, Harmonic processes
+# people PII.
+actions:
+  # ---------- Enrichment ----------
+  - id: harmonic.enrich_people
+    object: Person
+    action: enrich_people
+    id_form: capability
+    description: "Get rich info about companies, people, and investors. Deal data is available as an add-on"
+    category: Customer
+    risk: high
+    business_impact: "Returns detailed profile data for a named individual (founder, employee, or investor), including employment history and contact-adjacent attributes; single-record PII read from a data-broker dataset."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: harmonic.enrich_companies
+    object: Company
+    action: enrich_companies
+    id_form: capability
+    description: "Get rich info about companies, people, and investors. Deal data is available as an add-on"
+    category: Customer
+    risk: low
+    business_impact: "Returns firmographics for a company (funding, locations, headcount, founder summary); company data, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Search & Discovery ----------
+  - id: harmonic.search_people
+    object: Person
+    action: search_people
+    id_form: capability
+    description: "Find companies and people using natural language queries or fast lookups by name, domain, linkedin URL, or email."
+    category: Customer
+    risk: high
+    business_impact: "Returns matching individuals from Harmonic's people dataset queried by name, domain, LinkedIn URL, or email; PII read keyed on personal identifiers."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: harmonic.search_companies
+    object: Company
+    action: search_companies
+    id_form: capability
+    description: "Find companies and people using natural language queries or fast lookups by name, domain, linkedin URL, or email."
+    category: Customer
+    risk: low
+    business_impact: "Returns matching company profiles for a natural-language or domain query; company data, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Bulk Lookup ----------
+  - id: harmonic.lookup_people
+    object: Person
+    action: lookup_people
+    id_form: capability
+    description: "Retrieve companies, people, or investors in bulk by ID or canonical URL."
+    category: Customer
+    risk: high
+    business_impact: "Retrieves many individuals (people and investor persons) in a single request by ID or canonical URL; bulk PII extraction event."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: harmonic.lookup_companies
+    object: Company
+    action: lookup_companies
+    id_form: capability
+    description: "Retrieve companies, people, or investors in bulk by ID or canonical URL."
+    category: Customer
+    risk: low
+    business_impact: "Retrieves many company profiles in a single request by ID or canonical URL; company data, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Saved Searches ----------
+  - id: harmonic.get_saved_search_results
+    object: SavedSearch
+    action: get_saved_search_results
+    id_form: capability
+    description: "Get results from your saved searches across companies, people, and investors, including net-new results"
+    category: Customer
+    risk: medium
+    business_impact: "Returns the current and net-new results of a team saved search, which may include individuals (people and investors); PII read whose volume depends on the search definition."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Network Mapping ----------
+  - id: harmonic.get_network_connections
+    object: Connection
+    action: get_network_connections
+    id_form: capability
+    description: "Discover how your team is connected to specific companies or people."
+    category: Customer
+    risk: high
+    business_impact: "Reveals the relationship graph between your own team members and specific external individuals; exposes personal-relationship data about both employees and third parties."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- List Management ----------
+  - id: harmonic.create_list
+    object: List
+    action: create_list
+    id_form: capability
+    description: "Create and manage lists of companies and people within Harmonic."
+    category: Customer
+    risk: medium
+    business_impact: "Creates a new Harmonic list of companies and people; reversible write that assembles a named collection which may include individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: harmonic.update_list
+    object: List
+    action: update_list
+    id_form: capability
+    description: "Create and manage lists of companies and people within Harmonic."
+    category: Customer
+    risk: medium
+    business_impact: "Adds, removes, or updates companies and people on an existing list; reversible write to a collection that may include individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Custom Data ----------
+  - id: harmonic.manage_custom_data
+    object: CustomField
+    action: manage_custom_data
+    id_form: capability
+    description: "Add and manage custom data on companies and people, both globally across your workspace and within specific lists."
+    category: Customer
+    risk: medium
+    business_impact: "Adds or updates custom attributes attached to companies and people across the workspace; reversible write that can append personal data to individual records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

@@ -1,0 +1,68 @@
+schema_version: "1.1"
+platform: yardi-virtuoso
+display_name: Yardi Virtuoso
+source: langguard-editorial
+updated: "2026-06"
+reference: https://help.virtuoso.ai/en/articles/13679727-yardi-virtuoso-mcp-technical-documentation-guide
+actions:
+  # ---------- Operations ----------
+  - id: yardi-virtuoso.rfm_connectai_create_work_order
+    object: WorkOrder
+    action: rfm_connectai_create_work_order
+    description: "Creates new work orders with descriptions, property/unit details, priority, categories, custom fields, attachments, and access notes."
+    category: Operations
+    risk: medium
+    business_impact: "Creates a maintenance work order against a property and unit, carrying tenant access notes and descriptions; a reversible operational write that records identifiable resident and vendor data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: yardi-virtuoso.rfm_workorder_mark_work_order_as_complete
+    object: WorkOrder
+    action: rfm_workorder_mark_work_order_as_complete
+    description: "Closes completed work orders by recording the completion date and adding final technician notes."
+    category: Operations
+    risk: medium
+    business_impact: "Marks a work order complete and records completion date and technician notes; a reversible state change that can downstream trigger vendor billing and carries individually attributable notes."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: yardi-virtuoso.rfm_connectai_search_work_orders
+    object: WorkOrder
+    action: rfm_connectai_search_work_orders
+    description: "Performs advanced filtering and search across the work order database, returning up to ~5000 records spanning properties, units, tenants, vendors, and employees."
+    category: Operations
+    risk: high
+    business_impact: "Bulk read of up to thousands of work orders spanning tenants, vendors, and employees; a large-scale personal-data extraction regardless of intent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: yardi-virtuoso.vn_mcpframework_get_autocomplete
+    object: Entity
+    action: vn_mcpframework_get_autocomplete
+    description: "Provides autocomplete suggestions across entity types including properties, vendors, tenants, units, banks, accounts, employees, and prospects."
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces names of tenants, employees, vendors, and prospects via lookup; reads personal data of identifiable individuals, scoped to label-level matches."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: yardi-virtuoso.vn_mcpframework_list_autocomplete_types
+    object: Entity
+    action: vn_mcpframework_list_autocomplete_types
+    description: "Returns the available autocomplete entity types that can be used with the autocomplete tool."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the catalog of available lookup entity types; system metadata only, no personal or business records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

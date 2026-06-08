@@ -1,0 +1,33 @@
+schema_version: "1.1"
+platform: lawve-ai
+display_name: Lawve AI
+source: langguard-editorial
+updated: "2026-06"
+reference: https://lawve.ai/en/learn/mcp-setup
+actions:
+  # ---------- Data Access ----------
+  - id: lawve-ai.lawvable_search_skills
+    object: Skill
+    action: lawvable_search_skills
+    description: "Search the public Lawve AI skill catalogue by free-text query with optional category, jurisdiction, language, and locale filters; returns a ranked list of matching published skills."
+    reference: https://lawve.ai/en/learn/mcp-setup
+    category: Data Access
+    risk: low
+    business_impact: "Reads the public marketplace catalogue of legal skills (SELECT-only on whitelisted public tables); returns titles, descriptions, categories, and jurisdictions, exposing no user, org, or private data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: lawve-ai.lawvable_get_skill_manifest
+    object: Skill
+    action: lawvable_get_skill_manifest
+    description: "Fetch one published skill in full by slug, returning its localized SKILL.md content, file tree, license, and disclaimer in a single JSON envelope."
+    reference: https://lawve.ai/en/learn/mcp-setup
+    category: Data Access
+    risk: low
+    business_impact: "Reads a single public skill's full methodology document and file manifest from the read-only catalogue; no write, install, or script execution and no access to private or org skills."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

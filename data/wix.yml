@@ -1,21 +1,67 @@
-# NOTE: The Wix MCP server uses one generic dispatcher tool, CallWixSiteAPI,
-# that calls any Wix REST/SDK method on a site. Effective blast radius for
-# that tool is the union of the connected business solutions (Stores,
-# Bookings, Forms, CRM, etc.). Per-API methods invoked via CallWixSiteAPI
+# NOTE: This file covers the account-level Wix MCP server (https://mcp.wix.com/mcp,
+# GitHub wix/wix-mcp) — the server the claude.com/connectors/wix connector points
+# to. Wix also ships a SEPARATE per-site "Wix Site MCP" with a different tool set
+# (GenerateVisitorToken, SearchSiteApiDocs, GetBusinessDetails, SearchInSite); those
+# tools are intentionally NOT included here because they belong to a different MCP
+# server, not this connector.
+#
+# CallWixSiteAPI is one generic dispatcher tool that calls any Wix REST/SDK method on
+# a site. Effective blast radius for that tool is the union of the connected business
+# solutions (Stores, Bookings, Forms, CRM, etc.); per-API methods invoked through it
 # fall through to platform-level matching.
-schema_version: "1.0"
+schema_version: "1.1"
 platform: wix
 display_name: Wix
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://dev.wix.com/docs/sdk/articles/use-the-wix-mcp/about-the-wix-mcp
 actions:
+  # ---------- Data Access ----------
+  - id: wix.CallWixSiteAPI
+    object: "*"
+    action: CallWixSiteAPI
+    description: "Perform an action or query for a given account and selected site."
+    category: Data Access
+    risk: critical
+    business_impact: "Generic dispatcher that invokes any underlying Wix site API — Stores orders, Bookings appointments, CRM contacts, Forms submissions — enabling bulk data exfiltration, payment/revenue transactions, or arbitrary writes through a single tool."
+    compliance: [SOX, COSO, PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Site Management ----------
+  - id: wix.ManageWixSite
+    object: Site
+    action: ManageWixSite
+    description: "Perform a site-level action, such as creating a site."
+    category: Site Management
+    risk: high
+    business_impact: "Performs site-lifecycle actions such as creating, and potentially deleting or transferring, a site; an account-wide configuration change a single actor can make unilaterally."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: wix.ListWixSites
+    object: Site
+    action: ListWixSites
+    description: "Query the sites for a Wix account."
+    category: Site Management
+    risk: low
+    business_impact: "Returns the list of sites in the account; exposes account-level metadata such as site names and identifiers but no end-user data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
   # ---------- Documentation ----------
   - id: wix.SearchWixWDSDocumentation
     object: Documentation
     action: SearchWixWDSDocumentation
+    description: "Search the Wix Design System documentation."
     category: Documentation
     risk: low
-    business_impact: "Searches Wix Design System documentation."
+    business_impact: "Searches Wix's public Design System documentation; read-only and touches no customer or site data."
     compliance: []
     sod_concern: false
     confidence: high
@@ -24,9 +70,10 @@ actions:
   - id: wix.SearchWixRESTDocumentation
     object: Documentation
     action: SearchWixRESTDocumentation
+    description: "Search the Wix REST documentation."
     category: Documentation
     risk: low
-    business_impact: "Searches Wix REST API documentation."
+    business_impact: "Searches Wix's public REST API documentation; read-only and touches no customer or site data."
     compliance: []
     sod_concern: false
     confidence: high
@@ -35,9 +82,10 @@ actions:
   - id: wix.SearchWixSDKDocumentation
     object: Documentation
     action: SearchWixSDKDocumentation
+    description: "Search the Wix SDK documentation."
     category: Documentation
     risk: low
-    business_impact: "Searches Wix SDK documentation."
+    business_impact: "Searches Wix's public SDK documentation; read-only and touches no customer or site data."
     compliance: []
     sod_concern: false
     confidence: high
@@ -46,9 +94,10 @@ actions:
   - id: wix.SearchBuildAppsDocumentation
     object: Documentation
     action: SearchBuildAppsDocumentation
+    description: "Search the Wix Build Apps documentation."
     category: Documentation
     risk: low
-    business_impact: "Searches the 'Build Apps' developer documentation."
+    business_impact: "Searches Wix's public Build Apps platform documentation; read-only and touches no customer or site data."
     compliance: []
     sod_concern: false
     confidence: high
@@ -57,9 +106,10 @@ actions:
   - id: wix.SearchWixHeadlessDocumentation
     object: Documentation
     action: SearchWixHeadlessDocumentation
+    description: "Search the Wix Headless documentation."
     category: Documentation
     risk: low
-    business_impact: "Searches Wix Headless documentation."
+    business_impact: "Searches Wix's public Headless documentation; read-only and touches no customer or site data."
     compliance: []
     sod_concern: false
     confidence: high
@@ -68,20 +118,10 @@ actions:
   - id: wix.WixBusinessFlowsDocumentation
     object: Documentation
     action: WixBusinessFlowsDocumentation
+    description: "Include complete step-by-step instructions for multi-step sample flows."
     category: Documentation
     risk: low
-    business_impact: "Returns documentation on Wix business solution flows."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: wix.SearchSiteApiDocs
-    object: Documentation
-    action: SearchSiteApiDocs
-    category: Documentation
-    risk: low
-    business_impact: "Returns API documentation for the business solutions installed on a specific site."
+    business_impact: "Returns step-by-step guides for multi-step Wix sample flows; read-only reference content with no customer or site data."
     compliance: []
     sod_concern: false
     confidence: high
@@ -90,9 +130,10 @@ actions:
   - id: wix.ReadFullDocsArticle
     object: Documentation
     action: ReadFullDocsArticle
+    description: "Fetch the full content of an article by article URL."
     category: Documentation
     risk: low
-    business_impact: "Fetches a complete article from the Wix developer documentation portal."
+    business_impact: "Fetches the full text of a public Wix documentation article by URL; read-only and touches no customer or site data."
     compliance: []
     sod_concern: false
     confidence: high
@@ -101,76 +142,10 @@ actions:
   - id: wix.ReadFullDocsMethodSchema
     object: Documentation
     action: ReadFullDocsMethodSchema
+    description: "Get the full request and response schema of an API method."
     category: Documentation
     risk: low
-    business_impact: "Fetches the full schema for a Wix API method before calling it."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Site Management ----------
-  - id: wix.ListWixSites
-    object: Site
-    action: ListWixSites
-    category: Site Management
-    risk: low
-    business_impact: "Lists Wix sites in the connected account."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: wix.ManageWixSite
-    object: Site
-    action: ManageWixSite
-    category: Site Management
-    risk: high
-    business_impact: "Performs site-level lifecycle actions including creating sites; account-wide configuration write."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: wix.CallWixSiteAPI
-    object: "*"
-    action: CallWixSiteAPI
-    category: Site Management
-    risk: critical
-    business_impact: "Generic dispatcher that calls any Wix Site API on the visitor's behalf: Stores orders, Bookings appointments, CRM contacts, Forms submissions. Effective scope equals the connected site's full API surface."
-    compliance: [SOX, COSO, PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: wix.GenerateVisitorToken
-    object: VisitorToken
-    action: GenerateVisitorToken
-    category: Site Management
-    risk: medium
-    business_impact: "Mints a new visitor session token for the site; impersonation surface for visitor-scoped APIs."
-    compliance: [SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: true
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: wix.GetBusinessDetails
-    object: BusinessProfile
-    action: GetBusinessDetails
-    category: Site Management
-    risk: low
-    business_impact: "Reads business and site details (timezone, email, phone, address)."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: wix.SearchInSite
-    object: SiteContent
-    action: SearchInSite
-    category: Site Management
-    risk: low
-    business_impact: "Searches public site content."
+    business_impact: "Returns the public request/response schema for a Wix API method; read-only and touches no customer or site data."
     compliance: []
     sod_concern: false
     confidence: high
@@ -180,9 +155,10 @@ actions:
   - id: wix.SupportAndFeedback
     object: Feedback
     action: SupportAndFeedback
+    description: "Prompt the user for feedback and send it to Wix."
     category: Support
     risk: low
-    business_impact: "Submits support feedback to Wix."
+    business_impact: "Prompts the user for feedback and transmits it to Wix; low-impact and user-initiated, though free-text input could incidentally contain personal data."
     compliance: []
     sod_concern: false
     confidence: high

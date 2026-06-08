@@ -1,0 +1,201 @@
+schema_version: "1.1"
+platform: metaview
+display_name: Metaview
+source: langguard-editorial
+updated: "2026-06"
+reference: https://support.metaview.ai/integrations/mcp-integration/mcp-overview
+# Official Metaview connector ("The AI platform for recruiting"), listed on
+# claude.com/connectors/metaview with the capability label "Read & write". The
+# hosted MCP server is https://mcp.metaview.ai/mcp (HTTP/streamable transport,
+# OAuth or API-key bearer auth).
+#
+# TOOL-SURFACE PROVENANCE (id_form: capability throughout)
+# tools/list is OAuth-gated. Re-confirmed in THIS curation session: live
+# introspection of https://mcp.metaview.ai/mcp (mcp-introspect.py,
+# streamable-http) returned 401/auth-required; no anonymous tools/list is
+# reachable. No verbatim snake_case/kebab/camel tool ids are published anywhere
+# reachable — not in the support docs, the claude.com connector page, or web
+# search. Per the curator spec this is the capability-form fallback:
+# id_form=capability, the verbatim vendor label is carried in `description`, ids
+# are slugified best-effort, audit matching is intent-level (not
+# identifier-level), and every entry is capped at confidence: medium. No tool id
+# below is invented or derived from a REST endpoint; each is a slugification of a
+# quoted vendor capability label.
+#
+# WRITE SURFACE — Sequences (verbatim-confirmed from the vendor MCP blog)
+# The connector is officially labeled "Read & write". The vendor's MCP launch
+# blog (metaview.ai/resources/blog/mcp-interview-data-claude) documents the
+# Sequences write surface under "Sequences: Launch and improve outreach without
+# effort", listing these verbatim MCP capabilities: "Create a new sequence",
+# "Add candidates to a sequence", "Update an email's sender details", "Change
+# the content of an email", and "Pause a candidate". All five labels were
+# verbatim-confirmed against the raw blog page this session. The two support
+# pages (mcp-overview, mcp-guide) describe only the read subset
+# ("search conversations, retrieve transcripts and notes, read structured
+# data") and assert read-only; the blog supersedes that for the write surface,
+# so the Sequences writes are included here at capability-form / confidence
+# medium. The mcp-guide's coaching-pack / "deliver via Slack" / calendar-pull
+# items remain cross-system PROMPT WORKFLOWS that combine Metaview's read tools
+# with SEPARATE connectors (Slack, Google Calendar) — they are NOT Metaview MCP
+# tools and are not enumerated here.
+#
+# DOMAIN / REGIME NOTE
+# This is recruiting/interview data — candidate names, full interview
+# transcripts, AI-generated assessment notes, structured scorecards,
+# compensation expectations, and AI-sourcing candidate/feedback data. Candidate
+# PII drives the 8-regime privacy stack on every action that reads, writes, or
+# exports candidate personal data. Outreach-config writes that edit a sequence
+# or an email template (create_sequence, update_sender_details,
+# change_email_content) touch campaign configuration, not candidate PII, so they
+# carry no privacy regimes. AI-governance regimes (EU_AI_ACT — recruitment/
+# candidate-evaluation AI is an explicitly high-risk system; NIST_AI_RMF;
+# CO_AI_ACT — employment consequential decisions) are tagged ONLY where the
+# action surfaces or acts on the output of an automated candidate-sourcing/
+# ranking system (analyse_sourcing_data, add_candidates_to_sequence) — never on
+# raw transcript/scorecard reads or on outreach-config edits. No financial-
+# statement, payment, or PHI dimension applies, so no SOX/COSO/PCI/HIPAA. No
+# action exposes privilege escalation, self-approval, or audit-log tampering, so
+# sod_concern is false throughout.
+actions:
+  # ---------- Outreach Sequences (write surface) ----------
+  - id: metaview.create_sequence
+    object: OutreachSequence
+    action: create_sequence
+    id_form: capability
+    description: "Create a new sequence"
+    reference: https://www.metaview.ai/resources/blog/mcp-interview-data-claude
+    category: Operations
+    risk: low
+    business_impact: "Creates a new outreach sequence (campaign configuration and message templates); reversible and affects no candidate records until candidates are enrolled."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: metaview.add_candidates_to_sequence
+    object: OutreachSequence
+    action: add_candidates_to_sequence
+    id_form: capability
+    description: "Add candidates to a sequence"
+    reference: https://www.metaview.ai/resources/blog/mcp-interview-data-claude
+    category: Operations
+    risk: medium
+    business_impact: "Enrolls a set of sourced candidates into an automated outreach sequence, queueing recruiting messages to identifiable individuals selected from an AI sourcing search."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, EU_AI_ACT, NIST_AI_RMF, CO_AI_ACT]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: metaview.update_sender_details
+    object: OutreachEmail
+    action: update_sender_details
+    id_form: capability
+    description: "Update an email's sender details"
+    reference: https://www.metaview.ai/resources/blog/mcp-interview-data-claude
+    category: Operations
+    risk: low
+    business_impact: "Updates the sender identity on an outreach email within a sequence; edits campaign configuration and does not read or modify candidate personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: metaview.change_email_content
+    object: OutreachEmail
+    action: change_email_content
+    id_form: capability
+    description: "Change the content of an email"
+    reference: https://www.metaview.ai/resources/blog/mcp-interview-data-claude
+    category: Operations
+    risk: low
+    business_impact: "Edits the body content of an outreach email template within a sequence; reversible campaign-configuration change with no candidate personal data involved."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: metaview.pause_candidate
+    object: OutreachSequence
+    action: pause_candidate
+    id_form: capability
+    description: "Pause a candidate"
+    reference: https://www.metaview.ai/resources/blog/mcp-interview-data-claude
+    category: Operations
+    risk: low
+    business_impact: "Pauses an identified candidate's enrollment in an outreach sequence, halting queued recruiting messages; toggles workflow state for one named individual and is reversible."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access (candidate-PII reads) ----------
+  - id: metaview.search_conversations
+    object: Conversation
+    action: search_conversations
+    id_form: capability
+    description: "search conversations"
+    reference: https://support.metaview.ai/mcp-guide
+    category: Data Access
+    risk: medium
+    business_impact: "Searches the workspace's interview conversations by candidate, role, or stage; surfaces identifiable candidate records into the agent context, scoped to the caller's existing Metaview permissions."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: metaview.retrieve_transcripts_and_notes
+    object: Transcript
+    action: retrieve_transcripts_and_notes
+    id_form: capability
+    description: "retrieve transcripts and notes"
+    reference: https://support.metaview.ai/mcp-guide
+    category: Data Access
+    risk: high
+    business_impact: "Returns full interview transcripts plus AI-generated assessment notes for a candidate; exposes sensitive candidate interview content and evaluative commentary into the agent context."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: metaview.read_structured_data
+    object: Scorecard
+    action: read_structured_data
+    id_form: capability
+    description: "read structured data"
+    reference: https://support.metaview.ai/mcp-guide
+    category: Data Access
+    risk: high
+    business_impact: "Reads structured interview fields and scorecard data — the per-candidate evaluation scores that feed hiring decisions about identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Operations (reporting / analytics reads) ----------
+  - id: metaview.review_conversation_activity
+    object: Report
+    action: review_conversation_activity
+    id_form: capability
+    description: "Reviewing your conversation activity, including interview volume by role or over time"
+    reference: https://support.metaview.ai/integrations/mcp-integration/mcp-overview
+    category: Operations
+    risk: low
+    business_impact: "Returns aggregate recruiting analytics such as interview volume by role and over time; organizational reporting metadata with limited direct personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: metaview.analyse_sourcing_data
+    object: SourcingActivity
+    action: analyse_sourcing_data
+    id_form: capability
+    description: "Analyse Sourcing data, including search volumes"
+    reference: https://support.metaview.ai/integrations/mcp-integration/mcp-overview
+    category: Operations
+    risk: high
+    business_impact: "Reads AI Sourcing data — candidate searches, surfaced candidates, candidate feedback, and sourcing metrics — exposing the ranked-candidate output an automated sourcing pipeline produces about identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, EU_AI_ACT, NIST_AI_RMF, CO_AI_ACT, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

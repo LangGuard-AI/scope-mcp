@@ -1,0 +1,47 @@
+schema_version: "1.1"
+platform: wolfram
+display_name: Wolfram
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.wolfram.com/artificial-intelligence/mcp-service/
+actions:
+  # ---------- Code & Release ----------
+  - id: wolfram.WolframLanguageEvaluator
+    object: Computation
+    action: WolframLanguageEvaluator
+    description: "Evaluates arbitrary Wolfram Language code in a stateless Wolfram Cloud kernel with fixed memory and time constraints."
+    reference: https://www.wolfram.com/artificial-intelligence/mcp-service/wolfram-mcp-cloud-service
+    category: Code & Release
+    risk: medium
+    business_impact: "Executes arbitrary Wolfram Language code in a sandboxed cloud kernel; the code-execution surface is a confidentiality/integrity concern even though the kernel is stateless and isolated from caller systems."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: wolfram.WolframAlpha
+    object: Query
+    action: WolframAlpha
+    description: "Submits natural-language queries to Wolfram|Alpha and returns curated computational answers."
+    reference: https://www.wolfram.com/artificial-intelligence/mcp-service/wolfram-mcp-cloud-service
+    category: Data Access
+    risk: low
+    business_impact: "Reads computed answers from Wolfram|Alpha's curated knowledgebase; no caller data is written or persisted."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: wolfram.WolframContext
+    object: Query
+    action: WolframContext
+    description: "Combines WolframAlphaContext and WolframLanguageContext to run semantic search across Wolfram|Alpha results and Wolfram Language resources."
+    reference: https://www.wolfram.com/artificial-intelligence/mcp-service/wolfram-mcp-cloud-service
+    category: Data Access
+    risk: low
+    business_impact: "Reads semantic-search results from Wolfram's own knowledgebase and documentation; no caller data is written or persisted."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

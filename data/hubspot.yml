@@ -1,106 +1,67 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: hubspot
 display_name: HubSpot
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://developers.hubspot.com/docs/apps/developer-platform/build-apps/integrate-with-the-remote-hubspot-mcp-server
 actions:
   # ---------- Customer ----------
   - id: hubspot.manage_crm_objects
     object: "*"
     action: manage_crm_objects
+    description: "Create or update CRM records or activities."
     category: Customer
     risk: high
-    business_impact: "Generic write tool that creates, updates, associates, or deletes CRM records (contacts, companies, deals, tickets); single call can mutate any standard or custom object."
+    business_impact: "Generic write tool over any CRM object (contacts, companies, deals, tickets, invoices, quotes, engagements); a single call mutates customer and pipeline data across all object types, and the HubSpot batch APIs it fronts support archive/delete — whether the remote MCP schema exposes that destructive path is unverified, so it is treated as a potential single-actor destructive write."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: true
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: hubspot.get_crm_objects
-    object: "*"
-    action: get_crm_objects
-    category: Customer
-    risk: medium
-    business_impact: "Reads CRM records by id; returns PII fields on contacts, companies, deals."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
+    confidence: low
     access_methods: [REST, MCP]
 
   - id: hubspot.search_crm_objects
     object: "*"
     action: search_crm_objects
+    description: "Search and filter CRM records using filter groups, text queries, sorting, and pagination."
+    category: Customer
+    risk: high
+    business_impact: "Returns up to 200 CRM records per page matching a filter; enables bulk extraction of contact and customer PII across the entire CRM."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: hubspot.get_crm_objects
+    object: "*"
+    action: get_crm_objects
+    description: "Fetch one or more CRM objects by their IDs in a single request."
     category: Customer
     risk: medium
-    business_impact: "Filtered query across CRM objects; returns PII matching the criteria."
+    business_impact: "Reads specific CRM records by ID; returns customer PII for the requested objects."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: hubspot.search_owners
-    object: Owner
-    action: search_owners
-    category: Customer
-    risk: low
-    business_impact: "Looks up CRM record owners (HubSpot users) by email or id."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Platform & DevOps ----------
-  - id: hubspot.search_properties
-    object: Property
-    action: search_properties
-    category: Platform & DevOps
-    risk: low
-    business_impact: "Lists property metadata for CRM objects; schema introspection only."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: hubspot.get_properties
-    object: Property
-    action: get_properties
-    category: Platform & DevOps
-    risk: low
-    business_impact: "Reads property definitions; schema introspection only."
-    compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
   # ---------- Revenue & Pipeline ----------
-  - id: hubspot.get_campaign_analytics
-    object: Campaign
-    action: get_campaign_analytics
-    category: Revenue & Pipeline
-    risk: low
-    business_impact: "Reads marketing campaign performance metrics; aggregate analytics."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
   - id: hubspot.get_campaign_contacts_by_type
     object: Campaign
     action: get_campaign_contacts_by_type
+    description: "Fetch paginated contact IDs for a campaign filtered by attribution type."
     category: Revenue & Pipeline
     risk: medium
-    business_impact: "Returns contact lists associated with a campaign — bulk PII read."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    business_impact: "Returns paginated lists of campaign contact IDs by attribution type; enables enumeration of individuals associated with a marketing campaign."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
-  - id: hubspot.get_campaign_asset_types
+  - id: hubspot.get_campaign_analytics
     object: Campaign
-    action: get_campaign_asset_types
+    action: get_campaign_analytics
+    description: "Get campaign analytics (metrics or revenue attribution) for one or more campaigns."
     category: Revenue & Pipeline
     risk: low
-    business_impact: "Lists asset types attached to campaigns; metadata only."
+    business_impact: "Reads aggregate campaign performance metrics and revenue-attribution figures; no individual record access."
     compliance: []
     sod_concern: false
     confidence: high
@@ -109,22 +70,73 @@ actions:
   - id: hubspot.get_campaign_asset_metrics
     object: Campaign
     action: get_campaign_asset_metrics
+    description: "Get metrics and properties for specific CRM objects associated with a campaign."
     category: Revenue & Pipeline
     risk: low
-    business_impact: "Reads per-asset campaign performance metrics."
+    business_impact: "Reads metrics and properties for CRM objects tied to a campaign; surfaces aggregate performance data rather than full records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: hubspot.get_campaign_asset_types
+    object: Campaign
+    action: get_campaign_asset_types
+    description: "List the asset type names available as campaign assets."
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Lists the available campaign asset type names; configuration metadata only, no business data."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
   # ---------- Identity & Access ----------
+  - id: hubspot.search_owners
+    object: Owner
+    action: search_owners
+    description: "Find CRM record owners by name or email, or look up owners by ID."
+    category: Identity & Access
+    risk: low
+    business_impact: "Looks up HubSpot users who own CRM records by name, email, or ID; returns user-directory PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
   - id: hubspot.get_user_details
     object: User
     action: get_user_details
+    description: "Returns the authenticated user's information, account details, and per-object access."
     category: Identity & Access
     risk: low
-    business_impact: "Returns details about the authenticated HubSpot user (the caller)."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Reads the calling user's own identity, account details, and granted per-object access scopes; single-subject identity and access-control read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Configuration ----------
+  - id: hubspot.search_properties
+    object: Property
+    action: search_properties
+    description: "Find property definitions for an object type using keyword search."
+    category: Configuration
+    risk: low
+    business_impact: "Searches CRM property (schema) definitions by keyword; returns metadata, not record data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: hubspot.get_properties
+    object: Property
+    action: get_properties
+    description: "Get full property definitions, including data types and enumeration values."
+    category: Configuration
+    risk: low
+    business_impact: "Reads full CRM property definitions including data types and enum values; schema metadata only."
+    compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
@@ -133,9 +145,10 @@ actions:
   - id: hubspot.submit_feedback
     object: Feedback
     action: submit_feedback
+    description: "Send feedback about the MCP server experience to HubSpot."
     category: Operations
     risk: low
-    business_impact: "Sends feedback about the MCP server back to HubSpot; no customer-data effect."
+    business_impact: "Sends free-text feedback about the MCP server to HubSpot; no customer or business data affected."
     compliance: []
     sod_concern: false
     confidence: high

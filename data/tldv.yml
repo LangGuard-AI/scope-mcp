@@ -1,0 +1,66 @@
+schema_version: "1.1"
+platform: tldv
+display_name: tl;dv
+source: langguard-editorial
+updated: "2026-06"
+# Verbatim tool ids harvested from the vendor's own MCP server source,
+# tldv-public/tldv-mcp-server (src/index.ts server.tool(...) registrations):
+# get-meeting-metadata, get-transcript, list-meetings, get-highlights.
+# That repo is the self-hosted (stdio) distribution; the hosted claude.com
+# connector endpoint was NOT live-verified (vendor docs state no hosted URL —
+# self-host via Docker/Node only), so the hosted surface could in principle
+# differ. The vendor blog and README converge on exactly these 4 tools, so the
+# bare kebab-case ids below are the best-available, primary-source-backed set.
+# "Import Meeting" is documented "(Coming Soon)" and is NOT registered in source,
+# so it is deliberately excluded (no hallucinated actions). All 4 tools are
+# read-only; there is no write/destructive surface to model.
+reference: https://github.com/tldv-public/tldv-mcp-server
+actions:
+  # ---------- Data Access ----------
+  - id: tldv.get-transcript
+    object: Transcript
+    action: get-transcript
+    description: "Get transcript by meeting ID; a time-stamped list of speaker-attributed messages exchanged in the meeting."
+    category: Data Access
+    risk: high
+    business_impact: "Returns the full verbatim transcript of a recorded meeting, including everything every participant said; exposes detailed personal communications and any sensitive topics discussed."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: tldv.get-highlights
+    object: Highlight
+    action: get-highlights
+    description: "Get highlights from a meeting by meeting ID; each highlight carries a verbatim excerpt of what was said plus its topic."
+    category: Data Access
+    risk: high
+    business_impact: "Returns verbatim excerpt text clipped from a private meeting; partial conversation content that can contain personal data or any sensitive topic raised on the call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: tldv.get-meeting-metadata
+    object: Meeting
+    action: get-meeting-metadata
+    description: "Get a meeting by its ID; returns metadata including name, date, organizer, and participants."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns one meeting's metadata including organizer and invitee names and emails; a single-meeting read of participant personal data without conversation content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: tldv.list-meetings
+    object: Meeting
+    action: list-meetings
+    description: "List meetings matching filters (query, date range, participation, internal/external type); returns metadata and participants for each."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns meeting metadata with organizer and invitee names and emails across many meetings; bulk participant-PII exposure spanning the user's meeting history."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

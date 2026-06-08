@@ -1,0 +1,52 @@
+schema_version: "1.1"
+platform: goodnotes
+display_name: Goodnotes
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/connectors/goodnotes
+# Tool ids below are verbatim from live tools/list introspection of the official
+# Goodnotes remote MCP server (https://claude-mcp-api.ml.goodnotes.com/mcp), which
+# is anonymously reachable. The server exposes exactly 3 tools, all content-
+# generation widgets that render agent-supplied content (SVG, Mermaid, markdown)
+# into a Goodnotes document. All three carry readOnlyHint:true / destructiveHint:
+# false annotations and touch no existing user records, exports, admin, or
+# financial state — hence low risk and empty compliance arrays per the don't-
+# over-tag rule. Community SQLite-reader "goodnotes-mcp" projects on GitHub are a
+# different, unofficial implementation and are intentionally excluded.
+actions:
+  # ---------- Content Generation ----------
+  - id: goodnotes.create_markdown_text_document
+    object: Document
+    action: create_markdown_text_document
+    description: "Renders agent-supplied markdown content as a formatted rich-text Goodnotes document widget."
+    category: Content Generation
+    risk: low
+    business_impact: "Creates a new formatted text document from supplied markdown; additive, reversible, and touches no existing user data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: goodnotes.draw_svg_image
+    object: Drawing
+    action: draw_svg_image
+    description: "Renders agent-supplied SVG code as a custom vector graphic in a Goodnotes whiteboard widget."
+    category: Content Generation
+    risk: low
+    business_impact: "Creates a new vector-graphic widget from supplied SVG code; additive, reversible, and touches no existing user data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: goodnotes.generate_mermaid_diagram
+    object: Diagram
+    action: generate_mermaid_diagram
+    description: "Renders agent-supplied Mermaid syntax as a flowchart, mindmap, or timeline in a Goodnotes whiteboard widget."
+    category: Content Generation
+    risk: low
+    business_impact: "Creates a new structured-diagram widget from supplied Mermaid markup; additive, reversible, and touches no existing user data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

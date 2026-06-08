@@ -1,0 +1,76 @@
+# NOTE: IFTTT's hosted MCP server (https://ifttt.com/mcp) is OAuth-gated:
+# `tools/list` returns 401 "Missing Authorization header" without a bearer
+# token, and the advertised docs URL (https://ifttt.com/docs/mcp) 404s. No
+# verbatim MCP tool ids are published anywhere reachable. IFTTT does publish a
+# consistent, tier-gated set of plain-language capability labels across its MCP
+# pages, so every action below uses `id_form: capability` (intent-level match,
+# confidence capped at medium) with the verbatim label in `description`. Like
+# Zapier, IFTTT is an automation broker: a single "run actions" capability
+# fans out to 1000+ downstream services (Slack, Gmail, smart-home, social,
+# docs), so the effective risk and data type of any given invocation depend on
+# the underlying service and are unknowable at audit time.
+schema_version: "1.1"
+platform: ifttt
+display_name: IFTTT
+source: langguard-editorial
+updated: "2026-06"
+reference: https://ifttt.com/mcp
+actions:
+  # ---------- Action Execution ----------
+  - id: ifttt.run_action
+    object: "*"
+    action: run_action
+    id_form: capability
+    description: "run actions"
+    reference: https://ifttt.com/explore/what-is-ifttt-mcp
+    category: Action Execution
+    risk: high
+    business_impact: "Executes a real side-effecting action across any of 1000+ connected services (send a Slack message, post an update, control a smart-home device); blast radius and data type depend on the downstream service and are unknowable at audit time."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ifttt.query_data
+    object: "*"
+    action: query_data
+    id_form: capability
+    description: "running queries"
+    reference: https://ifttt.com/explore/what-is-ifttt-mcp
+    category: Action Execution
+    risk: medium
+    business_impact: "Reads live data from any connected service into the conversation; may surface personal data from arbitrary downstream apps depending on the service queried."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Action Management ----------
+  - id: ifttt.create_or_enable_applet
+    object: Applet
+    action: create_or_enable_applet
+    id_form: capability
+    description: "create or enable free Applets"
+    reference: https://ifttt.com/explore/what-is-ifttt-mcp
+    category: Action Management
+    risk: medium
+    business_impact: "Creates or enables a persistent Applet automation that runs triggers and actions across connected services on an ongoing basis; reversible by disabling or deleting the Applet."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Action Discovery ----------
+  - id: ifttt.search_services_and_applets
+    object: Service
+    action: search_services_and_applets
+    id_form: capability
+    description: "search for services and Applets"
+    reference: https://ifttt.com/explore/what-is-ifttt-mcp
+    category: Action Discovery
+    risk: low
+    business_impact: "Searches IFTTT's public catalog of services and pre-built Applets and the user's own enabled Applets; read-only discovery."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

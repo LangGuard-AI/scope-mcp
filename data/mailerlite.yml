@@ -1,0 +1,554 @@
+schema_version: "1.1"
+platform: mailerlite
+display_name: MailerLite
+source: langguard-editorial
+updated: "2026-06"
+reference: https://developers.mailerlite.com/mcp/
+actions:
+  # ---------- Subscriber Management ----------
+  - id: mailerlite.add_subscriber
+    object: Subscriber
+    action: add_subscriber
+    description: "Add a new subscriber or update existing (supports email, name, fields, groups)."
+    category: Customer
+    risk: medium
+    business_impact: "Writes a subscriber's email, name, and custom fields into the account; reversible but creates an identifiable marketing record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.update_subscriber
+    object: Subscriber
+    action: update_subscriber
+    description: "Update subscriber information (non-destructive)."
+    category: Customer
+    risk: medium
+    business_impact: "Modifies a single subscriber's profile fields and attributes; non-destructive and reversible."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.delete_subscriber
+    object: Subscriber
+    action: delete_subscriber
+    description: "Delete a subscriber (keeps info for re-subscription)."
+    category: Customer
+    risk: medium
+    business_impact: "Removes a subscriber from the active list but retains their record for re-subscription; reversible."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.forget_subscriber
+    object: Subscriber
+    action: forget_subscriber
+    description: "GDPR-compliant complete removal of subscriber data."
+    category: Customer
+    risk: high
+    business_impact: "Irreversibly erases all stored data for a subscriber to satisfy a right-to-be-forgotten request; cannot be undone for that record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.list_subscribers
+    object: Subscriber
+    action: list_subscribers
+    description: "List all subscribers with filtering by status (active, unsubscribed, unconfirmed, bounced, junk)."
+    category: Customer
+    risk: high
+    business_impact: "Bulk read of the entire subscriber directory; enumerates identifiable contacts by email and status at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.get_subscriber
+    object: Subscriber
+    action: get_subscriber
+    description: "Get subscriber info by ID or email."
+    category: Customer
+    risk: medium
+    business_impact: "Returns one subscriber's full profile, including email and custom field values."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.get_subscriber_activity
+    object: Subscriber
+    action: get_subscriber_activity
+    description: "Get activity history for a subscriber."
+    category: Customer
+    risk: medium
+    business_impact: "Returns one subscriber's engagement history (opens, clicks, sends); behavioral PII tied to an identifiable person."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.get_subscriber_count
+    object: Subscriber
+    action: get_subscriber_count
+    description: "Get total count of subscribers."
+    category: Customer
+    risk: low
+    business_impact: "Returns an aggregate subscriber count; a single number with no individual-level PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.get_single_import
+    object: Import
+    action: get_single_import
+    description: "Get details of a single import."
+    category: Customer
+    risk: low
+    business_impact: "Returns status and metadata for one import job; counts and outcomes rather than the imported records themselves."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Group Management ----------
+  - id: mailerlite.import_subscribers_to_group
+    object: Group
+    action: import_subscribers_to_group
+    description: "Bulk import subscribers to a group."
+    category: Customer
+    risk: high
+    business_impact: "Bulk write of subscriber PII into the account in a single call; ingests an identifiable contact list at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.get_group_subscribers
+    object: Group
+    action: get_group_subscribers
+    description: "Get subscribers in a group."
+    category: Customer
+    risk: high
+    business_impact: "Bulk read of every member of a group; enumerates identifiable subscribers by email at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.assign_subscriber_to_group
+    object: Group
+    action: assign_subscriber_to_group
+    description: "Add a subscriber to a group."
+    category: Customer
+    risk: low
+    business_impact: "Adds one existing subscriber to a group; reversible segmentation change with no new PII created."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.unassign_subscriber_from_group
+    object: Group
+    action: unassign_subscriber_from_group
+    description: "Remove a subscriber from a group."
+    category: Customer
+    risk: low
+    business_impact: "Removes one subscriber from a group; reversible segmentation change."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.create_group
+    object: Group
+    action: create_group
+    description: "Create a new subscriber group."
+    category: Customer
+    risk: low
+    business_impact: "Creates an empty subscriber group; organizational container with no PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.update_group
+    object: Group
+    action: update_group
+    description: "Update group name."
+    category: Customer
+    risk: low
+    business_impact: "Renames a subscriber group; metadata change with no PII impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.delete_group
+    object: Group
+    action: delete_group
+    description: "Delete a group."
+    category: Customer
+    risk: medium
+    business_impact: "Deletes a subscriber group, dropping its segmentation; subscribers themselves are retained but list organization is lost."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.list_groups
+    object: Group
+    action: list_groups
+    description: "List all subscriber groups."
+    category: Customer
+    risk: low
+    business_impact: "Lists subscriber groups; names and counts with no individual-level PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Segment Management ----------
+  - id: mailerlite.get_subscribers_in_segment
+    object: Segment
+    action: get_subscribers_in_segment
+    description: "Get subscribers in a segment with status filtering."
+    category: Customer
+    risk: high
+    business_impact: "Bulk read of every subscriber matching a segment; enumerates identifiable contacts by email at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.update_segment
+    object: Segment
+    action: update_segment
+    description: "Update segment name."
+    category: Customer
+    risk: low
+    business_impact: "Renames a segment; metadata change with no PII impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.delete_segment
+    object: Segment
+    action: delete_segment
+    description: "Delete a segment."
+    category: Customer
+    risk: low
+    business_impact: "Deletes a segment definition; subscribers are unaffected and only the saved filter is removed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.list_segments
+    object: Segment
+    action: list_segments
+    description: "List all segments."
+    category: Customer
+    risk: low
+    business_impact: "Lists segment definitions; filter names and counts with no individual-level PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Campaign Management ----------
+  - id: mailerlite.create_campaign
+    object: Campaign
+    action: create_campaign
+    description: "Create a new email campaign (regular, ab, resend types)."
+    category: Messaging
+    risk: medium
+    business_impact: "Drafts an email campaign (name, subject, sender, content) with no recipient list attached; reversible content staging that is the precursor to a send carrying consent obligations (CAN-SPAM, TCPA, GDPR direct-marketing rules)."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.schedule_campaign
+    object: Campaign
+    action: schedule_campaign
+    description: "Schedule a campaign to be sent."
+    category: Messaging
+    risk: high
+    business_impact: "Commits a campaign to be delivered to subscribers at a set time; triggers outbound mass marketing email subject to consent and unsubscribe obligations (CAN-SPAM, TCPA, GDPR direct-marketing rules)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.cancel_campaign
+    object: Campaign
+    action: cancel_campaign
+    description: "Cancel a scheduled campaign."
+    category: Messaging
+    risk: low
+    business_impact: "Cancels a campaign before it sends; prevents an outbound send and removes no subscriber data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.update_campaign
+    object: Campaign
+    action: update_campaign
+    description: "Update campaign details (name, subject, from, content)."
+    category: Messaging
+    risk: medium
+    business_impact: "Edits the subject, sender, or body of a draft campaign; changes what subscribers will receive when it sends."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.delete_campaign
+    object: Campaign
+    action: delete_campaign
+    description: "Delete a campaign."
+    category: Messaging
+    risk: medium
+    business_impact: "Deletes a campaign and its associated reporting; removes send history and analytics for that campaign."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.get_campaign_subscribers
+    object: Campaign
+    action: get_campaign_subscribers
+    description: "Get subscribers who received a campaign with filters."
+    category: Messaging
+    risk: high
+    business_impact: "Bulk read of the recipient list for a campaign; enumerates identifiable subscribers and their delivery status at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.get_campaign
+    object: Campaign
+    action: get_campaign
+    description: "Get specific campaign details."
+    category: Messaging
+    risk: low
+    business_impact: "Returns one campaign's configuration and aggregate stats; content and metadata with no individual-level PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.list_campaigns
+    object: Campaign
+    action: list_campaigns
+    description: "List all campaigns with filtering by status and type."
+    category: Messaging
+    risk: low
+    business_impact: "Lists campaigns with status and type; names and aggregate metadata with no individual-level PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Automation Management ----------
+  - id: mailerlite.create_automation
+    object: Automation
+    action: create_automation
+    description: "Create a draft automation."
+    category: Operations
+    risk: medium
+    business_impact: "Creates a draft automation workflow; reversible while drafted, but defines logic that will send mail to subscribers when activated."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.delete_automation
+    object: Automation
+    action: delete_automation
+    description: "Delete an automation."
+    category: Operations
+    risk: medium
+    business_impact: "Deletes an automation workflow and its run history; reporting for that automation is lost."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.get_automation_activity
+    object: Automation
+    action: get_automation_activity
+    description: "Get subscriber activity for an automation with status filtering."
+    category: Operations
+    risk: high
+    business_impact: "Bulk read of which subscribers have moved through an automation; enumerates identifiable contacts and their workflow status at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.get_automation
+    object: Automation
+    action: get_automation
+    description: "Get single automation details."
+    category: Operations
+    risk: low
+    business_impact: "Returns one automation's configuration and aggregate stats; workflow definition with no individual-level PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.list_automations
+    object: Automation
+    action: list_automations
+    description: "List all automations with filtering by name, group, enabled status."
+    category: Operations
+    risk: low
+    business_impact: "Lists automation workflows; names and enabled state with no individual-level PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Form Management ----------
+  - id: mailerlite.get_form_subscribers
+    object: Form
+    action: get_form_subscribers
+    description: "Get subscribers who signed up through a form."
+    category: Customer
+    risk: high
+    business_impact: "Bulk read of everyone who submitted a form; enumerates identifiable contacts by email at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.update_form
+    object: Form
+    action: update_form
+    description: "Update form name."
+    category: Customer
+    risk: low
+    business_impact: "Renames a signup form; metadata change with no PII impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.delete_form
+    object: Form
+    action: delete_form
+    description: "Delete a form."
+    category: Customer
+    risk: medium
+    business_impact: "Deletes a signup form, removing a subscriber-acquisition surface and its conversion stats."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.get_form
+    object: Form
+    action: get_form
+    description: "Get single form details."
+    category: Customer
+    risk: low
+    business_impact: "Returns one form's configuration and aggregate stats; definition with no individual-level PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.list_forms
+    object: Form
+    action: list_forms
+    description: "List forms by type (popup, embedded, promotion)."
+    category: Customer
+    risk: low
+    business_impact: "Lists signup forms; names and types with no individual-level PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Webhook & Integration ----------
+  - id: mailerlite.create_webhook
+    object: Webhook
+    action: create_webhook
+    description: "Create a new webhook with name, URL, and events."
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Registers an external URL to receive subscriber-event payloads; establishes an ongoing egress channel that can stream subscriber PII off-platform."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.update_webhook
+    object: Webhook
+    action: update_webhook
+    description: "Update webhook details including enabling/disabling."
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Changes a webhook's destination URL or event scope; can redirect subscriber-event payloads to a different external endpoint."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.delete_webhook
+    object: Webhook
+    action: delete_webhook
+    description: "Delete a webhook."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Removes a webhook; downstream integrations stop receiving subscriber events but no subscriber data is destroyed."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.get_webhook
+    object: Webhook
+    action: get_webhook
+    description: "Get specific webhook details."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns one webhook's URL and event configuration; integration metadata with no subscriber PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: mailerlite.list_webhooks
+    object: Webhook
+    action: list_webhooks
+    description: "List all webhooks."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Lists configured webhooks and their target URLs; integration metadata with no subscriber PII."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Authentication ----------
+  - id: mailerlite.get_auth_status
+    object: Account
+    action: get_auth_status
+    description: "Get current authentication status."
+    category: Identity & Access
+    risk: low
+    business_impact: "Reports whether the current connection is authenticated; status check with no data access."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

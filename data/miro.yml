@@ -1,0 +1,387 @@
+schema_version: "1.1"
+platform: miro
+display_name: Miro
+source: langguard-editorial
+updated: "2026-06"
+reference: https://developers.miro.com/docs/miro-mcp-prompts
+actions:
+  # ---------- Boards ----------
+  - id: miro.board_create
+    object: Board
+    action: board_create
+    description: "Create a new Miro board."
+    category: Boards
+    risk: low
+    business_impact: "Adds a new board to the workspace; additive and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: miro.board_search_boards
+    object: Board
+    action: board_search_boards
+    description: "Search and list boards accessible to the current user."
+    category: Boards
+    risk: low
+    business_impact: "Enumerates boards visible to the caller; read-only metadata listing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: miro.board_list_items
+    object: BoardItem
+    action: board_list_items
+    description: "List items on a board with cursor-based pagination, optionally filtered by item type or parent container."
+    category: Boards
+    risk: low
+    business_impact: "Reads the inventory of items on a single board; returns board content the caller already has access to."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Board Content (Read) ----------
+  - id: miro.context_get
+    object: Board
+    action: context_get
+    description: "Get text context from a Miro board or a specific item on a board."
+    category: Board Content
+    risk: medium
+    business_impact: "Extracts free-text content from a board; design text may include confidential material but is not bulk PII exfiltration."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: miro.context_explore
+    object: Board
+    action: context_explore
+    description: "Explore high-level items on a Miro board, such as frames, documents, prototypes, tables, and diagrams."
+    category: Board Content
+    risk: low
+    business_impact: "Returns a structural overview of a board's high-level items; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: miro.layout_read
+    object: BoardItem
+    action: layout_read
+    description: "Read existing board items and return them as DSL text."
+    category: Board Content
+    risk: medium
+    business_impact: "Serializes a board's items into DSL text; can carry confidential design content out of the platform but is not bulk PII export."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: miro.layout_get_dsl
+    object: DSLSpecification
+    action: layout_get_dsl
+    description: "Get the DSL format specification for creating board layouts."
+    category: Board Content
+    risk: low
+    business_impact: "Returns static DSL syntax documentation; carries no board or user data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Layouts & Diagrams (Write) ----------
+  - id: miro.layout_create
+    object: BoardItem
+    action: layout_create
+    description: "Create multiple board items on a Miro board from DSL text."
+    category: Board Content
+    risk: low
+    business_impact: "Adds new items to a board from DSL; additive and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: miro.layout_update
+    object: BoardItem
+    action: layout_update
+    description: "Edit board items using find-and-replace on their DSL representation."
+    category: Board Content
+    risk: low
+    business_impact: "Modifies existing board items via find-and-replace; reversible board-content edit."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: miro.diagram_create
+    object: Diagram
+    action: diagram_create
+    description: "Create a diagram on a Miro board from DSL text."
+    category: Board Content
+    risk: low
+    business_impact: "Adds a new diagram to a board; additive and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: miro.diagram_get_dsl
+    object: DSLSpecification
+    action: diagram_get_dsl
+    description: "Get the DSL format specification for creating diagrams."
+    category: Board Content
+    risk: low
+    business_impact: "Returns static DSL syntax documentation; carries no board or user data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Documents ----------
+  - id: miro.doc_create
+    object: Document
+    action: doc_create
+    description: "Create a structured document item on a Miro board."
+    category: Board Content
+    risk: low
+    business_impact: "Adds a new document item to a board; additive and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: miro.doc_update
+    object: Document
+    action: doc_update
+    description: "Edit content in an existing document item using find-and-replace."
+    category: Board Content
+    risk: low
+    business_impact: "Modifies an existing document item's content; reversible board-content edit."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: miro.doc_get
+    object: Document
+    action: doc_get
+    description: "Read the content of a document item from a Miro board."
+    category: Board Content
+    risk: medium
+    business_impact: "Extracts the full text of a document item; may carry confidential content but is not bulk PII export."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Tables ----------
+  - id: miro.table_create
+    object: Table
+    action: table_create
+    description: "Create a table on a Miro board with specified columns."
+    category: Board Content
+    risk: low
+    business_impact: "Adds a new table to a board; additive and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: miro.table_sync_rows
+    object: TableRow
+    action: table_sync_rows
+    description: "Add or update rows in a Miro table using key-based upsert matching."
+    category: Board Content
+    risk: low
+    business_impact: "Upserts rows into a board table; reversible board-content write."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: miro.table_list_rows
+    object: TableRow
+    action: table_list_rows
+    description: "Get rows from a Miro table with column metadata and optional filtering."
+    category: Board Content
+    risk: medium
+    business_impact: "Reads tabular data from a board table; structured content may hold confidential material but is not bulk PII export."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Images ----------
+  - id: miro.image_create
+    object: Image
+    action: image_create
+    description: "Create an image item on a Miro board."
+    category: Board Content
+    risk: low
+    business_impact: "Adds an image item to a board; additive and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: miro.image_get_url
+    object: Image
+    action: image_get_url
+    description: "Get a download URL for an image item from a Miro board."
+    category: Board Content
+    risk: medium
+    business_impact: "Issues a download URL for a board image; moves visual content outside the platform but is not bulk PII export."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: miro.image_get_data
+    object: Image
+    action: image_get_data
+    description: "Get image metadata and base64-encoded image data for an image item on a Miro board."
+    category: Board Content
+    risk: medium
+    business_impact: "Returns the raw bytes of a board image; image content could include confidential or personal material but is single-item, not bulk PII export."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: miro.image_get_upload_url
+    object: Image
+    action: image_get_upload_url
+    description: "Get a temporary, single-use presigned POST URL for uploading an image."
+    category: Board Content
+    risk: low
+    business_impact: "Issues a single-use presigned upload URL; enables adding an image but performs no data read or write itself."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Prototypes ----------
+  - id: miro.prototype_create
+    object: Prototype
+    action: prototype_create
+    description: "Create a Miro prototype from one or more HTML screens, using uploaded HTML tokens or inline HTML contents."
+    category: Board Content
+    risk: low
+    business_impact: "Adds a new prototype to a board from supplied HTML; additive and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: miro.prototype_read
+    object: Prototype
+    action: prototype_read
+    description: "Read prototype screens from a Miro board, including metadata."
+    category: Board Content
+    risk: medium
+    business_impact: "Extracts prototype screen content from a board; may carry confidential design material but is not bulk PII export."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Code Widgets ----------
+  - id: miro.code_widget_create
+    object: CodeWidget
+    action: code_widget_create
+    description: "Create a code widget on a Miro board."
+    category: Board Content
+    risk: low
+    business_impact: "Adds a code widget to a board; additive and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: miro.code_widget_update
+    object: CodeWidget
+    action: code_widget_update
+    description: "Update an existing code widget on a Miro board."
+    category: Board Content
+    risk: low
+    business_impact: "Modifies an existing code widget's source; reversible board-content edit."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: miro.code_widget_delete
+    object: CodeWidget
+    action: code_widget_delete
+    description: "Delete a code widget from a Miro board."
+    category: Board Content
+    risk: medium
+    business_impact: "Removes a single code widget from a board; a content deletion that is not bulk or irreversible at the workspace level."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: miro.code_widget_get
+    object: CodeWidget
+    action: code_widget_get
+    description: "Read a code widget from a Miro board, including its source code and metadata."
+    category: Board Content
+    risk: medium
+    business_impact: "Returns a code widget's source and metadata; may carry confidential source but is single-item, not bulk export."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: miro.code_widget_list_items
+    object: CodeWidget
+    action: code_widget_list_items
+    description: "List code widgets on a Miro board."
+    category: Board Content
+    risk: low
+    business_impact: "Enumerates code widgets on a board; read-only listing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Comments ----------
+  - id: miro.comment_reply
+    object: Comment
+    action: comment_reply
+    description: "Add a reply to an existing comment thread on a Miro board."
+    category: Board Content
+    risk: low
+    business_impact: "Posts a reply into a board comment thread; additive and visible to thread participants."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: miro.comment_resolve
+    object: Comment
+    action: comment_resolve
+    description: "Resolve or unresolve a comment thread on a Miro board."
+    category: Board Content
+    risk: low
+    business_impact: "Toggles the resolved state of a comment thread; reversible workflow state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: miro.comment_list_comments
+    object: Comment
+    action: comment_list_comments
+    description: "List comments from a Miro board or a specific item on the board."
+    category: Board Content
+    risk: medium
+    business_impact: "Reads author-attributed comment text, which can reference or identify individuals; single-board read rather than bulk export."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

@@ -1,0 +1,162 @@
+schema_version: "1.1"
+platform: circleback
+display_name: Circleback
+source: langguard-editorial
+updated: "2026-06"
+reference: https://support.circleback.ai/en/articles/13249081-circleback-mcp
+# Circleback is a meeting-intelligence connector. Its hosted MCP server
+# (https://circleback.ai/api/mcp) is OAuth-gated and strictly READ-ONLY: all 11
+# tools retrieve or search existing data (meetings, transcripts, emails,
+# calendar events, people, companies, tags, support docs). No
+# create/update/delete/send surface exists, so no action carries an SoD concern.
+# Risk and regime exposure are driven by the SENSITIVITY of the data each tool
+# reads, not by blast radius. The full privacy stack is applied only where
+# personal data is the material payload — verbatim private communications
+# (transcripts, emails) and individual profiling/summarized records.
+#
+# The three metadata/lookup reads (SearchMeetings, SearchCalendarEvents,
+# SearchActionItems) DO surface attendee/assignee identities (i.e. personal
+# data), but the auditor characterized them as low-sensitivity, and the >60%
+# over-tag gate forecloses tagging them: any privacy regime added to a metadata
+# read also sits on the 5 content/profiling actions, pushing it to 8/11 = 73%
+# (the prior YAML's failure mode). Their compliance arrays are therefore left []
+# and the incidental-identity exposure is documented in business_impact prose;
+# their confidence is set to `medium` to flag the contested tag-vs-empty call
+# for human review before sync.
+actions:
+  # ---------- Data Access — verbatim private communication content ----------
+  - id: circleback.SearchTranscripts
+    object: Transcript
+    action: SearchTranscripts
+    description: "Search across all meeting transcripts to find where something was mentioned."
+    category: Data Access
+    risk: high
+    business_impact: "Reads the verbatim content of private meeting conversations across the entire workspace; surfaces sensitive spoken statements and may include PII or PHI."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: circleback.GetTranscriptsForMeetings
+    object: Transcript
+    action: GetTranscriptsForMeetings
+    description: "Get the full transcript for one or more meetings, with speaker labels and timestamps."
+    category: Data Access
+    risk: high
+    business_impact: "Returns full verbatim transcripts with speaker attribution; exposes the complete private content of selected meetings and may include PII or PHI."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: circleback.SearchEmails
+    object: Email
+    action: SearchEmails
+    description: "Search connected email accounts for threads by keyword, sender, recipient, or date range."
+    category: Data Access
+    risk: high
+    business_impact: "Reads the verbatim content of private email threads from connected accounts; surfaces correspondence and the personal data of senders and recipients."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access — summarized records & individual profiling ----------
+  - id: circleback.ReadMeetings
+    object: Meeting
+    action: ReadMeetings
+    description: "Get detailed information for specific meetings, including notes, attendees, action items, insights, tags, and duration."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns meeting notes, insights, and attendee details for selected meetings; exposes summarized private discussion and participant personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: circleback.FindProfiles
+    object: Person
+    action: FindProfiles
+    description: "Look up people by name to see their profile and interaction history across meetings."
+    category: Data Access
+    risk: medium
+    business_impact: "Builds a per-person profile and interaction history across meetings; aggregates an identifiable individual's communications into a single view."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access — metadata & lookup reads (identities incidental) ----------
+  - id: circleback.SearchMeetings
+    object: Meeting
+    action: SearchMeetings
+    description: "Find meetings by keyword, date range, tags, attendee, or domain."
+    category: Data Access
+    risk: low
+    business_impact: "Returns meeting metadata (titles, dates, tags) matching a query; attendee identities appear only incidentally and no meeting content is exposed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: circleback.SearchCalendarEvents
+    object: CalendarEvent
+    action: SearchCalendarEvents
+    description: "Search upcoming and past calendar events, including attendees, meeting links, and join status."
+    category: Data Access
+    risk: low
+    business_impact: "Returns calendar event metadata such as titles, links, and join status; attendee identities appear only incidentally and no meeting content is exposed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: circleback.SearchActionItems
+    object: ActionItem
+    action: SearchActionItems
+    description: "Find action items by keyword, status, assignee, tag, or date range."
+    category: Data Access
+    risk: low
+    business_impact: "Returns action items with status and assignee labels; assignee identities appear only incidentally and no meeting content is exposed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access — non-personal lookups & metadata ----------
+  - id: circleback.FindDomains
+    object: Company
+    action: FindDomains
+    description: "Look up companies by name to find their domain and related meetings."
+    category: Data Access
+    risk: low
+    business_impact: "Resolves a company name to its domain and related meetings; company-level lookup with no individual personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: circleback.ListTags
+    object: Tag
+    action: ListTags
+    description: "List all tags in the workspace, useful for filtering meetings, transcripts, or action items."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the workspace tag taxonomy; organizational metadata with no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Support & Documentation ----------
+  - id: circleback.SearchSupportArticles
+    object: SupportArticle
+    action: SearchSupportArticles
+    description: "Search Circleback support documentation for help and how-to guides."
+    category: Documentation
+    risk: low
+    business_impact: "Searches Circleback's public help documentation; returns no customer data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

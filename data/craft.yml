@@ -1,0 +1,133 @@
+schema_version: "1.1"
+platform: craft
+display_name: Craft
+source: langguard-editorial
+updated: "2026-06"
+reference: https://support.craft.do/en/integrate/mcp
+# NOTE: The official Craft connector's MCP server is the registry entry
+# `do.craft.mcp/server` at https://mcp.craft.do/my/mcp (streamable-http). It is
+# OAuth-gated — an anonymous tools/list POST returns HTTP 401 with
+# `WWW-Authenticate: Bearer ... resource_metadata=.../oauth-protected-resource/my`
+# — and no bearer token was available, so the verbatim tool ids could not be
+# retrieved. Craft publishes only plain-language capability labels on its own
+# support docs (support.craft.do/en/integrate/mcp) and connector page
+# (claude.com/connectors/craft): "Search across all documents", "Create, update,
+# and delete documents", "Collection management including schema creation and
+# editing", "Daily notes and tasks are fully accessible via MCP", "Read the
+# content of your Craft documents". These are recorded via the capability-form
+# fallback (id_form: capability); ids are intent-level slugs derived from those
+# labels, NOT verbatim MCP identifiers, so every entry is capped at
+# confidence: medium.
+# Sources deliberately NOT used as the tool surface: (1) the separate Craft
+# *Agents* docs MCP server at agents.craft.do/docs/mcp, which is anonymously
+# introspectable but only exposes two documentation-search tools
+# (search_craft_agents, query_docs_filesystem_craft_agents) for a different
+# product (the Craft Agent CLI framework), not the notes connector; (2) the
+# unrelated "Craft CMS" MCP (stimmtdigital/craft-mcp); (3) third-party catalog
+# sites listing clean-CRUD names (list_documents, search_document, etc.) that
+# could not be verified against an official source. Craft.do documents are a
+# user's private notes / daily notes / tasks / personal databases, so reads,
+# writes, and searches over them touch personal data → the privacy-regime stack
+# is tagged; the full-workspace search is additionally a bulk personal-data read.
+actions:
+  # ---------- Data Access ----------
+  - id: craft.search_all_documents
+    object: Document
+    action: search_all_documents
+    id_form: capability
+    description: "Search across all documents"
+    reference: https://support.craft.do/en/integrate/mcp
+    category: Data Access
+    risk: medium
+    business_impact: "Searches the entire connected Craft space — including private notes, daily notes, and tasks — with tag, date, and regex filters and returns matching content; a bulk read across the user's personal knowledge base."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: craft.read_document
+    object: Document
+    action: read_document
+    id_form: capability
+    description: "Read the content of your Craft documents"
+    reference: https://support.craft.do/en/integrate/mcp
+    category: Data Access
+    risk: low
+    business_impact: "Returns the full content of a single Craft document, including any personal information the user has written into it; read-only."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Content ----------
+  - id: craft.create_document
+    object: Document
+    action: create_document
+    id_form: capability
+    description: "Create, update, and delete documents"
+    reference: https://support.craft.do/en/integrate/mcp
+    category: Content
+    risk: low
+    business_impact: "Creates a new document or folder in the connected Craft space; reversible and scoped to the user's own workspace."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: craft.update_document
+    object: Document
+    action: update_document
+    id_form: capability
+    description: "Create, update, and delete documents"
+    reference: https://support.craft.do/en/integrate/mcp
+    category: Content
+    risk: low
+    business_impact: "Edits or restructures the content of an existing Craft document in place; reversible via the user's own edit history."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: craft.delete_document
+    object: Document
+    action: delete_document
+    id_form: capability
+    description: "Create, update, and delete documents"
+    reference: https://support.craft.do/en/integrate/mcp
+    category: Content
+    risk: medium
+    business_impact: "Deletes a Craft document along with the personal notes it contains; removes the user's own content but is recoverable from Craft's trash."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Tasks ----------
+  - id: craft.manage_tasks
+    object: Task
+    action: manage_tasks
+    id_form: capability
+    description: "Daily notes and tasks are fully accessible via MCP"
+    reference: https://support.craft.do/en/integrate/mcp
+    category: Tasks
+    risk: low
+    business_impact: "Adds, updates, or completes tasks within the user's daily notes; reversible personal-productivity writes."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Collections ----------
+  - id: craft.manage_collections
+    object: Collection
+    action: manage_collections
+    id_form: capability
+    description: "Collection management including schema creation and editing"
+    reference: https://support.craft.do/en/integrate/mcp
+    category: Collections
+    risk: low
+    business_impact: "Creates or edits personal databases (collections) and their column schemas, and adds entries; reversible writes scoped to the user's own workspace."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

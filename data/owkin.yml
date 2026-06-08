@@ -1,0 +1,203 @@
+schema_version: "1.1"
+platform: owkin
+display_name: Owkin
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.owkin.com/connect-and-integrate/pathology-explorer-mcp-ai-powered-tissue-analysis/getting-started
+# Owkin's "Pathology Explorer" connector (MCP endpoint https://mcp.k.owkin.com/mcp,
+# OAuth-gated via AWS Cognito eu-west-1). The vendor "Tool reference (advanced)" block
+# publishes 11 plain-language capability LABELS (no verbatim identifier strings), so those
+# entries use id_form: capability. The April-2026 changelog additionally documents three
+# GigaTIME tools as verbatim backticked ids (get_gigatime_features, display_gigatime_map,
+# display_gigatime_overlay) — those are id_form: verbatim. Live tools/list could not be
+# introspected (401 invalid_token; no anonymous /tools catalog), so identifier strings for
+# the 11 labelled tools are not recoverable. Every tool operates on the PUBLIC, de-identified
+# TCGA database — not user-supplied patient slides — so privacy/HIPAA regimes do NOT apply to
+# routine reads; the one bulk-egress tool is tagged as a security/confidentiality event only.
+actions:
+  # ---------- Data Access ----------
+  - id: owkin.download_histomics_data
+    object: HistomicsDataset
+    action: download_histomics_data
+    id_form: capability
+    description: "Download histomics data"
+    category: Data Access
+    risk: medium
+    business_impact: "Issues a presigned URL for a bulk Parquet download of slide-level histomics features; a data-egress event whose payload is de-identified public TCGA research data (would carry PII/PHI exposure only if a future deployment exports user-supplied patient slides)."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  # ---------- Analysis ----------
+  - id: owkin.perform_survival_analysis
+    object: Cohort
+    action: perform_survival_analysis
+    id_form: capability
+    description: "Perform survival analysis"
+    category: Analysis
+    risk: low
+    business_impact: "Runs overall-survival / progression-free-survival analysis over a TCGA cohort; produces aggregate research output from public de-identified data, reversible and individually logged."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  - id: owkin.get_histomics_features_for_slides
+    object: Slide
+    action: get_histomics_features_for_slides
+    id_form: capability
+    description: "Get histomics features for slides"
+    category: Analysis
+    risk: low
+    business_impact: "Returns slide-level histomics features for specified TCGA slide IDs; read-only over public de-identified data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  - id: owkin.filter_slides_by_histomics_features
+    object: Slide
+    action: filter_slides_by_histomics_features
+    id_form: capability
+    description: "Filter slides by histomics features"
+    category: Analysis
+    risk: low
+    business_impact: "Returns TCGA slide IDs matching feature criteria; read-only query over public de-identified data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  - id: owkin.filter_tiles_by_histomics
+    object: Tile
+    action: filter_tiles_by_histomics
+    id_form: capability
+    description: "Filter tiles by histomics"
+    category: Analysis
+    risk: low
+    business_impact: "Selects image tiles by feature criteria within a TCGA slide; read-only query over public de-identified data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  # ---------- GigaTIME Biomarkers ----------
+  - id: owkin.get_gigatime_features
+    object: Slide
+    action: get_gigatime_features
+    description: "Returns the 21 mean GigaTIME virtual-mIF channel expression values per slide for TCGA-LUAD."
+    reference: https://docs.owkin.com/terms-and-support/support/changelog
+    category: Analysis
+    risk: low
+    business_impact: "Returns GigaTIME virtual multiplex-immunofluorescence biomarker features for TCGA-LUAD slides; read-only over public de-identified research data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  - id: owkin.display_gigatime_map
+    object: Slide
+    action: display_gigatime_map
+    description: "Renders a GigaTIME marker-grid display for a slide."
+    reference: https://docs.owkin.com/terms-and-support/support/changelog
+    category: Analysis
+    risk: low
+    business_impact: "Renders a GigaTIME marker-grid visualization for a TCGA-LUAD slide; read-only over public de-identified research data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  - id: owkin.display_gigatime_overlay
+    object: Slide
+    action: display_gigatime_overlay
+    description: "Renders a side-by-side H&E-vs-marker GigaTIME overlay for a slide."
+    reference: https://docs.owkin.com/terms-and-support/support/changelog
+    category: Analysis
+    risk: low
+    business_impact: "Renders an H&E-versus-marker GigaTIME overlay for a TCGA-LUAD slide; read-only over public de-identified research data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  # ---------- Visualization ----------
+  - id: owkin.display_slide_thumbnail
+    object: Slide
+    action: display_slide_thumbnail
+    id_form: capability
+    description: "Display slide thumbnail"
+    category: Visualization
+    risk: low
+    business_impact: "Renders a thumbnail of a TCGA slide image; read-only visualization of public de-identified data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  - id: owkin.display_tiles_with_predictions
+    object: Tile
+    action: display_tiles_with_predictions
+    id_form: capability
+    description: "Display tiles with predictions"
+    category: Visualization
+    risk: low
+    business_impact: "Renders a mosaic of image tiles annotated with model predictions; read-only visualization of public de-identified data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  # ---------- Catalog & Metadata ----------
+  - id: owkin.list_tcga_cohorts
+    object: Cohort
+    action: list_tcga_cohorts
+    id_form: capability
+    description: "List TCGA cohorts"
+    category: Catalog & Metadata
+    risk: low
+    business_impact: "Returns the supported TCGA cohorts; read-only catalog metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  - id: owkin.list_available_cell_types
+    object: CellType
+    action: list_available_cell_types
+    id_form: capability
+    description: "List available cell types"
+    category: Catalog & Metadata
+    risk: low
+    business_impact: "Returns the supported cell-type tokens; read-only catalog metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  - id: owkin.describe_slide_level_histomics_features
+    object: HistomicsFeature
+    action: describe_slide_level_histomics_features
+    id_form: capability
+    description: "Describe slide-level histomics features"
+    category: Catalog & Metadata
+    risk: low
+    business_impact: "Describes available histomics feature names and their meanings; read-only schema metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+
+  - id: owkin.pathology_explorer_description
+    object: Model
+    action: pathology_explorer_description
+    id_form: capability
+    description: "Pathology Explorer description"
+    category: Catalog & Metadata
+    risk: low
+    business_impact: "Returns a summary of the Pathology Explorer model and its capabilities; read-only metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]

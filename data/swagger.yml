@@ -1,0 +1,286 @@
+schema_version: "1.1"
+platform: swagger
+display_name: Swagger
+source: langguard-editorial
+updated: "2026-06"
+reference: https://developer.smartbear.com/smartbear-mcp/docs/remote-swagger
+actions:
+  # ---------- API Governance ----------
+  - id: swagger.swagger_create_or_update_api
+    object: API
+    action: swagger_create_or_update_api
+    description: "Creates a new API or updates an existing one in SwaggerHub Registry, auto-detecting OpenAPI/AsyncAPI format from the supplied definition."
+    category: API Governance
+    risk: medium
+    business_impact: "Writes or overwrites an API definition in the registry; reversible by saving a new version but can replace an existing contract that downstream consumers depend on."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: swagger.swagger_create_api_from_prompt
+    object: API
+    action: swagger_create_api_from_prompt
+    description: "Generates and saves an API definition from a natural-language prompt using SmartBear AI, applying organization governance and standardization rules."
+    category: API Governance
+    risk: medium
+    business_impact: "Writes a new AI-generated API definition into the registry; reversible by versioning but introduces machine-authored design artifacts under the organization's governance rules."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: swagger.swagger_standardize_api
+    object: API
+    action: swagger_standardize_api
+    description: "Scans an API definition for standardization errors and uses AI to fix them, saving the result as a new version or overwriting the current one when no new version is supplied."
+    category: API Governance
+    risk: medium
+    business_impact: "Rewrites a governed API definition via AI; overwrites the current version unless a new version is specified, changing the canonical contract in place."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: swagger.swagger_scan_api_standardization
+    object: API
+    action: swagger_scan_api_standardization
+    description: "Runs a read-only standardization scan of an API definition against the organization's governance rules and returns validation errors and warnings."
+    category: API Governance
+    risk: low
+    business_impact: "Validates a definition against governance rules without changing any stored state; read-only analysis."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: swagger.swagger_get_api_definition
+    object: API
+    action: swagger_get_api_definition
+    description: "Fetches a resolved OpenAPI specification for a given owner, API name, and version."
+    category: API Governance
+    risk: low
+    business_impact: "Reads a single resolved API specification; non-destructive metadata retrieval."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: swagger.swagger_search_apis_and_domains
+    object: API
+    action: swagger_search_apis_and_domains
+    description: "Searches APIs and Domains in the registry and returns metadata including owner, name, description, version, and specification."
+    category: API Governance
+    risk: low
+    business_impact: "Reads API and Domain metadata matching a filter; non-destructive discovery query."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Documentation Portals ----------
+  - id: swagger.swagger_publish_portal_product
+    object: Product
+    action: swagger_publish_portal_product
+    description: "Publishes a product's current content live (or as a preview), making it visible to portal visitors."
+    category: Documentation Portals
+    risk: medium
+    business_impact: "Pushes documentation content live to external portal visitors; an externally visible change-management event, reversible by republishing prior content."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: swagger.swagger_create_portal
+    object: Portal
+    action: swagger_create_portal
+    description: "Creates a new documentation portal within Swagger."
+    category: Documentation Portals
+    risk: medium
+    business_impact: "Provisions a new public-facing documentation portal under the organization; reversible but creates externally addressable infrastructure."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: swagger.swagger_update_portal
+    object: Portal
+    action: swagger_update_portal
+    description: "Updates a portal's configuration, including subdomain, custom domain, visibility, routing, and credential settings."
+    category: Documentation Portals
+    risk: medium
+    business_impact: "Changes public-facing portal configuration such as custom domain, visibility, and credential enforcement; affects who can reach and authenticate to the portal."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: swagger.swagger_get_portal
+    object: Portal
+    action: swagger_get_portal
+    description: "Retrieves the full configuration metadata for a specific portal."
+    category: Documentation Portals
+    risk: low
+    business_impact: "Reads configuration metadata for a single portal; non-destructive retrieval."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: swagger.swagger_list_portals
+    object: Portal
+    action: swagger_list_portals
+    description: "Lists portals for which the caller holds an owner or designer role."
+    category: Documentation Portals
+    risk: low
+    business_impact: "Enumerates portals visible to the caller; non-destructive discovery query."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: swagger.swagger_create_portal_product
+    object: Product
+    action: swagger_create_portal_product
+    description: "Creates a new product within a specific portal."
+    category: Documentation Portals
+    risk: low
+    business_impact: "Adds a new (unpublished) product to a portal; reversible and not externally visible until published."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: swagger.swagger_update_portal_product
+    object: Product
+    action: swagger_update_portal_product
+    description: "Updates a product's settings within a specific portal."
+    category: Documentation Portals
+    risk: low
+    business_impact: "Changes settings of a portal product; reversible and not externally visible until republished."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: swagger.swagger_delete_portal_product
+    object: Product
+    action: swagger_delete_portal_product
+    description: "Deletes a product from a specific portal."
+    category: Documentation Portals
+    risk: medium
+    business_impact: "Removes a product and its documentation from a portal; no soft-delete is documented, so the product and its content are lost unless rebuilt."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: swagger.swagger_get_portal_product
+    object: Product
+    action: swagger_get_portal_product
+    description: "Retrieves information about a specific product resource."
+    category: Documentation Portals
+    risk: low
+    business_impact: "Reads metadata for a single portal product; non-destructive retrieval."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: swagger.swagger_list_portal_products
+    object: Product
+    action: swagger_list_portal_products
+    description: "Lists the products within a specific portal."
+    category: Documentation Portals
+    risk: low
+    business_impact: "Enumerates products in a portal; non-destructive discovery query."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: swagger.swagger_list_portal_product_sections
+    object: Section
+    action: swagger_list_portal_product_sections
+    description: "Lists the sections of a specific product within a portal."
+    category: Documentation Portals
+    risk: low
+    business_impact: "Enumerates sections of a portal product; non-destructive discovery query."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Documentation Content ----------
+  - id: swagger.swagger_create_table_of_contents
+    object: TableOfContents
+    action: swagger_create_table_of_contents
+    description: "Creates a new table-of-contents item in a portal product section, supporting API-reference, HTML, and Markdown content types."
+    category: Documentation Content
+    risk: low
+    business_impact: "Adds a navigation entry to a product section; reversible content authoring with no external impact until published."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: swagger.swagger_delete_table_of_contents
+    object: TableOfContents
+    action: swagger_delete_table_of_contents
+    description: "Soft-deletes a table-of-contents entry, with support for recursive deletion of nested items."
+    category: Documentation Content
+    risk: medium
+    business_impact: "Removes a table-of-contents entry and any nested items; soft-delete keeps it recoverable but can prune large navigation subtrees in one call."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: swagger.swagger_list_table_of_contents
+    object: TableOfContents
+    action: swagger_list_table_of_contents
+    description: "Gets the table of contents for a section of a product within a portal."
+    category: Documentation Content
+    risk: low
+    business_impact: "Reads the table of contents for a product section; non-destructive retrieval."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: swagger.swagger_update_document
+    object: Document
+    action: swagger_update_document
+    description: "Updates the content or source of an existing document, supporting HTML and Markdown content types."
+    category: Documentation Content
+    risk: low
+    business_impact: "Edits the body of a documentation document; reversible content authoring with no external impact until published."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: swagger.swagger_get_document
+    object: Document
+    action: swagger_get_document
+    description: "Gets document content and metadata by document ID."
+    category: Documentation Content
+    risk: low
+    business_impact: "Reads a single document's content and metadata; non-destructive retrieval."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: swagger.swagger_list_organizations
+    object: Organization
+    action: swagger_list_organizations
+    description: "Returns the organizations the authenticated user belongs to, including id, name, description, contact email, url, and member count (all organizations for on-premise admins)."
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads organization directory metadata including a contact email per org; org-level data rather than individual records, but exposes membership and contact details."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

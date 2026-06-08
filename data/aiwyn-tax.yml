@@ -1,38 +1,76 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: aiwyn-tax
 display_name: Aiwyn Tax
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://docs.columntax.com/page/aiwyn-tax-mcp-server
 actions:
-  # ---------- Reference Data ----------
-  - id: aiwyn-tax.tax_years
-    object: TaxYear
-    action: tax_years
-    category: Data Access
-    risk: low
-    business_impact: "Returns supported tax years."
-    compliance: []
+  # ---------- Financial ----------
+  # Stateless tax-calculation engine: taxpayer PII (SSN, W-2 income, dependents) is
+  # supplied by the caller in the `input` argument and processed in-flight; the server
+  # persists no taxpayer corpus, so nothing here reaches `critical`. PII tools carry the
+  # full privacy stack plus GLBA (tax-prep firms are GLBA "financial institutions" under
+  # the FTC Safeguards Rule). SOX/COSO deliberately NOT tagged: these compute individual
+  # 1040s, not corporate financial statements — no SOX/ITGC nexus.
+  - id: aiwyn-tax.generate_tax_pdf_tool
+    object: TaxReturn
+    action: generate_tax_pdf_tool
+    description: "Starts an async PDF-generation job for a tax return from supplied taxpayer inputs; returns a job ID to poll."
+    category: Financial
+    risk: high
+    business_impact: "Materializes a filing-ready IRS/state PDF containing taxpayer SSN, income, and deductions, retrievable via a download URL."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
-  - id: aiwyn-tax.tax_jurisdictions
-    object: TaxJurisdiction
-    action: tax_jurisdictions
-    category: Data Access
-    risk: low
-    business_impact: "Returns supported federal and state tax jurisdictions."
-    compliance: []
+  - id: aiwyn-tax.get_tax_pdf_tool
+    object: TaxReturn
+    action: get_tax_pdf_tool
+    description: "Polls a PDF-generation job and returns its status plus a download URL for the completed taxpayer return."
+    category: Financial
+    risk: high
+    business_impact: "Returns a download URL for a previously generated PDF containing taxpayer SSN, income, and deductions."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
-  - id: aiwyn-tax.tax_namespaces
-    object: TaxNamespace
-    action: tax_namespaces
+  - id: aiwyn-tax.calculate_tax
+    object: TaxReturn
+    action: calculate_tax
+    description: "Computes a full federal and/or state tax return from caller-supplied taxpayer inputs and returns the computed document."
+    category: Financial
+    risk: medium
+    business_impact: "Computes federal/state tax liability from taxpayer PII supplied in the request; the caller already holds the input and no record is persisted."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: aiwyn-tax.check_tax
+    object: TaxReturn
+    action: check_tax
+    description: "Validates caller-supplied tax-return inputs against a jurisdiction's rules before calculation."
+    category: Financial
+    risk: medium
+    business_impact: "Validates a taxpayer-PII payload against jurisdiction rules; the caller already holds the input and no record is persisted."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  # Reference/schema reads and the example-scenario helper. None touch taxpayer PII:
+  # tax_simple_return returns curated example data and workflow guidance, not real
+  # taxpayer records.
+  - id: aiwyn-tax.tax_simple_return
+    object: TaxScenario
+    action: tax_simple_return
+    description: "Returns a curated namespace list, example input, and step-by-step filing workflow for a simple scenario."
     category: Data Access
     risk: low
-    business_impact: "Returns the namespace taxonomy used to scope tax inputs."
+    business_impact: "Returns generic example input and workflow guidance to bootstrap a return; no taxpayer data involved."
     compliance: []
     sod_concern: false
     confidence: high
@@ -41,78 +79,59 @@ actions:
   - id: aiwyn-tax.tax_namespace_schema
     object: TaxNamespace
     action: tax_namespace_schema
+    description: "Returns the input JSON schema (field names and types) for a single tax namespace."
     category: Data Access
     risk: low
-    business_impact: "Returns the JSON schema for a given tax namespace."
+    business_impact: "Returns the JSON input schema for a given tax namespace; metadata only, no taxpayer data."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  # ---------- Tax Computation ----------
-  - id: aiwyn-tax.tax_simple_return
-    object: TaxReturn
-    action: tax_simple_return
-    category: Financial
-    risk: high
-    business_impact: "Computes a simplified tax return from supplied taxpayer data; touches taxpayer PII and financial details."
-    compliance: [SOX, COSO, GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+  - id: aiwyn-tax.tax_namespaces
+    object: TaxNamespace
+    action: tax_namespaces
+    description: "Lists the available input namespaces for a given jurisdiction."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the namespace taxonomy used to scope tax inputs for a jurisdiction; metadata only."
+    compliance: []
     sod_concern: false
-    confidence: medium
+    confidence: high
     access_methods: [REST, MCP]
 
-  - id: aiwyn-tax.check_tax
-    object: TaxReturn
-    action: check_tax
-    category: Financial
-    risk: medium
-    business_impact: "Validates a tax-return payload against jurisdiction rules; may surface preparer-sensitive data."
-    compliance: [SOX, COSO, GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+  - id: aiwyn-tax.tax_jurisdictions
+    object: TaxJurisdiction
+    action: tax_jurisdictions
+    description: "Lists the supported federal and state tax jurisdictions for a given tax year."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the list of supported tax jurisdictions; reference data only."
+    compliance: []
     sod_concern: false
-    confidence: medium
+    confidence: high
     access_methods: [REST, MCP]
 
-  - id: aiwyn-tax.calculate_tax
-    object: TaxReturn
-    action: calculate_tax
-    category: Financial
-    risk: high
-    business_impact: "Computes federal/state tax liability from taxpayer inputs; financial-statement and filing impact."
-    compliance: [SOX, COSO, GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+  - id: aiwyn-tax.tax_years
+    object: TaxYear
+    action: tax_years
+    description: "Lists all supported tax years."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the list of supported tax years; reference data only."
+    compliance: []
     sod_concern: false
-    confidence: medium
+    confidence: high
     access_methods: [REST, MCP]
 
-  # ---------- PDF Generation ----------
-  - id: aiwyn-tax.generate_tax_pdf_tool
-    object: TaxPDF
-    action: generate_tax_pdf_tool
-    category: Financial
-    risk: high
-    business_impact: "Produces a filing-ready PDF containing taxpayer SSN, income, and deductions."
-    compliance: [SOX, COSO, GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: aiwyn-tax.get_tax_pdf_tool
-    object: TaxPDF
-    action: get_tax_pdf_tool
-    category: Financial
-    risk: high
-    business_impact: "Retrieves a previously generated tax PDF; data exfiltration risk for taxpayer records."
-    compliance: [SOX, COSO, GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  # ---------- Utilities ----------
+  # ---------- Operations ----------
   - id: aiwyn-tax.generate_uuid_v5
     object: Utility
     action: generate_uuid_v5
+    description: "Generates a deterministic UUID v5 from a source UUID and namespace."
     category: Operations
     risk: low
-    business_impact: "Generates a deterministic UUID v5 for client-side use."
+    business_impact: "Generates a deterministic UUID v5 for client-side input linking; no taxpayer data involved."
     compliance: []
     sod_concern: false
     confidence: high

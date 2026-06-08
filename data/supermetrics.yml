@@ -1,0 +1,158 @@
+schema_version: "1.1"
+platform: supermetrics
+display_name: Supermetrics
+source: langguard-editorial
+updated: "2026-06"
+reference: https://mcp.supermetrics.com/openapi.json
+# Verbatim tool ids taken from the vendor's anonymously-accessible OpenAPI spec at
+# https://mcp.supermetrics.com/openapi.json (HTTP 200, no auth) — title
+# "Supermetrics MCP Server". The 12 MCP tools are the POST /mcp/<tool> operations;
+# GET /mcp/resources/* entries are MCP resources, not tools, and are excluded.
+actions:
+  # ---------- Identity & Access ----------
+  - id: supermetrics.manage_user_and_team
+    object: User
+    action: manage_user_and_team
+    description: "Manages the Supermetrics account: invites new members, assigns users to a subscription, and creates data-source login links."
+    category: Identity & Access
+    risk: high
+    business_impact: "Provisions team access — invites members, assigns subscriptions, and mints data-source login links — bypassing a two-person access-review control."
+    compliance: [SOC2, ISO_27001, NIST_CSF, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: supermetrics.user_info
+    object: User
+    action: user_info
+    description: "Account-management tool sharing the manage-user/team surface: reads profile and license info, invites members, and creates data-source login links."
+    category: Identity & Access
+    risk: high
+    business_impact: "Exposes the same access-management surface (invite, subscription assignment, login-link minting) as manage_user_and_team; single-actor access provisioning."
+    compliance: [SOC2, ISO_27001, NIST_CSF, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Campaigns ----------
+  - id: supermetrics.campaign_create
+    object: Campaign
+    action: campaign_create
+    description: "Creates an ad campaign on Google Ads, Facebook Ads, TikTok Ads, LinkedIn Ads, Microsoft Ads, or ChatGPT Ads with budget, targeting, and ad groups."
+    category: Campaigns
+    risk: medium
+    business_impact: "Launches a live ad campaign with a committed budget on the connected ad platform; incurs media spend once enabled and is reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: supermetrics.campaign_update
+    object: Campaign
+    action: campaign_update
+    description: "Updates an existing campaign's budget, status, targeting, bidding, or ad groups; can remove ads and ad groups."
+    category: Campaigns
+    risk: medium
+    business_impact: "Changes a live campaign's budget, targeting, or status and can remove ads and ad groups; alters media spend and audience reach but is reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: supermetrics.campaign_and_resource_get
+    object: Campaign
+    action: campaign_and_resource_get
+    description: "Lists or retrieves campaigns and related ad-platform resources for an account."
+    category: Campaigns
+    risk: low
+    business_impact: "Reads campaign and ad-resource configuration for a connected account; non-destructive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: supermetrics.data_query
+    object: Report
+    action: data_query
+    description: "Runs a marketing-data query across Google Ads, Google Analytics, Facebook Ads, Shopify, HubSpot, and 200+ other connected platforms."
+    category: Data Access
+    risk: high
+    business_impact: "Pulls aggregated and row-level marketing data from 200+ connected sources, which can include customer-level and lead-level PII from analytics and CRM platforms."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: supermetrics.get_async_query_results
+    object: Report
+    action: get_async_query_results
+    description: "Retrieves the results of an asynchronous data_query using its schedule_id."
+    category: Data Access
+    risk: high
+    business_impact: "Returns the full result set of a marketing-data query, which can include customer-level and lead-level PII from analytics and CRM sources."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: supermetrics.accounts_discovery
+    object: Account
+    action: accounts_discovery
+    description: "Lists the connected accounts available for a given data source."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates connected ad and analytics accounts and their IDs for a data source; metadata read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: supermetrics.data_source_discovery
+    object: DataSource
+    action: data_source_discovery
+    description: "Lists available data sources or returns a source's configuration, capabilities, and login-link status."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the catalog of connectable data sources and their auth and config state; non-destructive metadata read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: supermetrics.field_discovery
+    object: Field
+    action: field_discovery
+    description: "Lists the available metric and dimension fields for a data source."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the schema of selectable fields for a data source; metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: supermetrics.contact_supermetrics
+    object: SupportTicket
+    action: contact_supermetrics
+    description: "Sends feedback, opens a support ticket, or submits a sales enquiry, including submitter contact details."
+    category: Operations
+    risk: low
+    business_impact: "Creates a support, feedback, or sales record carrying the submitter's name, company, and country; transmits personal contact data to Supermetrics."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: supermetrics.get_today
+    object: Utility
+    action: get_today
+    description: "Returns the current UTC date and time for resolving relative date ranges."
+    category: Operations
+    risk: low
+    business_impact: "Returns the current UTC date and time; no data access or state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

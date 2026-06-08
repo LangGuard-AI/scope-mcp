@@ -1,0 +1,207 @@
+schema_version: "1.1"
+platform: motion
+display_name: Motion
+source: langguard-editorial
+updated: "2026-06"
+reference: https://help.motionapp.com/en/articles/14315735-motion-mcp
+# Motion (motionapp.com) — Creative Analytics platform for Meta ad-creative
+# performance. The hosted MCP server at https://projects.motionapp.com/mcp is
+# OAuth-gated. The vendor docs state "14 tools across six categories"; the
+# Available Tools table enumerates 13 verbatim get_*/search_* read tools
+# (creative performance, workspace context, competitor/brand intelligence,
+# saved reports, AI tags, auth context). The 14th is a feedback-submission tool
+# that EGRESSES the conversation context to Motion's team ("submit feedback to
+# Motion ... the MCP will package up the conversation context and send it
+# directly to our team"). It is documented in prose only (Troubleshooting + FAQ)
+# with NO verbatim tool id published anywhere reachable; the server is OAuth-
+# gated so tools/list cannot be introspected anonymously. It is curated below
+# via the capability-form fallback (id_form: capability, confidence: low). The
+# vendor "read-only" claim is scoped to "doesn't modify your account, creatives,
+# or settings" and does NOT cover this egress. No financial, destructive, or
+# identity/admin surface is exposed.
+actions:
+  # ---------- Creative Performance ----------
+  - id: motion.get_creative_insights
+    object: Creative
+    action: get_creative_insights
+    description: "The primary analytics tool; returns your creatives ranked by performance, sortable by spend, ROAS, purchases, CPA, CPC, CTR, hook rate, and scaling status, with date and AI-tag filtering."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the workspace's own ad-creative performance metrics; aggregate marketing analytics with no personal data and no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: motion.get_creative_summary
+    object: Creative
+    action: get_creative_summary
+    description: "Gets an AI-generated digest for a single creative: detected format, plain-language summary, best hook/headline, and CTAs."
+    category: Data Access
+    risk: low
+    business_impact: "Reads an AI-generated summary of one of the workspace's own ad creatives; marketing content only, no personal data and no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: motion.get_creative_transcript
+    object: Creative
+    action: get_creative_transcript
+    description: "Pulls the spoken transcript of a video creative with timed segments, including language detection and English translation for non-English content."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the transcript of the workspace's own video ad creative; published marketing content with no personal data and no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: motion.get_demographic_breakdown
+    object: DemographicBreakdown
+    action: get_demographic_breakdown
+    description: "Breaks down ad performance by age (18-24 through 65+) and gender, with metrics including spend, ROAS, purchase value, cost per purchase, and thumbstop ratio."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads ad performance split by audience age and gender; aggregate demographic data (not identifiable individuals) but processes age/gender attributes governed by privacy regimes."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Workspace Context ----------
+  - id: motion.get_workspace_brand
+    object: Brand
+    action: get_workspace_brand
+    description: "Returns the workspace's brand positioning, voice, and visual identity as configured in Motion."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the workspace's own brand positioning and identity configuration; no personal data and no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: motion.get_workspace_competitors
+    object: Competitor
+    action: get_workspace_competitors
+    description: "Lists the competitor brands tracked in the workspace: names, domains, categories, follower counts, and active ad counts."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the list of competitor brands the workspace tracks; public-company marketing metadata with no personal data and no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Competitor & Brand Intelligence ----------
+  - id: motion.search_brands
+    object: Brand
+    action: search_brands
+    description: "Searches for any brand by name or domain, returning matching brands with IDs, logos, and industry info."
+    category: Data Access
+    risk: low
+    business_impact: "Searches the public brand directory by name or domain; returns company metadata with no personal data and no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: motion.get_brand_by_domain
+    object: Brand
+    action: get_brand_by_domain
+    description: "Resolves a brand from a website URL or domain."
+    category: Data Access
+    risk: low
+    business_impact: "Resolves a brand record from a URL or domain; public-company metadata lookup with no personal data and no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: motion.get_inspo_creatives
+    object: Creative
+    action: get_inspo_creatives
+    description: "Retrieves creatives from a competitor brand's ad library: format, copy, headline, CTA, launch date, status, days active, landing page, and file URLs (metadata, not performance metrics)."
+    category: Data Access
+    risk: low
+    business_impact: "Reads competitor ad-library creatives sourced from public ad libraries; published marketing content with no personal data and no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: motion.get_inspo_brand_context
+    object: Brand
+    action: get_inspo_brand_context
+    description: "Returns deep brand intelligence for a competitor: positioning, voice, tone, messaging angles, product info, and customer voice analysis."
+    category: Data Access
+    risk: low
+    business_impact: "Reads aggregated competitor brand-intelligence analysis derived from public sources; no personal data and no state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Saved Reports ----------
+  - id: motion.get_reports
+    object: Report
+    action: get_reports
+    description: "Lists saved reports, or returns a single report's full configuration including filters, attribution windows, metrics, and comparison settings."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the workspace's saved report configurations and contained marketing analytics; no personal data and no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- AI Tags ----------
+  - id: motion.get_glossary_values
+    object: GlossaryValue
+    action: get_glossary_values
+    description: "Returns the workspace's AI Tag taxonomy (e.g. Asset Type, Visual Format, Messaging Angle, Hook Tactic), mappable back to specific creatives."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the workspace's AI-tag taxonomy used to categorize creatives; configuration metadata with no personal data and no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Auth & Context ----------
+  - id: motion.get_auth_context
+    object: AuthContext
+    action: get_auth_context
+    description: "Returns the caller's organizations and workspaces; called automatically as the first step in any session to resolve workspace selection."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the authenticated user's organization and workspace list to resolve session context; account metadata with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Feedback / Data Egress ----------
+  # Documented in prose only (Troubleshooting + FAQ); accounts for the vendor's
+  # "14 tools" count vs the 13-row Available Tools table. No verbatim tool id is
+  # published and the OAuth-gated server cannot be introspected anonymously, so
+  # this is curated via the capability-form fallback. The egressed payload is
+  # the free-form conversation context, which can contain personal data
+  # depending on what the user discussed — hence the privacy + confidentiality
+  # tagging (export/exfil heuristic) and confidence: low pending a verbatim id.
+  # access_methods is [MCP] only: the egress is described purely as an MCP-
+  # session behavior, with no documented REST endpoint.
+  - id: motion.submit_feedback
+    object: Feedback
+    action: submit_feedback
+    id_form: capability
+    description: "submit feedback to Motion"
+    reference: https://help.motionapp.com/en/articles/14315735-motion-mcp
+    category: Data Egress
+    risk: medium
+    business_impact: "Packages up the session's conversation context and sends it directly to Motion's team; a third-party data-egress event whose payload may contain personal data the user discussed, outside the read-only account surface."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: low
+    access_methods: [MCP]

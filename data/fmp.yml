@@ -1,0 +1,223 @@
+schema_version: "1.1"
+platform: fmp
+display_name: Financial Modeling Prep
+source: langguard-editorial
+updated: "2026-06"
+reference: https://site.financialmodelingprep.com/developer/docs/mcp-server
+# PROVENANCE: The official FMP hosted MCP server (https://financialmodelingprep.com/mcp?apikey=...)
+# is apikey-gated and returns 401 to anonymous tools/list, so the full verbatim tool surface
+# could not be introspected. The claude.com/connectors/fmp page states the server exposes
+# "27 read-only tools"; the FMP MCP docs page is marketing prose that does not enumerate ids.
+# Exactly ONE verbatim tool id was confirmable, from the official docs' FastMCP code example
+# (`Tool(name="quote", ...)` / `client.call_tool("quote", {"symbol":"AAPL"})`): the `quote` tool,
+# recorded below as id_form: verbatim. The official server uses bare lowercase tool names — this
+# rules out the community GitHub servers' conflicting `get_*` ids (imbenrabi, cdtait, ccdatatraits),
+# which are SEPARATE implementations and were NOT used.
+# All other entries are id_form: capability, derived from capability labels explicitly attested in
+# the claude.com connector prose and the FMP docs/nav. They are intent-level matches (confidence
+# capped at medium), NOT verbatim identifiers. The set was intentionally NOT padded to 27.
+# RISK/REGIME NOTE: Every FMP tool is a READ over PUBLIC market data (published company financials,
+# stock/crypto/forex/commodity prices, SEC filings, public insider/congressional disclosures).
+# This is third-party public-record data, NOT the customer's own books or customer PII — so SOX,
+# COSO, GLBA, and PCI do NOT apply (those govern a firm's own financial-reporting controls and
+# consumer financial-account data, neither of which this connector touches). Most arrays are [].
+actions:
+  # ---------- Market Data ----------
+  - id: fmp.quote
+    object: Quote
+    action: quote
+    description: "Returns a real-time price quote for a ticker symbol."
+    category: Data Access
+    risk: low
+    business_impact: "Reads a real-time public market quote; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: fmp.get_historical_prices
+    object: PriceHistory
+    action: get_historical_prices
+    id_form: capability
+    description: "Real-time and historical financial data"
+    category: Data Access
+    risk: low
+    business_impact: "Reads historical public price/market data; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: fmp.get_market_news
+    object: NewsArticle
+    action: get_market_news
+    id_form: capability
+    description: "Market News"
+    category: Data Access
+    risk: low
+    business_impact: "Reads published market news headlines; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Company Fundamentals ----------
+  - id: fmp.get_company_fundamentals
+    object: Company
+    action: get_company_fundamentals
+    id_form: capability
+    description: "Look up company fundamentals"
+    category: Data Access
+    risk: low
+    business_impact: "Reads a public company profile and fundamentals; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: fmp.get_financial_statements
+    object: FinancialStatement
+    action: get_financial_statements
+    id_form: capability
+    description: "Pull financial statements"
+    category: Financial
+    risk: low
+    business_impact: "Reads a public company's published financial statements; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: fmp.get_analyst_estimates
+    object: AnalystEstimate
+    action: get_analyst_estimates
+    id_form: capability
+    description: "Analyst Estimates"
+    category: Data Access
+    risk: low
+    business_impact: "Reads published analyst estimates and price targets; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: fmp.run_dcf_valuation
+    object: Valuation
+    action: run_dcf_valuation
+    id_form: capability
+    description: "Run valuation models"
+    category: Financial
+    risk: low
+    business_impact: "Computes a discounted-cash-flow valuation from public financials; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Screening & Discovery ----------
+  - id: fmp.screen_stocks
+    object: Screener
+    action: screen_stocks
+    id_form: capability
+    description: "Screen stocks"
+    category: Data Access
+    risk: low
+    business_impact: "Filters the public equities universe by financial criteria; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Earnings ----------
+  - id: fmp.get_earnings_transcripts
+    object: EarningsTranscript
+    action: get_earnings_transcripts
+    id_form: capability
+    description: "Read earnings transcripts"
+    category: Data Access
+    risk: low
+    business_impact: "Reads published earnings-call transcripts; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Regulatory Disclosures ----------
+  - id: fmp.get_sec_filings
+    object: SECFiling
+    action: get_sec_filings
+    id_form: capability
+    description: "SEC filings"
+    category: Data Access
+    risk: low
+    business_impact: "Reads public SEC filings; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: fmp.get_insider_trades
+    object: InsiderTrade
+    action: get_insider_trades
+    id_form: capability
+    description: "Track insider and congressional trades"
+    category: Data Access
+    risk: low
+    business_impact: "Reads public-record insider-trading disclosures that name individuals; read-only public data, not customer PII."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: fmp.get_congressional_trades
+    object: CongressionalTrade
+    action: get_congressional_trades
+    id_form: capability
+    description: "Track insider and congressional trades"
+    category: Data Access
+    risk: low
+    business_impact: "Reads public-record congressional-trading disclosures that name legislators; read-only public data, not customer PII."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Economics & Alternative Assets ----------
+  - id: fmp.get_economic_indicators
+    object: EconomicIndicator
+    action: get_economic_indicators
+    id_form: capability
+    description: "Economic indicators"
+    category: Data Access
+    risk: low
+    business_impact: "Reads published macroeconomic indicator series; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: fmp.get_crypto_forex_commodities
+    object: MarketData
+    action: get_crypto_forex_commodities
+    id_form: capability
+    description: "Crypto, forex, and commodities"
+    category: Data Access
+    risk: low
+    business_impact: "Reads public crypto, forex, and commodity market prices; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: fmp.get_etf_data
+    object: ETF
+    action: get_etf_data
+    id_form: capability
+    description: "Stock and ETF data"
+    category: Data Access
+    risk: low
+    business_impact: "Reads public ETF and mutual-fund holdings and pricing; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

@@ -1,0 +1,20 @@
+schema_version: "1.1"
+platform: sandboxaq
+display_name: SandboxAQ
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.aisim.sandboxaq.com/mcp
+actions:
+  # ---------- Simulation ----------
+  - id: sandboxaq.aqcat
+    object: AdsorptionCalculation
+    action: aqcat
+    description: "Fully automated dense adsorption geometry optimization; returns the lowest-energy relaxed structure and binding energy for a given bulk material, adsorbate, and crystal facet."
+    reference: https://docs.aisim.sandboxaq.com/aqcat
+    category: Operations
+    risk: low
+    business_impact: "Runs a read-only computational-chemistry inference over materials-science inputs (composition, adsorbate, crystal facet) and returns binding energies and relaxed atomic structures; no persistent state change and no personal, health, or financial data involved."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

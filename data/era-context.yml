@@ -1,0 +1,566 @@
+schema_version: "1.1"
+platform: era-context
+display_name: Era Context
+source: langguard-editorial
+updated: "2026-06"
+reference: https://era.app/help/mcp-server-era-context/
+actions:
+  # ---------- Financial Data Access ----------
+  - id: era-context.knowledge__get_financial_context_and_overview
+    object: FinancialProfile
+    action: knowledge__get_financial_context_and_overview
+    description: "Get financial context and overview"
+    category: Financial
+    risk: critical
+    business_impact: "Returns the user's consolidated financial picture in a single call; bulk exfiltration of personal financial data regardless of intent."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: era-context.accounts__list_financial_accounts
+    object: FinancialAccount
+    action: accounts__list_financial_accounts
+    description: "List financial accounts"
+    category: Financial
+    risk: high
+    business_impact: "Reads the full list of the user's linked bank and financial accounts; bulk financial-PII read."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.accounts__check_account_balance
+    object: FinancialAccount
+    action: accounts__check_account_balance
+    description: "Check account balance"
+    category: Financial
+    risk: high
+    business_impact: "Reads an account's current balance; sensitive financial-PII read."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.transactions__list_transactions
+    object: Transaction
+    action: transactions__list_transactions
+    description: "List transactions"
+    category: Financial
+    risk: high
+    business_impact: "Reads the user's transaction history in bulk; bulk financial-PII read."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.transactions__search_transactions
+    object: Transaction
+    action: transactions__search_transactions
+    description: "Search transactions"
+    category: Financial
+    risk: high
+    business_impact: "Returns transaction records matching a query; bulk financial-PII read over the transaction ledger."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.transactions__list_recurring_charges
+    object: RecurringCharge
+    action: transactions__list_recurring_charges
+    description: "List recurring charges"
+    category: Financial
+    risk: medium
+    business_impact: "Reads the user's recurring subscriptions and bills derived from transaction data; financial-PII read."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.transactions__list_spending_categories
+    object: Category
+    action: transactions__list_spending_categories
+    description: "List spending categories"
+    category: Financial
+    risk: low
+    business_impact: "Reads the user's spending-category taxonomy; minimal personal-data exposure."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Insights & Analysis ----------
+  - id: era-context.insights__analyze_spending
+    object: SpendingAnalysis
+    action: insights__analyze_spending
+    description: "Analyze spending"
+    category: Financial
+    risk: medium
+    business_impact: "Computes spending breakdowns over the user's transaction data; derived financial-PII read."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.insights__compare_spending_periods
+    object: SpendingAnalysis
+    action: insights__compare_spending_periods
+    description: "Compare spending periods"
+    category: Financial
+    risk: medium
+    business_impact: "Compares spending across time windows over the user's transaction data; derived financial-PII read."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.insights__forecast_spending
+    object: SpendingForecast
+    action: insights__forecast_spending
+    description: "Forecast spending"
+    category: Financial
+    risk: medium
+    business_impact: "Projects future spending from the user's financial history; derived financial-PII read."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.insights__get_cash_flow
+    object: CashFlow
+    action: insights__get_cash_flow
+    description: "Get cash flow"
+    category: Financial
+    risk: medium
+    business_impact: "Reads aggregated inflow/outflow over the user's accounts; derived financial-PII read."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.insights__get_daily_financial_summary
+    object: FinancialSummary
+    action: insights__get_daily_financial_summary
+    description: "Get daily financial summary"
+    category: Financial
+    risk: medium
+    business_impact: "Reads a daily roll-up of the user's financial position; derived financial-PII read."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Transaction Management ----------
+  - id: era-context.transactions__update_transactions
+    object: Transaction
+    action: transactions__update_transactions
+    description: "Update transactions"
+    category: Financial
+    risk: medium
+    business_impact: "Edits fields on selected transactions; reversible business write over financial-PII records."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.transactions__manage_manual_transaction
+    object: Transaction
+    action: transactions__manage_manual_transaction
+    description: "Manage manual transactions (batch)"
+    category: Financial
+    risk: high
+    business_impact: "Creates, edits, or deletes manual transactions in batch; vendor-flagged destructive write over the financial ledger."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.transactions__import_csv_transactions
+    object: Transaction
+    action: transactions__import_csv_transactions
+    description: "Import CSV transactions"
+    category: Financial
+    risk: medium
+    business_impact: "Bulk-imports transaction records from a CSV; financial-PII write that mutates the ledger."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.transactions__manage_categories
+    object: Category
+    action: transactions__manage_categories
+    description: "Manage spending categories"
+    category: Financial
+    risk: low
+    business_impact: "Creates or edits spending categories; reversible configuration write."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.transactions__manage_transaction_tags
+    object: Tag
+    action: transactions__manage_transaction_tags
+    description: "Manage transaction tags"
+    category: Financial
+    risk: low
+    business_impact: "Adds or removes tags on transactions; reversible metadata write over financial records."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.transactions__manage_automation_rules
+    object: AutomationRule
+    action: transactions__manage_automation_rules
+    description: "Manage automation rules"
+    category: Financial
+    risk: medium
+    business_impact: "Creates or edits rules that automatically mutate future transaction data; reversible but affects all subsequent records."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.transactions__manage_transfer_links
+    object: TransferLink
+    action: transactions__manage_transfer_links
+    description: "Manage transfer links"
+    category: Financial
+    risk: low
+    business_impact: "Links transactions representing transfers between the user's own accounts; reversible reconciliation write, does not move money."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Accounts & Connections ----------
+  - id: era-context.connections__connect_bank_account
+    object: Connection
+    action: connections__connect_bank_account
+    description: "Connect bank account"
+    category: Identity & Access
+    risk: high
+    business_impact: "Initiates linking a new bank or financial institution; grants ongoing access to a new financial data source."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.connections__disconnect_institution
+    object: Connection
+    action: connections__disconnect_institution
+    description: "Disconnect institution"
+    category: Identity & Access
+    risk: medium
+    business_impact: "Severs the link to a financial institution; vendor-flagged destructive but reversible by reconnecting."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.accounts__manage_account
+    object: FinancialAccount
+    action: accounts__manage_account
+    description: "Manage account"
+    category: Financial
+    risk: medium
+    business_impact: "Edits or removes a financial account record; vendor-flagged destructive write over financial-PII state."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.accounts__manage_account_groups
+    object: AccountGroup
+    action: accounts__manage_account_groups
+    description: "Manage account groups"
+    category: Financial
+    risk: low
+    business_impact: "Organizes accounts into groups; reversible configuration write (plan-gated)."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.accounts__set_account_visibility
+    object: FinancialAccount
+    action: accounts__set_account_visibility
+    description: "Set account visibility"
+    category: Financial
+    risk: low
+    business_impact: "Hides or shows an account in analysis; reversible display-scope write."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.accounts__toggle_balance_backfill
+    object: FinancialAccount
+    action: accounts__toggle_balance_backfill
+    description: "Toggle balance backfill"
+    category: Financial
+    risk: low
+    business_impact: "Enables or disables historical balance backfill for an account; reversible data-ingestion toggle."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Memory & Knowledge ----------
+  - id: era-context.knowledge__remember
+    object: Fact
+    action: knowledge__remember
+    description: "Remember a fact"
+    category: Data Access
+    risk: low
+    business_impact: "Stores a user-stated fact in the assistant's memory; reversible write that may contain personal financial details."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.knowledge__forget
+    object: Fact
+    action: knowledge__forget
+    description: "Forget a fact"
+    category: Data Access
+    risk: medium
+    business_impact: "Deletes a stored fact from memory; vendor-flagged destructive single-record removal."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.knowledge__confirm_or_reject_inference
+    object: Inference
+    action: knowledge__confirm_or_reject_inference
+    description: "Confirm or reject inference"
+    category: Data Access
+    risk: low
+    business_impact: "Accepts or discards an inferred fact about the user; reversible write to assistant memory."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.knowledge__defer_question
+    object: Question
+    action: knowledge__defer_question
+    description: "Defer question"
+    category: Data Access
+    risk: low
+    business_impact: "Postpones a pending onboarding/knowledge question; low-impact state write."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.knowledge__get_pending_questions
+    object: Question
+    action: knowledge__get_pending_questions
+    description: "Get pending questions"
+    category: Data Access
+    risk: low
+    business_impact: "Reads outstanding knowledge questions the assistant should ask; minimal personal-data exposure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.knowledge__recall_history
+    object: Fact
+    action: knowledge__recall_history
+    description: "Recall fact history"
+    category: Data Access
+    risk: low
+    business_impact: "Reads the change history of a stored fact; may surface personal financial details."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.knowledge__show_question_ui
+    object: Question
+    action: knowledge__show_question_ui
+    description: "Show question form"
+    category: Data Access
+    risk: low
+    business_impact: "Renders an interactive question form to the user; no data mutation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Billing ----------
+  - id: era-context.billing__upgrade
+    object: Subscription
+    action: billing__upgrade
+    description: "Upgrade plan"
+    category: Financial
+    risk: medium
+    business_impact: "Upgrades the user's paid plan and incurs a charge; requires the separate mcp:billing-write consent scope."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.billing__manage
+    object: Subscription
+    action: billing__manage
+    description: "Manage billing"
+    category: Financial
+    risk: medium
+    business_impact: "Changes billing details and subscription state; requires the separate mcp:billing-write consent scope."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.billing__confirm_subscription_change
+    object: Subscription
+    action: billing__confirm_subscription_change
+    description: "Confirm subscription change"
+    category: Financial
+    risk: medium
+    business_impact: "Commits a previewed plan change and the associated charge; requires the separate mcp:billing-write consent scope."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.billing__cancel_subscription
+    object: Subscription
+    action: billing__cancel_subscription
+    description: "Cancel subscription"
+    category: Financial
+    risk: medium
+    business_impact: "Cancels the user's paid subscription; vendor-flagged destructive but reversible via un-cancel."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.billing__uncancel_subscription
+    object: Subscription
+    action: billing__uncancel_subscription
+    description: "Un-cancel subscription"
+    category: Financial
+    risk: low
+    business_impact: "Reverses a pending cancellation and resumes billing; requires the separate mcp:billing-write consent scope."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.billing__preview_subscription_change
+    object: Subscription
+    action: billing__preview_subscription_change
+    description: "Preview subscription change"
+    category: Financial
+    risk: low
+    business_impact: "Computes the cost impact of a hypothetical plan change without committing it; read-only (plan-gated)."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.billing__get_current_plan
+    object: Subscription
+    action: billing__get_current_plan
+    description: "Get current plan"
+    category: Financial
+    risk: low
+    business_impact: "Reads the user's current subscription plan; minimal personal-data exposure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.billing__list_plans
+    object: Plan
+    action: billing__list_plans
+    description: "List plans"
+    category: Financial
+    risk: low
+    business_impact: "Reads the catalog of available plans; no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Referrals ----------
+  - id: era-context.referral__join_referral_program
+    object: Referral
+    action: referral__join_referral_program
+    description: "Join referral program"
+    category: Operations
+    risk: low
+    business_impact: "Enrolls the user in the referral program; reversible account-state write."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.referral__switch_referral_campaign
+    object: Referral
+    action: referral__switch_referral_campaign
+    description: "Switch referral campaign"
+    category: Operations
+    risk: low
+    business_impact: "Changes the active referral campaign; reversible account-state write."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.referral__get_referral_link
+    object: Referral
+    action: referral__get_referral_link
+    description: "Get referral link"
+    category: Operations
+    risk: low
+    business_impact: "Reads the user's personal referral link; minimal personal-data exposure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.referral__get_referral_stats
+    object: Referral
+    action: referral__get_referral_stats
+    description: "Get referral stats"
+    category: Operations
+    risk: low
+    business_impact: "Reads the user's referral performance metrics; minimal personal-data exposure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: era-context.referral__get_dashboard_sso
+    object: Referral
+    action: referral__get_dashboard_sso
+    description: "Get referral dashboard SSO link"
+    category: Identity & Access
+    risk: medium
+    business_impact: "Mints a single-sign-on link to the referral dashboard; a leaked link could grant authenticated access."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Help ----------
+  - id: era-context.help__get_help
+    object: HelpArticle
+    action: help__get_help
+    description: "Get help"
+    category: Operations
+    risk: low
+    business_impact: "Returns help and documentation content; no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

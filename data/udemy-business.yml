@@ -1,0 +1,94 @@
+schema_version: "1.1"
+platform: udemy-business
+display_name: Udemy Business
+source: langguard-editorial
+updated: "2026-06"
+# Tool ids are verbatim from Udemy's authoritative MCP integration guide
+# ("Available tools and capabilities" table). The live MCP endpoint
+# (https://api.udemy.com/mcp) is OAuth-2.1 gated, so tools/list could not be
+# enumerated anonymously. The five read tools were confirmed verbatim against
+# the vendor table (Feb-2026 capture). The sixth tool, create_learning_path, was
+# added to the connector AFTER that capture and is the connector's ONLY write
+# tool — the vendor explicitly labels it "[Write tool]" and states it "is the
+# only tool that writes to your account - it creates a learning path in your
+# Udemy Business account." Confirmed independently via Udemy's own support/FAQ
+# articles (34213384429335, 34305838778775). All reads return course/lecture/lab/
+# path catalog metadata — not student educational records — so no FERPA or other
+# privacy regime attaches. create_learning_path writes a private-by-default,
+# approval-gated learning-path content object containing curated course refs (no
+# learner PII), so no privacy/FERPA regime attaches there either.
+reference: https://business-support.udemy.com/hc/en-us/articles/34213384429335-How-to-Integrate-the-Udemy-Business-MCP-Server-With-Your-AI-Tool
+actions:
+  # ---------- Data Modification ----------
+  - id: udemy-business.create_learning_path
+    object: LearningPath
+    action: create_learning_path
+    description: "Creates a learning path in your Udemy Business account; the only tool that writes to the account."
+    category: Data Modification
+    risk: medium
+    business_impact: "Writes a new learning path into the organization's Udemy Business tenant; created private-by-default and approval-gated, reversible via admin Learning Paths tools."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: udemy-business.search_courses
+    object: Course
+    action: search_courses
+    description: "Search Udemy's catalog of online courses to find courses for learning, professional development, or personal growth."
+    category: Data Access
+    risk: low
+    business_impact: "Searches the organization's Udemy course catalog and returns matching course metadata; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: udemy-business.get_course_curriculum
+    object: Course
+    action: get_course_curriculum
+    description: "Retrieve the full ordered curriculum (sections and items) for a single Udemy course."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the section/lecture breakdown for one course; read-only catalog metadata with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: udemy-business.search_lectures
+    object: Lecture
+    action: search_lectures
+    description: "Search Udemy's lecture database semantically for specific learning content within courses."
+    category: Data Access
+    risk: low
+    business_impact: "Searches individual lectures and returns matching content metadata; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: udemy-business.search_labs
+    object: Lab
+    action: search_labs
+    description: "Search Udemy's catalog of hands-on labs for practical, interactive learning experiences (Udemy Business Pro only)."
+    category: Data Access
+    risk: low
+    business_impact: "Searches hands-on practice labs and returns matching lab metadata; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: udemy-business.search_learning_paths
+    object: LearningPath
+    action: search_learning_paths
+    description: "Search Udemy's curated Pro learning paths for a progressive curriculum on a skill or topic (Udemy Business Pro only)."
+    category: Data Access
+    risk: low
+    business_impact: "Searches curated learning paths and returns matching path metadata; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

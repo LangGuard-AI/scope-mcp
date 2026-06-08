@@ -1,0 +1,56 @@
+schema_version: "1.1"
+platform: omni-analytics
+display_name: Omni Analytics
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.omni.co/ai/mcp
+actions:
+  # ---------- Data Access ----------
+  - id: omni-analytics.pickModel
+    object: Model
+    action: pickModel
+    description: "Returns a list of available semantic models and their IDs."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the workspace's semantic models and IDs; metadata-only read that exposes no underlying record data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: omni-analytics.pickTopic
+    object: Topic
+    action: pickTopic
+    description: "Returns the available topics (or views) within a selected model."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the topics and views within a model; metadata-only read that exposes no underlying record data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: omni-analytics.getData
+    object: Query
+    action: getData
+    description: "Executes a query against the selected model and topic and returns the result rows."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns query result rows from the semantic model, which may contain personal or financial data; runs under the data team's governed permissions rather than as an unrestricted export."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: omni-analytics.searchOmniDocs
+    object: Documentation
+    action: searchOmniDocs
+    description: "AI-powered search of Omni's public product documentation with cited sources."
+    category: Operations
+    risk: low
+    business_impact: "Searches Omni's public product documentation and returns synthesized answers with citations; touches no customer data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

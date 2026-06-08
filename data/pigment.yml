@@ -1,0 +1,473 @@
+schema_version: "1.1"
+platform: pigment
+display_name: Pigment
+source: langguard-editorial
+updated: "2026-06"
+reference: https://kb.pigment.com/docs/supported-tools
+# Tool surface verified verbatim from the official Pigment AI plugins repo
+# (gopigment/ai-plugins), which bundles the Pigment MCP server config (.mcp.json)
+# and Skills that reference each tool by its exact MCP id via `tool:<name>` markers.
+# Default-mode read tools cross-checked against kb.pigment.com/docs/supported-tools.
+# MCP server URL is per-tenant (https://pigment.app/api/mcp/public/{mcp-id}); live
+# tools/list introspection is not possible anonymously, so the repo is the authority.
+actions:
+  # ---------- Financial (advanced mode — planning-model writes) ----------
+  # source: https://github.com/gopigment/ai-plugins (tool:set_metric_input)
+  - id: pigment.set_metric_input
+    object: Metric
+    action: set_metric_input
+    description: "Writes input values into the cells of an input Metric."
+    category: Financial
+    risk: high
+    business_impact: "Writes budget/forecast values directly into planning Metrics that feed financial reporting and revenue/headcount planning; alters numbers used for FP&A decisions."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:create_or_update_formula)
+  - id: pigment.create_or_update_formula
+    object: Formula
+    action: create_or_update_formula
+    description: "Creates or updates the formula that computes a Metric."
+    category: Financial
+    risk: high
+    business_impact: "Changes the calculation logic of a planning Metric; silently alters every value derived from it and the financial figures downstream consumers rely on."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:update_list_property_formula)
+  - id: pigment.update_list_property_formula
+    object: Formula
+    action: update_list_property_formula
+    description: "Updates the formula behind a List (Dimension) property."
+    category: Financial
+    risk: high
+    business_impact: "Changes the formula computing a Dimension property; reshapes groupings and breakdowns used across every Metric that pivots on it."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:validate_formula)
+  - id: pigment.validate_formula
+    object: Formula
+    action: validate_formula
+    description: "Validates a formula's syntax without applying it to any Block."
+    category: Financial
+    risk: low
+    business_impact: "Validates a formula without applying it; no state change to the model."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:create_cycle)
+  - id: pigment.create_cycle
+    object: Cycle
+    action: create_cycle
+    description: "Creates an iterative-calculation cycle over an iteration dimension for a set of Metrics."
+    category: Financial
+    risk: medium
+    business_impact: "Configures an iterative-calculation cycle that drives planning computations; reviewable and adjustable but affects computed financial outputs."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:update_cycle)
+  - id: pigment.update_cycle
+    object: Cycle
+    action: update_cycle
+    description: "Updates the configuration of an existing iterative-calculation cycle."
+    category: Financial
+    risk: medium
+    business_impact: "Adjusts an existing calculation cycle; changes how iterative planning figures are computed but is reversible."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:list_cycles)
+  - id: pigment.list_cycles
+    object: Cycle
+    action: list_cycles
+    description: "Lists existing iterative-calculation cycles for the target Metrics."
+    category: Financial
+    risk: low
+    business_impact: "Enumerates configured calculation cycles; metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Modeling (advanced mode — application structure) ----------
+  # source: https://github.com/gopigment/ai-plugins (tool:rewrite_specifications)
+  - id: pigment.rewrite_specifications
+    object: Specification
+    action: rewrite_specifications
+    description: "Overwrites the Application's modeling specification document (Summary, Architecture, per-app Blocks/Folders, Views, Boards)."
+    category: Modeling
+    risk: high
+    business_impact: "Overwrites the structural blueprint of a financial-planning Application in one call — its Blocks, Folders, Views and Boards — replacing the prior specification of how the model is built."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:create_metric)
+  - id: pigment.create_metric
+    object: Metric
+    action: create_metric
+    description: "Creates a new Metric (data block) in a Pigment Application."
+    category: Modeling
+    risk: medium
+    business_impact: "Adds a new Metric to the planning model; reversible structural change gated by the user's Configure Blocks permission."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:add_list_items)
+  - id: pigment.add_list_items
+    object: List
+    action: add_list_items
+    description: "Appends rows (Items) to a Dimension or Transaction List."
+    category: Modeling
+    risk: medium
+    business_impact: "Appends Items to a Dimension or Transaction List; List Items may name employees, customers, or other entities and reshape every Metric dimensioned by the List."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Time & Calendars (advanced mode — period structure) ----------
+  # source: https://github.com/gopigment/ai-plugins (tool:calendar_create)
+  - id: pigment.calendar_create
+    object: Calendar
+    action: calendar_create
+    description: "Creates a Calendar that defines the time structure of an Application."
+    category: Modeling
+    risk: medium
+    business_impact: "Defines the time structure (months, quarters, fiscal year) every Metric is computed over; reshapes how financial figures are periodized across the model."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:calendar_get)
+  - id: pigment.calendar_get
+    object: Calendar
+    action: calendar_get
+    description: "Reads the current Calendar configuration of an Application."
+    category: Modeling
+    risk: low
+    business_impact: "Reads the Calendar's time structure; configuration metadata only, no business data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:calendar_expand)
+  - id: pigment.calendar_expand
+    object: Calendar
+    action: calendar_expand
+    description: "Expands an existing Calendar's time range or granularity."
+    category: Modeling
+    risk: medium
+    business_impact: "Extends the time periods a Calendar covers; alters the periodization of every Metric bound to it but is reversible."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:calendar_add_time_dimension)
+  - id: pigment.calendar_add_time_dimension
+    object: Calendar
+    action: calendar_add_time_dimension
+    description: "Adds a time Dimension to a Calendar's structure."
+    category: Modeling
+    risk: medium
+    business_impact: "Adds a time Dimension to a Calendar; changes how Metrics break down across time in the planning model, reversible."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:calendar_remove_time_dimension)
+  - id: pigment.calendar_remove_time_dimension
+    object: Calendar
+    action: calendar_remove_time_dimension
+    description: "Removes a time Dimension from a Calendar's structure."
+    category: Modeling
+    risk: high
+    business_impact: "Destructively drops a time Dimension from a Calendar; re-periodizes every Metric bound to it and discards the breakdown along the removed dimension, performed by a single actor."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Views & Boards (advanced mode — presentation) ----------
+  # source: https://github.com/gopigment/ai-plugins (tool:create_view)
+  - id: pigment.create_view
+    object: View
+    action: create_view
+    description: "Creates a new View (pivot configuration) for a Block."
+    category: Views & Boards
+    risk: low
+    business_impact: "Creates a new View pivot for a Block; presentation-layer change, reversible and non-destructive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:update_view)
+  - id: pigment.update_view
+    object: View
+    action: update_view
+    description: "Updates an existing View's top-level configuration."
+    category: Views & Boards
+    risk: low
+    business_impact: "Updates an existing View's configuration; presentation-layer change, reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:update_view_pivots)
+  - id: pigment.update_view_pivots
+    object: View
+    action: update_view_pivots
+    description: "Updates a View's pivot structure — the fields placed on rows, columns, pages and the metrics location."
+    category: Views & Boards
+    risk: medium
+    business_impact: "Mutates the core pivot structure of a View (rows, columns, pages, calculated items, aggregations); reshapes how the underlying Metric values are grouped and surfaced to every viewer, reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:update_view_values)
+  - id: pigment.update_view_values
+    object: View
+    action: update_view_values
+    description: "Updates a View's value fields — which Metrics are members of the View."
+    category: Views & Boards
+    risk: medium
+    business_impact: "Changes a View's metric membership by adding or removing value fields; alters which Metrics a Table block View computes and shows, not merely cosmetic, reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:update_view_filters)
+  - id: pigment.update_view_filters
+    object: View
+    action: update_view_filters
+    description: "Updates the filters applied to a View."
+    category: Views & Boards
+    risk: low
+    business_impact: "Changes which Items a View filters to; presentation-layer change, reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:update_view_sorts)
+  - id: pigment.update_view_sorts
+    object: View
+    action: update_view_sorts
+    description: "Updates the sort order applied to a View."
+    category: Views & Boards
+    risk: low
+    business_impact: "Changes a View's sort order; presentation-layer change, reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:update_view_chart_config)
+  - id: pigment.update_view_chart_config
+    object: View
+    action: update_view_chart_config
+    description: "Updates the chart configuration of a View."
+    category: Views & Boards
+    risk: low
+    business_impact: "Changes a View's chart configuration; presentation-layer change, reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:update_view_widget_overrides)
+  - id: pigment.update_view_widget_overrides
+    object: View
+    action: update_view_widget_overrides
+    description: "Wires a Draft View to display through a Board widget via per-widget overrides."
+    category: Views & Boards
+    risk: low
+    business_impact: "Overrides which View a Board widget displays; presentation-layer change scoped to the widget, reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:save_draft_views)
+  - id: pigment.save_draft_views
+    object: View
+    action: save_draft_views
+    description: "Promotes one or more Draft Views to live Views in a single bulk-save call."
+    category: Views & Boards
+    risk: medium
+    business_impact: "Publishes Draft Views to the live Application, replacing what other Board viewers see; reversible by re-editing but affects shared presentation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:update_board)
+  - id: pigment.update_board
+    object: Board
+    action: update_board
+    description: "Updates a Board's configuration, including its Pages and filters."
+    category: Views & Boards
+    risk: medium
+    business_impact: "Changes a shared Board's layout and filters; affects what every Board viewer sees, reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:get_view)
+  - id: pigment.get_view
+    object: View
+    action: get_view
+    description: "Retrieves the configuration of a single View."
+    category: Views & Boards
+    risk: low
+    business_impact: "Reads one View's pivot configuration; metadata only, no underlying data values."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:get_block_views)
+  - id: pigment.get_block_views
+    object: View
+    action: get_block_views
+    description: "Lists the Views that exist for a given Block."
+    category: Views & Boards
+    risk: low
+    business_impact: "Enumerates the Views configured on a Block; metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:get_all_view_templates)
+  - id: pigment.get_all_view_templates
+    object: View
+    action: get_all_view_templates
+    description: "Returns the available View templates that can be applied to a Grid View."
+    category: Views & Boards
+    risk: low
+    business_impact: "Lists reusable View templates; metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access (default mode — read-only) ----------
+  # source: https://kb.pigment.com/docs/supported-tools (query_data)
+  - id: pigment.query_data
+    object: Metric
+    action: query_data
+    description: "Retrieves data from a single Metric using a natural-language query; returns values and metadata."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads live financial-planning values (revenue, headcount, costs) from a Metric; planning data leaves the workspace and may include employee compensation figures."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:search)
+  - id: pigment.search
+    object: Block
+    action: search
+    description: "Scans the entire Application logic, exposing all Block metadata (names, data types, Dimensions, formulas)."
+    category: Data Access
+    risk: medium
+    business_impact: "Exposes all Block metadata across an Application — names, data types, Dimensions, and formulas — and is not subject to per-Block access rights, so it can surface business logic beyond a user's data permissions."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://kb.pigment.com/docs/supported-tools (get_ai_metrics)
+  - id: pigment.get_ai_metrics
+    object: Metric
+    action: get_ai_metrics
+    description: "Lists AI-enabled Metrics in an Application, returning Metric IDs and names."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates AI-enabled Metric names and IDs in an Application; metadata only, no values returned."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://kb.pigment.com/docs/supported-tools (get_metric_description)
+  - id: pigment.get_metric_description
+    object: Metric
+    action: get_metric_description
+    description: "Returns a Metric's structure: name, data type, description, Dimensions with sample Items, and Scenarios."
+    category: Data Access
+    risk: low
+    business_impact: "Exposes a Metric's structure and sample Dimension Items; sample Items may reveal entity names (departments, regions, employees) but not bulk values."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # source: https://kb.pigment.com/docs/supported-tools (get_applications)
+  - id: pigment.get_applications
+    object: Application
+    action: get_applications
+    description: "Lists all Pigment applications the user can access, with ID, name, and description."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the Applications the user can access; structural metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations (advanced mode — performance diagnostics) ----------
+  # source: https://github.com/gopigment/ai-plugins (tool:get_top_blocks_by_performance)
+  - id: pigment.get_top_blocks_by_performance
+    object: Block
+    action: get_top_blocks_by_performance
+    description: "Ranks the most expensive Blocks in an Application over a time window by execution-cost criteria."
+    category: Operations
+    risk: low
+    business_impact: "Ranks Blocks by execution cost over a time window for performance triage; diagnostic metadata, no business data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # source: https://github.com/gopigment/ai-plugins (tool:performance_profile_change)
+  - id: pigment.performance_profile_change
+    object: Block
+    action: performance_profile_change
+    description: "Profiles a slow change by replaying it from the audit trail to report effective and output scope."
+    category: Operations
+    risk: low
+    business_impact: "Profiles a recorded change for performance diagnostics; reads execution scope from the audit trail, makes no model change."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

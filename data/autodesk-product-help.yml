@@ -1,0 +1,31 @@
+schema_version: "1.1"
+platform: autodesk-product-help
+display_name: Autodesk Product Help
+source: langguard-editorial
+updated: "2026-06"
+reference: https://help.autodesk.com/view/ADSKMCP/ENU/?guid=ADSKMCP_KnowledgeMcp_autodesk_product_help_mcp_server_html
+actions:
+  # ---------- Data Access ----------
+  - id: autodesk-product-help.search_help_content
+    object: HelpDocument
+    action: search_help_content
+    description: "Searches Autodesk public Help/Support documentation and returns the most relevant published articles for a query."
+    category: Data Access
+    risk: low
+    business_impact: "Returns published Autodesk help and support documentation for a query; read-only access to a public knowledge corpus with no personal or proprietary customer data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: autodesk-product-help.get_available_products
+    object: Product
+    action: get_available_products
+    description: "Returns the canonical Autodesk product catalog (product names, codes, and supported release codes)."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the static Autodesk product catalog used to scope help searches; reference data with no personal, financial, or security-sensitive content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

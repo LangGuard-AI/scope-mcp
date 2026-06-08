@@ -1,0 +1,496 @@
+schema_version: "1.1"
+platform: peec-ai
+display_name: Peec AI
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.peec.ai/mcp/tools
+actions:
+  # ---------- Configuration ----------
+  # Brand-visibility analytics config: brands, prompts, tags, topics. Every write
+  # tool is readOnlyHint:false; every delete_* is destructiveHint:true (soft-delete,
+  # reversible). Objects are companies/competitors and tracking config, not personal
+  # data of identifiable individuals — compliance defaults to [].
+  - id: peec-ai.create_brand
+    object: Brand
+    action: create_brand
+    description: "Creates a new tracked brand (own brand or competitor) in a project."
+    category: Configuration
+    risk: low
+    business_impact: "Adds a tracked brand to a project; reversible via soft-delete and individually confirmed by the client."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.create_brands
+    object: Brand
+    action: create_brands
+    description: "Bulk-creates up to 50 brands in a single call; duplicates are skipped, not failed."
+    category: Configuration
+    risk: low
+    business_impact: "Adds up to 50 tracked brands at once; reversible and non-sensitive tracking config."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.update_brand
+    object: Brand
+    action: update_brand
+    description: "Updates a brand's name, regex, aliases, domains, or color; name/regex/alias edits trigger a background metric recalculation."
+    category: Configuration
+    risk: medium
+    business_impact: "Changes brand matching config and may trigger a full metric recalculation, altering reported visibility figures until it completes."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.delete_brand
+    object: Brand
+    action: delete_brand
+    description: "Soft-deletes a brand (destructiveHint:true)."
+    category: Configuration
+    risk: medium
+    business_impact: "Removes a tracked brand and its dashboards from view; reversible from soft-delete but interrupts ongoing tracking."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.delete_brands
+    object: Brand
+    action: delete_brands
+    description: "Bulk soft-deletes up to 50 brands in a single call (destructiveHint:true)."
+    category: Configuration
+    risk: medium
+    business_impact: "Removes up to 50 tracked brands at once; reversible from soft-delete but unilaterally disrupts a project's tracking surface."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.create_prompt
+    object: Prompt
+    action: create_prompt
+    description: "Creates a new prompt that Peec runs against AI engines to measure visibility."
+    category: Configuration
+    risk: low
+    business_impact: "Adds a tracked prompt to a project; reversible and consumes monitoring credits when run."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.create_prompts
+    object: Prompt
+    action: create_prompts
+    description: "Bulk-creates up to 50 prompts in a single call."
+    category: Configuration
+    risk: low
+    business_impact: "Adds up to 50 tracked prompts at once; reversible but can materially increase monitoring credit consumption."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.update_prompt
+    object: Prompt
+    action: update_prompt
+    description: "Updates a prompt's topic and/or tags."
+    category: Configuration
+    risk: low
+    business_impact: "Re-categorizes a tracked prompt; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.delete_prompt
+    object: Prompt
+    action: delete_prompt
+    description: "Soft-deletes a prompt (destructiveHint:true)."
+    category: Configuration
+    risk: medium
+    business_impact: "Removes a tracked prompt and stops its measurement; reversible from soft-delete but interrupts data collection."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.delete_prompts
+    object: Prompt
+    action: delete_prompts
+    description: "Bulk soft-deletes up to 50 prompts in a single call (destructiveHint:true)."
+    category: Configuration
+    risk: medium
+    business_impact: "Removes up to 50 tracked prompts at once; reversible from soft-delete but unilaterally halts large swaths of measurement."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.create_tag
+    object: Tag
+    action: create_tag
+    description: "Creates a new tag (cross-cutting label applicable to prompts)."
+    category: Configuration
+    risk: low
+    business_impact: "Adds an organizational label; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.create_tags
+    object: Tag
+    action: create_tags
+    description: "Bulk-creates up to 50 tags in a single call."
+    category: Configuration
+    risk: low
+    business_impact: "Adds up to 50 organizational labels at once; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.update_tag
+    object: Tag
+    action: update_tag
+    description: "Updates a tag's name or color."
+    category: Configuration
+    risk: low
+    business_impact: "Renames or recolors an organizational label; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.delete_tag
+    object: Tag
+    action: delete_tag
+    description: "Soft-deletes a tag (destructiveHint:true)."
+    category: Configuration
+    risk: low
+    business_impact: "Removes an organizational label; reversible from soft-delete and low-impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.delete_tags
+    object: Tag
+    action: delete_tags
+    description: "Bulk soft-deletes up to 50 tags in a single call (destructiveHint:true)."
+    category: Configuration
+    risk: low
+    business_impact: "Removes up to 50 organizational labels at once; reversible from soft-delete and low-impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.create_topic
+    object: Topic
+    action: create_topic
+    description: "Creates a new topic grouping that organizes prompts."
+    category: Configuration
+    risk: low
+    business_impact: "Adds a prompt-grouping; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.create_topics
+    object: Topic
+    action: create_topics
+    description: "Bulk-creates up to 50 topics in a single call."
+    category: Configuration
+    risk: low
+    business_impact: "Adds up to 50 prompt-groupings at once; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.update_topic
+    object: Topic
+    action: update_topic
+    description: "Renames a topic."
+    category: Configuration
+    risk: low
+    business_impact: "Renames a prompt-grouping; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.delete_topic
+    object: Topic
+    action: delete_topic
+    description: "Soft-deletes a topic (destructiveHint:true)."
+    category: Configuration
+    risk: low
+    business_impact: "Removes a prompt-grouping; reversible from soft-delete and low-impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.delete_topics
+    object: Topic
+    action: delete_topics
+    description: "Bulk soft-deletes up to 50 topics in a single call (destructiveHint:true)."
+    category: Configuration
+    risk: low
+    business_impact: "Removes up to 50 prompt-groupings at once; reversible from soft-delete and low-impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.set_project_profile
+    object: ProjectProfile
+    action: set_project_profile
+    description: "Replaces the project's brand profile (description, industry, brand-identity adjectives, target markets, audience distribution, product list) used to generate prompt suggestions."
+    category: Configuration
+    risk: medium
+    business_impact: "Overwrites the entire brand profile in one call, changing how Peec generates prompt suggestions and characterizes the project; reversible only by re-setting prior values."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Classification Taxonomy ----------
+  # Custom domain/URL classification entities that extend the built-in source taxonomy.
+  - id: peec-ai.create_domain_classification
+    object: DomainClassification
+    action: create_domain_classification
+    description: "Defines a custom domain classification entity that extends the built-in taxonomy."
+    category: Configuration
+    risk: low
+    business_impact: "Adds a custom source-classification category; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.delete_domain_classification
+    object: DomainClassification
+    action: delete_domain_classification
+    description: "Deletes a custom domain classification entity (destructiveHint:true)."
+    category: Configuration
+    risk: medium
+    business_impact: "Removes a custom source-classification category, cascading to clear any domain assignments referencing it."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.assign_domain_classification
+    object: DomainClassification
+    action: assign_domain_classification
+    description: "Assigns a custom classification to a domain."
+    category: Configuration
+    risk: low
+    business_impact: "Tags a source domain with a custom classification; reversible and affects only reporting categorization."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.unassign_domain_classification
+    object: DomainClassification
+    action: unassign_domain_classification
+    description: "Clears a custom classification override on a domain."
+    category: Configuration
+    risk: low
+    business_impact: "Removes a custom classification from a source domain; reversible and affects only reporting categorization."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.create_url_classification
+    object: UrlClassification
+    action: create_url_classification
+    description: "Defines a custom URL classification entity that extends the built-in taxonomy."
+    category: Configuration
+    risk: low
+    business_impact: "Adds a custom URL-classification category; reversible and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.delete_url_classification
+    object: UrlClassification
+    action: delete_url_classification
+    description: "Deletes a custom URL classification entity (destructiveHint:true)."
+    category: Configuration
+    risk: medium
+    business_impact: "Removes a custom URL-classification category, cascading to clear any URL assignments referencing it."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.assign_url_classification
+    object: UrlClassification
+    action: assign_url_classification
+    description: "Assigns a custom classification to a URL."
+    category: Configuration
+    risk: low
+    business_impact: "Tags a source URL with a custom classification; reversible and affects only reporting categorization."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.unassign_url_classification
+    object: UrlClassification
+    action: unassign_url_classification
+    description: "Clears a custom classification override on a URL."
+    category: Configuration
+    risk: low
+    business_impact: "Removes a custom classification from a source URL; reversible and affects only reporting categorization."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  # Reads over AI-engine response content, source content, and aggregated bot
+  # access-log counts. Brand-monitoring data, not third-party personal comms.
+  - id: peec-ai.get_chat
+    object: Chat
+    action: get_chat
+    description: "Gets the full content of a single chat: user prompt, AI response, retrieved source URLs, mentioned brands, search queries, and extracted products."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns full AI-engine response text for a monitored prompt, which could incidentally surface personal data when a prompt concerns an individual."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.list_chats
+    object: Chat
+    action: list_chats
+    description: "Lists individual AI responses (chats) for a project over a date range; each chat is one prompt run against one AI engine on a date."
+    category: Data Access
+    risk: low
+    business_impact: "Returns chat metadata (ids, dates, model, feature flags) over a date range; no response content and no personal data in the listing itself."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.get_url_content
+    object: SourceUrl
+    action: get_url_content
+    description: "Returns the scraped markdown content of an indexed source URL."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns scraped page content of an external source URL, which could incidentally include personal data published on that page."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.get_agent_visits
+    object: AgentVisit
+    action: get_agent_visits
+    description: "Aggregates AI bot visit counts from connected access logs over a date range, optionally grouped by bot, status, host, or path."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregated AI-bot visit counts from access logs; bot-level traffic aggregates, not human personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.list_search_queries
+    object: SearchQuery
+    action: list_search_queries
+    description: "Lists the search sub-queries an AI engine issued while answering monitored prompts over a date range."
+    category: Data Access
+    risk: low
+    business_impact: "Returns AI-engine sub-query text for monitored prompts; brand-monitoring metadata, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.list_shopping_queries
+    object: ShoppingQuery
+    action: list_shopping_queries
+    description: "Lists product/shopping sub-queries an AI engine issued and the distinct products returned, over a date range."
+    category: Data Access
+    risk: low
+    business_impact: "Returns shopping sub-query text and extracted product names; brand-monitoring metadata, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.get_brand_report
+    object: BrandReport
+    action: get_brand_report
+    description: "Returns brand visibility, sentiment, and position metrics aggregated over a date range."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregated brand visibility/sentiment/position metrics; competitive analytics about companies, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.get_domain_report
+    object: DomainReport
+    action: get_domain_report
+    description: "Returns source-domain retrieval and citation metrics aggregated over a date range."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregated source-domain retrieval/citation metrics; analytics about sources, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.get_url_report
+    object: UrlReport
+    action: get_url_report
+    description: "Returns URL-level retrieval and citation metrics aggregated over a date range."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregated URL-level retrieval/citation metrics; analytics about sources, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.get_actions
+    object: Action
+    action: get_actions
+    description: "Returns opportunity-scored action recommendations for improving brand visibility."
+    category: Data Access
+    risk: low
+    business_impact: "Returns ranked optimization recommendations; advisory analytics output with no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: peec-ai.get_project_profile
+    object: ProjectProfile
+    action: get_project_profile
+    description: "Reads the project's brand profile: description, industry, brand-identity adjectives, target markets, audience distribution, and product list."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the project's own brand profile config; non-sensitive business metadata about the customer's own brand."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

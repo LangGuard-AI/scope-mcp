@@ -1,82 +1,93 @@
-# NOTE: Snowflake Cortex Agents MCP exposes user-defined tools created via
-# CREATE MCP SERVER. The static control-plane tool TYPES that the platform
-# always supports are SYSTEM_EXECUTE_SQL, CORTEX_SEARCH_SERVICE_QUERY,
-# CORTEX_ANALYST_MESSAGE, CORTEX_AGENT_RUN, and GENERIC (per-UDF). Concrete
-# tool names are user-defined per server (e.g. `sql_exec_tool`,
-# `product-search`, `multiply_by_ten`); we curate the canonical example names
-# from Snowflake docs here. Per-asset / per-UDF tool names that don't match
-# fall through to platform-level matching.
-schema_version: "1.0"
+schema_version: "1.1"
 platform: snowflake
 display_name: Snowflake
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-agents-mcp
+# Snowflake exposes a *managed* MCP server whose endpoint is per-customer
+# (https://<account_URL>/api/v2/databases/{db}/schemas/{schema}/mcp-servers/{name}),
+# so there is no anonymous tools-catalog endpoint and no universal verbatim
+# tool surface to introspect. Per the CREATE MCP SERVER reference, every tool
+# entry has a user-defined `name` (what shows up in tools/list) plus a fixed
+# `type` enum. The five published TYPE values are the only stable, vendor-named
+# surface; the runtime tool `name` strings are customer-resource-derived and
+# cannot be enumerated verbatim. We therefore model each TYPE as an
+# id_form: capability entry (intent-level match, not identifier-level): the
+# lowercase slug in `id` is best-effort, the verbatim TYPE string is preserved
+# in `description`, and confidence is capped at medium.
+#
+# NOTE on the connector's "Read-only" marketing label: the claude.com connector
+# page advertises read-only retrieval, and the SYSTEM_EXECUTE_SQL tool defaults
+# to read_only=true (SELECT-only). However the managed-server type surface is
+# write-capable in general — SYSTEM_EXECUTE_SQL can be configured read_only=false,
+# and CORTEX_AGENT_RUN can invoke SQL exec / search / custom tools — so the write
+# surface is reported here rather than trimmed to the two pure-read tools.
+# (The separate, deprecated Snowflake-Labs/mcp open-source server has its own
+# fixed object-management tool names; those are deliberately NOT mixed in here.)
 actions:
   # ---------- Data Access ----------
-  - id: snowflake.SYSTEM_EXECUTE_SQL
+  - id: snowflake.system_execute_sql
     object: Query
-    action: SYSTEM_EXECUTE_SQL
+    action: system_execute_sql
+    id_form: capability
+    description: "SYSTEM_EXECUTE_SQL"
     category: Data Access
     risk: critical
-    business_impact: "Runs arbitrary SQL with the connected role's full privileges; can read or modify any table the role can reach."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: snowflake.sql_exec_tool
-    object: Query
-    action: sql_exec_tool
-    category: Data Access
-    risk: critical
-    business_impact: "Canonical Snowflake-published name for the SQL execution tool; same blast radius as SYSTEM_EXECUTE_SQL."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Cortex Search & Analyst ----------
-  - id: snowflake.CORTEX_SEARCH_SERVICE_QUERY
-    object: SearchService
-    action: CORTEX_SEARCH_SERVICE_QUERY
-    category: Cortex Search & Analyst
-    risk: high
-    business_impact: "Queries indexed unstructured content (documents, support cases, contracts) via Cortex Search; can surface PII or proprietary text."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: snowflake.CORTEX_ANALYST_MESSAGE
-    object: SemanticView
-    action: CORTEX_ANALYST_MESSAGE
-    category: Cortex Search & Analyst
-    risk: high
-    business_impact: "Natural-language query over a semantic view; returns structured business metrics that can include revenue or PII."
-    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: snowflake.CORTEX_AGENT_RUN
-    object: Agent
-    action: CORTEX_AGENT_RUN
-    category: Cortex Search & Analyst
-    risk: high
-    business_impact: "Invokes a managed Cortex Agent which can in turn call SQL, search, and custom tools; effective privileges are the agent's."
+    business_impact: "Runs SQL with the connected role's full privileges across every table the role can reach; defaults to read_only (SELECT-only) but can be configured for writes, so it is a bulk read/exfil and potential mutation surface with no review gate."
     compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
     sod_concern: true
     confidence: medium
     access_methods: [REST, MCP]
 
-  # ---------- Generic / User-Defined ----------
-  - id: snowflake.GENERIC
+  - id: snowflake.cortex_agent_run
+    object: Agent
+    action: cortex_agent_run
+    id_form: capability
+    description: "CORTEX_AGENT_RUN"
+    category: Data Access
+    risk: critical
+    business_impact: "Invokes a managed Cortex Agent that can in turn call SQL execution, search, and custom tools; its effective blast radius is the union of whatever sub-tools the agent is wired to, so it inherits SQL-exec-level reach."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: snowflake.generic
     object: UDF
-    action: GENERIC
-    category: Generic / User-Defined
+    action: generic
+    id_form: capability
+    description: "GENERIC"
+    category: Data Access
     risk: medium
-    business_impact: "Catch-all type for user-defined functions and stored procedures exposed as MCP tools; risk depends on the UDF body."
+    business_impact: "Catch-all type wrapping a user-defined function or stored procedure as an MCP tool; effect depends entirely on the UDF/proc body, which can read or modify governed data."
     compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: low
+    access_methods: [REST, MCP]
+
+  # ---------- Cortex Search & Analyst ----------
+  - id: snowflake.cortex_analyst_message
+    object: SemanticView
+    action: cortex_analyst_message
+    id_form: capability
+    description: "CORTEX_ANALYST_MESSAGE"
+    category: Cortex Search & Analyst
+    risk: high
+    business_impact: "Answers a natural-language question over a semantic view and returns structured business metrics that can include revenue figures or PII the role is authorized to read."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: snowflake.cortex_search_service_query
+    object: SearchService
+    action: cortex_search_service_query
+    id_form: capability
+    description: "CORTEX_SEARCH_SERVICE_QUERY"
+    category: Cortex Search & Analyst
+    risk: high
+    business_impact: "Queries indexed unstructured content (documents, support cases, contracts) via Cortex Search and can surface PII or proprietary text the role is authorized to read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
     access_methods: [REST, MCP]

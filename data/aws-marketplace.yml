@@ -1,16 +1,32 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: aws-marketplace
 display_name: AWS Marketplace
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://docs.aws.amazon.com/marketplace/latest/APIReference/marketplace-mcp-server.html
 actions:
-  # ---------- Discovery (Single-turn) ----------
+  # ---------- Catalog Discovery ----------
+  - id: aws-marketplace.search_aws_marketplace_solutions
+    object: Solution
+    action: search_aws_marketplace_solutions
+    description: "Searches the AWS Marketplace catalog by keyword queries (up to 10) and returns raw, unranked solution metadata."
+    reference: https://docs.aws.amazon.com/marketplace/latest/APIReference/marketplace-mcp-server.html#marketplace-mcp-tool-search-solutions
+    category: Data Access
+    risk: low
+    business_impact: "Read-only search of the public AWS Marketplace catalog; returns vendor and product listings, no personal or transactional data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
   - id: aws-marketplace.get_aws_marketplace_solution
     object: Solution
     action: get_aws_marketplace_solution
+    description: "Retrieves detailed metadata for one or more solution IDs (reviews, pricing options, certifications, call-to-action links)."
+    reference: https://docs.aws.amazon.com/marketplace/latest/APIReference/marketplace-mcp-server.html#marketplace-mcp-tool-get-solution
     category: Data Access
     risk: low
-    business_impact: "Returns metadata for an AWS Marketplace listing."
+    business_impact: "Read-only lookup of a public catalog listing's metadata; returns no personal data and triggers no procurement."
     compliance: []
     sod_concern: false
     confidence: high
@@ -19,111 +35,53 @@ actions:
   - id: aws-marketplace.get_aws_marketplace_related_solutions
     object: Solution
     action: get_aws_marketplace_related_solutions
+    description: "Returns related solutions for given solution IDs, sorted by AWS Marketplace relation score."
+    reference: https://docs.aws.amazon.com/marketplace/latest/APIReference/marketplace-mcp-server.html#marketplace-mcp-tool-related-solutions
     category: Data Access
     risk: low
-    business_impact: "Returns adjacent or comparable Marketplace listings."
+    business_impact: "Read-only retrieval of adjacent public catalog listings; no personal or transactional data exposed."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: aws-marketplace.search_aws_marketplace_solutions
+  # ---------- Research & Reporting ----------
+  - id: aws-marketplace.research_aws_marketplace_solution
     object: Solution
-    action: search_aws_marketplace_solutions
+    action: research_aws_marketplace_solution
+    description: "Performs deep outbound web research on solutions (features, reviews, limitations, competitors, pricing, integrations, case studies) with inline citations."
+    reference: https://docs.aws.amazon.com/marketplace/latest/APIReference/marketplace-mcp-server.html#marketplace-mcp-tool-research-solution
     category: Data Access
     risk: low
-    business_impact: "Searches the AWS Marketplace catalog by keyword or filter."
+    business_impact: "Runs read-only outbound web searches and returns aggregated public information about a product; no personal data or system changes."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [MCP]
 
-  # ---------- Agentic Research (Multi-turn) ----------
-  - id: aws-marketplace.ask_aws_marketplace
-    object: Conversation
-    action: ask_aws_marketplace
-    category: Data Access
-    risk: low
-    business_impact: "Posts a free-form question to the Marketplace assistant."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: aws-marketplace.get_aws_marketplace_recommendations_report
+  - id: aws-marketplace.get_aws_marketplace_report_guidelines
     object: Report
-    action: get_aws_marketplace_recommendations_report
+    action: get_aws_marketplace_report_guidelines
+    description: "Returns workflow instructions and an output-format template for a recommendation, comparison, or evaluation report."
+    reference: https://docs.aws.amazon.com/marketplace/latest/APIReference/marketplace-mcp-server.html#marketplace-mcp-tool-report-guidelines
     category: Data Access
     risk: low
-    business_impact: "Generates a recommendation report for a stated procurement need."
+    business_impact: "Read-only retrieval of static prompt templates; returns no business or personal data."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [MCP]
 
-  - id: aws-marketplace.get_aws_marketplace_comparisons_report
-    object: Report
-    action: get_aws_marketplace_comparisons_report
-    category: Data Access
-    risk: low
-    business_impact: "Generates a side-by-side comparison report across Marketplace listings."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: aws-marketplace.get_aws_marketplace_evaluation_report
-    object: Report
-    action: get_aws_marketplace_evaluation_report
-    category: Data Access
-    risk: low
-    business_impact: "Generates a structured evaluation of a Marketplace solution."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- File Workspace ----------
-  - id: aws-marketplace.generate_aws_marketplace_file_upload_url
-    object: File
-    action: generate_aws_marketplace_file_upload_url
+  # ---------- Feedback ----------
+  - id: aws-marketplace.submit_aws_marketplace_feedback
+    object: Feedback
+    action: submit_aws_marketplace_feedback
+    description: "Submits a positive/negative sentiment and optional free-text feedback about report quality."
+    reference: https://docs.aws.amazon.com/marketplace/latest/APIReference/marketplace-mcp-server.html#marketplace-mcp-tool-submit-feedback
     category: Operations
     risk: low
-    business_impact: "Issues a presigned URL for uploading a context file (e.g., RFP, requirements)."
-    compliance: [SOC2]
+    business_impact: "Records a thumbs-up/down rating and optional comment on report quality; non-destructive and carries no sensitive payload."
+    compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  - id: aws-marketplace.get_aws_marketplace_uploaded_files
-    object: File
-    action: get_aws_marketplace_uploaded_files
-    category: Data Access
-    risk: low
-    business_impact: "Lists files previously uploaded to the assistant context."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: aws-marketplace.delete_aws_marketplace_uploaded_file
-    object: File
-    action: delete_aws_marketplace_uploaded_file
-    category: Operations
-    risk: low
-    business_impact: "Removes a previously uploaded context file."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: medium
-    access_methods: [REST, MCP]
-
-  - id: aws-marketplace.delete_aws_marketplace_conversation
-    object: Conversation
-    action: delete_aws_marketplace_conversation
-    category: Operations
-    risk: low
-    business_impact: "Deletes a stored Marketplace assistant conversation."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
+    access_methods: [MCP]

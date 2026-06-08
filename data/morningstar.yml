@@ -1,0 +1,99 @@
+schema_version: "1.1"
+platform: morningstar
+display_name: Morningstar
+source: langguard-editorial
+updated: "2026-06"
+reference: https://developer.morningstar.com/direct-web-services/documentation/morningstar-mcp-server/about
+actions:
+  # ---------- Data Access ----------
+  - id: morningstar.morningstar-data-tool
+    object: Security
+    action: morningstar-data-tool
+    description: "Retrieves Morningstar's AI-ready data for global mutual funds, ETFs, and stocks."
+    reference: https://developer.morningstar.com/direct-web-services/documentation/morningstar-mcp-server/tools-and-example-questions
+    category: Data Access
+    risk: low
+    business_impact: "Returns Morningstar reference datapoints (ratings, fair value, price, returns) for a security; read-only market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: morningstar.morningstar-screener-tool
+    object: Security
+    action: morningstar-screener-tool
+    description: "Retrieves a list of investments that match given criteria."
+    reference: https://developer.morningstar.com/direct-web-services/documentation/morningstar-mcp-server/tools-and-example-questions
+    category: Data Access
+    risk: low
+    business_impact: "Returns a filtered list of securities matching quantitative/qualitative criteria; read-only market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: morningstar.morningstar-fund-holdings-tool
+    object: Fund
+    action: morningstar-fund-holdings-tool
+    description: "Retrieves the top holdings for a list of mutual funds or ETFs."
+    reference: https://developer.morningstar.com/direct-web-services/documentation/morningstar-mcp-server/tools-and-example-questions
+    category: Data Access
+    risk: low
+    business_impact: "Returns published top-holdings composition for funds/ETFs; read-only market data, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: morningstar.morningstar-id-lookup-tool
+    object: Security
+    action: morningstar-id-lookup-tool
+    description: "Acts as the MCP server's entity detection layer, identifying the relevant investments and data points to hand off to other tools."
+    reference: https://developer.morningstar.com/direct-web-services/documentation/morningstar-mcp-server/tools-and-example-questions
+    category: Data Access
+    risk: low
+    business_impact: "Maps tickers and security/datapoint names to Morningstar internal identifiers; read-only metadata lookup, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Research & Analysis ----------
+  - id: morningstar.morningstar-analyst-research-tool
+    object: ResearchReport
+    action: morningstar-analyst-research-tool
+    description: "Returns relevant portions of Morningstar's analyst- and quantitative-driven forward-looking investment reports."
+    reference: https://developer.morningstar.com/direct-web-services/documentation/morningstar-mcp-server/tools-and-example-questions
+    category: Research & Analysis
+    risk: low
+    business_impact: "Returns licensed Morningstar analyst research excerpts (fair value, moat, risk) for a security; read-only content, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: morningstar.morningstar-articles-tool
+    object: Article
+    action: morningstar-articles-tool
+    description: "Returns relevant portions of articles, news, and commentary published on Morningstar.com and other Morningstar products."
+    reference: https://developer.morningstar.com/direct-web-services/documentation/morningstar-mcp-server/tools-and-example-questions
+    category: Research & Analysis
+    risk: low
+    business_impact: "Returns excerpts of Morningstar editorial/research content; read-only published material, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: morningstar.morningstar-portfolio-analysis-tool
+    object: Portfolio
+    action: morningstar-portfolio-analysis-tool
+    description: "Analyzes a portfolio of holdings or a fund using Morningstar's X-Ray methodology, delivering breakdowns across asset allocation, sector exposure, geographic region, investment style, and risk/return metrics."
+    reference: https://developer.morningstar.com/direct-web-services/documentation/morningstar-mcp-server/tools-and-example-questions
+    category: Research & Analysis
+    risk: low
+    business_impact: "Runs X-Ray analysis on a caller-supplied portfolio of holdings; the holdings list is transient input, not a Morningstar-stored consumer account, but could reflect a real individual's positions if passed by the agent."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

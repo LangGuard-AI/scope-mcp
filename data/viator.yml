@@ -1,0 +1,44 @@
+schema_version: "1.1"
+platform: viator
+display_name: Viator
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.viator.com/partner-api/mcp/
+# PROVENANCE: Tool names are GROUND TRUTH from live tools/list introspection of
+# the official Viator Experiences MCP server (https://exp-app-mcp.prod.ep.viator.com/mcp),
+# which is anonymous/IP-whitelisted (no OAuth). The server exposes exactly two
+# tools, both confirmed read-only (readOnlyHint: true, destructiveHint: false in
+# the server's own tool annotations). Both are catalog-search queries against
+# Viator's public tours/attractions/experiences catalog and return a click-out
+# booking URL — no booking, cart, payment, or write/PII operation happens in the
+# MCP server itself. compliance: [] is correct: inputs are a free-text search
+# term, trip dates, and an opaque sessionId; no personal data of identifiable
+# individuals is read, written, or exported. This mirrors the consumer-travel
+# search precedent in booking.yml.
+actions:
+  # ---------- Data Access ----------
+  - id: viator.search_experiences
+    object: Experience
+    action: search_experiences
+    description: "Retrieves a curated list of Viator experiences based on a free-text search of what the user wants (destination, activity type, preferences) plus trip dates and optional refiners (budget, duration)."
+    reference: https://docs.viator.com/partner-api/mcp/
+    category: Data Access
+    risk: low
+    business_impact: "Performs a read-only search of Viator's public tours and experiences catalog; returns summarised results and click-out URLs, makes no booking and stores nothing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: viator.get_experience_details
+    object: Experience
+    action: get_experience_details
+    description: "Retrieves enriched details for a specific Viator product, including description, highlights, images, inclusions/exclusions, pricing, and the booking click-out URL."
+    reference: https://docs.viator.com/partner-api/mcp/
+    category: Data Access
+    risk: low
+    business_impact: "Reads public catalog detail for a single Viator experience; non-destructive, reversible and makes no booking."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

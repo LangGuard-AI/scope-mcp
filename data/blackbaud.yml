@@ -1,0 +1,102 @@
+schema_version: "1.1"
+platform: blackbaud
+display_name: Blackbaud
+source: langguard-editorial
+updated: "2026-06"
+reference: https://support.claude.com/en/articles/12923221-using-the-blackbaud-connector-in-claude
+# NOTE: The Anthropic-distributed Blackbaud connector (SKY API / Raiser's Edge NXT)
+# is OAuth-gated and publishes only plain-language capability labels — no verbatim
+# `tools/list` identifiers are reachable from the connector page, the Claude support
+# article, or developer.blackbaud.com. Third-party community servers (CData, Composio,
+# Pipedream) expose conflicting generic SQL tools and are NOT authoritative for this
+# first-party connector. All entries below therefore use id_form: capability with the
+# verbatim capability label in `description`; ids are intent-level slugs, confidence
+# capped at medium. The connector is documented as read-only.
+actions:
+  # ---------- Customer ----------
+  - id: blackbaud.constituent_profile_retrieval
+    object: Constituent
+    action: constituent_profile_retrieval
+    id_form: capability
+    description: "Constituent Profile Retrieval"
+    reference: https://support.claude.com/en/articles/12923221-using-the-blackbaud-connector-in-claude
+    category: Customer
+    risk: high
+    business_impact: "Reads a full donor profile including contact information and complete giving history; exposes identifiable personal and donation data on demand."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: blackbaud.constituent_search
+    object: Constituent
+    action: constituent_search
+    id_form: capability
+    description: "Constituent Search"
+    reference: https://support.claude.com/en/articles/12923221-using-the-blackbaud-connector-in-claude
+    category: Customer
+    risk: medium
+    business_impact: "Searches the donor database by name or partial name, returning identifiable constituent records; a name-prefix query can enumerate the donor directory."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: blackbaud.real_time_data_access
+    object: Constituent
+    action: real_time_data_access
+    id_form: capability
+    description: "Real-Time Data Access"
+    reference: https://support.claude.com/en/articles/12923221-using-the-blackbaud-connector-in-claude
+    category: Customer
+    risk: medium
+    business_impact: "Fetches current donor and fundraising data on demand from Raiser's Edge NXT; returns live identifiable constituent information."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+
+  # ---------- Financial ----------
+  - id: blackbaud.gift_record_access
+    object: Gift
+    action: gift_record_access
+    id_form: capability
+    description: "Gift Record Access"
+    reference: https://support.claude.com/en/articles/12923221-using-the-blackbaud-connector-in-claude
+    category: Financial
+    risk: high
+    business_impact: "Reads individual gift records with donation amounts and dates tied to identifiable donors; exposes financial-giving data on demand."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: blackbaud.event_discovery
+    object: Event
+    action: event_discovery
+    id_form: capability
+    description: "Event Discovery"
+    reference: https://support.claude.com/en/articles/12923221-using-the-blackbaud-connector-in-claude
+    category: Operations
+    risk: low
+    business_impact: "Searches fundraising events by name or keyword; returns event metadata with limited personal data exposure."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Messaging ----------
+  - id: blackbaud.communication_generation
+    object: Communication
+    action: communication_generation
+    id_form: capability
+    description: "Communication Generation"
+    reference: https://support.claude.com/en/articles/12923221-using-the-blackbaud-connector-in-claude
+    category: Messaging
+    risk: low
+    business_impact: "Drafts thank-you notes and outreach emails to donors using their personal and giving data; produces draft content rather than sending it."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

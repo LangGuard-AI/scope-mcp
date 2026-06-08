@@ -1,0 +1,83 @@
+schema_version: "1.1"
+platform: msci
+display_name: MSCI
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.msci.com/downloads/web/msci-com/data-and-analytics/private-asset-solutions/ai-for-private-markets/msci-mcp-msci-connector-user-guide.pdf
+actions:
+  # ---------- Data Access ----------
+  # Index domain — verbatim tool-call identifiers attested in the MSCI connector
+  # and IndexAI Insights user guides (UI tool-call indicators / FAQ examples).
+  # These two are a generic Index GraphQL gateway: one fetches the schema, the
+  # other executes an arbitrary index query against MSCI's entitlement-controlled
+  # index data. Behaviour is inferred from name + doc context (no published
+  # tools/list schema), and the docs disagree on casing for the execute tool
+  # (prose "executeIndexGQLSchema" vs UI screenshot "ExecuteIndexGQLSchema"),
+  # so both are capped at medium confidence.
+  - id: msci.GetIndexGQLSchemaFragments
+    object: IndexGraphQLSchema
+    action: GetIndexGQLSchemaFragments
+    description: "Retrieves fragments of the MSCI index GraphQL schema to discover queryable index fields and structure."
+    category: Data Access
+    risk: low
+    business_impact: "Reads schema metadata describing the entitlement-controlled index data model; no business data is returned and no state is changed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: msci.ExecuteIndexGQLSchema
+    object: IndexGraphQLQuery
+    action: ExecuteIndexGQLSchema
+    description: "Executes an arbitrary GraphQL query against MSCI index data (levels, returns, constituents, valuation ratios, FaCS factor scores, sustainability/climate metrics, corporate actions, methodology)."
+    category: Data Access
+    risk: low
+    business_impact: "Reads entitlement-controlled MSCI index data on a security/issuer basis; results (including bulk constituent pulls and CSV exports) are subject to the client's MSCI license and redistribution terms, but the underlying data is market/reference data, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Private Markets ----------
+  # PCI and TPM expose no verbatim tool identifiers anywhere reachable; the
+  # vendor publishes only plain-language capability labels for these domains.
+  # Per the capability-form fallback, ids are slugified from the verbatim labels
+  # (carried in `description`) and capped at medium confidence.
+  - id: msci.benchmark_private_capital_funds
+    object: PrivateCapitalFund
+    action: benchmark_private_capital_funds
+    id_form: capability
+    description: "Benchmark private capital funds using IRR, TVPI, DPI, and other performance measures across vintages, geographies, asset classes, and fund sizes"
+    category: Private Markets
+    risk: low
+    business_impact: "Reads aggregated, universe-level private-capital benchmarks (IRR/TVPI/DPI by vintage, geography, asset class); results are anonymized market analytics, not personal data, but remain subject to the client's MSCI license terms."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: msci.holdings_positions
+    object: Portfolio
+    action: holdings_positions
+    id_form: capability
+    description: "Holdings & positions"
+    category: Private Markets
+    risk: high
+    business_impact: "Reads the client's confidential portfolio holdings, valuations, and transaction-level data (investor letters, SMA statements, custodian feeds, GP reports) across public and private positions; results are downloadable as CSV, so a single call can bulk-export commercially sensitive financial information."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: msci.liquidity_cash_flow
+    object: Portfolio
+    action: liquidity_cash_flow
+    id_form: capability
+    description: "Liquidity & cash flow"
+    category: Private Markets
+    risk: medium
+    business_impact: "Reads the client's confidential portfolio liquidity and forecasted private-capital cash-flow data; downloadable as CSV, exposing commercially sensitive treasury and funding-position information."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

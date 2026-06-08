@@ -1,0 +1,506 @@
+schema_version: "1.1"
+platform: phoenix
+display_name: Phoenix by HG Insights
+source: langguard-editorial
+updated: "2026-06"
+reference: https://phoenix.hginsights.com/docs/mcp-tools/overview
+actions:
+  # ---------- Identity & Access (admin) ----------
+  - id: phoenix.admin_remove_user
+    object: User
+    action: admin_remove_user
+    description: "Removes a user from the calling org and revokes all of their API keys and OAuth tokens for that org."
+    reference: https://phoenix.hginsights.com/docs/mcp-tools/admin-remove-user
+    category: Identity & Access
+    risk: critical
+    business_impact: "Hard-deletes the user's org membership and revokes every API key and OAuth token they hold; the vendor labels this irreversible, requiring a fresh invitation to restore access."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: phoenix.admin_invite_user
+    object: User
+    action: admin_invite_user
+    description: "Invites a user to the calling org with a member or admin role and emails the invitation."
+    reference: https://phoenix.hginsights.com/docs/mcp-tools/admin-invite-user
+    category: Identity & Access
+    risk: critical
+    business_impact: "Provisions org access and can grant the admin role, a privilege-escalation path that unlocks every other admin-only tool; sends an email and writes an audit row."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: phoenix.admin_list_users
+    object: User
+    action: admin_list_users
+    description: "Lists the users who are members of the calling org."
+    reference: https://phoenix.hginsights.com/docs/mcp-tools/admin-list-users
+    category: Identity & Access
+    risk: high
+    business_impact: "Returns the full roster of org members including their identities; a bulk read of employee personal data subject to data-subject rights."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: phoenix.admin_list_api_keys
+    object: ApiKey
+    action: admin_list_api_keys
+    description: "Lists the API keys issued for the calling org with attribution metadata."
+    reference: https://phoenix.hginsights.com/docs/mcp-tools/admin-list-api-keys
+    category: Identity & Access
+    risk: medium
+    business_impact: "Enumerates the org's API-key inventory and the users they are attributed to; surfaces the access-control surface but returns metadata, not the secret key values."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Secrets & Integrations (admin) ----------
+  - id: phoenix.admin_set_integration_credentials
+    object: IntegrationCredential
+    action: admin_set_integration_credentials
+    description: "Sets or rotates the secret credential for an org integration."
+    reference: https://phoenix.hginsights.com/docs/mcp-tools/admin-set-integration-credentials
+    category: Secrets & Workflows
+    risk: critical
+    business_impact: "Writes or rotates an integration's secret credential org-wide; controls downstream data-source access and can repoint or break integrations."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: phoenix.admin_remove_integration_credentials
+    object: IntegrationCredential
+    action: admin_remove_integration_credentials
+    description: "Deactivates an integration by removing its stored credential; idempotent."
+    reference: https://phoenix.hginsights.com/docs/mcp-tools/admin-remove-integration-credentials
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Removes an integration's credential and deactivates it org-wide; reversible by setting the credential again and audited on every call."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: phoenix.admin_list_integrations
+    object: Integration
+    action: admin_list_integrations
+    description: "Lists the integrations configured for the calling org and their status."
+    reference: https://phoenix.hginsights.com/docs/mcp-tools/admin-list-integrations
+    category: Secrets & Workflows
+    risk: low
+    business_impact: "Returns the org's integration inventory and configuration status; metadata only, no credential values are exposed."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Consumption & Usage (admin) ----------
+  - id: phoenix.admin_get_consumption
+    object: Consumption
+    action: admin_get_consumption
+    description: "Returns org-wide consumption status, optionally broken down per user."
+    reference: https://phoenix.hginsights.com/docs/mcp-tools/admin-get-consumption
+    category: Operations
+    risk: low
+    business_impact: "Returns the org's API consumption and quota status; usage metadata scoped to the calling org."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: phoenix.admin_get_consumption_by_api_key
+    object: Consumption
+    action: admin_get_consumption_by_api_key
+    description: "Returns consumption broken down by API key for the calling org."
+    reference: https://phoenix.hginsights.com/docs/mcp-tools/admin-get-consumption-by-api-key
+    category: Operations
+    risk: low
+    business_impact: "Returns per-API-key consumption with caller attribution; usage telemetry that can surface which users drove activity, scoped to the calling org."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Contact Intelligence ----------
+  - id: phoenix.contact_enrich
+    object: Contact
+    action: contact_enrich
+    description: "Enrich contacts with full details including email, phone, and social profiles."
+    category: Data Access
+    risk: high
+    business_impact: "Returns directly-identifying personal data (email, phone, social profiles) for named individuals sourced from a third-party data broker."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: phoenix.contact_search
+    object: Contact
+    action: contact_search
+    description: "Search for contacts at a company by title, seniority, and location."
+    category: Data Access
+    risk: high
+    business_impact: "Returns lists of identifiable individuals at a target company; broker-sourced personal data subject to data-subject rights."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Warehouse Query ----------
+  - id: phoenix.hg_data_query
+    object: DataWarehouse
+    action: hg_data_query
+    description: "Execute read-only SQL SELECT queries against the HG data warehouse."
+    category: Data Access
+    risk: high
+    business_impact: "Runs arbitrary read-only SQL against the HG warehouse; scope is unbounded and can reach contact-level personal data depending on the query."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: phoenix.hg_catalog
+    object: DataWarehouse
+    action: hg_catalog
+    description: "Discover available tables, columns, data types, and row counts in the HG data warehouse."
+    category: Data Access
+    risk: low
+    business_impact: "Returns schema metadata for the HG warehouse; no row-level data is exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Company Intelligence ----------
+  - id: phoenix.company_firmographic
+    object: Company
+    action: company_firmographic
+    description: "Get firmographic data about a company including size, revenue, industry, and location."
+    category: Data Access
+    risk: low
+    business_impact: "Returns org-level firmographic attributes for a company; no personal data of individuals."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: phoenix.company_technographic
+    object: Company
+    action: company_technographic
+    description: "Analyze a company's technology stack and usage patterns."
+    category: Data Access
+    risk: low
+    business_impact: "Returns org-level technology-stack data for a company; competitive intelligence, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: phoenix.company_operating_signals
+    object: Company
+    action: company_operating_signals
+    description: "Retrieve operating signals including work model, cloud posture, and GenAI readiness."
+    category: Data Access
+    risk: low
+    business_impact: "Returns org-level operating signals for a company; no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: phoenix.company_install_time_series
+    object: Company
+    action: company_install_time_series
+    description: "Get installation intensity time series data showing how a company's technology usage changes over time."
+    category: Data Access
+    risk: low
+    business_impact: "Returns org-level technology-adoption trend data for a company; no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: phoenix.company_fai
+    object: Company
+    action: company_fai
+    description: "Access Functional Area Intelligence (FAI) data showing departmental technology usage."
+    category: Data Access
+    risk: low
+    business_impact: "Returns org-level departmental technology-usage intelligence; aggregated, not individual-level."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: phoenix.company_intent
+    object: Company
+    action: company_intent
+    description: "Retrieve intent signals and buying behavior data from TrustRadius."
+    category: Data Access
+    risk: low
+    business_impact: "Returns org-level buyer-intent signals for a company; aggregated buying-behavior data, not individual profiling."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: phoenix.company_spend
+    object: Company
+    action: company_spend
+    description: "Analyze company spending patterns across technology categories."
+    category: Data Access
+    risk: low
+    business_impact: "Returns org-level technology-spend estimates for a company; no personal or customer financial data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: phoenix.company_cloud_spend
+    object: Company
+    action: company_cloud_spend
+    description: "Get detailed cloud spending analysis and patterns from Intricately."
+    category: Data Access
+    risk: low
+    business_impact: "Returns org-level cloud-spend estimates for a company; estimated third-party intelligence, not the company's own books."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: phoenix.company_contracts
+    object: Company
+    action: company_contracts
+    description: "Retrieve ICT outsourced contract intelligence including GSI relationships, deal values, and contract timelines."
+    category: Data Access
+    risk: low
+    business_impact: "Returns org-level outsourced-contract intelligence for a company; market data, not personal or regulated financial records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: phoenix.search_companies
+    object: Company
+    action: search_companies
+    description: "Search for companies using natural-language criteria (industry, size, location, technologies)."
+    category: Data Access
+    risk: low
+    business_impact: "Returns lists of companies matching firmographic/technographic criteria; org-level data only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Product & Vendor Catalog ----------
+  - id: phoenix.get_product_information
+    object: Product
+    action: get_product_information
+    description: "Get comprehensive product information including pricing and competitors."
+    category: Data Access
+    risk: low
+    business_impact: "Returns catalog product information; public market data with no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: phoenix.get_product_reviews
+    object: Product
+    action: get_product_reviews
+    description: "Get customer reviews and ratings with date/rating filtering."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregated product reviews and ratings; review content may name reviewers but is published third-party content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: phoenix.get_vendor_information
+    object: Vendor
+    action: get_vendor_information
+    description: "Search for a technology vendor by name (fuzzy matching) or list all available vendors."
+    category: Data Access
+    risk: low
+    business_impact: "Returns technology-vendor catalog data; public market reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: phoenix.list_product_categories
+    object: Product
+    action: list_product_categories
+    description: "List all available HG Insights product categories."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the catalog taxonomy of product categories; reference metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: phoenix.list_product_attributes
+    object: Product
+    action: list_product_attributes
+    description: "List available product attributes for filtering and analysis."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the set of product attributes available for filtering; reference metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: phoenix.list_intent_topics
+    object: IntentTopic
+    action: list_intent_topics
+    description: "Get available intent topics for intent signal analysis."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the catalog of intent topics available for analysis; reference metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: phoenix.intent_category
+    object: IntentTopic
+    action: intent_category
+    description: "Retrieve buyer intent signals based on product categories."
+    category: Data Access
+    risk: low
+    business_impact: "Returns org-level buyer-intent signals scoped to product categories; aggregated buying-behavior data, not individual profiling."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Government & Federal ----------
+  - id: phoenix.search_federal_contracts
+    object: FederalContract
+    action: search_federal_contracts
+    description: "Search USAspending.gov for U.S. federal contract awards by agency, NAICS code, value, date range, and set-aside type."
+    category: Data Access
+    risk: low
+    business_impact: "Returns publicly-disclosed federal contract award records from USAspending.gov; public-record data, not gov-cloud system access."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: phoenix.search_gov_opportunities
+    object: GovOpportunity
+    action: search_gov_opportunities
+    description: "Search SAM.gov for open U.S. federal solicitations including RFPs, RFQs, presolicitations, and sources sought."
+    category: Data Access
+    risk: low
+    business_impact: "Returns public federal solicitation records from SAM.gov; public-record data only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: phoenix.company_gov_opportunities
+    object: GovOpportunity
+    action: company_gov_opportunities
+    description: "Find open federal solicitations where a specific company is the incumbent contractor or a likely bidder."
+    category: Data Access
+    risk: low
+    business_impact: "Correlates a company against public federal solicitation records; derived from public-record data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: phoenix.company_gov_relationships
+    object: Company
+    action: company_gov_relationships
+    description: "Show prime/subcontractor relationships for a company from federal subaward data."
+    category: Data Access
+    risk: low
+    business_impact: "Returns prime/subcontractor relationships derived from public federal subaward data; public-record data only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- SEC Filings ----------
+  - id: phoenix.sec_filing_section
+    object: SecFiling
+    action: sec_filing_section
+    description: "Extract specific sections from SEC 10-K, 10-Q, or 8-K filings."
+    category: Data Access
+    risk: low
+    business_impact: "Extracts sections from publicly-filed third-party SEC documents; public-record data, not the customer's own financial reporting."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: phoenix.sec_full_text_search
+    object: SecFiling
+    action: sec_full_text_search
+    description: "Search within SEC filing content for specific terms or phrases."
+    category: Data Access
+    risk: low
+    business_impact: "Full-text searches publicly-filed third-party SEC documents; public-record data only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Phoenix Agents ----------
+  - id: phoenix.phoenix_invoke_agent
+    object: Agent
+    action: phoenix_invoke_agent
+    description: "Execute a Phoenix AI agent with specified inputs."
+    category: Operations
+    risk: medium
+    business_impact: "Triggers execution of a configured Phoenix AI agent run; consumes quota and can drive downstream multi-step data retrieval whose scope depends on the agent's design."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: phoenix.phoenix_list_agents
+    object: Agent
+    action: phoenix_list_agents
+    description: "List all available Phoenix AI agents for the organization."
+    category: Operations
+    risk: low
+    business_impact: "Returns the list of configured Phoenix agents for the organization; metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: phoenix.phoenix_get_run_status
+    object: AgentRun
+    action: phoenix_get_run_status
+    description: "Get the status and artifacts of an agent run."
+    category: Operations
+    risk: low
+    business_impact: "Returns status and artifacts of a prior agent run; read-only and scoped to the requesting organization."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Utility ----------
+  - id: phoenix.web_search
+    object: WebResult
+    action: web_search
+    description: "Perform web searches to find real-time information."
+    category: Data Access
+    risk: low
+    business_impact: "Performs a general web search and returns public results; no proprietary or personal data is written."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

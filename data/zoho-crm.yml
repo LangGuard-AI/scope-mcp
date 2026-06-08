@@ -1,0 +1,281 @@
+schema_version: "1.1"
+platform: zoho-crm
+display_name: Zoho CRM
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.zoho.com/crm/developer/docs/mcp/overview.html
+# NOTE: Zoho CRM's MCP surface is delivered through four pre-built, user-generated
+# MCP servers (Data Insights, Data Operations, Module Customization, Workflow &
+# Process Automation). The MCP server URL is generated per-tenant by the Zoho MCP
+# service and is OAuth-gated, so tools/list cannot be introspected anonymously, and
+# Zoho's official developer docs publish only plain-language capability labels — no
+# verbatim tool identifiers. The only verbatim ids found anywhere were in conflicting
+# third-party server implementations (Vinkius, Composio, CData, community GitHub),
+# which the curator spec forbids using. Per Step 3, every action below therefore uses
+# id_form: capability — the `description` is the capability label quoted verbatim from
+# Zoho's official docs, the `id`/`action` slug is best-effort (intent-level, NOT an
+# identifier-level match), and confidence is capped at medium.
+actions:
+  # ---------- Customer ----------
+  - id: zoho-crm.create_record
+    object: Record
+    action: create_record
+    id_form: capability
+    description: "Create, read, update, and delete records"
+    category: Customer
+    risk: medium
+    business_impact: "Creates a CRM record (lead, contact, account, deal, etc.) holding customer PII; reversible but writes identifiable personal data into the CRM."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoho-crm.update_record
+    object: Record
+    action: update_record
+    id_form: capability
+    description: "Create, read, update, and delete records"
+    category: Customer
+    risk: medium
+    business_impact: "Updates a CRM record's fields including customer PII and deal/pipeline state; reversible via audit history but mutates business-critical and personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoho-crm.delete_record
+    object: Record
+    action: delete_record
+    id_form: capability
+    description: "Create, read, update, and delete records"
+    category: Customer
+    risk: high
+    business_impact: "Deletes a CRM record; Zoho moves deleted records to Recycle Bin for 60 days, but a single principal can destroy customer/pipeline data without a second approval."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoho-crm.bulk_operations
+    object: Record
+    action: bulk_operations
+    id_form: capability
+    description: "Perform bulk operations on multiple records at once"
+    category: Customer
+    risk: critical
+    business_impact: "Applies create/update/delete across many records in one call; a single bulk-delete or bulk-update can destroy or rewrite customer and pipeline data at scale without a second approver."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoho-crm.update_related_records
+    object: Record
+    action: update_related_records
+    id_form: capability
+    description: "Retrieve and update related records associated with a parent record"
+    category: Customer
+    risk: medium
+    business_impact: "Reads and updates child records linked to a parent (e.g. contacts under an account, products under a deal), mutating related customer and pipeline data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoho-crm.search_records
+    object: Record
+    action: search_records
+    id_form: capability
+    description: "Search records using COQL queries"
+    category: Customer
+    risk: high
+    business_impact: "Runs arbitrary COQL queries across standard and custom modules; enables bulk extraction of customer PII matching any filter from the entire CRM."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: zoho-crm.query_records
+    object: Record
+    action: query_records
+    id_form: capability
+    description: "Query records across standard and custom modules using COQL"
+    category: Data Access
+    risk: high
+    business_impact: "Read-only COQL query across all standard and custom modules; enables bulk read and exfiltration of customer PII across the entire CRM."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoho-crm.filter_sort_group_results
+    object: Record
+    action: filter_sort_group_results
+    id_form: capability
+    description: "Filter, sort, group, and paginate results"
+    category: Data Access
+    risk: medium
+    business_impact: "Paginates and shapes query results; enables systematic enumeration of customer records page by page."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoho-crm.list_modules
+    object: Module
+    action: list_modules
+    id_form: capability
+    description: "Retrieve the list of all modules in your CRM"
+    category: Data Access
+    risk: low
+    business_impact: "Reads the list of CRM modules (schema metadata only); no record-level personal data is returned."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoho-crm.access_field_schemas
+    object: Field
+    action: access_field_schemas
+    id_form: capability
+    description: "Access field schemas for any module"
+    category: Data Access
+    risk: low
+    business_impact: "Reads field definitions for a module (schema metadata only); reveals CRM structure but no record-level personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Configuration ----------
+  - id: zoho-crm.create_custom_module
+    object: Module
+    action: create_custom_module
+    id_form: capability
+    description: "Create new custom modules"
+    category: Configuration
+    risk: medium
+    business_impact: "Adds a new custom module to the CRM schema; a structural tenant-wide change affecting data model and downstream automations."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoho-crm.update_module_settings
+    object: Module
+    action: update_module_settings
+    id_form: capability
+    description: "Update module-level settings and properties"
+    category: Configuration
+    risk: medium
+    business_impact: "Changes module-level settings and properties; a tenant-wide configuration change affecting how a module behaves for all users."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoho-crm.create_custom_field
+    object: Field
+    action: create_custom_field
+    id_form: capability
+    description: "Retrieve field schemas and create custom fields"
+    category: Configuration
+    risk: medium
+    business_impact: "Creates a new custom field on a module; alters the CRM data model and can introduce new fields that capture personal data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoho-crm.update_field_properties
+    object: Field
+    action: update_field_properties
+    id_form: capability
+    description: "Update field properties (label, required, tooltip, etc.)"
+    category: Configuration
+    risk: medium
+    business_impact: "Modifies field properties (label, required, tooltip, etc.); a schema change that can alter validation and data-capture behavior tenant-wide."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoho-crm.manage_page_layouts
+    object: Layout
+    action: manage_page_layouts
+    id_form: capability
+    description: "Retrieve, update, activate, and deactivate page layouts"
+    category: Configuration
+    risk: medium
+    business_impact: "Activates, deactivates, and updates page layouts; a tenant-wide UI/data-entry configuration change that can hide or expose fields for all users."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoho-crm.view_module_metadata
+    object: Module
+    action: view_module_metadata
+    id_form: capability
+    description: "Retrieve the list of all modules and view module metadata"
+    category: Configuration
+    risk: low
+    business_impact: "Reads module metadata (schema and configuration only); no record-level personal data is returned."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: zoho-crm.create_workflow_rule
+    object: WorkflowRule
+    action: create_workflow_rule
+    id_form: capability
+    description: "Create, update, and list workflow rules"
+    category: Operations
+    risk: high
+    business_impact: "Creates or updates a workflow rule that auto-triggers actions on record events; can silently automate data writes, notifications, or field updates across the tenant."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoho-crm.reorder_workflow_rules
+    object: WorkflowRule
+    action: reorder_workflow_rules
+    id_form: capability
+    description: "Reorder the sequence of workflow rules"
+    category: Operations
+    risk: medium
+    business_impact: "Changes the execution order of workflow rules; can alter automation outcomes tenant-wide without changing any rule's content."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoho-crm.manage_workflow_task_actions
+    object: WorkflowAction
+    action: manage_workflow_task_actions
+    id_form: capability
+    description: "Create, update, and list workflow task actions"
+    category: Operations
+    risk: medium
+    business_impact: "Creates and updates the task actions a workflow performs (e.g. field updates, task creation); changes automated behavior triggered on record events."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: zoho-crm.retrieve_workflow_configuration
+    object: WorkflowRule
+    action: retrieve_workflow_configuration
+    id_form: capability
+    description: "Retrieve workflow configuration details"
+    category: Operations
+    risk: low
+    business_impact: "Reads workflow configuration details (automation metadata only); no record-level personal data is returned."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

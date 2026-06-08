@@ -1,0 +1,85 @@
+schema_version: "1.1"
+platform: semrush
+display_name: Semrush
+source: langguard-editorial
+updated: "2026-06"
+reference: https://developer.semrush.com/api/introduction/semrush-mcp/
+actions:
+  # ---------- Data Access ----------
+  # The official Semrush MCP server is strictly read-only. It exposes a small set
+  # of category-level discovery tools that surface available Semrush reports, plus
+  # two generic tools (get_report_schema / execute_report) that fetch a report's
+  # parameter schema and run it. All data is aggregate SEO / marketing / competitive
+  # / Trends intelligence plus read-only Projects configuration — no personal data
+  # of identifiable individuals, no writes, no deletes.
+  - id: semrush.organic_research
+    object: Report
+    action: organic_research
+    description: "Discovers available Semrush organic search reports (rankings, organic positions, competitors)."
+    category: Data Access
+    risk: low
+    business_impact: "Reads aggregate organic-search intelligence for a domain or keyword; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: semrush.keyword_research
+    object: Report
+    action: keyword_research
+    description: "Discovers available Semrush keyword reports (search volume, difficulty, related keywords, SERP features)."
+    category: Data Access
+    risk: low
+    business_impact: "Reads aggregate keyword metrics from the Semrush dataset; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: semrush.backlink_research
+    object: Report
+    action: backlink_research
+    description: "Discovers available Semrush backlink reports (referring domains, anchor text, backlink profiles)."
+    category: Data Access
+    risk: low
+    business_impact: "Reads aggregate backlink and referring-domain intelligence; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: semrush.trends_research
+    object: Report
+    action: trends_research
+    description: "Discovers available Semrush Trends reports (traffic analytics, market share, audience and traffic-source breakdowns)."
+    category: Data Access
+    risk: low
+    business_impact: "Reads aggregate, modeled traffic-and-market intelligence from the Trends dataset; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: semrush.get_report_schema
+    object: Report
+    action: get_report_schema
+    description: "Returns the parameter schema for a specific Semrush report so the agent knows how to call it."
+    category: Data Access
+    risk: low
+    business_impact: "Returns metadata describing a report's parameters; no business data is read or changed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: semrush.execute_report
+    object: Report
+    action: execute_report
+    description: "Runs a specified Semrush report with the supplied parameters and returns its rows."
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves a Semrush report's data; read-only against aggregate SEO/marketing/Trends data, scope varies by report."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

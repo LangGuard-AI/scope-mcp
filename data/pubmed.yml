@@ -1,0 +1,91 @@
+schema_version: "1.1"
+platform: pubmed
+display_name: PubMed
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/resources/tutorials/using-the-pubmed-connector-in-claude
+actions:
+  # ---------- Data Access ----------
+  - id: pubmed.search_articles
+    object: Article
+    action: search_articles
+    description: "Searches PubMed for biomedical and life-sciences research articles matching a query."
+    category: Data Access
+    risk: low
+    business_impact: "Returns PubMed IDs for published articles matching the query; read-only against the public NLM bibliographic index."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: pubmed.get_article_metadata
+    object: Article
+    action: get_article_metadata
+    description: "Retrieves title, abstract, authors, journal, and identifiers for given PubMed IDs."
+    category: Data Access
+    risk: low
+    business_impact: "Returns published bibliographic metadata and abstracts for the supplied PMIDs; read-only public scholarly data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: pubmed.get_full_text_article
+    object: Article
+    action: get_full_text_article
+    description: "Retrieves full-text articles from PubMed Central (PMC) by PMC ID."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the full text of open-access PMC articles for the supplied IDs; read-only against already-published research."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: pubmed.find_related_articles
+    object: Article
+    action: find_related_articles
+    description: "Finds related articles and linked resources (similar papers, genes, proteins, nucleotides) for given PMIDs."
+    category: Data Access
+    risk: low
+    business_impact: "Returns related-article and cross-database link IDs for the supplied PMIDs; read-only public scholarly data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: pubmed.lookup_article_by_citation
+    object: Article
+    action: lookup_article_by_citation
+    description: "Matches bibliographic citation details (journal, year, volume, page, author) to PubMed IDs."
+    category: Data Access
+    risk: low
+    business_impact: "Resolves supplied citation fields to PMIDs; read-only lookup against the public bibliographic index."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: pubmed.convert_article_ids
+    object: Article
+    action: convert_article_ids
+    description: "Converts between article identifier formats (PMID, PMCID, DOI)."
+    category: Data Access
+    risk: low
+    business_impact: "Returns equivalent identifiers for the supplied article IDs; read-only identifier mapping."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: pubmed.get_copyright_status
+    object: Article
+    action: get_copyright_status
+    description: "Returns copyright and licensing information (e.g. open-access status, CC license) for given PMIDs."
+    category: Data Access
+    risk: low
+    business_impact: "Returns published copyright and license metadata for the supplied PMIDs; read-only IP/licensing lookup, no allowlist regime applies."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

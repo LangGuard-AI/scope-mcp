@@ -1,0 +1,117 @@
+schema_version: "1.1"
+platform: legalzoom
+display_name: LegalZoom
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.legalzoom.com/tools/mcp-docs
+actions:
+  # ---------- Legal Review ----------
+  - id: legalzoom.request_attorney_review
+    object: AttorneyReview
+    action: request_attorney_review
+    description: "Connect the user with a LegalZoom attorney for professional legal review with full conversation context."
+    category: Legal Review
+    risk: high
+    business_impact: "Discloses the user's identity and full conversation context — potentially sensitive legal-matter detail — to a third-party attorney at LZ Legal Services; an external personal-data disclosure that also implicates attorney-client confidentiality."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: legalzoom.attach_document_to_attorney_review
+    object: Document
+    action: attach_document_to_attorney_review
+    description: "Attach a document to an existing attorney review for the attorney to access in their portal."
+    category: Legal Review
+    risk: high
+    business_impact: "Shares a user-supplied legal document — contracts, agreements, or NDAs that routinely contain personal and confidential business data — with a third-party attorney portal."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: legalzoom.prepare_document_upload
+    object: Document
+    action: prepare_document_upload
+    description: "Get a one-time upload URL for attaching documents in environments where direct file access is unavailable."
+    category: Legal Review
+    risk: medium
+    business_impact: "Provisions a one-time upload channel for ingesting user legal documents that may carry personal and confidential data; reversible and no content is transferred by this call alone."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Entitlements & Commerce ----------
+  - id: legalzoom.check-attorney-consultation-entitlements
+    object: Entitlement
+    action: check-attorney-consultation-entitlements
+    description: "Check if the user has attorney consultation access and determine next steps."
+    category: Entitlements & Commerce
+    risk: low
+    business_impact: "Reads the user's account-level consultation entitlement status; touches identifiable account data but is read-only and non-destructive."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: legalzoom.add-bap-to-cart
+    object: Cart
+    action: add-bap-to-cart
+    description: "Add a Business Advisory Plan or Personal Legal Plan to the user's cart when they need to purchase consultation access."
+    category: Entitlements & Commerce
+    risk: low
+    business_impact: "Adds a subscription plan to the user's shopping cart as a purchase intent; reversible and processes no payment-card data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: legalzoom.attorney-consultation-redirect
+    object: Consultation
+    action: attorney-consultation-redirect
+    description: "Redirect users to complete checkout or begin consultation setup based on entitlement status."
+    category: Entitlements & Commerce
+    risk: low
+    business_impact: "Returns a redirect to an externally hosted checkout or consultation-setup flow; no money moves and no card data is handled by this call."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Consultation Catalog ----------
+  - id: legalzoom.get_attorney_availability
+    object: Availability
+    action: get_attorney_availability
+    description: "Check when attorneys are available for consultation by topic and location."
+    category: Consultation Catalog
+    risk: low
+    business_impact: "Reads attorney scheduling availability by topic and jurisdiction; no personal data of the requesting user is written or returned."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: legalzoom.get_consultation_topics
+    object: Topic
+    action: get_consultation_topics
+    description: "Get available attorney consultation specializations (contracts, business formation, IP, employment, estate planning, etc.)."
+    category: Consultation Catalog
+    risk: low
+    business_impact: "Returns a static catalog of consultation practice areas; no personal data involved."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: legalzoom.get_valid_locations
+    object: Location
+    action: get_valid_locations
+    description: "Get valid US state and territory codes for attorney matching and jurisdiction validation."
+    category: Consultation Catalog
+    risk: low
+    business_impact: "Returns the static list of valid US state and territory codes; no personal data involved."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

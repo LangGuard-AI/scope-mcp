@@ -1,0 +1,86 @@
+schema_version: "1.1"
+platform: ketryx
+display_name: Ketryx
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.ketryx.com/reference/ketryx-mcp-server
+# Ketryx's hosted MCP server (https://app.ketryx.com/api/mcp, JSON-RPC over Streamable
+# HTTP) gates tools/list behind OAuth: an anonymous POST returns HTTP 401 with
+# `WWW-Authenticate: Bearer resource_metadata="https://app.ketryx.com/.well-known/oauth-protected-resource"`,
+# and that RFC 9728 metadata confirms an OAuth-protected resource whose authorization
+# server is Stytch (pleasant-bridge-4023.customers.stytch.com). Live introspection
+# therefore cannot read the verbatim tool list, and the vendor reference docs
+# (docs.ketryx.com/reference/ketryx-mcp-server) redirect to an authenticated GitBook
+# login — no static content, no capability table. No public MCP server source repo
+# exists under the Ketryx GitHub org. Ketryx publishes its MCP surface only as
+# plain-language capability phrases on the connector page and the MCP access-request
+# page. Every action below therefore uses id_form: capability per the curator spec's
+# documented fallback: the verbatim vendor phrase is preserved in `description`,
+# `id`/`action` are intent-level slugs, and confidence is capped at medium.
+#
+# Ketryx is a 21 CFR Part 11 / IEC 62304 / ISO 13485 ALM platform for regulated
+# (primarily medical-device and life-sciences) product development. The MCP server is a
+# READ-ONLY meta-connector: it answers compliance questions over a unified knowledge
+# graph aggregated from connected tools (Jira, Jama, GitHub, TestRail, Polarion, Azure
+# DevOps). The records it reads are FDA 21 CFR Part 11-scoped electronic records, NOT
+# consumer PII — so the privacy-regime stack (GDPR/CCPA/etc.) is deliberately NOT
+# applied. EU MDR and ISO 13485/14971 are not in the canonical allowlist and are noted
+# in prose only. When a real tools/list capture becomes available, refresh to
+# id_form: verbatim with the actual identifier strings. MCP server is in public beta.
+actions:
+  # ---------- Compliance Intelligence ----------
+  - id: ketryx.read_compliance_data
+    object: ComplianceRecord
+    action: read_compliance_data
+    id_form: capability
+    description: "Connect your preferred AI tools, like Claude, Cursor, Copilot, or ChatGPT, directly to your compliance data"
+    reference: https://www.ketryx.com/mcp-access-request
+    category: Data Access
+    risk: medium
+    business_impact: "Reads aggregated compliance records (requirements, risks, SOPs, tests, traceability) across the connected toolchain; the records are FDA 21 CFR Part 11-scoped electronic records and a broad cross-system read concentrates confidential engineering data."
+    compliance: [FDA_PART_11, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ketryx.check_traceability
+    object: TraceabilityMatrix
+    action: check_traceability
+    id_form: capability
+    description: "Check for end-to-end traceability"
+    reference: https://www.ketryx.com/mcp-access-request
+    category: Data Access
+    risk: low
+    business_impact: "Reads the traceability graph linking requirements, code, and tests to surface coverage gaps; read-only over Part 11-scoped engineering records, no state change."
+    compliance: [FDA_PART_11]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ketryx.check_release_readiness
+    object: Release
+    action: check_release_readiness
+    id_form: capability
+    description: "Instantly understand release readiness"
+    reference: https://www.ketryx.com/mcp-access-request
+    category: Data Access
+    risk: low
+    business_impact: "Reads release status and open compliance items to report deployment readiness; advisory read against Part 11-scoped records, does not gate or trigger a release."
+    compliance: [FDA_PART_11]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ketryx.change_impact_assessment
+    object: ChangeAssessment
+    action: change_impact_assessment
+    id_form: capability
+    description: "Automate change impact assessment"
+    reference: https://www.ketryx.com/mcp-access-request
+    category: Operations
+    risk: medium
+    business_impact: "Explores the project and reads every requirement, risk, and SOP to produce a draft change-impact plan; the draft is advisory and remains subject to Ketryx's separate approval and traceability framework before any controlled change is enacted."
+    compliance: [FDA_PART_11]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]

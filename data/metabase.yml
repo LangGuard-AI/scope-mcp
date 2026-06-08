@@ -1,0 +1,138 @@
+schema_version: "1.1"
+platform: metabase
+display_name: Metabase
+source: langguard-editorial
+updated: "2026-06"
+reference: https://www.metabase.com/docs/latest/ai/mcp
+actions:
+  # ---------- Data Access ----------
+  - id: metabase.execute_query
+    object: Query
+    action: execute_query
+    description: "Execute a previously constructed query and return the results with column metadata, row count, and execution time."
+    reference: https://www.metabase.com/docs/latest/ai/mcp
+    category: Data Access
+    risk: high
+    business_impact: "Runs an arbitrary query against the connected data warehouse and returns rows; can extract any PII, financial, or health data the warehouse holds."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: metabase.query
+    object: Query
+    action: query
+    description: "Query a table or metric and return results."
+    reference: https://www.metabase.com/docs/latest/ai/mcp
+    category: Data Access
+    risk: high
+    business_impact: "Queries a table or metric and returns underlying rows; can surface any PII, financial, or health data stored in the warehouse."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: metabase.get_table_field_values
+    object: Field
+    action: get_table_field_values
+    description: "Get sample values and statistics for a field in a table."
+    reference: https://www.metabase.com/docs/latest/ai/mcp
+    category: Data Access
+    risk: medium
+    business_impact: "Returns sampled real values from a table column; sampled rows may contain PII or other regulated data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: metabase.get_metric_field_values
+    object: Field
+    action: get_metric_field_values
+    description: "Get sample values and statistics for a field in a metric."
+    reference: https://www.metabase.com/docs/latest/ai/mcp
+    category: Data Access
+    risk: medium
+    business_impact: "Returns sampled real values from a metric field; sampled rows may contain PII or other regulated data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: metabase.construct_query
+    object: Query
+    action: construct_query
+    description: "Construct a query against a table or metric, returning an opaque query string that can be executed with execute_query."
+    reference: https://www.metabase.com/docs/latest/ai/mcp
+    category: Data Access
+    risk: low
+    business_impact: "Builds an opaque query string without executing it; no data is read or returned until execute_query is called."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: metabase.search
+    object: Resource
+    action: search
+    description: "Find tables and metrics using keyword or natural language search."
+    reference: https://www.metabase.com/docs/latest/ai/mcp
+    category: Data Access
+    risk: low
+    business_impact: "Searches table and metric metadata by name; returns schema-level results, not underlying data rows."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: metabase.get_table
+    object: Table
+    action: get_table
+    description: "Get details about a table, including its fields, related tables, and metrics."
+    reference: https://www.metabase.com/docs/latest/ai/mcp
+    category: Data Access
+    risk: low
+    business_impact: "Returns table schema metadata (fields and relationships); exposes structure, not the underlying data rows."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: metabase.get_metric
+    object: Metric
+    action: get_metric
+    description: "Get details about a metric, including its queryable dimensions."
+    reference: https://www.metabase.com/docs/latest/ai/mcp
+    category: Data Access
+    risk: low
+    business_impact: "Returns metric definition metadata (queryable dimensions); exposes structure, not the underlying data rows."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Content & Reporting ----------
+  - id: metabase.create_question
+    object: Question
+    action: create_question
+    description: "Create questions."
+    reference: https://www.metabase.com/docs/latest/ai/mcp
+    category: Content & Reporting
+    risk: medium
+    business_impact: "Saves a new question (card) whose embedded query can surface warehouse data to other users; reversible by deleting the question."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: metabase.create_dashboard
+    object: Dashboard
+    action: create_dashboard
+    description: "Create dashboards."
+    reference: https://www.metabase.com/docs/latest/ai/mcp
+    category: Content & Reporting
+    risk: medium
+    business_impact: "Creates a new dashboard that can surface query results to other users; reversible by deleting the dashboard."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

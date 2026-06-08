@@ -1,0 +1,92 @@
+schema_version: "1.1"
+platform: legal-data-hunter
+display_name: Legal Data Hunter
+source: langguard-editorial
+updated: "2026-06"
+reference: https://legaldatahunter.com/docs/mcp-vs-api
+actions:
+  # ---------- Data Access ----------
+  - id: legal-data-hunter.search
+    object: Document
+    action: search
+    description: "Hybrid semantic + keyword search across the public legal corpus, filterable by country, court tier, jurisdiction, language, and date range."
+    category: Data Access
+    risk: low
+    business_impact: "Returns ranked titles, snippets, and scores over published government legal records; read-only query against a public corpus."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: legal-data-hunter.resolve_reference
+    object: Document
+    action: resolve_reference
+    description: "Resolves a loose legal citation (ECLI, CELEX, case number, article reference) to the matching published document(s)."
+    category: Data Access
+    risk: low
+    business_impact: "Maps an informal citation to specific public legal documents; read-only lookup against published records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: legal-data-hunter.get_document
+    object: Document
+    action: get_document
+    description: "Retrieves the full text and metadata of a single published court decision or legislative text by source and source_id."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the complete text of a judgment, which can contain personal data and special-category facts (criminal, health, family) of named individuals across many jurisdictions, even though the record is already officially published."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: legal-data-hunter.discover_countries
+    object: Country
+    action: discover_countries
+    description: "Lists every country in the database with document counts broken down by type."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregate country-level coverage counts; no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: legal-data-hunter.discover_sources
+    object: Source
+    action: discover_sources
+    description: "For a given country, lists all official sources (courts, legislative bodies) with their document counts and date ranges."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregate source-level coverage metadata for a country; no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: legal-data-hunter.get_filters
+    object: Source
+    action: get_filters
+    description: "For a given source, returns the available filter values (courts, chambers, jurisdictions, decision types, languages, date ranges)."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the set of valid query-filter values for a source; no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: legal-data-hunter.report_source_issue
+    object: SourceIssue
+    action: report_source_issue
+    description: "Reports a broken URL, missing data, indexing error, or quality issue for a source directly to the maintainer."
+    category: Operations
+    risk: low
+    business_impact: "Sends a feedback report to the dataset maintainer; does not modify the corpus or any customer data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

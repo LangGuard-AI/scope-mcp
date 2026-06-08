@@ -1,0 +1,165 @@
+schema_version: "1.1"
+platform: jam
+display_name: Jam
+source: langguard-editorial
+updated: "2026-06"
+reference: https://jam.dev/docs/debug-a-jam/mcp
+actions:
+  # ---------- Data Access ----------
+  - id: jam.getNetworkRequests
+    object: NetworkRequest
+    action: getNetworkRequests
+    description: "Lists every web request captured in a Jam recording as JSON, with status-code, content-type, host, and limit filters."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads captured HTTP request and response data that routinely includes auth tokens, request bodies, and personal data of the recorded app's users."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: jam.getConsoleLogs
+    object: ConsoleLog
+    action: getConsoleLogs
+    description: "Grabs the console logs from a Jam recording, with log-level and limit filters."
+    category: Data Access
+    risk: low
+    business_impact: "Reads captured browser console output that may incidentally contain personal data or secrets logged by the recorded application."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: jam.getMetadata
+    object: Metadata
+    action: getMetadata
+    description: "Reads custom key-value metadata set via the jam.metadata() SDK, including user IDs, app versions, and feature flags."
+    category: Data Access
+    risk: low
+    business_impact: "Reads developer-supplied metadata that explicitly includes user IDs and other identifiers attached to the recording."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: jam.getUserEvents
+    object: UserEvent
+    action: getUserEvents
+    description: "Reads each click, input, and page-navigation change captured in the recording in plain language."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the captured interaction timeline including typed input values that may contain personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: jam.getScreenshot
+    object: Screenshot
+    action: getScreenshot
+    description: "Returns every screenshot from a screenshot Jam for visual inspection."
+    category: Data Access
+    risk: low
+    business_impact: "Reads captured screen images that may show personal data visible on screen at record time."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: jam.getVideoTranscript
+    object: Transcript
+    action: getVideoTranscript
+    description: "Returns the spoken transcript from a video Jam where the microphone was enabled, in WebVTT format with timestamps."
+    category: Data Access
+    risk: low
+    business_impact: "Reads a transcript of the recorder's voice narration; personal data of an identifiable speaker."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: jam.analyzeVideo
+    object: Recording
+    action: analyzeVideo
+    description: "Analyzes a Jam video recording to extract insights, detect issues, and provide structured feedback."
+    category: Data Access
+    risk: low
+    business_impact: "Processes the video recording content, which may depict personal data, to produce a structured analysis."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: jam.getDetails
+    object: Jam
+    action: getDetails
+    description: "Returns a quick snapshot of a Jam: who made it, what happened, and which other tools to try next."
+    category: Data Access
+    risk: low
+    business_impact: "Reads recording metadata including the author's identity; minimal personal data of a single workspace member."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: jam.listMembers
+    object: Member
+    action: listMembers
+    description: "Browses the workspace's team members."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Reads the full workspace member roster; bulk personal-data read of identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: jam.listJams
+    object: Jam
+    action: listJams
+    description: "Searches and filters Jams by text, type, folder, author, URL, or date."
+    category: Operations
+    risk: low
+    business_impact: "Lists recording metadata across the workspace; index data that includes author names."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: jam.listFolders
+    object: Folder
+    action: listFolders
+    description: "Browses the available folders."
+    category: Operations
+    risk: low
+    business_impact: "Reads the folder structure used to organize recordings; organizational metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: jam.createComment
+    object: Comment
+    action: createComment
+    description: "Adds Markdown comments to a Jam."
+    category: Operations
+    risk: low
+    business_impact: "Adds a Markdown comment to a recording; reversible and low-impact collaboration write."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: jam.updateJam
+    object: Jam
+    action: updateJam
+    description: "Moves Jams between folders using a folder ID or folder name."
+    category: Operations
+    risk: low
+    business_impact: "Moves a recording between folders; reversible organizational change with no data loss."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

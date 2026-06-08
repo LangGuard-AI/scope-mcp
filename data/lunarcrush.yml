@@ -1,0 +1,189 @@
+schema_version: "1.1"
+platform: lunarcrush
+display_name: LunarCrush
+source: langguard-editorial
+updated: "2026-06"
+reference: https://lunarcrush.com/developers/api/ai
+actions:
+  # ---------- Creator & Post Data ----------
+  - id: lunarcrush.creator
+    object: Creator
+    action: creator
+    description: "Creator's summary snapshot of social metrics and insights for a social media account/creator/influencer."
+    category: Data Access
+    risk: low
+    business_impact: "Reads public social-profile metrics for a named creator account; surfaces personal data of an identifiable individual."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lunarcrush.creator_posts
+    object: Creator
+    action: creator_posts
+    description: "Top social posts for a specific social media account by id or screen name over a time period."
+    category: Data Access
+    risk: low
+    business_impact: "Reads individual posts authored by a named creator account; surfaces personal data of an identifiable individual."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lunarcrush.creator_time_series
+    object: Creator
+    action: creator_time_series
+    description: "Historical time-series metrics for a social media account by id or screen name."
+    category: Data Access
+    risk: low
+    business_impact: "Reads historical engagement metrics for a named creator account; surfaces personal data of an identifiable individual."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lunarcrush.post
+    object: Post
+    action: post
+    description: "Social post details for a single post by network and id."
+    category: Data Access
+    risk: low
+    business_impact: "Reads a single social post and its author details; surfaces personal data of an identifiable individual."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lunarcrush.topic_posts
+    object: Post
+    action: topic_posts
+    description: "Top social posts by interactions for a social topic over a given time period."
+    category: Data Access
+    risk: low
+    business_impact: "Reads individual social posts and their authors driving a topic; surfaces personal data of identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lunarcrush.keyword_posts
+    object: Post
+    action: keyword_posts
+    description: "Top social posts by interactions for an exact keyword or phrase over a given time period."
+    category: Data Access
+    risk: low
+    business_impact: "Reads individual social posts and their authors matching a keyword; surfaces personal data of identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lunarcrush.search
+    object: Search
+    action: search
+    description: "Searches for any keyword or account; returns matching topics, creator accounts, and top social posts."
+    category: Data Access
+    risk: low
+    business_impact: "Returns matching creator accounts and individual posts; surfaces personal data of identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lunarcrush.fetch
+    object: Resource
+    action: fetch
+    description: "Fetches a LunarCrush context by path, such as /creator/x/lunarcrush or /post/x/1234567890."
+    category: Data Access
+    risk: low
+    business_impact: "Resolves an arbitrary path that may return creator or post data; surfaces personal data of identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Topic & Market Metrics ----------
+  - id: lunarcrush.topic
+    object: Topic
+    action: topic
+    description: "Summary snapshot of social metrics and insights for any topic, keyword, cryptocurrency, stock, or collection."
+    category: Data Access
+    risk: low
+    business_impact: "Reads aggregate social-metric snapshots for a topic; no identifiable individual data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: lunarcrush.topic_time_series
+    object: Topic
+    action: topic_time_series
+    description: "Historical time-series metrics for a social topic, keyword, cryptocurrency, or stock."
+    category: Data Access
+    risk: low
+    business_impact: "Reads aggregate historical metrics for a topic; no identifiable individual data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: lunarcrush.keyword_time_series
+    object: Keyword
+    action: keyword_time_series
+    description: "Historical time-series social metrics for any keyword or phrase."
+    category: Data Access
+    risk: low
+    business_impact: "Reads aggregate historical metrics for a keyword; no identifiable individual data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: lunarcrush.list
+    object: Topic
+    action: list
+    description: "List of social topics within a category sorted and filtered by available metrics and sectors."
+    category: Data Access
+    risk: low
+    business_impact: "Reads a ranked list of topics by aggregate metrics; no identifiable individual data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: lunarcrush.cryptocurrencies
+    object: Cryptocurrency
+    action: cryptocurrencies
+    description: "List of cryptocurrencies sorted by available metrics and filtered by a sector."
+    category: Data Access
+    risk: low
+    business_impact: "Reads ranked public market-intelligence data for cryptocurrencies; no identifiable individual data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: lunarcrush.stocks
+    object: Stock
+    action: stocks
+    description: "List of stocks sorted by available metrics and filtered by a sector."
+    category: Data Access
+    risk: low
+    business_impact: "Reads ranked public market-intelligence data for stocks; no identifiable individual data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Account ----------
+  - id: lunarcrush.auth
+    object: Account
+    action: auth
+    description: "Get subscription and rate-limit information for the calling API key."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the caller's own subscription and rate-limit metadata; no third-party personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

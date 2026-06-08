@@ -1,0 +1,92 @@
+schema_version: "1.1"
+platform: adobe-marketing-agent
+display_name: Adobe Marketing Agent
+source: langguard-editorial
+updated: "2026-06"
+# The Adobe Marketing Agent is a unified, intent-routing connector that spans
+# Real-Time CDP, Journey Optimizer, and Customer Journey Analytics. It does NOT
+# publish a verbatim tools/list: there is no public MCP server URL on the
+# connector page, the live endpoint is OAuth-gated, and the published material
+# enumerates only plain-language capability labels — never a tool identifier.
+# Per Step 3's capability-form fallback, every entry below uses
+# `id_form: capability` with a slugged id and the verbatim connector-page label
+# in `description`; confidence is capped at medium because the match is
+# intent-level, not identifier-level.
+#
+# WRITE-SURFACE NOTE (re. prior audit): the authoritative source for THIS slug —
+# the Claude connector page (WebFetch + raw-HTML grep, both confirmed) — and the
+# connector's own "Documentation" link publish exactly FOUR capability labels,
+# all read/insight-oriented ("Ask about an audience", "Pull a quick insight",
+# "Check a journey", "Switch context fast"), plus the tagline "Marketing
+# campaign and audience insights from Adobe" and a single "Interactive"
+# capability badge. NO audience-creation/activation, journey-activation, or
+# campaign-management WRITE label appears anywhere in Adobe's published material
+# for this connector. The write capabilities that surface in web search trace to
+# (a) Scalekit's third-party `adobe_*` wrapper — NOT Adobe's own tools/list — and
+# (b) sibling/adjacent Adobe MCP servers (Marketo Engage, Adobe Target, AEM, the
+# Databricks-Adobe Orchestrator integration) which are distinct products. Adobe's
+# own verbatim-tool / write surfaces are curated SEPARATELY as their own
+# platforms — adobe-cja.yml (e.g. upsertAudience / upsertSegment),
+# adobe-journey-optimizer.yml, adobe-experience-manager.yml. Fabricating write
+# tools here from those sources would violate the no-hallucination rule, so none
+# is invented. What IS corrected from the prior revision: the four real
+# capabilities are re-classified to reflect that this intent-routing agent reads
+# against Real-Time CDP profiles, Journey Optimizer targeting, and CJA behavioral
+# data — scope the agent resolves from natural-language intent — so privacy
+# regimes and SOC2 now apply and the risk ceiling rises above uniform `low`.
+# When Adobe publishes a real tools/list for this connector (or a token enables
+# live introspection), refresh to `id_form: verbatim`.
+reference: https://claude.com/connectors/adobe-marketing-agent
+actions:
+  # ---------- Data Access ----------
+  - id: adobe-marketing-agent.ask_about_an_audience
+    object: Audience
+    action: ask_about_an_audience
+    id_form: capability
+    description: "Ask about an audience"
+    category: Data Access
+    risk: medium
+    business_impact: "Queries a Real-Time CDP audience that is defined by PII-based segmentation over individual profiles; the agent resolves scope from intent, so a response can surface profile-level personal data, not only an aggregate count."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-marketing-agent.pull_a_quick_insight
+    object: Report
+    action: pull_a_quick_insight
+    id_form: capability
+    description: "Pull a quick insight"
+    category: Data Access
+    risk: medium
+    business_impact: "Runs Customer Journey Analytics queries over customer behavioral and conversion data; returns analytics derived from identifiable individuals' activity, with scope determined by the agent from intent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-marketing-agent.check_a_journey
+    object: Journey
+    action: check_a_journey
+    id_form: capability
+    description: "Check a journey"
+    category: Data Access
+    risk: medium
+    business_impact: "Reads Journey Optimizer journey status and entered-profile figures for a customer-communication flow; exposes how identifiable individuals are targeted and can surface profile-level entry detail."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: adobe-marketing-agent.switch_context_fast
+    object: Session
+    action: switch_context_fast
+    id_form: capability
+    description: "Switch context fast"
+    category: Data Access
+    risk: low
+    business_impact: "Switches the active sandbox and data view for the session and summarizes top audience segments; a session-scope change that reveals segment definitions but writes no persistent tenant configuration."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

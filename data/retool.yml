@@ -1,0 +1,437 @@
+schema_version: "1.1"
+platform: retool
+display_name: Retool
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.retool.com/org-users/reference/mcp-tools
+# ---------------------------------------------------------------------------
+# PROVENANCE / id_form NOTE
+# Source: vendor_mcp_docs. Retool publishes a complete, verbatim tool table at
+# https://docs.retool.com/org-users/reference/mcp-tools (Tool | Required Scope
+# | Description). The full table is present in the page's static HTML — a
+# single self-closing <table> of exactly 34 rows immediately followed by the
+# page footer, with no truncation, no JS-loaded tail, and no separate
+# "additional / beta / insiders" section. A WebFetch summarizer reported "40
+# tools total", but the raw HTML contains no such count and exactly 34 unique
+# `retool_*` tool ids; the 34 figure is ground truth and the phantom 6 do not
+# exist. The hosted MCP server is per-instance (https://<instance>/mcp) and
+# OAuth-gated, so live tools/list introspection was not possible without a real
+# Retool instance + token; the static doc table is the authoritative source.
+# All 34 tools written verbatim (id_form: verbatim, default). Required-scope
+# annotations (mcp:read / mcp:write / mcp:admin) informed but did not mechanically
+# set risk — e.g. retool_execute_resource_ts is mcp:write yet classified critical
+# (arbitrary TypeScript against connected production resources).
+# ---------------------------------------------------------------------------
+actions:
+  # ---------- Data Access ----------
+  - id: retool.retool_execute_resource_ts
+    object: Resource
+    action: retool_execute_resource_ts
+    description: "Execute a TypeScript snippet against selected resources using the bindings from retool_get_resource_ts_definitions."
+    category: Data Access
+    risk: critical
+    business_impact: "Runs arbitrary TypeScript against connected production resources (databases, APIs, storage); enables unilateral data reads, writes, and bulk exfiltration with no review gate."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_get_resource
+    object: Resource
+    action: retool_get_resource
+    description: "Get metadata for one resource by name; for resource details, not for querying the underlying data."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads connection metadata for one resource (type, host, configuration), which can reveal backend topology and credential field names."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_list_resources
+    object: Resource
+    action: retool_list_resources
+    description: "List resources available in the organization, including databases, APIs, storage, and AI providers."
+    category: Data Access
+    risk: medium
+    business_impact: "Enumerates every connected backend resource in the organization, exposing the full data-integration topology."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_get_resource_ts_definitions
+    object: Resource
+    action: retool_get_resource_ts_definitions
+    description: "Generate global variable bindings and TypeScript definitions for selected resources; required before retool_execute_resource_ts."
+    category: Data Access
+    risk: low
+    business_impact: "Generates read-only TypeScript bindings for selected resources; a prerequisite step that exposes no resource data itself."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_create_resource
+    object: Resource
+    action: retool_create_resource
+    description: "Create a new resource; provide the resource type plus optional connection fields, then finish configuration in the returned URL."
+    category: Data Access
+    risk: high
+    business_impact: "Provisions a new backend connection (database, API, storage, or AI provider), potentially storing credentials and widening the data-access surface."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: retool.retool_create_user_invite
+    object: UserInvite
+    action: retool_create_user_invite
+    description: "Create a user invite."
+    category: Identity & Access
+    risk: high
+    business_impact: "Provisions access for a new user to the organization; grants entry to apps, resources, and data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_delete_user_invite
+    object: UserInvite
+    action: retool_delete_user_invite
+    description: "Delete a user invite by invite ID."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Revokes a pending invite before acceptance; reversible by re-inviting and affects no active session."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_set_user_invite_attribute
+    object: UserInvite
+    action: retool_set_user_invite_attribute
+    description: "Create or update a user attribute on a user invite."
+    category: Identity & Access
+    risk: high
+    business_impact: "Sets attributes on a pending invite that drive permission and group assignment; can pre-grant elevated access on acceptance."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_delete_user_invite_attribute
+    object: UserInvite
+    action: retool_delete_user_invite_attribute
+    description: "Delete a user attribute from a user invite."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Removes a permission-driving attribute from a pending invite, altering the access the user will receive on acceptance."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_list_users
+    object: User
+    action: retool_list_users
+    description: "List users in the organization."
+    category: Identity & Access
+    risk: high
+    business_impact: "Returns the full member directory (names, emails, identifiers); a bulk read of personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_get_user
+    object: User
+    action: retool_get_user
+    description: "Get a single user by user ID."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Reads one user's profile and personal data (name, email, identifiers)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_list_user_invites
+    object: UserInvite
+    action: retool_list_user_invites
+    description: "List user invites in the organization."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Returns all pending invites including invitee email addresses; a bulk read of personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_get_user_invite
+    object: UserInvite
+    action: retool_get_user_invite
+    description: "Get a single user invite by invite ID."
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads one pending invite including the invitee email address."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Configuration ----------
+  - id: retool.retool_get_organization
+    object: Organization
+    action: retool_get_organization
+    description: "Get organization settings."
+    category: Configuration
+    risk: medium
+    business_impact: "Reads tenant-wide organization settings, exposing security and configuration posture."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_list_environments
+    object: Environment
+    action: retool_list_environments
+    description: "List environments in the organization."
+    category: Configuration
+    risk: low
+    business_impact: "Enumerates the organization's environments (e.g. staging, production); read-only configuration metadata."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_get_environment
+    object: Environment
+    action: retool_get_environment
+    description: "Get an environment by environment ID."
+    category: Configuration
+    risk: low
+    business_impact: "Reads metadata for one environment; read-only configuration detail."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_list_folders
+    object: Folder
+    action: retool_list_folders
+    description: "List folders in the organization."
+    category: Configuration
+    risk: low
+    business_impact: "Enumerates the organization's folder structure; read-only organizational metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_get_folder
+    object: Folder
+    action: retool_get_folder
+    description: "Get a folder by folder ID."
+    category: Configuration
+    risk: low
+    business_impact: "Reads metadata for one folder; read-only organizational detail."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: retool.retool_delete_workflow
+    object: Workflow
+    action: retool_delete_workflow
+    description: "Delete a workflow by workflow ID."
+    category: Operations
+    risk: high
+    business_impact: "Permanently removes an automation workflow; unilateral destruction of operational logic that other systems may depend on."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_list_workflows
+    object: Workflow
+    action: retool_list_workflows
+    description: "List workflows in the organization."
+    category: Operations
+    risk: low
+    business_impact: "Enumerates automation workflows in the organization; read-only operational metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_get_workflow
+    object: Workflow
+    action: retool_get_workflow
+    description: "Get a workflow by workflow ID."
+    category: Operations
+    risk: low
+    business_impact: "Reads one workflow's definition; read-only operational detail."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_list_audit_logs
+    object: AuditLog
+    action: retool_list_audit_logs
+    description: "List audit log events in the organization."
+    category: Operations
+    risk: medium
+    business_impact: "Reads the organization's audit trail; a sensitive security log that may contain user identifiers and activity history."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- App Builder ----------
+  - id: retool.retool_create_or_append_react_app_thread_message
+    object: App
+    action: retool_create_or_append_react_app_thread_message
+    description: "Create or update an app from a natural-language prompt; omit appUuid to create a new app."
+    category: App Builder
+    risk: medium
+    business_impact: "Creates or modifies a deployable Retool app from a prompt; changes application logic that end users will interact with."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_read_react_app_files
+    object: App
+    action: retool_read_react_app_files
+    description: "Read the contents of specific files in an app; requires an explicit list of paths."
+    category: App Builder
+    risk: medium
+    business_impact: "Reads application source files, which may embed secrets, queries, or personal data referenced by the app."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_list_react_app_files
+    object: App
+    action: retool_list_react_app_files
+    description: "List file paths, sizes, and line counts for an app; returns metadata only, never file contents."
+    category: App Builder
+    risk: low
+    business_impact: "Lists an app's file paths and sizes; returns metadata only, never file contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_get_app
+    object: App
+    action: retool_get_app
+    description: "Get a single app by app ID."
+    category: App Builder
+    risk: low
+    business_impact: "Reads metadata for one app; read-only application detail."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_list_apps
+    object: App
+    action: retool_list_apps
+    description: "List apps in the organization."
+    category: App Builder
+    risk: low
+    business_impact: "Enumerates apps in the organization; read-only application metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_respond_to_react_app_thread_review
+    object: AppThread
+    action: retool_respond_to_react_app_thread_review
+    description: "Wait for a pending review request, present it to the user, and submit the response so activity can continue."
+    category: App Builder
+    risk: low
+    business_impact: "Submits a response to a pending agent-review request, allowing a paused app-build thread to continue; bounded to in-progress work."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_cancel_react_app_thread_activity
+    object: AppThread
+    action: retool_cancel_react_app_thread_activity
+    description: "Cancel activity on an active thread by sending a stop request to the sandbox agent."
+    category: App Builder
+    risk: low
+    business_impact: "Stops in-progress agent work on an app-build thread; halts activity without destroying persisted state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_tail_react_app_thread_stream
+    object: AppThread
+    action: retool_tail_react_app_thread_stream
+    description: "Monitor an active thread and forward progress updates until activity completes, needs review, or times out."
+    category: App Builder
+    risk: low
+    business_impact: "Streams progress updates from an active app-build thread; read-only monitoring."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_read_react_app_thread_stream
+    object: AppThread
+    action: retool_read_react_app_thread_stream
+    description: "Fetch the most recent persisted chat messages for an existing thread; reads durable history only."
+    category: App Builder
+    risk: low
+    business_impact: "Reads persisted chat history for an app-build thread; read-only durable history that may contain prompt content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_list_react_app_threads
+    object: AppThread
+    action: retool_list_react_app_threads
+    description: "List recently active threads for an app and return thread handles that can be used to continue work."
+    category: App Builder
+    risk: low
+    business_impact: "Lists recent app-build threads and their handles; read-only operational metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_get_react_app_thread_activity_status
+    object: AppThread
+    action: retool_get_react_app_thread_activity_status
+    description: "Check whether an existing thread has active agent work, without starting a workflow or opening a stream."
+    category: App Builder
+    risk: low
+    business_impact: "Checks whether an app-build thread has active work; read-only status probe."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: retool.retool_report_tool_usage_feedback
+    object: Feedback
+    action: retool_report_tool_usage_feedback
+    description: "Report feedback about MCP tool usage, including helpful outcomes, unexpected behavior, or missing capabilities."
+    category: App Builder
+    risk: low
+    business_impact: "Submits telemetry-style feedback about MCP tool usage; no business state is changed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

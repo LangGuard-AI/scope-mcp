@@ -1,0 +1,129 @@
+schema_version: "1.1"
+platform: eraser
+display_name: Eraser
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.eraser.io/docs/mcp
+actions:
+  # ---------- Content & Diagrams ----------
+  - id: eraser.create
+    object: "*"
+    action: create
+    description: "Creates a new resource (file, diagram, folder, or preset) in the Eraser workspace."
+    category: Content & Diagrams
+    risk: low
+    business_impact: "Adds a new file, diagram, folder, or preset to the workspace; reversible and individually attributed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: eraser.update
+    object: "*"
+    action: update
+    description: "Updates an existing resource — file title, document content, folder location, or sharing settings; diagram code; preset rules; or folder hierarchy."
+    category: Content & Diagrams
+    risk: medium
+    business_impact: "Overwrites workspace content and can change a file's sharing settings, potentially widening who can access a document or diagram."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: eraser.generate
+    object: Diagram
+    action: generate
+    description: "Uses Eraser's AI to generate a diagram from a natural-language prompt, with optional styling and rendering parameters."
+    category: Content & Diagrams
+    risk: low
+    business_impact: "Produces a new AI-generated diagram from a text prompt; reversible and individually attributed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: eraser.generateEdit
+    object: Diagram
+    action: generateEdit
+    description: "Uses Eraser's AI to edit an existing diagram from natural-language instructions."
+    category: Content & Diagrams
+    risk: medium
+    business_impact: "Rewrites an existing diagram from AI instructions; can overwrite prior diagram content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: eraser.delete
+    object: "*"
+    action: delete
+    description: "Deletes or archives a resource — soft-deletes files to trash (restorable) but permanently removes diagrams from a file."
+    category: Content & Diagrams
+    risk: medium
+    business_impact: "Removes a resource; files are recoverable from trash, but diagram deletion is permanent and unrecoverable."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: eraser.export
+    object: Diagram
+    action: export
+    description: "Renders a diagram to an image and returns a temporary download URL."
+    category: Data Access
+    risk: medium
+    business_impact: "Produces a downloadable image of a diagram via a temporary URL; content can leave the workspace boundary."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: eraser.search
+    object: "*"
+    action: search
+    description: "Performs full-text search across workspace files and diagrams."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns matching files and diagrams from across the workspace; can surface confidential material in a single call."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: eraser.list
+    object: "*"
+    action: list
+    description: "Lists resources (files, folders) with pagination and filtering."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates workspace files and folders with pagination; metadata-level read of workspace contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: eraser.get
+    object: "*"
+    action: get
+    description: "Fetches a single resource by ID, or the current user's profile and active team via the 'me' resource."
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves a single resource, or the current user's profile and active team (personal data) when the 'me' resource is used."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: eraser.selectTeam
+    object: Team
+    action: selectTeam
+    description: "Sets the active team for subsequent operations; required when the user belongs to multiple teams (OAuth only)."
+    category: Identity & Access
+    risk: low
+    business_impact: "Switches the active team context for following operations; scopes which workspace subsequent reads and writes target."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

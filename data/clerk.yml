@@ -1,27 +1,39 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: clerk
 display_name: Clerk
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://clerk.com/docs/guides/ai/mcp/clerk-mcp-server
+# Tool surface is GROUND TRUTH from live tools/list introspection of the hosted
+# connector server at https://mcp.clerk.com/mcp (the exact endpoint behind
+# claude.com/connectors/clerk). The server exposed exactly 2 tools, both
+# read-only SDK-documentation helpers that return Clerk's own example code —
+# they do NOT read, write, or export any tenant user/organization/PII data.
+# NOTE: the separate experimental @clerk/agent-toolkit npm package (users.getUser,
+# organizations.getOrganization, etc.) is a self-hosted SDK, NOT this connector's
+# server, and its dotted SDK method paths are not verbatim MCP tools/list ids —
+# deliberately excluded to avoid fabrication.
 actions:
-  # ---------- Developer Reference ----------
+  # ---------- Data Access ----------
   - id: clerk.clerk_sdk_snippet
-    object: SDKSnippet
+    object: Documentation
     action: clerk_sdk_snippet
-    category: Developer Reference
+    description: "Get Clerk SDK code snippets and patterns."
+    category: Data Access
     risk: low
-    business_impact: "Returns a Clerk SDK code snippet for a specified topic; documentation lookup."
+    business_impact: "Returns a static Clerk SDK code snippet or bundle; no access to tenant user, organization, or billing data."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
   - id: clerk.list_clerk_sdk_snippets
-    object: SDKSnippet
+    object: Documentation
     action: list_clerk_sdk_snippets
-    category: Developer Reference
+    description: "List all available Clerk SDK snippets and bundles. Filter by tag to find specific functionality."
+    category: Data Access
     risk: low
-    business_impact: "Lists available SDK snippet topics; documentation index."
+    business_impact: "Returns the catalog of available Clerk SDK documentation snippets; no access to any customer data."
     compliance: []
     sod_concern: false
     confidence: high

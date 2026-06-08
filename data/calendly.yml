@@ -1,116 +1,115 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: calendly
 display_name: Calendly
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://developer.calendly.com/supported-tools
 actions:
-  # ---------- Event Types ----------
-  - id: calendly.event_types-create_event_type
-    object: EventType
-    action: event_types-create_event_type
-    category: Event Types
+  # ---------- Users & Org ----------
+  - id: calendly.organizations-create_organization_invitation
+    object: OrganizationInvitation
+    action: organizations-create_organization_invitation
+    description: "Invites a new user to join the organization."
+    category: Users & Org
+    risk: high
+    business_impact: "Invites a new user to the organization; expands the access surface and provisions a new member."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: calendly.organizations-revoke_organization_invitation
+    object: OrganizationInvitation
+    action: organizations-revoke_organization_invitation
+    description: "Revokes a pending organization invitation."
+    category: Users & Org
     risk: medium
-    business_impact: "Creates a bookable event type that determines what meetings the org accepts."
+    business_impact: "Cancels a pending invitation before it is accepted; reversible by re-inviting."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: calendly.organizations-list_organization_memberships
+    object: OrganizationMembership
+    action: organizations-list_organization_memberships
+    description: "Lists members of an organization with their roles."
+    category: Users & Org
+    risk: medium
+    business_impact: "Enumerates organization members with role information; exposes the access roster."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: calendly.organizations-get_organization_membership
+    object: OrganizationMembership
+    action: organizations-get_organization_membership
+    description: "Reads a single organization membership record."
+    category: Users & Org
+    risk: low
+    business_impact: "Reads one membership record including the member's role."
     compliance: [SOC2]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: calendly.event_types-update_event_type
-    object: EventType
-    action: event_types-update_event_type
-    category: Event Types
-    risk: medium
-    business_impact: "Modifies an event type's duration, location, or routing."
+  - id: calendly.organizations-list_organization_invitations
+    object: OrganizationInvitation
+    action: organizations-list_organization_invitations
+    description: "Lists pending invitations to join the organization."
+    category: Users & Org
+    risk: low
+    business_impact: "Lists outstanding invitations to join the org; metadata only."
     compliance: [SOC2]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: calendly.event_types-list_event_types
-    object: EventType
-    action: event_types-list_event_types
-    category: Event Types
+  - id: calendly.organizations-get_organization
+    object: Organization
+    action: organizations-get_organization
+    description: "Reads tenant-level organization metadata."
+    category: Users & Org
     risk: low
-    business_impact: "Lists configured event types; metadata only."
+    business_impact: "Reads tenant-level organization metadata; non-personal configuration data."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: calendly.event_types-get_event_type
-    object: EventType
-    action: event_types-get_event_type
-    category: Event Types
+  - id: calendly.users-get_user
+    object: User
+    action: users-get_user
+    description: "Reads a user record by id."
+    category: Users & Org
     risk: low
-    business_impact: "Reads a single event type's configuration."
-    compliance: []
+    business_impact: "Reads a user record including name, email, and role; single-record PII read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: calendly.event_types-list_event_type_available_times
-    object: EventType
-    action: event_types-list_event_type_available_times
-    category: Event Types
+  - id: calendly.users-get_current_user
+    object: User
+    action: users-get_current_user
+    description: "Returns the identity of the calling user."
+    category: Users & Org
     risk: low
-    business_impact: "Lists open booking slots for an event type."
+    business_impact: "Returns the calling user's own identity; self-scoped read."
     compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: calendly.event_types-list_event_type_availability_schedule
-    object: EventType
-    action: event_types-list_event_type_availability_schedule
-    category: Event Types
-    risk: low
-    business_impact: "Lists the availability schedule attached to an event type."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: calendly.event_types-update_event_type_availability_schedule
-    object: EventType
-    action: event_types-update_event_type_availability_schedule
-    category: Event Types
-    risk: medium
-    business_impact: "Changes when an event type can be booked; can silently expand or restrict access."
-    compliance: [SOC2]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
   # ---------- Meetings ----------
-  - id: calendly.meetings-list_events
-    object: Event
-    action: meetings-list_events
-    category: Meetings
-    risk: medium
-    business_impact: "Lists scheduled meetings; reveals invitee identities and meeting cadence."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: calendly.meetings-get_event
-    object: Event
-    action: meetings-get_event
-    category: Meetings
-    risk: medium
-    business_impact: "Reads a meeting record including invitee details."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
   - id: calendly.meetings-cancel_event
     object: Event
     action: meetings-cancel_event
+    description: "Cancels a scheduled event."
     category: Meetings
     risk: medium
-    business_impact: "Cancels a scheduled meeting; affects invitee plans and notifies them."
+    business_impact: "Cancels a scheduled meeting and notifies invitees; affects their plans but is reversible by rebooking."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: high
@@ -119,31 +118,10 @@ actions:
   - id: calendly.meetings-create_invitee
     object: Invitee
     action: meetings-create_invitee
+    description: "Adds an invitee to a scheduled event."
     category: Meetings
     risk: medium
-    business_impact: "Adds a person to a meeting; persists their PII (name, email)."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: calendly.meetings-list_event_invitees
-    object: Invitee
-    action: meetings-list_event_invitees
-    category: Meetings
-    risk: medium
-    business_impact: "Lists invitee PII attached to an event."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: calendly.meetings-get_event_invitee
-    object: Invitee
-    action: meetings-get_event_invitee
-    category: Meetings
-    risk: medium
-    business_impact: "Reads detailed invitee record including answers to intake questions."
+    business_impact: "Adds a person to a meeting and persists their PII (name, email, intake answers)."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: high
@@ -152,20 +130,10 @@ actions:
   - id: calendly.meetings-create_invitee_no_show
     object: NoShow
     action: meetings-create_invitee_no_show
+    description: "Marks an invitee as a no-show."
     category: Meetings
     risk: low
-    business_impact: "Marks an invitee as a no-show; affects metrics and follow-up logic."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: calendly.meetings-get_invitee_no_show
-    object: NoShow
-    action: meetings-get_invitee_no_show
-    category: Meetings
-    risk: low
-    business_impact: "Reads a no-show record."
+    business_impact: "Flags an invitee as a no-show; affects attendance metrics and follow-up logic, reversible."
     compliance: []
     sod_concern: false
     confidence: high
@@ -174,21 +142,155 @@ actions:
   - id: calendly.meetings-delete_invitee_no_show
     object: NoShow
     action: meetings-delete_invitee_no_show
+    description: "Removes a no-show flag from an invitee."
     category: Meetings
     risk: low
-    business_impact: "Reverses a no-show flag; minor metric impact."
+    business_impact: "Reverses a no-show flag on an invitee; minor attendance-metric impact."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  # ---------- Locations ----------
-  - id: calendly.locations-list_user_meeting_locations
-    object: Location
-    action: locations-list_user_meeting_locations
-    category: Locations
+  - id: calendly.meetings-list_events
+    object: Event
+    action: meetings-list_events
+    description: "Lists scheduled events."
+    category: Meetings
+    risk: medium
+    business_impact: "Lists scheduled meetings, revealing invitee identities and meeting cadence."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: calendly.meetings-get_event
+    object: Event
+    action: meetings-get_event
+    description: "Reads a single scheduled event."
+    category: Meetings
+    risk: medium
+    business_impact: "Reads a meeting record including invitee details."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: calendly.meetings-list_event_invitees
+    object: Invitee
+    action: meetings-list_event_invitees
+    description: "Lists invitees for a scheduled event."
+    category: Meetings
+    risk: medium
+    business_impact: "Lists invitee PII attached to a single event; scoped per-event, not an org-wide export."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: calendly.meetings-get_event_invitee
+    object: Invitee
+    action: meetings-get_event_invitee
+    description: "Reads a single event invitee record."
+    category: Meetings
+    risk: medium
+    business_impact: "Reads a detailed invitee record including answers to intake questions."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: calendly.meetings-get_invitee_no_show
+    object: NoShow
+    action: meetings-get_invitee_no_show
+    description: "Reads a no-show record."
+    category: Meetings
     risk: low
-    business_impact: "Lists configured meeting locations (Zoom, in-person, etc.)."
+    business_impact: "Reads a single no-show record; minimal data exposure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Event Types ----------
+  - id: calendly.event_types-create_event_type
+    object: EventType
+    action: event_types-create_event_type
+    description: "Creates a bookable event type."
+    category: Event Types
+    risk: medium
+    business_impact: "Creates a bookable event type that determines what meetings the org accepts; reversible."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: calendly.event_types-update_event_type
+    object: EventType
+    action: event_types-update_event_type
+    description: "Updates an existing event type."
+    category: Event Types
+    risk: medium
+    business_impact: "Modifies an event type's duration, location, or routing configuration."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: calendly.event_types-update_event_type_availability_schedule
+    object: EventType
+    action: event_types-update_event_type_availability_schedule
+    description: "Updates the availability schedule bound to an event type."
+    category: Event Types
+    risk: medium
+    business_impact: "Changes when an event type can be booked; can silently expand or restrict booking access."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: calendly.event_types-list_event_types
+    object: EventType
+    action: event_types-list_event_types
+    description: "Lists configured event types."
+    category: Event Types
+    risk: low
+    business_impact: "Lists configured event types; non-personal metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: calendly.event_types-get_event_type
+    object: EventType
+    action: event_types-get_event_type
+    description: "Reads a single event type's configuration."
+    category: Event Types
+    risk: low
+    business_impact: "Reads a single event type's configuration; non-personal metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: calendly.event_types-list_event_type_available_times
+    object: EventType
+    action: event_types-list_event_type_available_times
+    description: "Lists open booking slots for an event type."
+    category: Event Types
+    risk: low
+    business_impact: "Lists open booking slots for an event type; non-personal availability data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: calendly.event_types-list_event_type_availability_schedule
+    object: EventType
+    action: event_types-list_event_type_availability_schedule
+    description: "Lists the availability schedule attached to an event type."
+    category: Event Types
+    risk: low
+    business_impact: "Lists the availability schedule bound to an event type; configuration data only."
     compliance: []
     sod_concern: false
     confidence: high
@@ -198,9 +300,10 @@ actions:
   - id: calendly.scheduling_links-create_single_use_scheduling_link
     object: SchedulingLink
     action: scheduling_links-create_single_use_scheduling_link
+    description: "Creates a single-use scheduling link."
     category: Scheduling Links
     risk: low
-    business_impact: "Issues a one-time booking link."
+    business_impact: "Issues a one-time booking link; low-impact and reversible by expiry."
     compliance: []
     sod_concern: false
     confidence: high
@@ -209,77 +312,23 @@ actions:
   - id: calendly.shares-create_share
     object: Share
     action: shares-create_share
+    description: "Creates a shareable scheduling artifact."
     category: Scheduling Links
     risk: low
-    business_impact: "Creates a shareable scheduling artifact."
+    business_impact: "Creates a shareable scheduling artifact with preset event details; low-impact."
     compliance: []
     sod_concern: false
     confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Availability ----------
-  - id: calendly.availability-list_user_availability_schedules
-    object: AvailabilitySchedule
-    action: availability-list_user_availability_schedules
-    category: Availability
-    risk: low
-    business_impact: "Lists a user's availability schedules."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: calendly.availability-get_user_availability_schedule
-    object: AvailabilitySchedule
-    action: availability-get_user_availability_schedule
-    category: Availability
-    risk: low
-    business_impact: "Reads a user's availability schedule."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: calendly.availability-list_user_busy_times
-    object: BusyTime
-    action: availability-list_user_busy_times
-    category: Availability
-    risk: low
-    business_impact: "Reveals when a user is busy; minor calendar privacy exposure."
-    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
-    sod_concern: false
-    confidence: medium
     access_methods: [REST, MCP]
 
   # ---------- Routing Forms ----------
-  - id: calendly.routing_forms-list_routing_forms
-    object: RoutingForm
-    action: routing_forms-list_routing_forms
-    category: Routing Forms
-    risk: low
-    business_impact: "Lists routing forms used for lead-to-rep matching."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: calendly.routing_forms-get_routing_form
-    object: RoutingForm
-    action: routing_forms-get_routing_form
-    category: Routing Forms
-    risk: low
-    business_impact: "Reads a routing form's configuration."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
   - id: calendly.routing_forms-list_routing_form_submissions
     object: RoutingFormSubmission
     action: routing_forms-list_routing_form_submissions
+    description: "Lists submissions for a routing form."
     category: Routing Forms
     risk: medium
-    business_impact: "Lists form submissions; submissions typically include lead PII and qualifying answers."
+    business_impact: "Lists submissions for a routing form; submissions typically contain lead PII and qualifying answers, scoped to one form."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: high
@@ -288,110 +337,85 @@ actions:
   - id: calendly.routing_forms-get_routing_form_submission
     object: RoutingFormSubmission
     action: routing_forms-get_routing_form_submission
+    description: "Reads a single routing-form submission."
     category: Routing Forms
     risk: medium
-    business_impact: "Reads a single routing-form submission with submitter PII."
+    business_impact: "Reads a single routing-form submission including the submitter's PII and answers."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  # ---------- Users & Org ----------
-  - id: calendly.users-get_current_user
-    object: User
-    action: users-get_current_user
-    category: Users & Org
+  - id: calendly.routing_forms-list_routing_forms
+    object: RoutingForm
+    action: routing_forms-list_routing_forms
+    description: "Lists routing forms."
+    category: Routing Forms
     risk: low
-    business_impact: "Returns identity of the calling user."
+    business_impact: "Lists routing forms used for lead-to-rep matching; configuration metadata only."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: calendly.users-get_user
-    object: User
-    action: users-get_user
-    category: Users & Org
+  - id: calendly.routing_forms-get_routing_form
+    object: RoutingForm
+    action: routing_forms-get_routing_form
+    description: "Reads a single routing form's configuration."
+    category: Routing Forms
     risk: low
-    business_impact: "Reads a user record (name, email, role)."
+    business_impact: "Reads a routing form's configuration; non-personal metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Availability ----------
+  - id: calendly.availability-list_user_busy_times
+    object: BusyTime
+    action: availability-list_user_busy_times
+    description: "Lists a user's busy time ranges."
+    category: Availability
+    risk: low
+    business_impact: "Reveals when a user is busy; minor calendar-privacy exposure tied to an identifiable person."
     compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
-  - id: calendly.organizations-get_organization
-    object: Organization
-    action: organizations-get_organization
-    category: Users & Org
+  - id: calendly.availability-list_user_availability_schedules
+    object: AvailabilitySchedule
+    action: availability-list_user_availability_schedules
+    description: "Lists a user's availability schedules."
+    category: Availability
     risk: low
-    business_impact: "Reads tenant-level metadata."
+    business_impact: "Lists a user's availability schedules; configuration data only."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: calendly.organizations-list_organization_memberships
-    object: OrganizationMembership
-    action: organizations-list_organization_memberships
-    category: Users & Org
-    risk: medium
-    business_impact: "Enumerates members of the organization with role information."
-    compliance: [SOC2, ISO_27001]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: calendly.organizations-get_organization_membership
-    object: OrganizationMembership
-    action: organizations-get_organization_membership
-    category: Users & Org
+  - id: calendly.availability-get_user_availability_schedule
+    object: AvailabilitySchedule
+    action: availability-get_user_availability_schedule
+    description: "Reads a user's availability schedule."
+    category: Availability
     risk: low
-    business_impact: "Reads a single membership record."
-    compliance: [SOC2]
+    business_impact: "Reads a single user's availability schedule; configuration data only."
+    compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: calendly.organizations-delete_organization_membership
-    object: OrganizationMembership
-    action: organizations-delete_organization_membership
-    category: Users & Org
-    risk: high
-    business_impact: "Removes a user from the organization, revoking their access."
-    compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: calendly.organizations-list_organization_invitations
-    object: OrganizationInvitation
-    action: organizations-list_organization_invitations
-    category: Users & Org
+  # ---------- Locations ----------
+  - id: calendly.locations-list_user_meeting_locations
+    object: Location
+    action: locations-list_user_meeting_locations
+    description: "Lists a user's configured meeting locations."
+    category: Locations
     risk: low
-    business_impact: "Lists pending invitations to join the org."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: calendly.organizations-create_organization_invitation
-    object: OrganizationInvitation
-    action: organizations-create_organization_invitation
-    category: Users & Org
-    risk: high
-    business_impact: "Invites a new user to the organization; expands access surface."
-    compliance: [SOC2, ISO_27001, NIST_CSF]
-    sod_concern: true
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: calendly.organizations-revoke_organization_invitation
-    object: OrganizationInvitation
-    action: organizations-revoke_organization_invitation
-    category: Users & Org
-    risk: medium
-    business_impact: "Cancels a pending invitation."
-    compliance: [SOC2, ISO_27001]
+    business_impact: "Lists configured meeting locations (Zoom, in-person, etc.); non-personal configuration."
+    compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]

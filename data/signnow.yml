@@ -1,0 +1,311 @@
+schema_version: "1.1"
+platform: signnow
+display_name: SignNow
+source: langguard-editorial
+updated: "2026-06"
+reference: https://github.com/signnow/sn-mcp-server
+actions:
+  # ---------- Documents & Signing ----------
+  - id: signnow.send_invite
+    object: Invite
+    action: send_invite
+    description: "Send a signing invite for a document or document group to ordered recipients."
+    category: Documents & Signing
+    risk: medium
+    business_impact: "Emails a signing request containing signer PII and the document to recipients; initiates a legally binding eSignature workflow (annotated destructiveHint=true)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: signnow.send_invite_from_template
+    object: Invite
+    action: send_invite_from_template
+    description: "Create a document or group from a template and send a signing invite in one step (v1 compatibility tool)."
+    category: Documents & Signing
+    risk: medium
+    business_impact: "Instantiates a document from a template and emails a signing request with signer PII; one-shot create-and-send into a binding eSignature workflow."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: signnow.send_invite_reminder
+    object: Invite
+    action: send_invite_reminder
+    description: "Send a reminder email to pending signers on an existing invite."
+    category: Documents & Signing
+    risk: low
+    business_impact: "Re-sends a reminder email to existing recipients of a pending invite; no new data and no change to the signing workflow."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: signnow.cancel_invite
+    object: Invite
+    action: cancel_invite
+    description: "Cancel a pending signing invite."
+    category: Documents & Signing
+    risk: medium
+    business_impact: "Cancels an in-flight signing request, halting the signature collection workflow (annotated destructiveHint=true); reversible by sending a new invite."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: signnow.update_invite_recipient
+    object: Invite
+    action: update_invite_recipient
+    description: "Replace the recipient on an existing invite (redirect the signing request to a different person)."
+    category: Documents & Signing
+    risk: high
+    business_impact: "Redirects a pending signature request to a different recipient, exposing the document to a new individual and changing who legally signs (annotated destructiveHint=true)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: signnow.update_document_fields
+    object: Document
+    action: update_document_fields
+    description: "Update text fields on a document."
+    category: Documents & Signing
+    risk: medium
+    business_impact: "Modifies the field content of a document that may already be in a signing flow (annotated destructiveHint=true); alters the substance of an electronic record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: signnow.upload_document
+    object: Document
+    action: upload_document
+    description: "Upload a document to the SignNow account."
+    category: Documents & Signing
+    risk: medium
+    business_impact: "Adds a new document, which may contain signer PII or sensitive contract content, to the account; reversible and individually audited."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: signnow.rename_entity
+    object: Entity
+    action: rename_entity
+    description: "Rename a document, template, or group entity."
+    category: Documents & Signing
+    risk: low
+    business_impact: "Changes the display name of a document/template/group; metadata-only and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Templates ----------
+  - id: signnow.create_template
+    object: Template
+    action: create_template
+    description: "Create a template from an existing document or document group."
+    category: Templates
+    risk: low
+    business_impact: "Creates a reusable blank template from a document; produces a form definition rather than a completed record."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: signnow.create_from_template
+    object: Document
+    action: create_from_template
+    description: "Create a document or document group from a template or template group."
+    category: Templates
+    risk: low
+    business_impact: "Instantiates a new draft document from a template; reversible and not yet sent for signature."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: signnow.list_all_templates
+    object: Template
+    action: list_all_templates
+    description: "Get a simplified list of all templates and template groups with basic metadata."
+    category: Templates
+    risk: low
+    business_impact: "Returns template and template-group metadata (blank form definitions); no signer PII or document content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Embedded Experiences ----------
+  - id: signnow.create_embedded_invite
+    object: Invite
+    action: create_embedded_invite
+    description: "Create an embedded signing session for a document or group without email delivery."
+    category: Embedded Experiences
+    risk: medium
+    business_impact: "Generates an embedded signing session URL for a recipient, initiating a binding eSignature workflow in-app (annotated destructiveHint=true)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: signnow.create_embedded_invite_from_template
+    object: Invite
+    action: create_embedded_invite_from_template
+    description: "Create a document from a template and an embedded signing session in one step (v1 compatibility tool)."
+    category: Embedded Experiences
+    risk: medium
+    business_impact: "Instantiates a document from a template and creates an embedded signing session for a recipient, initiating a binding eSignature workflow."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: signnow.create_embedded_sending
+    object: Document
+    action: create_embedded_sending
+    description: "Create an embedded sending/management session for a document or group."
+    category: Embedded Experiences
+    risk: low
+    business_impact: "Generates an embedded sending/management UI link for a document; produces a session URL without itself sending or changing records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: signnow.create_embedded_sending_from_template
+    object: Document
+    action: create_embedded_sending_from_template
+    description: "Create a document from a template and an embedded sending session in one step (v1 compatibility tool)."
+    category: Embedded Experiences
+    risk: low
+    business_impact: "Instantiates a document from a template and returns an embedded sending UI link; creates a draft and a session URL without sending."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: signnow.create_embedded_editor
+    object: Document
+    action: create_embedded_editor
+    description: "Create an embedded editor link to place or adjust fields on a document."
+    category: Embedded Experiences
+    risk: low
+    business_impact: "Generates an embedded editor URL for adjusting document fields; produces a session URL without sending the document for signature."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: signnow.create_embedded_editor_from_template
+    object: Document
+    action: create_embedded_editor_from_template
+    description: "Create a document from a template and an embedded editor link in one step (v1 compatibility tool)."
+    category: Embedded Experiences
+    risk: low
+    business_impact: "Instantiates a document from a template and returns an embedded editor link; creates a draft and a session URL without sending."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Customer ----------
+  - id: signnow.list_contacts
+    object: Contact
+    action: list_contacts
+    description: "Search CRM contacts by name, email, or phone."
+    category: Customer
+    risk: medium
+    business_impact: "Returns CRM contact records (names, emails, phone numbers) matching a search query; bounded PII read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: signnow.get_document
+    object: Document
+    action: get_document
+    description: "Get details of a document or document group."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads a single document's details, which may include signer PII and contract content; bounded single-record read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: signnow.get_document_download_link
+    object: Document
+    action: get_document_download_link
+    description: "Get a download link for a completed or in-progress document."
+    category: Data Access
+    risk: high
+    business_impact: "Mints a download link to the full document file, which may contain signed PII or sensitive contract content; the link is a data-egress vector for the record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: signnow.get_signing_link
+    object: Invite
+    action: get_signing_link
+    description: "Get the signing link for a document recipient."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns a recipient-specific signing URL that grants access to view and sign the document; exposes the document to whoever holds the link."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: signnow.view_document
+    object: Document
+    action: view_document
+    description: "Get a view link to render a document inline."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns a view link rendering the document, which may include signer PII and contract content; bounded single-document read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: signnow.list_documents
+    object: Document
+    action: list_documents
+    description: "Get a simplified list of documents and document groups filtered by status."
+    category: Data Access
+    risk: high
+    business_impact: "Returns lists of documents and groups with names and statuses across folders; aggregate read that can enumerate signer-facing records at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: signnow.get_invite_status
+    object: Invite
+    action: get_invite_status
+    description: "Get the status of a signing invite."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the signing status of an invite; status metadata with minimal personal data exposure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: signnow.signnow_skills
+    object: Skill
+    action: signnow_skills
+    description: "Query the SignNow skill library for guidance on using the MCP tools."
+    category: Data Access
+    risk: low
+    business_impact: "Returns static how-to guidance from the SignNow skill library; no account data accessed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

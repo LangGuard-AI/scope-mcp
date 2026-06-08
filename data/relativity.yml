@@ -1,0 +1,425 @@
+schema_version: "1.1"
+platform: relativity
+display_name: RelativityOne
+source: langguard-editorial
+updated: "2026-06"
+reference: https://help.relativity.com/RelativityOne/Content/Relativity/MCP/RelativityOne_MCP.htm
+# Scope note: this connector exposes RelativityOne's ADMINISTRATIVE surface only
+# (clients, matters, workspaces, users, groups, schema, usage reports). It does NOT
+# expose any tool to read, search, export, or produce documents, custodian data, or
+# review material — so case-content sensitivity (privileged litigation data, PHI in
+# healthcare matters) is reflected in business_impact prose, not in regime codes.
+actions:
+  # ---------- Identity & Access ----------
+  - id: relativity.relone_add_user_to_group
+    object: GroupMembership
+    action: relone_add_user_to_group
+    description: "Adds a user as a member of a security group."
+    category: Identity & Access
+    risk: critical
+    business_impact: "Privilege escalation — can add any user (including oneself) to any security group, including admin groups, bypassing access-review controls and unlocking workspace and instance-level permissions."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_remove_user_from_group
+    object: GroupMembership
+    action: relone_remove_user_from_group
+    description: "Removes a user from a security group."
+    category: Identity & Access
+    risk: high
+    business_impact: "Unilaterally revokes a user's group membership, changing who can access matters and workspaces; reversible but bypasses access-review controls."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_add_workspace_group
+    object: WorkspaceGroup
+    action: relone_add_workspace_group
+    description: "Grants a user group access to a specific workspace."
+    category: Identity & Access
+    risk: high
+    business_impact: "Expands which group can see a workspace's contents — potentially privileged litigation material — without a second-party access review."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_remove_workspace_group
+    object: WorkspaceGroup
+    action: relone_remove_workspace_group
+    description: "Revokes a user group's access to a specific workspace."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Removes a group's access to a workspace; reversible by re-granting, but unilaterally alters who can reach case material."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_list_users
+    object: User
+    action: relone_list_users
+    description: "Lists users in the instance with their account details."
+    category: Identity & Access
+    risk: high
+    business_impact: "Bulk read of the full user directory including account details (names, emails); a personal-data extraction event."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_list_user_groups
+    object: GroupMembership
+    action: relone_list_user_groups
+    description: "Lists the security groups a given user is a member of."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Reads a named individual's group memberships, exposing user identity and their access footprint."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_list_group_users
+    object: GroupMembership
+    action: relone_list_group_users
+    description: "Lists the users that are members of a given security group."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Reads the membership roster of a security group, exposing user identities and the group's access scope."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_list_groups
+    object: Group
+    action: relone_list_groups
+    description: "Lists existing user groups in the instance."
+    category: Identity & Access
+    risk: low
+    business_impact: "Enumerates the security groups defined in the tenant; reveals access-control structure but no personal data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_list_workspace_groups
+    object: WorkspaceGroup
+    action: relone_list_workspace_groups
+    description: "Lists user groups that currently have access to a specific workspace."
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads which groups can access a workspace; surfaces access-control posture but no personal data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Clients & Matters ----------
+  - id: relativity.relone_create_client
+    object: Client
+    action: relone_create_client
+    description: "Creates a new client within the RelativityOne instance."
+    category: Operations
+    risk: low
+    business_impact: "Adds a new client container to the instance; reversible and individually audited under the acting user's identity."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_edit_client
+    object: Client
+    action: relone_edit_client
+    description: "Updates an existing client's properties (name, number, status)."
+    category: Operations
+    risk: low
+    business_impact: "Changes a client's name, number, or active status; reversible and audited."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_list_clients
+    object: Client
+    action: relone_list_clients
+    description: "Lists all clients in the RelativityOne instance."
+    category: Operations
+    risk: low
+    business_impact: "Reads the list of client containers; organizational metadata, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_create_matter
+    object: Matter
+    action: relone_create_matter
+    description: "Creates a new matter under a specified client."
+    category: Operations
+    risk: low
+    business_impact: "Adds a new matter container under a client; reversible and audited."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_edit_matter
+    object: Matter
+    action: relone_edit_matter
+    description: "Updates an existing matter's properties."
+    category: Operations
+    risk: low
+    business_impact: "Changes a matter's properties such as status; reversible and audited."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_list_matters
+    object: Matter
+    action: relone_list_matters
+    description: "Lists all matters in the RelativityOne instance."
+    category: Operations
+    risk: low
+    business_impact: "Reads the list of matter containers; organizational metadata, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Workspaces ----------
+  - id: relativity.relone_create_workspace
+    object: Workspace
+    action: relone_create_workspace
+    description: "Creates a new workspace from a workspace template."
+    category: Operations
+    risk: medium
+    business_impact: "Provisions a new review workspace from a template; consumes tenant storage/capacity and establishes a new container for case material."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_edit_workspace
+    object: Workspace
+    action: relone_edit_workspace
+    description: "Updates workspace properties such as name, status, and assigned matter."
+    category: Operations
+    risk: medium
+    business_impact: "Changes workspace properties including its assigned matter and status, altering how case material is organized; reversible and audited."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_get_workspace
+    object: Workspace
+    action: relone_get_workspace
+    description: "Retrieves full details about a specific workspace."
+    category: Operations
+    risk: low
+    business_impact: "Reads configuration metadata for a single workspace; no case content or personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_list_workspaces
+    object: Workspace
+    action: relone_list_workspaces
+    description: "Lists workspaces in the instance."
+    category: Operations
+    risk: low
+    business_impact: "Enumerates workspaces in the tenant; organizational metadata, no case content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_list_workspace_templates
+    object: WorkspaceTemplate
+    action: relone_list_workspace_templates
+    description: "Lists workspace templates available for creating new workspaces."
+    category: Operations
+    risk: low
+    business_impact: "Reads the catalog of workspace templates; configuration metadata, no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_get_workspace_create_job
+    object: WorkspaceJob
+    action: relone_get_workspace_create_job
+    description: "Checks the status of an in-progress workspace creation job."
+    category: Operations
+    risk: low
+    business_impact: "Reads the status of a workspace-provisioning job; operational metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_wait_for_workspace_create_job
+    object: WorkspaceJob
+    action: relone_wait_for_workspace_create_job
+    description: "Blocks until a workspace creation job completes or fails."
+    category: Operations
+    risk: low
+    business_impact: "Polls a workspace-provisioning job until completion; operational metadata only, no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Schema & Configuration ----------
+  - id: relativity.relone_list_object_types
+    object: ObjectType
+    action: relone_list_object_types
+    description: "Lists all object types defined in a workspace."
+    category: Configuration
+    risk: low
+    business_impact: "Reads the object-type schema of a workspace; configuration metadata, no case content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_get_fields
+    object: Field
+    action: relone_get_fields
+    description: "Retrieves the fields defined on a specific object type."
+    category: Configuration
+    risk: low
+    business_impact: "Reads the field definitions on an object type; schema metadata, no field values or case content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_list_choices
+    object: Choice
+    action: relone_list_choices
+    description: "Lists the choices available for a single-choice or multi-choice field."
+    category: Configuration
+    risk: low
+    business_impact: "Reads the choice values configured for a field (e.g. coding values); schema metadata, no case content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Usage & Reporting ----------
+  - id: relativity.relone_usage_generate_report
+    object: UsageReport
+    action: relone_usage_generate_report
+    description: "Creates a new usage report."
+    category: Operations
+    risk: medium
+    business_impact: "Generates a usage/storage report whose row-level contents may include per-user activity metrics; reversible but produces a downloadable dataset."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_usage_download_report
+    object: UsageReport
+    action: relone_usage_download_report
+    description: "Downloads a completed usage report as a CSV file."
+    category: Operations
+    risk: medium
+    business_impact: "Exports a usage report as CSV; contents are usage/storage metrics that may include per-user activity, so the file can carry user-identifying data off-platform."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_usage_get_report_details
+    object: UsageReport
+    action: relone_usage_get_report_details
+    description: "Retrieves the row-level data inside a usage report."
+    category: Operations
+    risk: medium
+    business_impact: "Reads the row-level contents of a usage report, which may include per-user activity metrics; the underlying data may be user-identifying."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_usage_delete_report
+    object: UsageReport
+    action: relone_usage_delete_report
+    description: "Deletes a usage report."
+    category: Operations
+    risk: medium
+    business_impact: "Deletes a usage report; the report is regenerable from source usage data, so the loss is reversible."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_usage_get_metadata
+    object: UsageReport
+    action: relone_usage_get_metadata
+    description: "Gets a list of metadata available within usage reports."
+    category: Operations
+    risk: low
+    business_impact: "Reads the catalog of metadata fields available for building usage reports; configuration metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_usage_list_reports
+    object: UsageReport
+    action: relone_usage_list_reports
+    description: "Lists usage reports that exist."
+    category: Operations
+    risk: low
+    business_impact: "Enumerates existing usage reports; operational metadata, no report contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_usage_get_report
+    object: UsageReport
+    action: relone_usage_get_report
+    description: "Retrieves metadata and status for a specific usage report."
+    category: Operations
+    risk: low
+    business_impact: "Reads the status and metadata of a single usage report; no row-level report contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: relativity.relone_usage_wait_for_report
+    object: UsageReport
+    action: relone_usage_wait_for_report
+    description: "Blocks until a usage report finishes generating."
+    category: Operations
+    risk: low
+    business_impact: "Polls a usage-report job until completion; operational metadata only, no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Diagnostics ----------
+  - id: relativity.relone_connection_status
+    object: Session
+    action: relone_connection_status
+    description: "Checks the RelativityOne connection and confirms which instance and identity the session is bound to."
+    category: Operations
+    risk: low
+    business_impact: "Reports the connected instance and the authenticated identity; diagnostic read with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

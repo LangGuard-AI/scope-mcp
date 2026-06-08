@@ -1,0 +1,206 @@
+schema_version: "1.1"
+platform: blockscout
+display_name: Blockscout
+source: langguard-editorial
+updated: "2026-06"
+reference: https://github.com/blockscout/mcp-server
+actions:
+  # ---------- Address Activity ----------
+  # Public, pseudonymous on-chain data. Addresses are not resolved to real-world
+  # identities by the explorer, so the privacy-regime stack does not attach;
+  # the genuine wallet-profiling / financial-surveillance concern is captured in
+  # business_impact prose. All tools are read-only (destructiveHint:false).
+  - id: blockscout.get_address_info
+    object: Address
+    action: get_address_info
+    description: "Get comprehensive information about an address: existence, native balance, first-transaction age, ENS association, and contract status."
+    category: Data Access
+    risk: low
+    business_impact: "Reads public ledger data and enriched metadata for a single pseudonymous wallet address; aggregation across calls enables wallet profiling but the data is already public and immutable."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: blockscout.get_transactions_by_address
+    object: Address
+    action: get_transactions_by_address
+    description: "Retrieves native-currency transfers and smart-contract interactions for an address (excludes token transfers)."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the full public transaction history of a pseudonymous wallet; supports financial-activity profiling but operates only on already-public ledger data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: blockscout.get_token_transfers_by_address
+    object: Address
+    action: get_token_transfers_by_address
+    description: "Gets ERC-20 token transfers for an address within a specific time range."
+    category: Data Access
+    risk: low
+    business_impact: "Reads a wallet's public token-transfer history within a date range; enables financial-activity profiling over already-public ledger data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: blockscout.get_tokens_by_address
+    object: Address
+    action: get_tokens_by_address
+    description: "Gets comprehensive ERC-20 token holdings for an address with enriched metadata and market data."
+    category: Data Access
+    risk: low
+    business_impact: "Reads a wallet's full token-holdings and balances from public chain data; supports net-worth/holdings profiling of a pseudonymous address."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: blockscout.nft_tokens_by_address
+    object: Address
+    action: nft_tokens_by_address
+    description: "Retrieves NFT tokens (ERC-721, ERC-404, ERC-1155) owned by an address, grouped by collection."
+    category: Data Access
+    risk: low
+    business_impact: "Reads a wallet's public NFT holdings grouped by collection; contributes to wallet profiling over already-public ledger data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: blockscout.get_address_by_ens_name
+    object: Address
+    action: get_address_by_ens_name
+    description: "Converts an ENS domain name (e.g. blockscout.eth) to its corresponding Ethereum address."
+    category: Data Access
+    risk: low
+    business_impact: "Resolves a public ENS name to its on-chain address; both endpoints are already public."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Transactions & Blocks ----------
+  - id: blockscout.get_transaction_info
+    object: Transaction
+    action: get_transaction_info
+    description: "Gets comprehensive, decoded transaction information including input parameters, token transfers, and fee breakdown."
+    category: Data Access
+    risk: low
+    business_impact: "Reads a single public on-chain transaction with decoded details; no state change and no private data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: blockscout.get_block_info
+    object: Block
+    action: get_block_info
+    description: "Gets block information such as timestamp, gas used, burnt fees, and transaction count, optionally including transaction hashes."
+    category: Data Access
+    risk: low
+    business_impact: "Reads public block-level chain data; no state change and no private data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: blockscout.get_block_number
+    object: Block
+    action: get_block_number
+    description: "Retrieves the block number and timestamp for a specific date/time or the latest block."
+    category: Data Access
+    risk: low
+    business_impact: "Reads a block height for a point in time or the chain tip; purely public infrastructure data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Contracts ----------
+  - id: blockscout.read_contract
+    object: Contract
+    action: read_contract
+    description: "Calls a smart-contract function (view/pure, or non-view simulated via eth_call) and returns the decoded result."
+    category: Data Access
+    risk: low
+    business_impact: "Executes a read-only or eth_call-simulated contract call and returns decoded state; no on-chain state is modified."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: blockscout.get_contract_abi
+    object: Contract
+    action: get_contract_abi
+    description: "Gets the ABI (Application Binary Interface) of a smart contract."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the public ABI of a smart contract; no state change and no private data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: blockscout.inspect_contract_code
+    object: Contract
+    action: inspect_contract_code
+    description: "Inspects a verified contract's source code or metadata."
+    category: Data Access
+    risk: low
+    business_impact: "Reads a verified contract's public source code or metadata; no state change and no private data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: blockscout.lookup_token_by_symbol
+    object: Token
+    action: lookup_token_by_symbol
+    description: "Searches for token addresses by symbol or name, returning multiple potential matches."
+    category: Data Access
+    risk: low
+    business_impact: "Searches public token registries by symbol or name; purely public reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Platform & Infrastructure ----------
+  - id: blockscout.get_chains_list
+    object: Chain
+    action: get_chains_list
+    description: "Gets the list of known blockchain chains with their IDs."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the catalog of chains Blockscout indexes; purely public infrastructure metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: blockscout.direct_api_call
+    object: "*"
+    action: direct_api_call
+    description: "Calls a curated raw Blockscout API endpoint for advanced or chain-specific data."
+    category: Data Access
+    risk: low
+    business_impact: "Reaches an open-ended set of read-only Blockscout API endpoints; scope depends on the endpoint chosen, but the underlying data is public and the call is annotated read-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: blockscout.__unlock_blockchain_analysis__
+    object: Session
+    action: __unlock_blockchain_analysis__
+    description: "Unlocks access to the other MCP tools; all tools return a Session Not Initialized error until this is called."
+    category: Data Access
+    risk: low
+    business_impact: "Initializes the MCP session and returns server usage instructions; no data access or state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

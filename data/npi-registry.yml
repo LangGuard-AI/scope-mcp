@@ -1,0 +1,44 @@
+schema_version: "1.1"
+platform: npi-registry
+display_name: NPI Registry
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/resources/tutorials/using-the-npi-registry-connector-in-claude
+actions:
+  # ---------- Data Access ----------
+  - id: npi-registry.npi_search
+    object: Provider
+    action: npi_search
+    description: "Performs flexible queries combining first/last name, organization name, location (city/state/ZIP), and specialty/taxonomy descriptions to discover providers, with wildcard and name-alias expansion."
+    category: Data Access
+    risk: low
+    business_impact: "Reads identifiable US healthcare-provider records (names, practice addresses, phones, taxonomy, licensing) from the public CMS NPPES directory; the data is public-by-design government record, contains no patient PHI, and is US-only, so no privacy regime attaches to the call."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: npi-registry.npi_lookup
+    object: Provider
+    action: npi_lookup
+    description: "Retrieves a complete provider record by NPI number, including credentials, primary specialty/taxonomy codes, state license numbers, practice addresses, phone numbers, and enumeration status."
+    category: Data Access
+    risk: low
+    business_impact: "Single-record read of a US healthcare provider's public NPPES registry entry; returns provider personal and professional data (address, phone, license numbers) drawn from a public government record, with no patient PHI, so HIPAA and the privacy regimes do not attach to the call."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Validation ----------
+  - id: npi-registry.npi_validate
+    object: NPI
+    action: npi_validate
+    description: "Performs instant local validation of NPI format and Luhn check digit without making an API call."
+    category: Validation
+    risk: low
+    business_impact: "Validates the format and check digit of a supplied NPI number locally; no network call, no record retrieval, and no personal data returned."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

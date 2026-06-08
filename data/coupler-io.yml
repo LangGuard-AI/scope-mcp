@@ -1,0 +1,60 @@
+schema_version: "1.1"
+platform: coupler-io
+display_name: Coupler.io
+source: langguard-editorial
+updated: "2026-06"
+reference: https://github.com/railsware/coupler-io-mcp-server
+actions:
+  # ---------- Data Access ----------
+  - id: coupler-io.get-data
+    object: DataFlow
+    action: get-data
+    description: "Gets the result of a data flow run as a SQLite file and executes a read-only query on it."
+    reference: https://github.com/railsware/coupler-io-mcp-server/tree/main/src/tools/get-data
+    category: Data Access
+    risk: high
+    business_impact: "Runs arbitrary read-only SQL over a configured data flow's result set, which aggregates marketing, sales, and finance records from connected sources and can return customer PII at row level; a data-access event regardless of intent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: coupler-io.list-dataflows
+    object: DataFlow
+    action: list-dataflows
+    description: "Gets the list of data flows that have an AI destination."
+    reference: https://github.com/railsware/coupler-io-mcp-server/tree/main/src/tools/list-dataflows
+    category: Operations
+    risk: low
+    business_impact: "Lists the names and IDs of configured data flows; returns inventory metadata, not personal-data values."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coupler-io.get-dataflow
+    object: DataFlow
+    action: get-dataflow
+    description: "Gets the metadata about the data flow, such as sources, data connections, last successful execution, and error details."
+    reference: https://github.com/railsware/coupler-io-mcp-server/tree/main/src/tools/get-dataflow
+    category: Operations
+    risk: low
+    business_impact: "Returns data-flow configuration metadata (connected sources, last run, errors); no personal-data values exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: coupler-io.get-schema
+    object: DataFlow
+    action: get-schema
+    description: "Gets the data flow schema file; currently only data flows built from a dashboard or dataset template are supported."
+    reference: https://github.com/railsware/coupler-io-mcp-server/tree/main/src/tools/get-schema
+    category: Operations
+    risk: low
+    business_impact: "Returns the column-level schema of a data flow's result table; exposes structure and column names, not personal-data values."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

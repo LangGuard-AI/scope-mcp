@@ -1,0 +1,118 @@
+schema_version: "1.1"
+platform: g2
+display_name: G2
+source: langguard-editorial
+updated: "2026-06"
+reference: https://documentation.g2.com/docs/g2-mcp-server
+# NOTE: G2's hosted MCP server (https://mcp.g2.com/mcp) is OAuth-gated; live
+# `tools/list` introspection returns 401 and the vendor publishes NO verbatim
+# tool identifiers anywhere reachable (full raw doc, V2 API reference, web/GitHub
+# search, and live-mount all checked). The vendor DOES publish plain-language
+# capability material: four named datasets and three named feature areas. These
+# entries use the capability-form fallback (id_form: capability) — the snake_case
+# id is a best-effort slug of the verbatim vendor label carried in `description`;
+# audit matching is intent-level, not identifier-level. The connector is
+# advertised as read-only ("Read" access) — no state-changing, destructive, or
+# privilege actions exist, so there is no critical risk and no SoD concern.
+#
+# Privacy tagging rationale: G2 intent/competitive output is account-level/
+# firmographic (company name, intent score, activity level, firmographics) and
+# G2 does not expose actual individual account data — so the intent/competitive
+# entries carry no privacy regimes (the privacy-adjacent nuance is noted in
+# business_impact prose, and those two intent entries are confidence: low because
+# the company-vs-individual call is a genuine judgment). Product Reviews /
+# Review Analytics are where reviewer-attributed personal data (name, title,
+# employer) actually lives, so those carry the full privacy stack.
+actions:
+  # ---------- Revenue & Pipeline ----------
+  - id: g2.buyer_intent_signals
+    object: BuyerIntentSignal
+    action: buyer_intent_signals
+    id_form: capability
+    description: "Buyer Intent Signals"
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Pulls third-party buyer-intent signals (company name, intent score, activity level, firmographics) for companies researching the product; account-level behavioral data from G2's panel — privacy-adjacent if signals derive from individual web tracking, but G2 exposes account-level rather than individual data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+
+  - id: g2.buyer_intent_intelligence
+    object: BuyerIntentSignal
+    action: buyer_intent_intelligence
+    id_form: capability
+    description: "Buyer Intent Intelligence"
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Retrieves recent buyer-intent activity for a named company (signal types, day-level timeline, recommended talking points); account-level competitive-intelligence pull whose subject is an identifiable target organization, not an individual person."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+
+  - id: g2.competitive_intelligence
+    object: CompetitiveSignal
+    action: competitive_intelligence
+    id_form: capability
+    description: "Competitive Intelligence"
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reveals which competitor products a prospect is evaluating and comparison patterns; firmographic/competitive context at the company level with no individual-level personal data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: g2.product_reviews
+    object: Review
+    action: product_reviews
+    id_form: capability
+    description: "Product Reviews"
+    category: Data Access
+    risk: medium
+    business_impact: "Accesses G2 product-review records, which can include reviewer-attributed personal data (name, job title, employer, segment, industry); reviewer PII is the genuine privacy exposure on this surface."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: g2.review_analytics
+    object: Review
+    action: review_analytics
+    id_form: capability
+    description: "Review Analytics"
+    category: Data Access
+    risk: medium
+    business_impact: "Analyzes review data with market-intelligence context (company segments, industries, feature ratings, switching patterns); aggregates reviewer-sourced content that may carry attributable personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: g2.product_catalog
+    object: Product
+    action: product_catalog
+    id_form: capability
+    description: "Product Catalog"
+    category: Data Access
+    risk: low
+    business_impact: "Reads G2's product-catalog reference data (product identifiers and names); non-personal reference data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: g2.category_taxonomy
+    object: Category
+    action: category_taxonomy
+    id_form: capability
+    description: "Category Taxonomy"
+    category: Data Access
+    risk: low
+    business_impact: "Reads G2's category taxonomy and hierarchy (category IDs and names); non-personal reference data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

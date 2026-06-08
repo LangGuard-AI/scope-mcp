@@ -1,0 +1,80 @@
+schema_version: "1.1"
+platform: lilt
+display_name: LILT
+source: langguard-editorial
+updated: "2026-06"
+reference: https://support.lilt.com/kb/LILT-mcp
+actions:
+  # ---------- Translation ----------
+  - id: lilt.upload_files
+    object: File
+    action: upload_files
+    description: "Uploads one or more text files to LILT and polls until they are ready for processing."
+    category: Data Access
+    risk: medium
+    business_impact: "Submits arbitrary user-supplied documents to a third-party translation processor; the payload may carry personal data and is a cross-border transfer to LILT."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lilt.translate_text
+    object: Text
+    action: translate_text
+    description: "Translates a piece of text instantly using LILT."
+    category: Data Access
+    risk: low
+    business_impact: "Sends the supplied text to LILT's machine-translation service; the text may contain personal data disclosed to a third party."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lilt.translate_files_with_verification
+    object: Job
+    action: translate_files_with_verification
+    description: "Creates a formal, human-verified translation job in LILT."
+    category: Data Access
+    risk: medium
+    business_impact: "Creates a verified translation job that discloses the submitted document content to LILT's human reviewers; the content may include personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lilt.download_job
+    object: Job
+    action: download_job
+    description: "Triggers a job export and returns a download link for the completed translation job."
+    category: Data Access
+    risk: medium
+    business_impact: "Exports the translated job output as a downloadable artifact; the returned content may contain the personal data originally submitted."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: lilt.check_job_status
+    object: Job
+    action: check_job_status
+    description: "Checks the status of a verified translation job."
+    category: Operations
+    risk: low
+    business_impact: "Reads job-progress metadata only; does not return document content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: lilt.get_credit_balance_information
+    object: Account
+    action: get_credit_balance_information
+    description: "Checks the current balance for both instant and verified translation credits."
+    category: Operations
+    risk: low
+    business_impact: "Reads the account's prepaid translation-credit balance; a usage-meter read that moves no money and touches no payment data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

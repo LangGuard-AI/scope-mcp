@@ -1,0 +1,94 @@
+schema_version: "1.1"
+platform: glovo
+display_name: Glovo
+source: langguard-editorial
+updated: "2026-06"
+reference: https://glovoapp.com/docs/en/legal/mcp/
+# PROVENANCE: The official "Glovo connector for Claude" does not publish an
+# anonymously reachable MCP server endpoint, and no verbatim MCP tool ids appear
+# in any authoritative source — the connector page (https://claude.com/connectors/glovo)
+# and the vendor MCP terms page (https://glovoapp.com/docs/en/legal/mcp/) list only
+# plain-language capability labels. Live tools/list introspection was therefore not
+# possible (no URL to connect to). The vendor's REST Partners API
+# (api-docs.glovoapp.com) and the third-party Apify "glovo-scraper" community MCP
+# actor were deliberately NOT used as sources: the spec forbids deriving ids from
+# REST endpoints, and the community actor is a different implementation from the
+# official connector. Per Step 3 of the curator spec, every entry below uses the
+# capability-form fallback (id_form: capability) with the verbatim vendor label in
+# `description` and confidence capped at medium; ids are intent-level slugs, not
+# verbatim MCP identifiers. The connector is explicitly a no-auth, read-only product
+# search/compare surface — the vendor docs state it CANNOT place orders, access the
+# user's Glovo account, process payments, or track orders (those happen in the Glovo
+# app), so there is no destructive/financial write surface to classify.
+actions:
+  # ---------- Data Access ----------
+  - id: glovo.search_products
+    object: Product
+    action: search_products
+    id_form: capability
+    description: "Search for specific products across thousands of local stores and supermarkets"
+    reference: https://glovoapp.com/docs/en/legal/mcp/
+    category: Data Access
+    risk: low
+    business_impact: "Performs a read-only product search across Glovo's public store catalog; no order is placed, no account is accessed, and no personal data is stored."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: glovo.filter_results
+    object: Product
+    action: filter_results
+    id_form: capability
+    description: "Filter results by budget, brand, features, ratings, or your preferred stores"
+    reference: https://glovoapp.com/docs/en/legal/mcp/
+    category: Data Access
+    risk: low
+    business_impact: "Refines a read-only product search by budget, brand, features, rating, or preferred store; reversible and non-destructive."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: glovo.view_availability
+    object: Product
+    action: view_availability
+    id_form: capability
+    description: "View live information such as availability, prices and store details"
+    reference: https://glovoapp.com/docs/en/legal/mcp/
+    category: Data Access
+    risk: low
+    business_impact: "Returns live availability, pricing, and store details for products; read-only over public catalog content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: glovo.compare_options
+    object: Product
+    action: compare_options
+    id_form: capability
+    description: "Compare options side by side to help you decide faster"
+    reference: https://glovoapp.com/docs/en/legal/mcp/
+    category: Data Access
+    risk: low
+    business_impact: "Compares public product options side by side from search results; produces comparison output only, makes no write or purchase."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: glovo.handoff_to_checkout
+    object: Order
+    action: handoff_to_checkout
+    id_form: capability
+    description: "Hand off to checkout directly in the Glovo app or website when you're ready to order"
+    reference: https://glovoapp.com/docs/en/legal/mcp/
+    category: Operations
+    risk: low
+    business_impact: "Hands the selection off to the Glovo app or website for checkout; does not place the order, take payment, or access the Glovo account from within Claude — ordering completes only in Glovo."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

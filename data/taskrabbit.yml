@@ -1,0 +1,65 @@
+schema_version: "1.1"
+platform: taskrabbit
+display_name: Taskrabbit
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/connectors/taskrabbit
+# PROVENANCE: Tool ids are VERBATIM ground truth from live MCP introspection
+# (tools/list) against the official anonymous endpoint
+# https://mcp.taskrabbit.com/mcp on 2026-06-03 — streamable-http, no auth
+# required, 3 tools returned. This is NOT the capability-form fallback used by
+# the sibling consumer connectors (booking.yml, alltrails.yml), whose servers
+# were OAuth-gated; those are capped at confidence: medium because their ids are
+# intent-level slugs. Here the ids ARE the server's real identifiers, so id_form
+# is verbatim (omitted) and confidence is high. A future curator should NOT
+# downgrade these to medium.
+#
+# All 3 tools advertise readOnlyHint:true and destructiveHint:false. The surface
+# is a read-only booking-discovery assistant: check availability/pricing, list
+# services, and generate a pre-filled booking deep link. No booking is executed
+# by the connector (the user completes booking on taskrabbit.com), and no stored
+# personal records are read or written — inputs are ephemeral query parameters
+# (a location and a free-text service description / scoping Q&A). compliance is
+# therefore [] on every action, matching the booking.com / AllTrails precedent.
+# 3 tools discovered, 3 written; no trim (no destructive or sensitive-read
+# tools exist to prioritize).
+actions:
+  # ---------- Data Access ----------
+  - id: taskrabbit.check_service_availability
+    object: Service
+    action: check_service_availability
+    description: "Check availability, pricing, and scoping questions for a service in a location."
+    reference: https://mcp.taskrabbit.com/mcp
+    category: Data Access
+    risk: low
+    business_impact: "Performs a read-only lookup of service availability and pricing for a supplied location and free-text service description; no booking made and no stored personal data exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: taskrabbit.list_supported_services
+    object: Service
+    action: list_supported_services
+    description: "List Taskrabbit services available in a location."
+    reference: https://mcp.taskrabbit.com/mcp
+    category: Data Access
+    risk: low
+    business_impact: "Returns the read-only catalog of Taskrabbit service categories available for a supplied location; non-destructive and stores nothing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: taskrabbit.generate_deep_link
+    object: BookingLink
+    action: generate_deep_link
+    description: "Generate a pre-filled Taskrabbit booking deep link using task template ID."
+    reference: https://mcp.taskrabbit.com/mcp
+    category: Data Access
+    risk: low
+    business_impact: "Assembles a pre-filled taskrabbit.com booking URL from the user's own scoping answers; produces a link only, executes no booking and persists nothing to a Taskrabbit account."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

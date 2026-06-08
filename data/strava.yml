@@ -1,0 +1,121 @@
+schema_version: "1.1"
+platform: strava
+display_name: Strava
+source: langguard-editorial
+updated: "2026-06"
+reference: https://support.strava.com/hc/en-us/articles/46190267796237-Strava-MCP-Connector
+# NOTE: Strava's official MCP Connector (launched 2026-06-01, a subscriber-gated
+# remote MCP server) is OAuth-gated and not anonymously reachable, so tools/list
+# could not be retrieved via live introspection (no token available; the local
+# `mcp` client is not installed; the connector is not mounted live in this
+# session). The canonical support/setup article 403s anonymous fetches, and
+# developers.strava.com (the REST API docs) publishes NO MCP tool reference.
+# Strava publishes only plain-language capability labels for the MCP surface —
+# "Activity history", "Fitness trends", "Readiness", "Goal planning",
+# "Cross-sport", "Gear" (per the press release and support materials). These are
+# recorded via the capability-form fallback (id_form: capability); the ids are
+# intent-level slugs, NOT verbatim MCP identifiers, so every entry is capped at
+# confidence: medium.
+#
+# The official connector is explicitly READ-ONLY: "Claude can analyze Strava
+# data but cannot upload, edit, or delete activities." There is therefore NO
+# destructive / state-changing write surface to curate. All entries are reads.
+#
+# Unlike a public-catalog connector (e.g. AllTrails), these reads return the
+# AUTHENTICATED ATHLETE'S OWN PERSONAL DATA — GPS route traces, per-second heart
+# rate and pace streams, cycling power, full activity history. That is personal
+# data of an identifiable individual held by a global SaaS, so the personal-data
+# reads carry the full 8-regime privacy stack. HIPAA is NOT tagged: consumer
+# fitness/heart-rate data is not PHI and Strava is not a HIPAA covered entity.
+# AI-decisioning regimes are NOT tagged: these are read/analyze actions, not
+# automated consequential decisions about individuals.
+#
+# The community servers (r-huijts/strava-mcp ~25 tools, MCPBundles ~16 tools,
+# bronteee, mdecesare13, etc.) were deliberately NOT used as a source — they are
+# different, conflicting implementations from the official connector, and the
+# spec treats conflicting community implementations as non-authoritative.
+actions:
+  # ---------- Data Access ----------
+  - id: strava.activity_history
+    object: Activity
+    action: activity_history
+    id_form: capability
+    description: "Activity history"
+    reference: https://support.strava.com/hc/en-us/articles/46190267796237-Strava-MCP-Connector
+    category: Data Access
+    risk: low
+    business_impact: "Reads the authenticated athlete's full activity history — including GPS route traces and per-second heart-rate and pace streams — exposing precise location and biometric data; read-only over the user's own authorized data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: strava.fitness_trends
+    object: FitnessTrend
+    action: fitness_trends
+    id_form: capability
+    description: "Fitness trends"
+    reference: https://support.strava.com/hc/en-us/articles/46190267796237-Strava-MCP-Connector
+    category: Data Access
+    risk: low
+    business_impact: "Reads derived training-load, volume, and pace trends computed from the athlete's own activity and biometric history; read-only over personal fitness data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: strava.readiness
+    object: Readiness
+    action: readiness
+    id_form: capability
+    description: "Readiness"
+    reference: https://support.strava.com/hc/en-us/articles/46190267796237-Strava-MCP-Connector
+    category: Data Access
+    risk: low
+    business_impact: "Reads the athlete's readiness/recovery signals derived from personal heart-rate, sleep-adjacent, and training-load data; read-only over personal health-adjacent data (not PHI; Strava is not a HIPAA covered entity)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: strava.cross_sport
+    object: Activity
+    action: cross_sport
+    id_form: capability
+    description: "Cross-sport"
+    reference: https://support.strava.com/hc/en-us/articles/46190267796237-Strava-MCP-Connector
+    category: Data Access
+    risk: low
+    business_impact: "Reads and synthesizes the athlete's personal activity data across multiple sports (running, cycling, strength) to analyze cross-training effects; read-only over the user's own activity data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: strava.goal_planning
+    object: Goal
+    action: goal_planning
+    id_form: capability
+    description: "Goal planning"
+    reference: https://support.strava.com/hc/en-us/articles/46190267796237-Strava-MCP-Connector
+    category: Data Access
+    risk: low
+    business_impact: "Produces training-goal planning suggestions from the athlete's own performance history; read-only analysis output, not a persisted write to the Strava account (the connector is read-only)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: strava.gear
+    object: Gear
+    action: gear
+    id_form: capability
+    description: "Gear"
+    reference: https://support.strava.com/hc/en-us/articles/46190267796237-Strava-MCP-Connector
+    category: Data Access
+    risk: low
+    business_impact: "Reads the athlete's registered gear (bikes, shoes) and associated usage mileage from their own account; read-only over account-linked personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

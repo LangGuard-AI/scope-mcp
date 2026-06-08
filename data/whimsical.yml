@@ -1,0 +1,141 @@
+schema_version: "1.1"
+platform: whimsical
+display_name: Whimsical
+source: langguard-editorial
+updated: "2026-06"
+reference: https://whimsical.com/learn/ai/mcp-tools
+actions:
+  # ---------- Content Authoring ----------
+  - id: whimsical.create
+    object: File
+    action: create
+    description: "Create a new Whimsical file, a board, flowchart, mind map, sequence diagram, wireframe, sticky note set, or table."
+    category: Content Authoring
+    risk: low
+    business_impact: "Adds a new diagram or board to the workspace; reversible and returns a link to the created file."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: whimsical.doc_create
+    object: Document
+    action: doc_create
+    description: "Create a new Whimsical document with markdown content."
+    category: Content Authoring
+    risk: low
+    business_impact: "Adds a new markdown document to the workspace; reversible, and any personal data is incidental author-supplied content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: whimsical.edit
+    object: File
+    action: edit
+    description: "Add, update, or delete objects on an existing Whimsical board or doc, including find-and-replace across a diagram."
+    category: Content Authoring
+    risk: medium
+    business_impact: "Mutates an existing board or doc and can delete objects or bulk-replace text; diagram-scoped and reversible via version history."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: whimsical.wireframe_edit
+    object: Wireframe
+    action: wireframe_edit
+    description: "Reflow or edit the elements of an existing wireframe, then re-run the flexbox layout."
+    category: Content Authoring
+    risk: low
+    business_impact: "Restyles or rearranges elements within a single wireframe; reversible and diagram-scoped."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: whimsical.auto_layout
+    object: Flowchart
+    action: auto_layout
+    description: "Re-arrange a flowchart using automatic layout, re-routing connectors."
+    category: Content Authoring
+    risk: low
+    business_impact: "Repositions nodes and connectors on a flowchart; cosmetic and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Collaboration ----------
+  - id: whimsical.comment_edit
+    object: Comment
+    action: comment_edit
+    description: "Create, reply to, edit, resolve, reopen, or delete a comment thread on a Whimsical board or doc."
+    category: Collaboration
+    risk: medium
+    business_impact: "Writes or deletes attributed comment threads carrying collaborator feedback; deletion removes a record of review discussion."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: whimsical.comment_read
+    object: Comment
+    action: comment_read
+    description: "Read the comment threads on a Whimsical board or doc, returning author, timestamp, and content."
+    category: Collaboration
+    risk: low
+    business_impact: "Returns attributed comment threads with author and timestamp; surfaces identifiable collaborator communications into agent context."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: whimsical.search
+    object: File
+    action: search
+    description: "Search across your Whimsical workspace by title or content to find boards, docs, folders, and sections."
+    category: Data Access
+    risk: low
+    business_impact: "Returns file titles and matching content from across the workspace; any personal data surfaced is incidental to user-authored diagrams."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: whimsical.fetch
+    object: File
+    action: fetch
+    description: "Read the contents of a Whimsical board, doc, or folder by ID, including a PNG snapshot of a board."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the full contents of a single file by ID into agent context; not a bulk export, and any personal data is incidental user content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: whimsical.file_tree
+    object: Folder
+    action: file_tree
+    description: "Browse the folder hierarchy in your workspace to see how files are organized."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the workspace folder and file structure; organizational metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: whimsical.list_workspaces
+    object: Workspace
+    action: list_workspaces
+    description: "List all Whimsical workspaces you belong to, returning workspace names, IDs, and your role."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the caller's workspace memberships and roles; exposes limited directory data about the authenticated user's access."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

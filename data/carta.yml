@@ -1,0 +1,975 @@
+schema_version: "1.1"
+platform: carta
+display_name: Carta
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.carta.com/api-platform/docs/claude-plugins-setup
+# The Carta connector (https://claude.com/connectors/carta) bundles three official
+# plugins served by TWO MCP servers, both verbatim-verified from primary sources:
+#   1. Cap Table + Investors — generic-dispatcher tools on the OAuth-gated server
+#      https://mcp.app.carta.com/mcp. The 9 verbatim tool names below are confirmed
+#      from the official carta/plugins marketplace repo: every SKILL.md `allowed-tools`
+#      frontmatter (the authoritative proxy for tools/list) enumerates exactly
+#      mcp__carta__{fetch,call_tool,discover,set_context,list_contexts,list_accounts,
+#      welcome,authenticate,complete_authentication}. The `fetch` and `call_tool` tools
+#      both dispatch named
+#      command verbs (cap_table:get:*, fa:mutate:*, dwh:execute:query, ...) and covers
+#      the full read/write financial + data-warehouse surface; `discover` searches the
+#      command catalog. There is NO standalone `execute_query` MCP tool — SQL runs as
+#      `fetch(command="dwh:execute:query", {sql})`; the README's "MCP Tools" table is a
+#      conceptual/legacy description, not the real tool list (removed prior fabrication).
+#   2. Carta CRM (ListAlpha) — explicit per-tool list published verbatim at
+#      https://docs.carta.com/crm/docs/carta-crm-mcp (server https://mcp.listalpha.com/mcp).
+#      78 distinct named tools (47 read + 31 write); the page's "92 total" headline is
+#      not backed by 92 distinct names (two independent fetches return the same 78).
+# Verified surface: 87 tools (9 cap-table/investors + 78 CRM). Written: 72.
+# Trimmed: 15 routine CRM schema/field/custom-field-definition/folder/how-to getters
+# with no PII or financial payload. Every write/destructive tool and every PII/financial
+# or bulk/aggregate read is kept.
+actions:
+  # ---------- Financial ----------
+  - id: carta.fetch
+    object: "*"
+    action: fetch
+    description: "Dispatches a named Carta command (e.g. cap_table:get:*, compensation:get:*, fa:mutate:*, dwh:execute:query) to read or mutate cap-table, equity, valuation, compensation, fund-admin, and data-warehouse records."
+    reference: https://docs.carta.com/api-platform/docs/claude-plugins-setup
+    category: Financial
+    risk: critical
+    business_impact: "Generic dispatcher over the cap table, grants, 409A valuations, fund-admin records, and the data warehouse — can read or mutate equity and financial data that feeds financial statements, in scope for SOX ITGCs, and can bulk-extract NAV/LP/portfolio financials via SQL."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.call_tool
+    object: "*"
+    action: call_tool
+    description: "Invokes a named Carta command by name with arguments (e.g. cap_table:get:*, compensation:get:*, fa:mutate:*, dwh:execute:query) — the generic command dispatcher that reads or mutates cap-table, equity, valuation, compensation, fund-admin, and data-warehouse records."
+    reference: https://docs.carta.com/api-platform/docs/claude-plugins-setup
+    category: Financial
+    risk: critical
+    business_impact: "Generic dispatcher over the cap table, grants, 409A valuations, fund-admin records, and the data warehouse — can read or mutate equity and financial data that feeds financial statements, in scope for SOX ITGCs, and can bulk-extract NAV/LP/portfolio financials via SQL."
+    compliance: [SOX, COSO, GLBA, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.discover
+    object: Command
+    action: discover
+    description: "Searches the cap-table/fund-admin command catalog by keyword and returns matching command names, required params, and help."
+    reference: https://docs.carta.com/api-platform/docs/claude-plugins-setup
+    category: Financial
+    risk: low
+    business_impact: "Read-only catalog search over available dispatcher commands; returns metadata, no financial records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Identity & Access ----------
+  - id: carta.set_context
+    object: Context
+    action: set_context
+    description: "Sets the active corporation or fund-admin firm context for subsequent dispatcher calls."
+    reference: https://docs.carta.com/api-platform/docs/claude-plugins-setup
+    category: Identity & Access
+    risk: low
+    business_impact: "Switches the active corporation/firm scope for the session; reversible and bounded by existing access grants."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.list_accounts
+    object: Account
+    action: list_accounts
+    description: "Lists the corporations the authenticated user can access for cap-table lookups."
+    reference: https://docs.carta.com/api-platform/docs/claude-plugins-setup
+    category: Identity & Access
+    risk: low
+    business_impact: "Enumerates the corporations in scope for the caller; metadata only, no financial records returned."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.list_contexts
+    object: Context
+    action: list_contexts
+    description: "Lists the fund-admin firms the authenticated user has access to."
+    reference: https://docs.carta.com/api-platform/docs/claude-plugins-setup
+    category: Identity & Access
+    risk: low
+    business_impact: "Enumerates the fund-admin firms in scope for the caller; metadata only."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.welcome
+    object: Session
+    action: welcome
+    description: "Initializes a Carta MCP session and returns the authenticated user's available accounts and context."
+    reference: https://docs.carta.com/api-platform/docs/claude-plugins-setup
+    category: Identity & Access
+    risk: low
+    business_impact: "Bootstraps the session and surfaces which corporations and firms the caller can access; no data mutation."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.authenticate
+    object: Session
+    action: authenticate
+    description: "Begins the Carta OAuth authentication flow for the session."
+    reference: https://docs.carta.com/api-platform/docs/claude-plugins-setup
+    category: Identity & Access
+    risk: low
+    business_impact: "Starts an OAuth login; grants the session access scoped to the user's own Carta permissions."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.complete_authentication
+    object: Session
+    action: complete_authentication
+    description: "Completes the Carta OAuth authentication flow and establishes the authenticated session."
+    reference: https://docs.carta.com/api-platform/docs/claude-plugins-setup
+    category: Identity & Access
+    risk: low
+    business_impact: "Finalizes OAuth login and binds the session token; access remains scoped to the user's existing Carta permissions."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Customer ----------
+  - id: carta.create_contact
+    object: Contact
+    action: create_contact
+    description: "Creates a new contact, optionally adding it to a list."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Customer
+    risk: low
+    business_impact: "Adds a new contact record with personal data (name, email); reversible and individually audited."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.update_contact
+    object: Contact
+    action: update_contact
+    description: "Updates an existing contact by ID."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Customer
+    risk: low
+    business_impact: "Modifies personal data on an existing contact record; reversible and individually audited."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.delete_contact
+    object: Contact
+    action: delete_contact
+    description: "Deletes a contact by ID."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Customer
+    risk: medium
+    business_impact: "Removes a contact record and its personal data; data-subject erasure with no documented soft-delete window."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.add_contact_to_list
+    object: Contact
+    action: add_contact_to_list
+    description: "Adds an existing contact to a list."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Customer
+    risk: low
+    business_impact: "Associates a contact with a list; reversible segmentation change, no new personal data created."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.create_contact_list
+    object: ContactList
+    action: create_contact_list
+    description: "Creates a new contact list."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Customer
+    risk: low
+    business_impact: "Adds an empty contact list; organizational metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.update_contact_list
+    object: ContactList
+    action: update_contact_list
+    description: "Renames a list or changes its permissions."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Customer
+    risk: medium
+    business_impact: "Changes list permissions, which can widen who in the org can view the contacts the list scopes."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.delete_contact_list
+    object: ContactList
+    action: delete_contact_list
+    description: "Deletes a contact list."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Customer
+    risk: medium
+    business_impact: "Removes a contact list and its segmentation; reversible only by rebuilding membership."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.create_contact_folder
+    object: ContactFolder
+    action: create_contact_folder
+    description: "Creates a new folder for organizing lists."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Customer
+    risk: low
+    business_impact: "Adds an organizational folder; metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.update_contact_folder
+    object: ContactFolder
+    action: update_contact_folder
+    description: "Renames a folder or changes its permissions."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Customer
+    risk: medium
+    business_impact: "Changes folder permissions, which can widen who in the org can access the lists and contacts beneath it."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.delete_contact_folder
+    object: ContactFolder
+    action: delete_contact_folder
+    description: "Deletes a folder."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Customer
+    risk: medium
+    business_impact: "Removes an organizational folder and its hierarchy; reversible only by rebuilding structure."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.search_contacts
+    object: Contact
+    action: search_contacts
+    description: "Searches contacts by text query and/or list."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Customer
+    risk: medium
+    business_impact: "Returns matching contact records including personal data; bulk read scoped by query."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.fetch_contact_by_id
+    object: Contact
+    action: fetch_contact_by_id
+    description: "Gets a single contact with its deals and notes."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Customer
+    risk: low
+    business_impact: "Returns one contact's personal data plus associated deals and notes; single-record read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.fetch_contact_interactions_by_emails
+    object: Interaction
+    action: fetch_contact_interactions_by_emails
+    description: "Gets email and calendar interactions with a contact."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Customer
+    risk: high
+    business_impact: "Surfaces private email and calendar interaction history for individuals; sensitive communications-metadata read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.list_interactions_by_domain
+    object: Interaction
+    action: list_interactions_by_domain
+    description: "Lists email and calendar event interactions with contacts."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Customer
+    risk: high
+    business_impact: "Bulk read of email and calendar interaction history across contacts at a domain; sensitive communications-metadata extraction."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.get_contact_lists
+    object: ContactList
+    action: get_contact_lists
+    description: "Gets all contact lists and the folder hierarchy."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Customer
+    risk: low
+    business_impact: "Returns list and folder structure metadata; no contact-level personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.search_people
+    object: Person
+    action: search_people
+    description: "Searches across people records (broader than contacts)."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Customer
+    risk: medium
+    business_impact: "Returns matching people records including personal data across a broader pool than contacts; bulk read scoped by query."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.enrich_person
+    object: Person
+    action: enrich_person
+    description: "Enriches a person record with external data."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Customer
+    risk: high
+    business_impact: "Augments a person's record with personal data sourced from third-party providers; expands the PII held and may trigger data-provenance and consent obligations."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.get_adviser_profile
+    object: Adviser
+    action: get_adviser_profile
+    description: "Single-call relationship summary for a bank or adviser."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Customer
+    risk: low
+    business_impact: "Returns a consolidated relationship summary for a single bank or adviser, including contact PII; single-record read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Company ----------
+  - id: carta.create_company
+    object: Company
+    action: create_company
+    description: "Creates a new company."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Company
+    risk: low
+    business_impact: "Adds a new company record; reversible and individually audited."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.update_company
+    object: Company
+    action: update_company
+    description: "Updates an existing company by ID."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Company
+    risk: low
+    business_impact: "Modifies an existing company record; reversible and individually audited."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.delete_company
+    object: Company
+    action: delete_company
+    description: "Deletes a company by ID."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Company
+    risk: medium
+    business_impact: "Removes a company record and its associations; reversible only by re-creation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.search_companies
+    object: Company
+    action: search_companies
+    description: "Searches companies by name or domain."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Company
+    risk: low
+    business_impact: "Returns matching company records; business records, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.fetch_company_by_domain
+    object: Company
+    action: fetch_company_by_domain
+    description: "Looks up a company by its domain."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Company
+    risk: low
+    business_impact: "Returns one company record by domain; single-record business read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.fetch_company_by_id
+    object: Company
+    action: fetch_company_by_id
+    description: "Gets a single company by its ID."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Company
+    risk: low
+    business_impact: "Returns one company record by ID; single-record business read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.find_company
+    object: Company
+    action: find_company
+    description: "Finds a company by name or domain."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Company
+    risk: low
+    business_impact: "Resolves a company by name or domain; business-record lookup."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.preview_company
+    object: Company
+    action: preview_company
+    description: "Previews company data before creation."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Company
+    risk: low
+    business_impact: "Returns prospective company data prior to creation; read-only preview."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.get_company_lists
+    object: CompanyList
+    action: get_company_lists
+    description: "Gets all company lists."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Company
+    risk: low
+    business_impact: "Returns company-list structure metadata; no company-level financial data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.aggregate_companies
+    object: Company
+    action: aggregate_companies
+    description: "Groups and counts companies by field values."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Company
+    risk: low
+    business_impact: "Returns grouped counts of companies; aggregate business metrics, no record-level export."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Deals ----------
+  - id: carta.create_deal
+    object: Deal
+    action: create_deal
+    description: "Creates a new deal."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Deals
+    risk: low
+    business_impact: "Adds a new deal record to the pipeline; reversible and individually audited."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.update_deal
+    object: Deal
+    action: update_deal
+    description: "Updates an existing deal by ID."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Deals
+    risk: medium
+    business_impact: "Modifies deal fields such as stage or value, which can shift reported pipeline and forecast figures; reversible and audited."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.delete_deal
+    object: Deal
+    action: delete_deal
+    description: "Deletes a deal by ID."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Deals
+    risk: medium
+    business_impact: "Removes a deal record and its pipeline contribution; reversible only by re-creation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.search_deals
+    object: Deal
+    action: search_deals
+    description: "Searches deals by text, stage, or date range."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Deals
+    risk: low
+    business_impact: "Returns matching deal records; pipeline business data scoped by query."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.fetch_deal_by_deal_id
+    object: Deal
+    action: fetch_deal_by_deal_id
+    description: "Gets full deal details with notes and related people."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Deals
+    risk: low
+    business_impact: "Returns one deal's details plus related people PII and notes; single-record read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.aggregate_deals
+    object: Deal
+    action: aggregate_deals
+    description: "Groups and counts deals by field values."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Deals
+    risk: low
+    business_impact: "Returns grouped counts of deals; aggregate pipeline metrics, no record-level export."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.get_deal_stage_history
+    object: Deal
+    action: get_deal_stage_history
+    description: "Gets timestamped stage transitions for a deal."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Deals
+    risk: low
+    business_impact: "Returns the audit trail of stage transitions for one deal; single-record history read."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Fundraising ----------
+  - id: carta.create_fundraising
+    object: Fundraising
+    action: create_fundraising
+    description: "Creates a new fundraising opportunity."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Fundraising
+    risk: low
+    business_impact: "Adds a new fundraising opportunity record; reversible and individually audited."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.update_fundraising
+    object: Fundraising
+    action: update_fundraising
+    description: "Updates an existing fundraising opportunity by ID."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Fundraising
+    risk: medium
+    business_impact: "Modifies a fundraising opportunity, which can shift reported raise progress and projected capital figures; reversible and audited."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.delete_fundraising
+    object: Fundraising
+    action: delete_fundraising
+    description: "Deletes a fundraising opportunity by ID."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Fundraising
+    risk: medium
+    business_impact: "Removes a fundraising opportunity record; reversible only by re-creation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.search_fundraising
+    object: Fundraising
+    action: search_fundraising
+    description: "Searches and lists fundraising opportunities."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Fundraising
+    risk: low
+    business_impact: "Returns matching fundraising opportunities; pipeline business data scoped by query."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.get_fundraising
+    object: Fundraising
+    action: get_fundraising
+    description: "Gets a single fundraising opportunity by ID."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Fundraising
+    risk: low
+    business_impact: "Returns one fundraising opportunity by ID; single-record business read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.aggregate_fundraising
+    object: Fundraising
+    action: aggregate_fundraising
+    description: "Groups and counts fundraising opportunities by field values."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Fundraising
+    risk: low
+    business_impact: "Returns grouped counts of fundraising opportunities; aggregate metrics, no record-level export."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Investors ----------
+  - id: carta.create_investor
+    object: Investor
+    action: create_investor
+    description: "Creates a new investor."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Investors
+    risk: low
+    business_impact: "Adds a new investor record, which may include individual investor PII; reversible and individually audited."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.update_investor
+    object: Investor
+    action: update_investor
+    description: "Updates an existing investor by ID."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Investors
+    risk: low
+    business_impact: "Modifies an investor record that may include individual investor PII; reversible and individually audited."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.delete_investor
+    object: Investor
+    action: delete_investor
+    description: "Deletes an investor by ID."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Investors
+    risk: medium
+    business_impact: "Removes an investor record and any associated PII; data-subject erasure reversible only by re-creation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.search_investors
+    object: Investor
+    action: search_investors
+    description: "Searches and lists investors."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Investors
+    risk: medium
+    business_impact: "Returns matching investor records that may include individual investor PII; bulk read scoped by query."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.get_investor
+    object: Investor
+    action: get_investor
+    description: "Gets a single investor by ID."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Investors
+    risk: low
+    business_impact: "Returns one investor record that may include individual investor PII; single-record read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.aggregate_investors
+    object: Investor
+    action: aggregate_investors
+    description: "Groups and counts investors by field values."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Investors
+    risk: low
+    business_impact: "Returns grouped counts of investors; aggregate metrics, no record-level export."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Notes ----------
+  - id: carta.create_note
+    object: Note
+    action: create_note
+    description: "Creates a new note."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Notes
+    risk: low
+    business_impact: "Adds a new note that may contain personal data about contacts or deals; reversible and individually audited."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.update_note
+    object: Note
+    action: update_note
+    description: "Updates an existing note by ID."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Notes
+    risk: low
+    business_impact: "Modifies a note that may contain personal data; reversible and individually audited."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.delete_note
+    object: Note
+    action: delete_note
+    description: "Deletes a note by ID."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Notes
+    risk: medium
+    business_impact: "Removes a note and any personal data it contains; reversible only by re-creation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.search_notes
+    object: Note
+    action: search_notes
+    description: "Full-text search across notes."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Notes
+    risk: medium
+    business_impact: "Full-text read across all notes, which may surface personal data embedded in free-text; bulk read scoped by query."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.fetch_note_by_id
+    object: Note
+    action: fetch_note_by_id
+    description: "Gets a single note by ID."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Notes
+    risk: low
+    business_impact: "Returns one note that may contain personal data; single-record read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Themes ----------
+  - id: carta.create_theme
+    object: Theme
+    action: create_theme
+    description: "Creates a new theme."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Themes
+    risk: low
+    business_impact: "Adds a new theme for organizing entities; metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.create_theme_item
+    object: ThemeItem
+    action: create_theme_item
+    description: "Links an entity to a theme."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Themes
+    risk: low
+    business_impact: "Associates an entity with a theme; reversible organizational link."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.delete_theme_item
+    object: ThemeItem
+    action: delete_theme_item
+    description: "Removes an entity link from a theme."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Themes
+    risk: low
+    business_impact: "Removes an entity-to-theme association; reversible organizational change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.add_subtheme
+    object: Theme
+    action: add_subtheme
+    description: "Makes an existing theme a sub-theme of another."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Themes
+    risk: low
+    business_impact: "Nests one theme under another; reversible hierarchy change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.remove_subtheme
+    object: Theme
+    action: remove_subtheme
+    description: "Removes a sub-theme link from a parent theme."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Themes
+    risk: low
+    business_impact: "Un-nests a sub-theme from its parent; reversible hierarchy change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.search_themes
+    object: Theme
+    action: search_themes
+    description: "Searches themes by name."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Themes
+    risk: low
+    business_impact: "Returns matching themes by name; organizational metadata read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.get_theme_items
+    object: ThemeItem
+    action: get_theme_items
+    description: "Gets items linked to a theme."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Themes
+    risk: low
+    business_impact: "Returns the entities linked to a theme; may reference companies, deals, or contacts by id."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: carta.list_reports
+    object: Report
+    action: list_reports
+    description: "Lists available reports for the organization."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the organization's available reports; metadata only, no report data returned."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: carta.get_report_data
+    object: Report
+    action: get_report_data
+    description: "Gets data for a specific report."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Data Access
+    risk: high
+    business_impact: "Returns the full dataset behind a report, which can bulk-extract contact/investor PII and pipeline figures in one call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: carta.get_file_content
+    object: Attachment
+    action: get_file_content
+    description: "Fetches file content for an attachment."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Data Access
+    risk: high
+    business_impact: "Returns the raw bytes of an attached file, whose contents are arbitrary and may include personal or confidential financial documents."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Service ----------
+  - id: carta.product_support_hotline
+    object: SupportRequest
+    action: product_support_hotline
+    description: "Escalates product support questions."
+    reference: https://docs.carta.com/crm/docs/carta-crm-mcp
+    category: Service
+    risk: low
+    business_impact: "Opens a product-support escalation; may transmit account and contact details to Carta support."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

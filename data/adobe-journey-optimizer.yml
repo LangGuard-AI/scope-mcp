@@ -2,29 +2,31 @@ schema_version: "1.1"
 platform: adobe-journey-optimizer
 display_name: Adobe Journey Optimizer
 source: langguard-editorial
-updated: "2026-05"
-# The Adobe Journey Optimizer MCP server is in beta and Adobe's docs
-# publish only plain-language capability labels ("List Campaigns",
-# "Get Campaign", "List Channel Configurations") — not verbatim tool
-# identifiers. Per CONTRIBUTING.md Rule 1's escape hatch, every entry
-# below uses `id_form: capability`. The earlier curation stored the
-# capability labels as verbatim ids, which produced ids containing
-# literal spaces (`adobe-journey-optimizer.List Campaigns`); this file
-# converts to slugged ids with the verbatim label in `description`.
-# When Adobe publishes a real `tools/list` (or open-sources the server),
-# refresh this file to `id_form: verbatim` with the actual identifier
-# strings.
+updated: "2026-06"
+# The Adobe Journey Optimizer MCP server is in beta. The server endpoint is
+# org-specific and provisioned by an Adobe representative (not publicly
+# reachable), and the connection is authentication-gated, so live tools/list
+# introspection is impossible. Adobe's docs publish only plain-language tool
+# labels under an "Available tools" table — "List Campaigns", "Get Campaign",
+# "List Channel Configurations" — not verbatim tool identifiers. Per Step 3's
+# capability-form fallback, every entry below uses `id_form: capability` with a
+# slugged id and the verbatim label in `description`; confidence is capped at
+# medium because the match is intent-level, not identifier-level.
+# The docs confirm the list is exhaustive (3 tools) and that ALL tools are
+# read-only — write/create/update/delete operations are not supported in the
+# current beta. When Adobe publishes a real `tools/list` (or open-sources the
+# server), refresh this file to `id_form: verbatim` with the actual identifiers.
 reference: https://experienceleague.adobe.com/en/docs/journey-optimizer/using/content-management/combine/ajo-mcp
 actions:
-  # ---------- Campaigns ----------
+  # ---------- Data Access ----------
   - id: adobe-journey-optimizer.list_campaigns
     object: Campaign
     action: list_campaigns
     id_form: capability
     description: "List Campaigns"
-    category: Operations
+    category: Data Access
     risk: low
-    business_impact: "Browses Adobe Journey Optimizer marketing campaigns; read-only in current beta."
+    business_impact: "Browses Adobe Journey Optimizer marketing campaigns and their status; read-only metadata listing in the current beta."
     compliance: []
     sod_concern: false
     confidence: medium
@@ -35,24 +37,23 @@ actions:
     action: get_campaign
     id_form: capability
     description: "Get Campaign"
-    category: Operations
+    category: Data Access
     risk: low
-    business_impact: "Reads full campaign configuration including audience targeting, schedule, and content."
-    compliance: [GDPR, UK_GDPR, CCPA]
+    business_impact: "Reads full campaign configuration including audience targeting and message content, which can expose personal data of targeted individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
     sod_concern: false
     confidence: medium
     access_methods: [REST, MCP]
 
-  # ---------- Configuration ----------
   - id: adobe-journey-optimizer.list_channel_configurations
     object: ChannelConfiguration
     action: list_channel_configurations
     id_form: capability
     description: "List Channel Configurations"
-    category: Operations
+    category: Data Access
     risk: low
-    business_impact: "Reads surface presets and branding for email, SMS, push, and WhatsApp channels."
-    compliance: [SOC2]
+    business_impact: "Reads surface presets and branding for email, SMS, push, and in-app channels; structural configuration with no personal data."
+    compliance: []
     sod_concern: false
     confidence: medium
     access_methods: [REST, MCP]

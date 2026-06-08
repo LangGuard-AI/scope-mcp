@@ -1,329 +1,187 @@
-schema_version: "1.0"
+schema_version: "1.1"
 platform: airops
 display_name: AirOps
 source: langguard-editorial
-updated: "2026-05"
+updated: "2026-06"
+reference: https://docs.airops.com/mcp/tools
 actions:
-  # ---------- Workspace & Brand Kit ----------
-  - id: airops.list_workspaces
-    object: Workspace
-    action: list_workspaces
-    category: Data Access
-    risk: low
-    business_impact: "Lists workspaces accessible to the user."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: airops.list_brand_kits
-    object: BrandKit
-    action: list_brand_kits
-    category: Data Access
-    risk: low
-    business_impact: "Lists brand kits configured in the workspace."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: airops.get_brand_kit
-    object: BrandKit
-    action: get_brand_kit
-    category: Data Access
-    risk: low
-    business_impact: "Reads brand-kit configuration including voice, tone, and assets."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: airops.get_legacy_brand_kit
-    object: BrandKit
-    action: get_legacy_brand_kit
-    category: Data Access
-    risk: low
-    business_impact: "Reads legacy brand-kit configuration."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
+  # ---------- Brand Kit Configuration ----------
   - id: airops.update_brand_kit
     object: BrandKit
     action: update_brand_kit
-    category: Operations
+    description: "Modifies a Brand Kit's base identity and writing-style fields."
+    category: Configuration
     risk: medium
-    business_impact: "Modifies brand-kit voice, audiences, or styling; affects all downstream content generation."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: airops.publish_brand_kit
-    object: BrandKit
-    action: publish_brand_kit
-    category: Operations
-    risk: medium
-    business_impact: "Promotes brand-kit changes to live use; takes effect immediately for content workflows."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: airops.suggest_brand_kit_edits
-    object: BrandKit
-    action: suggest_brand_kit_edits
-    category: Operations
-    risk: low
-    business_impact: "Returns AI-suggested edits to a brand kit; suggestions only, not applied."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: airops.get_insights_settings
-    object: BrandKit
-    action: get_insights_settings
-    category: Data Access
-    risk: low
-    business_impact: "Reads insights / analytics settings for a brand kit."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: airops.list_topics
-    object: Topic
-    action: list_topics
-    category: Data Access
-    risk: low
-    business_impact: "Lists topics scoped to the brand kit."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: airops.list_personas
-    object: Persona
-    action: list_personas
-    category: Data Access
-    risk: low
-    business_impact: "Lists personas defined for the brand kit."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Brand Kit Management ----------
-  - id: airops.manage_brand_kit_product_line
-    object: BrandKit
-    action: manage_brand_kit_product_line
-    category: Operations
-    risk: medium
-    business_impact: "Generic create/update/delete tool for brand-kit product lines."
-    compliance: [SOC2]
+    business_impact: "Changes the brand identity and writing rules that downstream content generation depends on; reversible by re-editing but affects all content produced from the kit."
+    compliance: [SOC2, ISO_27001]
     sod_concern: false
     confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: airops.manage_brand_kit_product_line
+    object: ProductLine
+    action: manage_brand_kit_product_line
+    description: "Creates or updates a product line within a Brand Kit."
+    category: Configuration
+    risk: low
+    business_impact: "Adds or edits a brand product-line definition; reversible and scoped to a single Brand Kit."
+    compliance: []
+    sod_concern: false
+    confidence: high
     access_methods: [REST, MCP]
 
   - id: airops.manage_brand_kit_competitor
-    object: BrandKit
+    object: Competitor
     action: manage_brand_kit_competitor
-    category: Operations
+    description: "Creates or updates a competitor entry within a Brand Kit."
+    category: Configuration
     risk: low
-    business_impact: "Generic CRUD tool for tracked competitors in a brand kit."
+    business_impact: "Adds or edits a tracked-competitor definition; reversible and scoped to a single Brand Kit."
     compliance: []
     sod_concern: false
-    confidence: medium
+    confidence: high
     access_methods: [REST, MCP]
 
   - id: airops.manage_brand_kit_audience
-    object: BrandKit
+    object: Audience
     action: manage_brand_kit_audience
-    category: Operations
+    description: "Creates or updates a marketing audience segment within a Brand Kit."
+    category: Configuration
     risk: low
-    business_impact: "Generic CRUD tool for audience definitions in a brand kit."
+    business_impact: "Adds or edits an abstract marketing-audience definition; reversible and scoped to a single Brand Kit."
     compliance: []
     sod_concern: false
     confidence: medium
     access_methods: [REST, MCP]
 
   - id: airops.manage_brand_kit_region
-    object: BrandKit
+    object: Region
     action: manage_brand_kit_region
-    category: Operations
+    description: "Creates or updates a region entry within a Brand Kit."
+    category: Configuration
     risk: low
-    business_impact: "Generic CRUD tool for region targeting in a brand kit."
+    business_impact: "Adds or edits a brand region definition; reversible and scoped to a single Brand Kit."
     compliance: []
     sod_concern: false
-    confidence: medium
+    confidence: high
     access_methods: [REST, MCP]
 
   - id: airops.manage_brand_kit_content_type
-    object: BrandKit
+    object: ContentType
     action: manage_brand_kit_content_type
-    category: Operations
+    description: "Creates or updates a content type within a Brand Kit."
+    category: Configuration
     risk: low
-    business_impact: "Generic CRUD tool for content-type definitions in a brand kit."
+    business_impact: "Adds or edits a content-type definition; reversible and scoped to a single Brand Kit."
     compliance: []
     sod_concern: false
-    confidence: medium
+    confidence: high
     access_methods: [REST, MCP]
 
   - id: airops.manage_brand_kit_content_sample
-    object: BrandKit
+    object: ContentSample
     action: manage_brand_kit_content_sample
-    category: Operations
+    description: "Creates or updates a content sample within a Brand Kit."
+    category: Configuration
     risk: low
-    business_impact: "Generic CRUD tool for content samples used to train brand voice."
+    business_impact: "Adds or edits an example-content sample used to guide generation; reversible and scoped to a single Brand Kit."
     compliance: []
     sod_concern: false
     confidence: medium
     access_methods: [REST, MCP]
 
   - id: airops.manage_brand_kit_writing_rule
-    object: BrandKit
+    object: WritingRule
     action: manage_brand_kit_writing_rule
-    category: Operations
+    description: "Creates or updates a writing rule within a Brand Kit."
+    category: Configuration
     risk: low
-    business_impact: "Generic CRUD tool for writing-rule entries."
+    business_impact: "Adds or edits a writing-style rule applied to generated content; reversible and scoped to a single Brand Kit."
     compliance: []
     sod_concern: false
-    confidence: medium
+    confidence: high
     access_methods: [REST, MCP]
 
   - id: airops.manage_brand_kit_custom_variable
-    object: BrandKit
+    object: CustomVariable
     action: manage_brand_kit_custom_variable
-    category: Operations
+    description: "Creates or updates a custom variable within a Brand Kit."
+    category: Configuration
     risk: low
-    business_impact: "Generic CRUD tool for custom variables exposed to grids."
+    business_impact: "Adds or edits a reusable custom variable in a Brand Kit; reversible and scoped to a single Brand Kit."
     compliance: []
     sod_concern: false
     confidence: medium
     access_methods: [REST, MCP]
 
-  # ---------- AEO Prompts & Answers ----------
-  - id: airops.list_aeo_prompts
-    object: AeoPrompt
-    action: list_aeo_prompts
-    category: Data Access
+  - id: airops.suggest_brand_kit_edits
+    object: BrandKit
+    action: suggest_brand_kit_edits
+    description: "Proposes Brand Kit edits with a side-by-side human-review UI before they apply."
+    category: Configuration
     risk: low
-    business_impact: "Lists tracked answer-engine optimization prompts."
+    business_impact: "Stages proposed Brand Kit edits for human review; no change takes effect until a reviewer accepts."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: airops.publish_brand_kit
+    object: BrandKit
+    action: publish_brand_kit
+    description: "Activates a Brand Kit's draft changes, making them live."
+    category: Configuration
+    risk: medium
+    business_impact: "Promotes draft Brand Kit changes to the live configuration that governs all downstream content generation; takes effect immediately for every consumer of the kit."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Workflow Execution ----------
+  - id: airops.run_grid_rows
+    object: Grid
+    action: run_grid_rows
+    description: "Triggers AirOps workflow execution across the specified grid rows."
+    category: Operations
+    risk: medium
+    business_impact: "Executes automated AirOps workflows over grid rows, consuming credits and producing or overwriting generated output; reversible per row but runs immediately."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: airops.write_grid
+    object: Grid
+    action: write_grid
+    description: "Creates or updates rows in a grid table."
+    category: Operations
+    risk: medium
+    business_impact: "Writes customer-supplied data into grid rows; reversible by overwriting but mutates working data that may feed downstream workflows."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: airops.add_grid_column
+    object: Grid
+    action: add_grid_column
+    description: "Adds a new column to a grid table."
+    category: Operations
+    risk: low
+    business_impact: "Adds a column to a grid schema; reversible and non-destructive to existing row data."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: airops.get_prompt_answers
-    object: AeoPrompt
-    action: get_prompt_answers
-    category: Data Access
+  - id: airops.get_grid_row_execution_status
+    object: Grid
+    action: get_grid_row_execution_status
+    description: "Checks the execution status of grid workflow rows."
+    category: Operations
     risk: low
-    business_impact: "Reads observed answers for a tracked AEO prompt."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: airops.get_answer
-    object: AeoPrompt
-    action: get_answer
-    category: Data Access
-    risk: low
-    business_impact: "Reads a single observed AEO answer."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Citations & Domains ----------
-  - id: airops.list_aeo_citations
-    object: Citation
-    action: list_aeo_citations
-    category: Data Access
-    risk: low
-    business_impact: "Lists citations observed in tracked AEO answers."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: airops.get_aeo_citation
-    object: Citation
-    action: get_aeo_citation
-    category: Data Access
-    risk: low
-    business_impact: "Reads a single AEO citation."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: airops.list_aeo_domains
-    object: Domain
-    action: list_aeo_domains
-    category: Data Access
-    risk: low
-    business_impact: "Lists domains observed in AEO citations."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Page Analytics ----------
-  - id: airops.list_pages
-    object: Page
-    action: list_pages
-    category: Data Access
-    risk: low
-    business_impact: "Lists tracked pages with analytics."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: airops.get_page_details
-    object: Page
-    action: get_page_details
-    category: Data Access
-    risk: low
-    business_impact: "Reads detailed analytics for a tracked page."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: airops.get_page_prompts
-    object: Page
-    action: get_page_prompts
-    category: Data Access
-    risk: low
-    business_impact: "Returns the AEO prompts a page is associated with."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  # ---------- Analytics ----------
-  - id: airops.query_analytics
-    object: Analytics
-    action: query_analytics
-    category: Data Access
-    risk: low
-    business_impact: "Runs an analytics query against AirOps metrics."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: airops.analytics_chart
-    object: Analytics
-    action: analytics_chart
-    category: Data Access
-    risk: low
-    business_impact: "Returns a rendered analytics chart."
+    business_impact: "Reads workflow execution status for grid rows; read-only with no state change."
     compliance: []
     sod_concern: false
     confidence: high
@@ -333,9 +191,10 @@ actions:
   - id: airops.create_report
     object: Report
     action: create_report
+    description: "Creates a saved analytics report composed of modules."
     category: Operations
     risk: low
-    business_impact: "Creates a new report definition."
+    business_impact: "Saves a new analytics report definition; reversible and scoped to the workspace."
     compliance: []
     sod_concern: false
     confidence: high
@@ -344,9 +203,10 @@ actions:
   - id: airops.list_reports
     object: Report
     action: list_reports
+    description: "Lists saved analytics reports."
     category: Data Access
     risk: low
-    business_impact: "Lists existing reports in the workspace."
+    business_impact: "Reads the list of saved reports; read-only with no state change."
     compliance: []
     sod_concern: false
     confidence: high
@@ -355,21 +215,35 @@ actions:
   - id: airops.get_report
     object: Report
     action: get_report
+    description: "Retrieves a specific saved report by ID."
     category: Data Access
     risk: low
-    business_impact: "Reads a report's definition and last results."
+    business_impact: "Reads a single saved report's contents; read-only with no state change."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  # ---------- Grids ----------
-  - id: airops.list_grids
-    object: Grid
-    action: list_grids
+  # ---------- Knowledge Bases ----------
+  - id: airops.search_knowledge_base
+    object: KnowledgeBase
+    action: search_knowledge_base
+    description: "Runs a semantic search within a Knowledge Base."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns customer-uploaded Knowledge Base content matching a query; surfaced content is arbitrary and may include confidential business material."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: airops.list_knowledge_bases
+    object: KnowledgeBase
+    action: list_knowledge_bases
+    description: "Lists accessible Knowledge Bases."
     category: Data Access
     risk: low
-    business_impact: "Lists AirOps grids (workflow worksheets)."
+    business_impact: "Reads the inventory of Knowledge Bases; read-only with no state change."
     compliance: []
     sod_concern: false
     confidence: high
@@ -378,77 +252,241 @@ actions:
   - id: airops.read_grid
     object: Grid
     action: read_grid
+    description: "Reads rows from a grid table."
     category: Data Access
-    risk: low
-    business_impact: "Reads cells from a grid."
-    compliance: []
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: airops.write_grid
-    object: Grid
-    action: write_grid
-    category: Operations
     risk: medium
-    business_impact: "Writes cells to a grid; can modify queued workflow inputs at scale."
-    compliance: [SOC2]
+    business_impact: "Returns customer-supplied grid-row data, which is arbitrary and may include confidential business material; read-only."
+    compliance: [SOC2, ISO_27001]
     sod_concern: false
-    confidence: high
+    confidence: medium
     access_methods: [REST, MCP]
 
-  - id: airops.add_grid_column
+  - id: airops.list_grids
     object: Grid
-    action: add_grid_column
-    category: Operations
+    action: list_grids
+    description: "Lists accessible grids."
+    category: Data Access
     risk: low
-    business_impact: "Adds a column to a grid; affects schema downstream workflows depend on."
+    business_impact: "Reads the inventory of grids; read-only with no state change."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: airops.run_grid_rows
-    object: Grid
-    action: run_grid_rows
-    category: Operations
-    risk: medium
-    business_impact: "Executes the configured workflow against selected grid rows; consumes credits and may make outbound calls."
-    compliance: [SOC2]
-    sod_concern: false
-    confidence: high
-    access_methods: [REST, MCP]
-
-  - id: airops.get_grid_row_execution_status
-    object: Grid
-    action: get_grid_row_execution_status
+  # ---------- AEO Analytics ----------
+  - id: airops.query_analytics
+    object: Analytics
+    action: query_analytics
+    description: "Queries AEO analytics with flexible metrics, dimensions, and filters."
     category: Data Access
     risk: low
-    business_impact: "Reads execution status for grid rows."
+    business_impact: "Reads aggregated AI-search-visibility analytics; read-only with no state change."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  # ---------- Knowledge Bases ----------
-  - id: airops.list_knowledge_bases
-    object: KnowledgeBase
-    action: list_knowledge_bases
+  - id: airops.analytics_chart
+    object: Analytics
+    action: analytics_chart
+    description: "Queries analytics and renders an interactive chart."
     category: Data Access
     risk: low
-    business_impact: "Lists knowledge bases configured in the workspace."
+    business_impact: "Reads aggregated analytics for chart rendering; read-only with no state change."
     compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]
 
-  - id: airops.search_knowledge_base
-    object: KnowledgeBase
-    action: search_knowledge_base
+  - id: airops.list_aeo_prompts
+    object: Prompt
+    action: list_aeo_prompts
+    description: "Lists tracked AI prompts for a Brand Kit with mention and citation metrics."
     category: Data Access
     risk: low
-    business_impact: "Performs semantic search over a knowledge base."
-    compliance: [SOC2]
+    business_impact: "Reads the set of tracked AI-search prompts and their visibility metrics; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airops.get_prompt_answers
+    object: Prompt
+    action: get_prompt_answers
+    description: "Retrieves AI answers captured for a specific tracked prompt."
+    category: Data Access
+    risk: low
+    business_impact: "Reads captured AI-engine answers for a tracked prompt; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airops.get_answer
+    object: Answer
+    action: get_answer
+    description: "Gets the complete AI answer text with citations."
+    category: Data Access
+    risk: low
+    business_impact: "Reads a single full AI-engine answer with its citations; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airops.list_aeo_citations
+    object: Citation
+    action: list_aeo_citations
+    description: "Lists cited URLs with AEO metrics."
+    category: Data Access
+    risk: low
+    business_impact: "Reads aggregated citation metrics for tracked URLs; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airops.get_aeo_citation
+    object: Citation
+    action: get_aeo_citation
+    description: "Gets citation details and the prompts citing it."
+    category: Data Access
+    risk: low
+    business_impact: "Reads details for a single citation and its citing prompts; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airops.list_aeo_domains
+    object: Domain
+    action: list_aeo_domains
+    description: "Lists domains aggregated by citation metrics."
+    category: Data Access
+    risk: low
+    business_impact: "Reads domain-level aggregated citation metrics; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airops.list_pages
+    object: Page
+    action: list_pages
+    description: "Lists pages with AEO, Google Search Console, and GA4 metrics."
+    category: Data Access
+    risk: low
+    business_impact: "Reads page-level AEO and web-analytics metrics; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airops.get_page_details
+    object: Page
+    action: get_page_details
+    description: "Gets detailed metrics for a specific page."
+    category: Data Access
+    risk: low
+    business_impact: "Reads detailed metrics for a single page; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airops.get_page_prompts
+    object: Page
+    action: get_page_prompts
+    description: "Gets the prompts citing a specific page."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the tracked prompts that cite a given page; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Workspace & Brand Kit Reads ----------
+  - id: airops.list_workspaces
+    object: Workspace
+    action: list_workspaces
+    description: "Lists all workspaces the caller can access with ID, name, slug, and tier."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the inventory of accessible workspaces; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airops.list_brand_kits
+    object: BrandKit
+    action: list_brand_kits
+    description: "Lists Brand Kits with brand-management and AEO capability flags."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the inventory of Brand Kits and their feature flags; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airops.get_brand_kit
+    object: BrandKit
+    action: get_brand_kit
+    description: "Retrieves a specific Brand Kit with identity, writing style, and related entities."
+    category: Data Access
+    risk: low
+    business_impact: "Reads a single Brand Kit's full configuration; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airops.get_legacy_brand_kit
+    object: BrandKit
+    action: get_legacy_brand_kit
+    description: "Retrieves the legacy Brand Kit structure for migration."
+    category: Data Access
+    risk: low
+    business_impact: "Reads a Brand Kit in its legacy structure for migration purposes; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airops.get_insights_settings
+    object: BrandKit
+    action: get_insights_settings
+    description: "Gets the AEO insights configuration for a Brand Kit."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the AEO/analytics configuration needed to use the analytics tools; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airops.list_topics
+    object: Topic
+    action: list_topics
+    description: "Lists Brand Kit topics."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the list of Brand Kit topics; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: airops.list_personas
+    object: Persona
+    action: list_personas
+    description: "Lists Brand Kit personas."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the list of abstract Brand Kit marketing personas; read-only with no state change."
+    compliance: []
     sod_concern: false
     confidence: high
     access_methods: [REST, MCP]

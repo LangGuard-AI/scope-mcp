@@ -1,0 +1,112 @@
+schema_version: "1.1"
+platform: ice-data-services
+display_name: ICE Data Services
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/connectors/ice-data-services
+# NOTE: This connector is hosted and OAuth-gated; its MCP `tools/list` is not
+# reachable without authentication, and ICE publishes no verbatim tool
+# identifiers in any public doc (developer.ice.com, ice.com, the Anthropic
+# financial-services announcement, or the connectors directory). The connector
+# page describes its surface only as plain-language, read-only capability
+# labels (use-case titles). Per the curator spec's capability-form fallback,
+# every action below uses `id_form: capability` with the verbatim label in
+# `description`, a best-effort snake_case slug as the id, and confidence capped
+# at medium (intent-level match, not identifier-level). The underlying data is
+# institutional U.S. fixed-income trade-tape, sector-volume, and issuer
+# reference data (securities/market data, NOT consumer personal data and NOT
+# cardholder data), and the entire connector is marked Read-only — hence the
+# low risk and (largely) empty compliance arrays.
+actions:
+  # ---------- Data Access ----------
+  - id: ice-data-services.monitor_institutional_trading_activity
+    object: BondTrade
+    action: monitor_institutional_trading_activity
+    id_form: capability
+    description: "Monitor Institutional Trading Activity"
+    category: Data Access
+    risk: low
+    business_impact: "Reads institutional fixed-income trade-tape data (e.g. largest corporate bond trades of the day); read-only market data, not personal or cardholder data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ice-data-services.analyze_sector_trading_volume
+    object: SectorVolume
+    action: analyze_sector_trading_volume
+    id_form: capability
+    description: "Analyze Sector Trading Volume"
+    category: Data Access
+    risk: low
+    business_impact: "Reads aggregate trading volume across sectors (financials, industrials, utilities) over a date range; read-only aggregate market data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ice-data-services.research_issuers_bond_portfolio
+    object: Issuer
+    action: research_issuers_bond_portfolio
+    id_form: capability
+    description: "Research an Issuer's Bond Portfolio"
+    category: Data Access
+    risk: low
+    business_impact: "Reads issuer-level reference data and bond maturity profiles for a named issuer; read-only securities reference data, not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ice-data-services.municipal_bond_analysis
+    object: MunicipalBond
+    action: municipal_bond_analysis
+    id_form: capability
+    description: "Municipal Bond Analysis"
+    category: Data Access
+    risk: low
+    business_impact: "Reads municipal and revenue bond trading activity grouped over time; read-only market data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ice-data-services.sub_sector_drill_down
+    object: SectorVolume
+    action: sub_sector_drill_down
+    id_form: capability
+    description: "Sub-Sector Drill-Down with Data Provenance"
+    category: Data Access
+    risk: low
+    business_impact: "Breaks down corporate bond volume by sub-sector category with provenance metadata; read-only aggregate market data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Analysis & Computation ----------
+  - id: ice-data-services.classify_financial_concepts
+    object: Concept
+    action: classify_financial_concepts
+    id_form: capability
+    description: "Classify Financial Concepts"
+    category: Analysis & Computation
+    risk: low
+    business_impact: "Explains and classifies financial concepts (e.g. what counts as an institutional trade); read-only reference/definitional lookup with no data mutation."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: ice-data-services.precise_arithmetic_on_query_results
+    object: QueryResult
+    action: precise_arithmetic_on_query_results
+    id_form: capability
+    description: "Precise Arithmetic on Query Results"
+    category: Analysis & Computation
+    risk: low
+    business_impact: "Performs precise arithmetic (e.g. summing total notional) over already-returned query results; pure computation with no data access or mutation."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

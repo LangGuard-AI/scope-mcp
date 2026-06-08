@@ -1,0 +1,116 @@
+schema_version: "1.1"
+platform: definely
+display_name: Definely
+source: langguard-editorial
+updated: "2026-06"
+reference: https://help.definely.com/en/articles/634922-definely-connector-for-claude-user-guide
+# NOTE: Definely's hosted MCP server is installed through Claude's connector
+# directory and is OAuth-gated; no public server endpoint URL or verbatim
+# `tools/list` identifiers are published anywhere reachable (no developer
+# portal, no API/MCP tools reference). The actions below use the documented
+# capability-form fallback (id_form: capability): ids are slugified from the
+# plain-language capability labels in the official user guide, descriptions are
+# the verbatim labels, and confidence is capped at medium (intent-level match,
+# not identifier-level). Definely is a deterministic, rules-based contract-
+# structure analysis tool ("rather than AI guessing"), so AI-decisioning and
+# financial-reporting regimes do not apply.
+actions:
+  # ---------- Data Access ----------
+  - id: definely.vault_search
+    object: Clause
+    action: vault_search
+    id_form: capability
+    description: "Vault Search"
+    reference: https://help.definely.com/en/articles/634922-definely-connector-for-claude-user-guide
+    category: Data Access
+    risk: medium
+    business_impact: "Queries the organization's stored clause and definition library across documents; surfaces confidential and potentially privileged contract content beyond the current document."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: definely.ask_from_document
+    object: Document
+    action: ask_from_document
+    id_form: capability
+    description: "Ask From Document"
+    reference: https://help.definely.com/en/articles/634922-definely-connector-for-claude-user-guide
+    category: Data Access
+    risk: low
+    business_impact: "Answers free-form questions over the uploaded contract; reads substantive document content that may include party PII and privileged terms."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Contract Analysis ----------
+  - id: definely.proof_check
+    object: Clause
+    action: proof_check
+    id_form: capability
+    description: "Proof Check"
+    reference: https://help.definely.com/en/articles/634922-definely-connector-for-claude-user-guide
+    category: Contract Analysis
+    risk: low
+    business_impact: "Reviews specific clauses for errors and inconsistencies; reads substantive contract content that may include party PII and privileged terms."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: definely.reference_report
+    object: Document
+    action: reference_report
+    id_form: capability
+    description: "Reference Report"
+    reference: https://help.definely.com/en/articles/634922-definely-connector-for-claude-user-guide
+    category: Contract Analysis
+    risk: low
+    business_impact: "Maps all cross-references in the document and flags broken or circular ones; reads substantive contract content that may include party PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: definely.issues_list
+    object: Document
+    action: issues_list
+    id_form: capability
+    description: "Issues List"
+    reference: https://help.definely.com/en/articles/634922-definely-connector-for-claude-user-guide
+    category: Contract Analysis
+    risk: low
+    business_impact: "Generates a drafting-issues report from the document's comments and markups; reads review annotations that may reference individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: definely.defined_terms
+    object: Document
+    action: defined_terms
+    id_form: capability
+    description: "Defined Terms"
+    reference: https://help.definely.com/en/articles/634922-definely-connector-for-claude-user-guide
+    category: Contract Analysis
+    risk: low
+    business_impact: "Lists every capitalized or formally defined term in the document; a lexical extraction with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: definely.undefined_terms
+    object: Document
+    action: undefined_terms
+    id_form: capability
+    description: "Undefined Terms"
+    reference: https://help.definely.com/en/articles/634922-definely-connector-for-claude-user-guide
+    category: Contract Analysis
+    risk: low
+    business_impact: "Identifies terms used as if defined but never actually defined; a lexical extraction with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

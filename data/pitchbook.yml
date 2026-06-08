@@ -1,0 +1,121 @@
+schema_version: "1.1"
+platform: pitchbook
+display_name: PitchBook
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/resources/tutorials/using-pitchbook-for-investment-research
+# NOTE: PitchBook's Premium MCP server (https://premium.mcp.pitchbook.com/mcp) is
+# OAuth/SSO-gated; tools/list returns 401 without a licensed bearer token, and the
+# vendor's own connector docs (help.pitchbook.com, getting-started) return 403 to
+# anonymous fetch. No verbatim tool ids are reachable from an authoritative source,
+# and third-party MCP catalogs disagree on both count and naming convention (5 vs 11
+# vs 13 tools, with three different conventions). Per the curator spec these entries
+# therefore use id_form: capability — the `description` field carries the verbatim
+# first-party capability label (from claude.com), and the `id`/`action` slugs are
+# intent-level, NOT identifier-level. confidence is capped at medium throughout.
+# The connector is documented as READ-ONLY: no create/update/delete/write surface.
+actions:
+  # ---------- Data Access ----------
+  - id: pitchbook.search_entities
+    object: "*"
+    action: search_entities
+    id_form: capability
+    description: "Search PitchBook's database for companies, investors, funds, people, limited partners (LPs), and deals by name or ticker"
+    category: Data Access
+    risk: medium
+    business_impact: "Returns matching companies, investors, funds, people, LPs, and deals with their PitchBook identifiers; surfaces licensed private-market intelligence and the names of identifiable individuals (founders, executives, board members)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pitchbook.get_company_profile
+    object: Company
+    action: get_company_profile
+    id_form: capability
+    description: "Access business descriptions, ownership status, financing history, and financial statements"
+    category: Data Access
+    risk: medium
+    business_impact: "Returns a private company's full profile including ownership status, financing history, and proprietary financial statements (income statement, balance sheet, cash flow); confidentiality-sensitive licensed data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pitchbook.get_company_financials
+    object: FinancialStatement
+    action: get_company_financials
+    id_form: capability
+    description: "Access financial statements (income statement, balance sheet, cash flow)"
+    category: Financial
+    risk: medium
+    business_impact: "Returns a company's income statement, balance sheet, and cash-flow data; confidentiality-sensitive financial information on private firms held under a PitchBook license."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pitchbook.get_deal_details
+    object: Deal
+    action: get_deal_details
+    id_form: capability
+    description: "Complete deal details including participants, investment amounts, valuations, and terms, plus cap table data showing ownership percentages and liquidation preferences"
+    category: Financial
+    risk: medium
+    business_impact: "Returns full deal terms — participants, amounts, valuations — and cap-table data with ownership percentages and liquidation preferences; highly confidential transaction intelligence on private companies."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pitchbook.get_investor_profile
+    object: Investor
+    action: get_investor_profile
+    id_form: capability
+    description: "Portfolio holdings showing current and exited investments, assets under management (AUM) and investment focus details"
+    category: Data Access
+    risk: low
+    business_impact: "Returns an investor's or fund's portfolio holdings, AUM, and investment focus; licensed market-intelligence data on firms rather than identifiable consumers."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pitchbook.get_fund_lp_commitments
+    object: Fund
+    action: get_fund_lp_commitments
+    id_form: capability
+    description: "Limited partner commitments across funds"
+    category: Financial
+    risk: medium
+    business_impact: "Returns limited-partner commitment data across funds (pension funds, endowments, sovereign wealth funds and their committed amounts); confidentiality-sensitive licensed financial intelligence."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pitchbook.get_professional_profile
+    object: Professional
+    action: get_professional_profile
+    id_form: capability
+    description: "Team member profiles and investor information, team member histories across organizations"
+    category: Data Access
+    risk: medium
+    business_impact: "Returns profiles of identifiable individuals — founders, executives, board members, and decision-makers — including their employment histories across organizations; personal data of named individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: pitchbook.discover_relationships
+    object: "*"
+    action: discover_relationships
+    id_form: capability
+    description: "Connection discovery between entities (co-investors, shared portfolio companies), LP participation patterns"
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces relationship graphs between firms and individuals (co-investors, shared portfolio companies, LP participation patterns); aggregates licensed data and can profile professional connections of named individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

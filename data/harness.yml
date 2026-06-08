@@ -1,0 +1,161 @@
+schema_version: "1.1"
+platform: harness
+display_name: Harness
+source: langguard-editorial
+updated: "2026-06"
+reference: https://github.com/harness/mcp-server
+# NOTE: Harness exposes a generic-dispatcher MCP surface — 11 tools that route
+# across 207 resource types and 33+ toolsets (pipelines, services, environments,
+# connectors, secrets, feature flags, GitOps apps, delegates, CCM/FinOps cost
+# data, RBAC/role bindings, templates). Each tool is classified by its WORST-CASE
+# capability across the resource types it can reach (e.g. harness_delete can
+# destroy a secret or a pipeline; harness_create/update can write a secret or a
+# role binding; harness_execute can deploy to production). Tool ids are verbatim
+# from the vendor MCP server README ("The server exposes 11 MCP tools").
+actions:
+  # ---------- Code & Release ----------
+  - id: harness.harness_execute
+    object: "*"
+    action: harness_execute
+    description: "Execute an action on a resource (run/retry pipeline, import pipeline from Git, toggle feature flag, sync GitOps app)."
+    reference: https://github.com/harness/mcp-server#tools-reference
+    category: Code & Release
+    risk: critical
+    business_impact: "Runs a deployment pipeline, syncs a GitOps app, or toggles a production feature flag — pushes change to production and can bypass change-management review if invoked unilaterally."
+    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: harness.harness_delete
+    object: "*"
+    action: harness_delete
+    description: "Delete a resource (pipeline, service, environment, connector, secret, etc.). Marked Destructive; prompts for confirmation via elicitation."
+    reference: https://github.com/harness/mcp-server#tools-reference
+    category: Code & Release
+    risk: critical
+    business_impact: "Irreversibly destroys a Harness resource — a pipeline, environment, connector, or secret — removing change-controlled deployment infrastructure."
+    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: harness.harness_create
+    object: "*"
+    action: harness_create
+    description: "Create a new resource (pipeline, service, connector, secret, infrastructure, role binding, etc.). Supports inline and Git-backed pipelines; prompts for confirmation via elicitation."
+    reference: https://github.com/harness/mcp-server#tools-reference
+    category: Code & Release
+    risk: critical
+    business_impact: "Creates deployment-path resources including secrets, credentialed connectors, role bindings, and pipelines — can write a secret, escalate access, or stand up a release path that reaches production."
+    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: harness.harness_update
+    object: "*"
+    action: harness_update
+    description: "Update an existing resource (pipeline definition, connector, secret, environment config, role binding, etc.); prompts for confirmation via elicitation."
+    reference: https://github.com/harness/mcp-server#tools-reference
+    category: Code & Release
+    risk: critical
+    business_impact: "Modifies deployment-path configuration including secrets, credentialed connectors, role bindings, and pipeline definitions — can rewrite a secret, escalate access, or change how and where releases ship."
+    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: harness.harness_get
+    object: "*"
+    action: harness_get
+    description: "Get a single resource by its identifier (pipeline, connector, secret config, service, cost report, user, etc.)."
+    reference: https://github.com/harness/mcp-server#tools-reference
+    category: Data Access
+    risk: medium
+    business_impact: "Reads a single resource's full configuration — including connector definitions, secret references, infrastructure, FinOps cost data, or member identity records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: harness.harness_list
+    object: "*"
+    action: harness_list
+    description: "List resources of a given type with filtering, search, and pagination."
+    reference: https://github.com/harness/mcp-server#tools-reference
+    category: Data Access
+    risk: medium
+    business_impact: "Enumerates resources across any type — connectors, secrets metadata, infrastructure, cost data, and member directories — mapping the account's security and deployment posture."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: harness.harness_search
+    object: "*"
+    action: harness_search
+    description: "Search across multiple resource types in parallel with a single query."
+    reference: https://github.com/harness/mcp-server#tools-reference
+    category: Data Access
+    risk: medium
+    business_impact: "Runs a parallel cross-type search that can surface connectors, secrets metadata, cost data, and member records in one pass — broad reconnaissance of the account."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: harness.harness_status
+    object: Project
+    action: harness_status
+    description: "Get a real-time project health dashboard — recent executions, failure rates, and deep links."
+    reference: https://github.com/harness/mcp-server#tools-reference
+    category: Operations
+    risk: low
+    business_impact: "Returns a project health dashboard of recent executions and failure rates; operational read with no configuration change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: harness.harness_diagnose
+    object: "*"
+    action: harness_diagnose
+    description: "Diagnose pipeline, connector, delegate, and gitops_application resources, returning timing, failure details, and health signals."
+    reference: https://github.com/harness/mcp-server#tools-reference
+    category: Operations
+    risk: low
+    business_impact: "Returns diagnostic timing, failure detail, and health signals for a pipeline, connector, delegate, or GitOps app; read-only troubleshooting."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Platform & DevOps ----------
+  - id: harness.harness_describe
+    object: Registry
+    action: harness_describe
+    description: "Discover available resource types, operations, and fields. No API call — returns local registry metadata."
+    reference: https://github.com/harness/mcp-server#tools-reference
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns local registry metadata describing available resource types and operations; makes no API call and touches no account data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: harness.harness_schema
+    object: Registry
+    action: harness_schema
+    description: "Fetch exact JSON Schema definitions for creating/updating resources; supports deep drilling via a path parameter."
+    reference: https://github.com/harness/mcp-server#tools-reference
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns JSON Schema definitions for resource create/update payloads; schema metadata only, no account data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

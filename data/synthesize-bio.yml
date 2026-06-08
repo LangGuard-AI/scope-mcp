@@ -1,0 +1,84 @@
+schema_version: "1.1"
+platform: synthesize-bio
+display_name: Synthesize Bio
+source: langguard-editorial
+updated: "2026-06"
+reference: https://docs.synthesize.bio/platform/tools-reference
+# ---------------------------------------------------------------------------
+# PROVENANCE / classification note
+# Primary source: vendor MCP docs (Tools Reference), read in full from the raw
+# markdown at https://docs.synthesize.bio/platform/tools-reference.md. That page
+# states verbatim: "The MCP server exposes four tools." All four are modeled
+# below with their exact ids (snake_case, no vendor prefix). Live introspection
+# of the MCP endpoint https://app.synthesize.bio/api/mcp returned HTTP 401 with
+# a WWW-Authenticate Bearer / OAuth-protected-resource challenge (OAuth-gated;
+# no anonymous tools-catalog endpoint), so the verbatim ids come from the vendor
+# Tools Reference rather than from a live tools/list. Tool count matches the
+# doc's declared total (4 of 4) — no trimming.
+#
+# DATA NATURE (drives the compliance tags): Synthesize Bio generates SYNTHETIC,
+# AI-generated gene expression data for a "virtual human" via its Gene Expression
+# Model (GEM). It does not hold, read, or return personal data of identifiable
+# individuals, and the connector is described as read-only. Inputs are natural-
+# language research prompts (e.g. "tumor vs normal", "heart vs liver"); outputs
+# are synthetic expression matrices and differential-expression statistics. The
+# privacy stack (GDPR/HIPAA/etc.) keys on personal data of real, identifiable
+# people — synthetic model output is not that — so those regimes are deliberately
+# NOT tagged here. Tagging HIPAA/GDPR on synthetic research data would be the
+# over-tagging the curator spec warns against. Empty compliance arrays are the
+# correct, honest result for these research-compute tools.
+# ---------------------------------------------------------------------------
+actions:
+  # ---------- Analysis ----------
+  - id: synthesize-bio.analyze_gene_expression
+    object: Analysis
+    action: analyze_gene_expression
+    description: "Starts the differential gene expression analysis pipeline from a confirmed resolution, returning a job_id."
+    reference: https://docs.synthesize.bio/platform/tools-reference
+    category: Analysis
+    risk: low
+    business_impact: "Kicks off an asynchronous AI gene-expression analysis job on synthetic (model-generated) data and provisions a platform dataset; reversible compute with no real-person, financial, or PII impact."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: synthesize-bio.resolve_sample_metadata
+    object: SampleMetadata
+    action: resolve_sample_metadata
+    description: "Resolves a natural-language experiment description into structured sample groups for downstream analysis."
+    reference: https://docs.synthesize.bio/platform/tools-reference
+    category: Analysis
+    risk: low
+    business_impact: "Parses a research prompt into structured sample groups; a stateless metadata-resolution step with no real-person data, no writes, and no irreversible effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access ----------
+  - id: synthesize-bio.get_analysis_results
+    object: Analysis
+    action: get_analysis_results
+    description: "Polls the status of a running analysis and returns the synthetic differential-expression results when complete."
+    reference: https://docs.synthesize.bio/platform/tools-reference
+    category: Data Access
+    risk: low
+    business_impact: "Returns up to 1,000 of the most significant synthetic differentially-expressed genes for a job; read-only research output with no real-person or sensitive data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: synthesize-bio.get_counts_data_url
+    object: CountsDataset
+    action: get_counts_data_url
+    description: "Returns a presigned download URL (valid 1 hour) for the raw synthetic gene expression counts data from a completed job."
+    reference: https://docs.synthesize.bio/platform/tools-reference
+    category: Data Access
+    risk: low
+    business_impact: "Issues a presigned URL that egresses the full raw synthetic counts dataset (tens of MB, ~20k genes per sample) outside the platform boundary; the data is AI-generated and non-personal, so the egress carries no PII or regulated-data exposure."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

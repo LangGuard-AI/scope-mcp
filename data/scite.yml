@@ -1,0 +1,20 @@
+schema_version: "1.1"
+platform: scite
+display_name: Scite
+source: langguard-editorial
+updated: "2026-06"
+reference: https://scite.ai/mcp
+actions:
+  # ---------- Data Access ----------
+  - id: scite.search_literature
+    object: Publication
+    action: search_literature
+    description: "Searches scite's corpus of peer-reviewed scientific literature by term, DOI, author, journal, or topic and returns metadata, Smart Citation counts, retraction notices, and full-text excerpts."
+    reference: https://github.com/scitedotai/scite-mcp-skill
+    category: Data Access
+    risk: low
+    business_impact: "Read-only query against a public scientific-literature corpus; returns bibliographic metadata and open-access excerpts, writes nothing and exposes no tenant data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

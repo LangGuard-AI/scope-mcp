@@ -1,0 +1,555 @@
+schema_version: "1.1"
+platform: razorpay
+display_name: Razorpay
+source: langguard-editorial
+updated: "2026-06"
+reference: https://razorpay.com/docs/mcp-server/tools-reference/
+actions:
+  # ---------- Financial ----------
+  - id: razorpay.capture_payment
+    object: Payment
+    action: capture_payment
+    description: "Change the payment status from authorized to captured."
+    category: Financial
+    risk: critical
+    business_impact: "Captures previously authorized funds and settles the charge; an irreversible general-ledger and revenue-recognition event."
+    compliance: [SOX, COSO, PCI, PSD2, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.create_refund
+    object: Refund
+    action: create_refund
+    description: "Creates a refund for a captured payment."
+    category: Financial
+    risk: critical
+    business_impact: "Moves money back out of the merchant account to the payer; effectively irreversible once processed and a direct general-ledger event."
+    compliance: [SOX, COSO, PCI, PSD2, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.create_instant_settlement
+    object: Settlement
+    action: create_instant_settlement
+    description: "Create an instant settlement that transfers held funds to the merchant bank account immediately."
+    category: Financial
+    risk: critical
+    business_impact: "Triggers an immediate transfer of held balance to the merchant bank account, bypassing the standard settlement cycle; a direct cash-movement and GL event."
+    compliance: [SOX, COSO, PCI, PSD2, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.initiate_payment
+    object: Payment
+    action: initiate_payment
+    description: "Initiate a payment using a saved payment method with order and customer details."
+    category: Financial
+    risk: high
+    business_impact: "Initiates a charge against a customer's saved payment instrument; collects money and is revenue-recognition relevant."
+    compliance: [SOX, COSO, PCI, PSD2, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.submit_otp
+    object: Payment
+    action: submit_otp
+    description: "Verify and submit OTP to complete payment authentication."
+    category: Financial
+    risk: high
+    business_impact: "Completes strong-customer-authentication and finalizes collection of a payment; the step that commits the charge."
+    compliance: [SOX, COSO, PCI, PSD2, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.resend_otp
+    object: Payment
+    action: resend_otp
+    description: "Resend OTP if the previous one was not received or expired."
+    category: Financial
+    risk: medium
+    business_impact: "Re-sends a one-time passcode to the payer's phone or email as part of payment authentication; advances an in-flight collection."
+    compliance: [PCI, PSD2, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.update_payment
+    object: Payment
+    action: update_payment
+    description: "Update the notes field of a payment."
+    category: Financial
+    risk: medium
+    business_impact: "Edits the notes metadata on a payment record that is in scope for financial reconciliation; reversible but alters an audited transaction record."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_payment_card_details
+    object: Payment
+    action: fetch_payment_card_details
+    description: "Fetch card details used for a payment."
+    category: Financial
+    risk: high
+    business_impact: "Reads cardholder card data associated with a payment; cardholder-data access in PCI scope."
+    compliance: [PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_all_payments
+    object: Payment
+    action: fetch_all_payments
+    description: "Fetch all payments with filtering and pagination."
+    category: Financial
+    risk: high
+    business_impact: "Bulk read of transaction records including payer identifiers and amounts; a data-exfiltration surface for financial and personal data."
+    compliance: [PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_payment
+    object: Payment
+    action: fetch_payment
+    description: "Fetch payment details with ID."
+    category: Financial
+    risk: low
+    business_impact: "Reads a single payment record including payer details and amount; non-destructive but exposes transaction and personal data."
+    compliance: [PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_order_payments
+    object: Payment
+    action: fetch_order_payments
+    description: "Fetch all payments for an order."
+    category: Financial
+    risk: low
+    business_impact: "Reads the payment records attached to an order; exposes transaction and payer data for that order."
+    compliance: [PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Settlements & Payouts ----------
+  - id: razorpay.fetch_settlement_recon_details
+    object: Settlement
+    action: fetch_settlement_recon_details
+    description: "Fetch settlement reconciliation report."
+    category: Financial
+    risk: high
+    business_impact: "Bulk read of the settlement reconciliation report mapping payouts to underlying transactions; financial-records exposure relevant to SOX reconciliation."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_all_settlements
+    object: Settlement
+    action: fetch_all_settlements
+    description: "Fetch all settlements."
+    category: Financial
+    risk: high
+    business_impact: "Bulk read of settlement records including amounts and bank-transfer details; financial-data exfiltration surface."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_all_instant_settlements
+    object: Settlement
+    action: fetch_all_instant_settlements
+    description: "Fetch all instant settlements."
+    category: Financial
+    risk: medium
+    business_impact: "Bulk read of instant-settlement records and amounts; exposes financial movement history."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_settlement_with_id
+    object: Settlement
+    action: fetch_settlement_with_id
+    description: "Fetch settlement details."
+    category: Financial
+    risk: low
+    business_impact: "Reads a single settlement record including amount and bank-transfer reference; non-destructive financial-data read."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_instant_settlement_with_id
+    object: Settlement
+    action: fetch_instant_settlement_with_id
+    description: "Fetch instant settlement with ID."
+    category: Financial
+    risk: low
+    business_impact: "Reads a single instant-settlement record; non-destructive financial-data read."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_all_payouts
+    object: Payout
+    action: fetch_all_payouts
+    description: "Fetch all payout details with account number."
+    category: Financial
+    risk: high
+    business_impact: "Bulk read of payout records including destination bank-account numbers; financial-data and PII exfiltration surface."
+    compliance: [SOX, COSO, GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_payout_with_id
+    object: Payout
+    action: fetch_payout_with_id
+    description: "Fetch a payout's details using its ID."
+    category: Financial
+    risk: medium
+    business_impact: "Reads a single payout record including destination bank-account details; exposes financial and personal data."
+    compliance: [SOX, COSO, GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Orders ----------
+  - id: razorpay.create_order
+    object: Order
+    action: create_order
+    description: "Creates an order."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Creates a payable order that anchors a collection flow; reversible before payment but a revenue-relevant business write."
+    compliance: [PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.update_order
+    object: Order
+    action: update_order
+    description: "Update an order."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Edits an existing order's fields; reversible but changes the basis for an in-flight collection."
+    compliance: [PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_order
+    object: Order
+    action: fetch_order
+    description: "Fetch order with ID."
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reads a single order record; non-destructive and exposes order and limited payer data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_all_orders
+    object: Order
+    action: fetch_all_orders
+    description: "Fetch all orders."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Bulk read of order records including amounts and customer references; exposes pipeline and personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Payment Links ----------
+  - id: razorpay.create_payment_link
+    object: PaymentLink
+    action: create_payment_link
+    description: "Creates a new payment link (standard)."
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Creates a shareable link that collects money from a payer; an active money-collection instrument."
+    compliance: [PCI, PSD2, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.payment_link_upi_create
+    object: PaymentLink
+    action: payment_link_upi_create
+    description: "Create a new UPI payment link in Razorpay with a specified amount and additional options."
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Creates a UPI collection link that charges a payer on confirmation; an active money-collection instrument."
+    compliance: [PCI, PSD2, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.update_payment_link
+    object: PaymentLink
+    action: update_payment_link
+    description: "Updates an existing standard payment link."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Edits an active payment-collection link, including amount or reference; reversible but changes a live money-collection instrument."
+    compliance: [PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.payment_link_notify
+    object: PaymentLink
+    action: payment_link_notify
+    description: "Send or resend notification for a payment link via SMS or email."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Sends a payment-link notification to a customer's phone or email; messaging to an individual with payment-collection intent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_payment_link
+    object: PaymentLink
+    action: fetch_payment_link
+    description: "Fetch details of a payment link."
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reads a single payment-link record including amount and customer reference; non-destructive read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_all_payment_links
+    object: PaymentLink
+    action: fetch_all_payment_links
+    description: "Fetch all the payment links."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Bulk read of payment-link records including amounts and customer references; exposes collection pipeline and personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Refunds ----------
+  - id: razorpay.update_refund
+    object: Refund
+    action: update_refund
+    description: "Update refund notes with ID."
+    category: Financial
+    risk: medium
+    business_impact: "Edits the notes metadata on a refund record in scope for reconciliation; reversible but alters an audited financial record."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_refund
+    object: Refund
+    action: fetch_refund
+    description: "Fetch refund details with ID."
+    category: Financial
+    risk: low
+    business_impact: "Reads a single refund record; non-destructive financial-data read."
+    compliance: [PCI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_all_refunds
+    object: Refund
+    action: fetch_all_refunds
+    description: "Fetch all refunds."
+    category: Financial
+    risk: medium
+    business_impact: "Bulk read of refund records including amounts and payer references; financial-data and PII exposure surface."
+    compliance: [PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_multiple_refunds_for_payment
+    object: Refund
+    action: fetch_multiple_refunds_for_payment
+    description: "Fetch multiple refunds for a payment."
+    category: Financial
+    risk: low
+    business_impact: "Reads the refund records associated with a payment; non-destructive financial-data read."
+    compliance: [PCI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_specific_refund_for_payment
+    object: Refund
+    action: fetch_specific_refund_for_payment
+    description: "Fetch a specific refund for a payment."
+    category: Financial
+    risk: low
+    business_impact: "Reads a single refund record associated with a payment; non-destructive financial-data read."
+    compliance: [PCI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- QR Codes ----------
+  - id: razorpay.create_qr_code
+    object: QRCode
+    action: create_qr_code
+    description: "Creates a QR code that accepts payments."
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Creates a live QR code that collects money from any payer who scans it; an active money-collection instrument."
+    compliance: [PCI, PSD2, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.close_qr_code
+    object: QRCode
+    action: close_qr_code
+    description: "Closes a QR code so it no longer accepts payments."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Deactivates a payment-collecting QR code; reversible by re-creating but stops an active collection instrument."
+    compliance: [PCI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_qr_code
+    object: QRCode
+    action: fetch_qr_code
+    description: "Fetch QR code with ID."
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reads a single QR-code record; non-destructive read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_all_qr_codes
+    object: QRCode
+    action: fetch_all_qr_codes
+    description: "Fetch all QR codes."
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Bulk read of QR-code records; non-destructive and exposes collection-instrument configuration."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_qr_codes_by_customer_id
+    object: QRCode
+    action: fetch_qr_codes_by_customer_id
+    description: "Fetch QR codes by customer ID."
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reads the QR codes associated with a customer; exposes a customer reference and collection configuration."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_qr_codes_by_payment_id
+    object: QRCode
+    action: fetch_qr_codes_by_payment_id
+    description: "Fetch QR codes by payment ID."
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reads the QR codes associated with a payment; non-destructive read."
+    compliance: [PCI]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_payments_for_qr_code
+    object: QRCode
+    action: fetch_payments_for_qr_code
+    description: "Fetch payments collected on a QR code."
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reads the payment records collected through a QR code; exposes transaction and payer data."
+    compliance: [PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Tokens & Saved Methods ----------
+  - id: razorpay.revoke_token
+    object: Token
+    action: revoke_token
+    description: "Revoke a saved payment method (token) for a customer."
+    category: Customer
+    risk: high
+    business_impact: "Destroys a customer's saved payment credential; breaks future recurring or one-click collection against that instrument."
+    compliance: [PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.fetch_tokens
+    object: Token
+    action: fetch_tokens
+    description: "Get all saved payment methods by customer ID or contact number."
+    category: Customer
+    risk: high
+    business_impact: "Reads a customer's saved payment instruments keyed by contact number; cardholder-data and PII access in PCI scope."
+    compliance: [PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Subscriptions ----------
+  - id: razorpay.create_registration_link
+    object: RegistrationLink
+    action: create_registration_link
+    description: "Create a registration (auth) link for subscription registration."
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Creates an authorization link that, once accepted, mandates recurring charges against the customer's payment instrument."
+    compliance: [PCI, PSD2, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Platform & DevOps ----------
+  - id: razorpay.detect_stack
+    object: Integration
+    action: detect_stack
+    description: "Detect the project language/framework for checkout integration."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Inspects the local project to identify its language and framework; advisory developer helper with no account-side effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: razorpay.integrate_razorpay_checkout
+    object: Integration
+    action: integrate_razorpay_checkout
+    description: "Generate end-to-end Razorpay Standard Checkout integration code for supported frameworks."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Generates checkout integration code for the developer; advisory output with no account-side effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

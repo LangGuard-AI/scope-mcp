@@ -1,0 +1,375 @@
+schema_version: "1.1"
+platform: motherduck
+display_name: MotherDuck
+source: langguard-editorial
+updated: "2026-06"
+reference: https://motherduck.com/docs/sql-reference/mcp/
+actions:
+  # ---------- Data Access ----------
+  - id: motherduck.query_rw
+    object: "*"
+    action: query_rw
+    description: "Execute SQL queries that can modify data or schema in MotherDuck (INSERT, UPDATE, DELETE, DROP, CREATE, ALTER)."
+    reference: https://motherduck.com/docs/sql-reference/mcp/query-rw/
+    category: Data Access
+    risk: critical
+    business_impact: "Runs arbitrary read-write SQL including DELETE/DROP/ALTER against any database; can irreversibly destroy or alter warehouse data and schema in a single call, and may touch PII, financial, or health data depending on table contents."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: motherduck.query
+    object: "*"
+    action: query
+    description: "Execute read-only SQL queries against MotherDuck databases."
+    reference: https://motherduck.com/docs/sql-reference/mcp/query/
+    category: Data Access
+    risk: high
+    business_impact: "Runs arbitrary read-only SELECT over any database in the workspace; a bulk data-exfiltration vector whose returned rows may contain PII, financial, or health data depending on table contents."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access (catalog & metadata) ----------
+  - id: motherduck.list_databases
+    object: Database
+    action: list_databases
+    description: "Lists the databases available in the MotherDuck workspace."
+    reference: https://motherduck.com/docs/sql-reference/mcp/list-databases/
+    category: Data Access
+    risk: low
+    business_impact: "Returns database names and metadata only; exposes the catalog structure but no row-level data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: motherduck.list_shares
+    object: Share
+    action: list_shares
+    description: "Lists the database shares available in the workspace."
+    reference: https://motherduck.com/docs/sql-reference/mcp/list-shares/
+    category: Data Access
+    risk: low
+    business_impact: "Returns the names and metadata of database shares; exposes sharing configuration but no row-level data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: motherduck.list_tables
+    object: Table
+    action: list_tables
+    description: "Lists the tables and views in a database."
+    reference: https://motherduck.com/docs/sql-reference/mcp/list-tables/
+    category: Data Access
+    risk: low
+    business_impact: "Returns table and view names; exposes schema structure but no row-level data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: motherduck.list_columns
+    object: Column
+    action: list_columns
+    description: "Lists the columns, with data types, for a specified table or view."
+    reference: https://motherduck.com/docs/sql-reference/mcp/list-columns/
+    category: Data Access
+    risk: low
+    business_impact: "Returns column names and data types; exposes schema detail but no row-level data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: motherduck.search_catalog
+    object: Catalog
+    action: search_catalog
+    description: "Searches the workspace catalog for databases, tables, and columns matching a query."
+    reference: https://motherduck.com/docs/sql-reference/mcp/search-catalog/
+    category: Data Access
+    risk: low
+    business_impact: "Returns matching catalog entries (names, types, descriptions) across the workspace; exposes schema metadata but no row-level data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access (documentation) ----------
+  - id: motherduck.ask_docs_question
+    object: Documentation
+    action: ask_docs_question
+    description: "Answers a natural-language question using the MotherDuck documentation."
+    reference: https://motherduck.com/docs/sql-reference/mcp/ask-docs-question/
+    category: Data Access
+    risk: low
+    business_impact: "Returns answers sourced from public MotherDuck documentation; touches no customer data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access (dives / saved analyses) ----------
+  - id: motherduck.get_dive_guide
+    object: Dive
+    action: get_dive_guide
+    description: "Returns guidance on how to author and structure a Dive."
+    reference: https://motherduck.com/docs/sql-reference/mcp/get-dive-guide/
+    category: Data Access
+    risk: low
+    business_impact: "Returns static authoring guidance for Dives; touches no customer data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: motherduck.list_dives
+    object: Dive
+    action: list_dives
+    description: "Lists the saved Dives in the workspace."
+    reference: https://motherduck.com/docs/sql-reference/mcp/list-dives/
+    category: Data Access
+    risk: low
+    business_impact: "Returns Dive titles and metadata; exposes which analyses exist but no row-level data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: motherduck.read_dive
+    object: Dive
+    action: read_dive
+    description: "Reads the source definition of a saved Dive."
+    reference: https://motherduck.com/docs/sql-reference/mcp/read-dive/
+    category: Data Access
+    risk: medium
+    business_impact: "Returns a Dive's source including embedded SQL; may reveal query logic and column-level detail over potentially sensitive data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: motherduck.view_dive
+    object: Dive
+    action: view_dive
+    description: "Renders a saved Dive and returns its computed results."
+    reference: https://motherduck.com/docs/sql-reference/mcp/view-dive/
+    category: Data Access
+    risk: high
+    business_impact: "Returns the rendered Dive including query results; surfaces row-level data that may contain PII, financial, or health data depending on the underlying tables."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: motherduck.save_dive
+    object: Dive
+    action: save_dive
+    description: "Saves a new Dive (a shareable interactive visualization with embedded SQL) and returns its URL."
+    reference: https://motherduck.com/docs/sql-reference/mcp/save-dive/
+    category: Data Access
+    risk: medium
+    business_impact: "Creates a new saved analysis object with embedded SQL and a shareable URL; reversible via delete and does not alter warehouse data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: motherduck.update_dive
+    object: Dive
+    action: update_dive
+    description: "Updates the definition of an existing saved Dive."
+    reference: https://motherduck.com/docs/sql-reference/mcp/update-dive/
+    category: Data Access
+    risk: medium
+    business_impact: "Modifies an existing saved analysis and its embedded SQL; reversible and does not alter warehouse data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: motherduck.share_dive_data
+    object: Dive
+    action: share_dive_data
+    description: "Creates org-scoped shares for databases used in a Dive so other organization members can view it."
+    reference: https://motherduck.com/docs/sql-reference/mcp/share-dive-data/
+    category: Data Access
+    risk: high
+    business_impact: "Broadens access to the underlying databases by creating organization-scoped shares; widens who can read row-level data that may include PII, financial, or health data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: motherduck.delete_dive
+    object: Dive
+    action: delete_dive
+    description: "Deletes a saved Dive."
+    reference: https://motherduck.com/docs/sql-reference/mcp/delete-dive/
+    category: Data Access
+    risk: medium
+    business_impact: "Removes a saved analysis object; destroys the Dive definition but does not delete underlying warehouse data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Operations (flights / data pipelines) ----------
+  - id: motherduck.get_flight_guide
+    object: Flight
+    action: get_flight_guide
+    description: "Returns guidance on how to author and structure a Flight."
+    reference: https://motherduck.com/docs/sql-reference/mcp/get-flight-guide/
+    category: Operations
+    risk: low
+    business_impact: "Returns static authoring guidance for Flights; touches no customer data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: motherduck.list_flights
+    object: Flight
+    action: list_flights
+    description: "Lists the Flights (data pipelines) defined in the workspace."
+    reference: https://motherduck.com/docs/sql-reference/mcp/list-flights/
+    category: Operations
+    risk: low
+    business_impact: "Returns Flight names and metadata; exposes which pipelines exist but no row-level data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: motherduck.get_flight
+    object: Flight
+    action: get_flight
+    description: "Returns the definition of a single Flight."
+    reference: https://motherduck.com/docs/sql-reference/mcp/get-flight/
+    category: Operations
+    risk: low
+    business_impact: "Returns a Flight's configuration and source SQL; exposes pipeline logic but does not execute it."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: motherduck.list_flight_versions
+    object: Flight
+    action: list_flight_versions
+    description: "Lists the version history of a Flight."
+    reference: https://motherduck.com/docs/sql-reference/mcp/list-flight-versions/
+    category: Operations
+    risk: low
+    business_impact: "Returns the version metadata of a Flight; exposes change history but no row-level data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: motherduck.create_flight
+    object: Flight
+    action: create_flight
+    description: "Creates a new Flight (data pipeline) from supplied source SQL."
+    reference: https://motherduck.com/docs/sql-reference/mcp/create-flight/
+    category: Operations
+    risk: medium
+    business_impact: "Defines a new automated data pipeline whose source SQL runs against the warehouse when executed; change-management-relevant but does not itself modify data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: motherduck.update_flight
+    object: Flight
+    action: update_flight
+    description: "Updates the configuration of an existing Flight."
+    reference: https://motherduck.com/docs/sql-reference/mcp/update-flight/
+    category: Operations
+    risk: medium
+    business_impact: "Changes an existing pipeline's configuration; alters automated behavior on future runs and is change-management-relevant."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: motherduck.edit_flight_source
+    object: Flight
+    action: edit_flight_source
+    description: "Edits the source SQL of an existing Flight."
+    reference: https://motherduck.com/docs/sql-reference/mcp/edit-flight-source/
+    category: Operations
+    risk: medium
+    business_impact: "Rewrites the SQL a pipeline executes; can change what warehouse data future runs read or modify, and is change-management-relevant."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: motherduck.delete_flight
+    object: Flight
+    action: delete_flight
+    description: "Deletes a Flight and its definition."
+    reference: https://motherduck.com/docs/sql-reference/mcp/delete-flight/
+    category: Operations
+    risk: medium
+    business_impact: "Removes an automated pipeline definition and its history; destroys the Flight object but does not delete underlying warehouse data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: motherduck.run_flight
+    object: Flight
+    action: run_flight
+    description: "Triggers an on-demand execution of a Flight using its current version."
+    reference: https://motherduck.com/docs/sql-reference/mcp/run-flight/
+    category: Operations
+    risk: high
+    business_impact: "Executes a pipeline's source SQL against the warehouse; blast radius depends on the Flight's contents and may include data-modifying or destructive statements."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: motherduck.list_flight_runs
+    object: FlightRun
+    action: list_flight_runs
+    description: "Lists the execution runs of a Flight."
+    reference: https://motherduck.com/docs/sql-reference/mcp/list-flight-runs/
+    category: Operations
+    risk: low
+    business_impact: "Returns run records and statuses for a pipeline; exposes execution history but no row-level data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: motherduck.get_flight_run_logs
+    object: FlightRun
+    action: get_flight_run_logs
+    description: "Returns the logs for a specific Flight run."
+    reference: https://motherduck.com/docs/sql-reference/mcp/get-flight-run-logs/
+    category: Operations
+    risk: medium
+    business_impact: "Returns a pipeline run's execution logs, which may incidentally surface query text or data values processed during the run."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: motherduck.cancel_flight_run
+    object: FlightRun
+    action: cancel_flight_run
+    description: "Cancels an in-progress Flight run."
+    reference: https://motherduck.com/docs/sql-reference/mcp/cancel-flight-run/
+    category: Operations
+    risk: medium
+    business_impact: "Stops a running pipeline mid-execution; may leave a partially completed data load in an inconsistent state."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

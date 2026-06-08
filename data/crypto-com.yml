@@ -1,0 +1,120 @@
+schema_version: "1.1"
+platform: crypto-com
+display_name: Crypto.com
+source: langguard-editorial
+updated: "2026-06"
+reference: https://mcp.crypto.com/docs
+actions:
+  # ---------- Data Access ----------
+  # Crypto.com's hosted MCP server (https://mcp.crypto.com/market-data/mcp) is an
+  # anonymous, no-auth, read-only public market-data surface. Every tool reports
+  # readOnlyHint:true / destructiveHint:false via live introspection. There is no
+  # write, trade, account, or PII surface, so risk is low and compliance arrays
+  # are empty (aggregate public market data, not personal data of individuals).
+  - id: crypto-com.get_ticker
+    object: Ticker
+    action: get_ticker
+    description: "Single ticker for an instrument."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the latest public ticker (last/bid/ask, 24h stats) for one instrument; read-only public market data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: crypto-com.get_tickers
+    object: Ticker
+    action: get_tickers
+    description: "Tickers for an instrument or all."
+    category: Data Access
+    risk: low
+    business_impact: "Returns public ticker snapshots for one or all instruments; read-only public market data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: crypto-com.get_index_price
+    object: IndexPrice
+    action: get_index_price
+    description: "Index price for an instrument."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the public index price for one instrument; read-only public market data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: crypto-com.get_mark_price
+    object: MarkPrice
+    action: get_mark_price
+    description: "Mark price for an instrument."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the public mark price for one instrument; read-only public market data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: crypto-com.get_book
+    object: OrderBook
+    action: get_book
+    description: "Order book snapshot (bids/asks)."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a public order-book snapshot of bids and asks for one instrument; read-only public market data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: crypto-com.get_candlestick
+    object: Candlestick
+    action: get_candlestick
+    description: "Recent candlesticks for an instrument and timeframe (returns up to 50)."
+    category: Data Access
+    risk: low
+    business_impact: "Returns recent public OHLCV candlestick bars for one instrument; read-only public market data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: crypto-com.get_trades
+    object: Trade
+    action: get_trades
+    description: "Recent trades (default 10, max 150)."
+    category: Data Access
+    risk: low
+    business_impact: "Returns recent anonymized public trade prints (price/qty/side) for one instrument; read-only public market data with no counterparty identity."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: crypto-com.get_instrument
+    object: Instrument
+    action: get_instrument
+    description: "Instrument detail for an instrument by id."
+    category: Data Access
+    risk: low
+    business_impact: "Returns public trading-pair reference metadata (tick sizes, leverage, tradable flag) for one instrument; read-only public market data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: crypto-com.get_instruments
+    object: Instrument
+    action: get_instruments
+    description: "List all available trading instruments."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the public catalog of available trading instruments; read-only public reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]

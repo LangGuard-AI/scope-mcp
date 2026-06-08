@@ -1,0 +1,93 @@
+schema_version: "1.1"
+platform: lastminute-com
+display_name: lastminute.com
+source: langguard-editorial
+updated: "2026-06"
+reference: https://technology.lastminute.com/mcp/
+# PROVENANCE: The official lastminute.com MCP server
+# (https://mcp.lastminute.com/mcp, v2.0, Feb 2026) is auth-gated and fronted by
+# a Cloudflare JS challenge — live tools/list introspection returns 401, and
+# anonymous GET /tools, GET /mcp/tools, and an unauthenticated tools/list POST
+# all return HTTP 403 ("Just a moment..."). No verbatim MCP tool ids are
+# published in the vendor MCP docs, the Anthropic connector page, or any launch
+# coverage; the docs describe the surface only with plain-language capability
+# labels. Per Step 3 of the curator spec these entries use the capability-form
+# fallback (id_form: capability) with verbatim labels in `description` and
+# confidence capped at medium. The connector is a read-only search/compare
+# surface: it returns summarised results and a "Book" deeplink, performs no
+# server-side booking or payment, and per the docs "does not store personal or
+# payment information" — so no booking/payment action is invented and most
+# compliance arrays are empty. The Jan-2026 press release said "flights only";
+# the Feb-2026 v2.0 docs and the connector page supersede it with hotels and
+# flight+hotel packages live, which is what is curated here.
+actions:
+  # ---------- Data Access ----------
+  - id: lastminute-com.search_flights
+    object: Flight
+    action: search_flights
+    id_form: capability
+    description: "Search flights across global airlines"
+    reference: https://technology.lastminute.com/mcp/
+    category: Data Access
+    risk: low
+    business_impact: "Performs a read-only flight search by origin, destination, and travel dates; returns price-sorted summarised results and a booking deeplink, makes no booking and stores nothing."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lastminute-com.search_hotels
+    object: Accommodation
+    action: search_hotels
+    id_form: capability
+    description: "Search hotel-only stays with amenity and accommodation-type filters"
+    reference: https://technology.lastminute.com/mcp/
+    category: Data Access
+    risk: low
+    business_impact: "Performs a read-only hotel search by destination, stay dates, star rating, accommodation type, and facilities; returns summarised results and a booking deeplink, makes no booking and stores nothing."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lastminute-com.search_packages
+    object: Package
+    action: search_packages
+    id_form: capability
+    description: "Search Flight + Hotel packages as bundled offers with a single request"
+    reference: https://technology.lastminute.com/mcp/
+    category: Data Access
+    risk: low
+    business_impact: "Performs a read-only search for bundled flight-and-hotel packages by route, dates, and night count; returns summarised results and a booking deeplink, makes no booking and stores nothing."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lastminute-com.apply_filters
+    object: SearchResult
+    action: apply_filters
+    id_form: capability
+    description: "Apply advanced filters for times, airports, stops, airlines, prices, stars, and facilities"
+    reference: https://technology.lastminute.com/mcp/
+    category: Data Access
+    risk: low
+    business_impact: "Refines a read-only search server-side by time window, airport, stops, airline, price, hotel stars, or facility IDs; reversible and non-destructive."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: lastminute-com.rank_recommendations
+    object: SearchResult
+    action: rank_recommendations
+    id_form: capability
+    description: "Get smart recommendations using intelligent ranking algorithms"
+    reference: https://technology.lastminute.com/mcp/
+    category: Data Access
+    risk: low
+    business_impact: "Re-ranks read-only search results using a recommendation algorithm weighing price, duration, and stops; surfaces suggested options but makes no booking and stores nothing."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

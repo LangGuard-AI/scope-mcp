@@ -1,0 +1,112 @@
+schema_version: "1.1"
+platform: trellis
+display_name: Trellis
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/connectors/trellis
+# NOTE: Trellis's hosted MCP server (https://mcp.trellis.law/anthropic) is OAuth-gated.
+# Live introspection returns 401 (DCR + PKCE S256, scopes_supported: ["mcp"]); the
+# /anthropic endpoint Cloudflare-blocks anonymous tools/list, and the only anonymous
+# path (/tools) returns a JSON-schema stub, not a tool catalog. Trellis's own docs
+# (support.trellis.law, trellis.law) describe the WEB product (Smart Search, Dockets,
+# Judge Analytics, Verdicts) and publish NO verbatim MCP tool ids. The authoritative
+# Anthropic plugin that consumes this connector (anthropics/claude-for-legal,
+# litigation-legal/.mcp.json + agents/docket-watcher.md) references it only via the
+# wildcard `mcp__trellis__*` — it does not enumerate individual tool names either.
+# No verbatim identifier strings are reachable from any authoritative source.
+#
+# Per the curator spec these entries therefore use id_form: capability. The
+# `description` field carries the verbatim first-party capability label (the five
+# connector-page use cases at claude.com/connectors/trellis, plus the data surfaces
+# named verbatim in the connector's .mcp.json registry description). The `id`/`action`
+# slugs are intent-level, NOT identifier-level; confidence is capped at medium.
+# The connector is classified READ / Interactive — a state-court-records research and
+# analytics data source. No create/update/delete/send/write surface is documented, so
+# none is invented here. Refresh to id_form: verbatim if a real tools/list capture
+# (via a licensed bearer token) becomes available.
+actions:
+  # ---------- Data Access ----------
+  - id: trellis.search_dockets
+    object: Docket
+    action: search_dockets
+    id_form: capability
+    description: "The largest state trial court dataset in the U.S. — dockets, rulings, verdicts, filings"
+    reference: https://claude.com/connectors/trellis
+    category: Data Access
+    risk: medium
+    business_impact: "Returns state trial court dockets, rulings, verdicts, and filings matching a search; surfaces court records that routinely name identifiable individuals (parties, attorneys, witnesses) and can expose litigation involvement of named persons."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: trellis.research_judge
+    object: Judge
+    action: research_judge
+    id_form: capability
+    description: "Judge Research"
+    reference: https://claude.com/connectors/trellis
+    category: Data Access
+    risk: medium
+    business_impact: "Returns analytics on a named judge's ruling history and judicial behavior; profiles an identifiable public official from aggregated court-record data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: trellis.profile_opposing_counsel
+    object: Attorney
+    action: profile_opposing_counsel
+    id_form: capability
+    description: "Opposing Counsel Profiling"
+    reference: https://claude.com/connectors/trellis
+    category: Data Access
+    risk: high
+    business_impact: "Aggregates a named attorney's litigation patterns, case types, and outcomes into a behavioral profile of an identifiable individual; profiling of a named person beyond a single record lookup."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: trellis.vet_expert_witness
+    object: ExpertWitness
+    action: vet_expert_witness
+    id_form: capability
+    description: "Expert Witness Vetting"
+    reference: https://claude.com/connectors/trellis
+    category: Data Access
+    risk: high
+    business_impact: "Returns a named expert witness's prior testimony, retentions, and any legal challenges to their credibility; profiling of an identifiable individual that can affect their professional standing and engagements."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: trellis.assess_case
+    object: Case
+    action: assess_case
+    id_form: capability
+    description: "Early Case Assessment"
+    reference: https://claude.com/connectors/trellis
+    category: Data Access
+    risk: medium
+    business_impact: "Generates a case-strategy assessment from comparable state court matters; aggregates court records that name the parties, counsel, and outcomes of identifiable individuals' prior litigation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Legal Drafting ----------
+  - id: trellis.draft_motion
+    object: Motion
+    action: draft_motion
+    id_form: capability
+    description: "Motion Drafting"
+    reference: https://claude.com/connectors/trellis
+    category: Legal Drafting
+    risk: low
+    business_impact: "Drafts a motion grounded in jurisdictional precedent retrieved from the Trellis dataset; output is an unfiled work-product draft requiring attorney review, with no court-side state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

@@ -1,0 +1,380 @@
+schema_version: "1.1"
+platform: process-street
+display_name: Process Street
+source: langguard-editorial
+updated: "2026-06"
+reference: https://claude.com/connectors/process-street
+# SOURCING NOTE
+# Process Street's hosted MCP server (https://mcp.process.st/mcp) is OAuth-gated: live
+# introspection of tools/list returns HTTP 401, and the vendor publishes NO verbatim MCP
+# tool identifiers anywhere reachable. The MCP help doc (process.st/help/docs/mcp-server)
+# states the server "supports most Process Street API endpoints as tools" and points to the
+# public API reference as the authoritative capability surface:
+#   https://public-api.process.st/api/v1.1/docs/openapi.json   (OpenAPI 3.1, 149 operations)
+# That spec is the source of every capability below. Because no verbatim MCP tool ids exist,
+# every action uses id_form: capability: the `description` is the vendor's verbatim API
+# operation summary (the capability label), the `id`/`action` is a snake_case slug, and
+# `confidence` is capped at medium (matches are intent-level, not identifier-level).
+#
+# This file is WRITE-SURFACE-FIRST and bounded. It does NOT enumerate all 149 REST operations.
+# The connector's canonical scope sentence limits the agent-facing surface to "workflows, runs,
+# tasks, users, and data sets"; this file covers the operational read/write surface for those
+# object classes PLUS every in-scope state-changing and destructive capability the OpenAPI spec
+# exposes for them: hard deletes (workflow, workflow run, task, data set, data-set record),
+# undelete, bulk import, approvals (approve/reject), data-set container writes, run/task access
+# grants, and permission changes. The earlier revision wrongly asserted the MCP server omits
+# these write surfaces; the vendor's own MCP doc contradicts that, so they are represented here.
+#
+# DELIBERATELY OMITTED (out of the canonical agent scope, not silently dropped):
+#  - Object classes absent from the scope sentence: Pages, Comments, Attachments, Folders (except
+#    folder permissions, kept as an access control), Webhooks, and Scheduled Workflows.
+#  - Workflow-template authoring internals under /revisions, /widgets, /logic-rules, /config,
+#    and /due-date-rule (publishWorkflowRevision, create/update/delete revision tasks, etc.) —
+#    these edit template structure rather than operate processes, the connector's stated purpose.
+#  - Per-file form-field attachment deletes (deleteFormFieldAllFiles / deleteFormFieldFileById) —
+#    sub-resource file ops adjacent to the form-field write that is already represented.
+actions:
+  # ---------- Identity & Access (highest blast radius) ----------
+  - id: process-street.set_workflow_permissions
+    object: Workflow
+    action: set_workflow_permissions
+    id_form: capability
+    description: "Set permissions for a workflow"
+    category: Identity & Access
+    risk: critical
+    business_impact: "Replaces the full permission set on a workflow and can grant or strip every user's access in one call; privilege-escalation and access-review-bypass surface."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: process-street.set_folder_permissions
+    object: Folder
+    action: set_folder_permissions
+    id_form: capability
+    description: "Set permissions for a folder"
+    category: Identity & Access
+    risk: critical
+    business_impact: "Replaces the full permission set on a folder, changing who can see or edit every workflow inside it; privilege-escalation and access-review-bypass surface."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Approvals ----------
+  - id: process-street.upsert_approval
+    object: Approval
+    action: upsert_approval
+    id_form: capability
+    description: "Approve or reject a task"
+    category: Operations
+    risk: high
+    business_impact: "Approves or rejects an approval task unilaterally, advancing or blocking a process gate; one actor self-approving bypasses the two-party control the approval step exists to enforce."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Operations: Workflow Runs ----------
+  - id: process-street.create_workflow_run
+    object: WorkflowRun
+    action: create_workflow_run
+    id_form: capability
+    description: "Create a workflow run"
+    category: Operations
+    risk: low
+    business_impact: "Starts a new workflow run from a template; reversible and individually audited."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: process-street.update_workflow_run
+    object: WorkflowRun
+    action: update_workflow_run
+    id_form: capability
+    description: "Update a workflow run"
+    category: Operations
+    risk: medium
+    business_impact: "Replaces all values on a workflow run (PUT semantics overwrite every field), changing live process state; reversible by a corrective update."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: process-street.delete_workflow_run
+    object: WorkflowRun
+    action: delete_workflow_run
+    id_form: capability
+    description: "Delete a workflow run"
+    category: Operations
+    risk: high
+    business_impact: "Deletes a workflow run, removing its task and form-field record from active view; recoverable for a limited retention window via undelete."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: process-street.undelete_workflow_run
+    object: WorkflowRun
+    action: undelete_workflow_run
+    id_form: capability
+    description: "Undelete a workflow run"
+    category: Operations
+    risk: medium
+    business_impact: "Restores a previously deleted workflow run, returning its data to active state; reversible (the run can be deleted again)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: process-street.search_workflow_runs
+    object: WorkflowRun
+    action: search_workflow_runs
+    id_form: capability
+    description: "Search workflow runs"
+    category: Operations
+    risk: low
+    business_impact: "Reads the status and history of past and active workflow runs; read-only operational visibility."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: process-street.assign_workflow_run
+    object: WorkflowRun
+    action: assign_workflow_run
+    id_form: capability
+    description: "Assign a user to a workflow run"
+    category: Operations
+    risk: medium
+    business_impact: "Grants a named user access to a workflow run and all data captured in it; expands who can read potentially personal data (reversible by unassigning)."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Operations: Tasks ----------
+  - id: process-street.update_task
+    object: Task
+    action: update_task
+    id_form: capability
+    description: "Update a task"
+    category: Operations
+    risk: medium
+    business_impact: "Replaces all values on a task in a workflow run (PUT semantics), changing its status, dates, or content; reversible by a corrective update."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: process-street.assign_task
+    object: Task
+    action: assign_task
+    id_form: capability
+    description: "Assign a user to a task"
+    category: Operations
+    risk: low
+    business_impact: "Assigns a named user to a task, recording their identity against the work item; reversible by unassigning."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: process-street.complete_one_off_task
+    object: Task
+    action: complete_one_off_task
+    id_form: capability
+    description: "Complete a one-off task"
+    category: Operations
+    risk: low
+    business_impact: "Marks a work task as complete; reversible by uncompleting the task."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: process-street.delete_one_off_task
+    object: Task
+    action: delete_one_off_task
+    id_form: capability
+    description: "Delete a one-off task"
+    category: Operations
+    risk: high
+    business_impact: "Deletes a work task, removing it and any data entered against it; single-record destructive write."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: process-street.list_tasks
+    object: Task
+    action: list_tasks
+    id_form: capability
+    description: "List all tasks"
+    category: Operations
+    risk: low
+    business_impact: "Lists tasks and their completion status across workflow runs; read-only operational visibility."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Operations: Workflows ----------
+  - id: process-street.list_workflows
+    object: Workflow
+    action: list_workflows
+    id_form: capability
+    description: "List all workflows"
+    category: Operations
+    risk: low
+    business_impact: "Lists the workflow templates available in the account; read-only structural metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: process-street.get_workflow
+    object: Workflow
+    action: get_workflow
+    id_form: capability
+    description: "Get a workflow"
+    category: Operations
+    risk: low
+    business_impact: "Reads the structure and configuration of a workflow template; read-only structural metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: process-street.delete_workflow
+    object: Workflow
+    action: delete_workflow
+    id_form: capability
+    description: "Delete a workflow"
+    category: Operations
+    risk: high
+    business_impact: "Soft-deletes a workflow template, removing it and its runs from active use; recoverable from trash within the retention window."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access: Form Fields ----------
+  - id: process-street.batch_update_form_field_values
+    object: FormField
+    action: batch_update_form_field_values
+    id_form: capability
+    description: "Batch update form field values"
+    category: Data Access
+    risk: medium
+    business_impact: "Writes values into workflow-run form fields, which routinely capture personal data through the process; reversible per-field."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- Data Access: Data Sets ----------
+  - id: process-street.create_data_set
+    object: DataSet
+    action: create_data_set
+    id_form: capability
+    description: "Create a data set"
+    category: Data Access
+    risk: medium
+    business_impact: "Creates a new data set (a shared reference table), defining a new store that may hold personal data; reversible by deleting it."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: process-street.update_data_set
+    object: DataSet
+    action: update_data_set
+    id_form: capability
+    description: "Update a data set"
+    category: Data Access
+    risk: medium
+    business_impact: "Updates a data set's definition or columns, reshaping a shared store that may hold personal data; reversible business write."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: process-street.delete_data_set
+    object: DataSet
+    action: delete_data_set
+    id_form: capability
+    description: "Delete a data set"
+    category: Data Access
+    risk: critical
+    business_impact: "Deletes an entire data set and every record it holds in one call, destroying all personal data in that store; bulk irreversible destruction."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: process-street.list_data_set_records
+    object: DataSetRecord
+    action: list_data_set_records
+    id_form: capability
+    description: "List all data set records"
+    category: Data Access
+    risk: medium
+    business_impact: "Returns data-set records, which may hold personal data, as reference rows; read access to potentially sensitive data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: process-street.create_data_set_record
+    object: DataSetRecord
+    action: create_data_set_record
+    id_form: capability
+    description: "Create a data set record"
+    category: Data Access
+    risk: medium
+    business_impact: "Adds a new record to a data set, which may hold personal data, into shared reference data; reversible by deleting the record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: process-street.update_data_set_record
+    object: DataSetRecord
+    action: update_data_set_record
+    id_form: capability
+    description: "Update a data set record"
+    category: Data Access
+    risk: medium
+    business_impact: "Updates an existing data-set record, which may hold personal data, in shared reference data; reversible business write."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: process-street.delete_data_set_record
+    object: DataSetRecord
+    action: delete_data_set_record
+    id_form: capability
+    description: "Delete a data set record"
+    category: Data Access
+    risk: critical
+    business_impact: "Permanently deletes a data-set record, which may hold personal data, with no undelete counterpart in the API; irreversible single-record destruction."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: process-street.import_data_set_records
+    object: DataSetRecord
+    action: import_data_set_records
+    id_form: capability
+    description: "Import data set records"
+    category: Data Access
+    risk: high
+    business_impact: "Bulk-imports records into a data set in one call, which may hold personal data; large-scale write to shared reference data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

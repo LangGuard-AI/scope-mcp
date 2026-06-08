@@ -1,0 +1,372 @@
+schema_version: "1.1"
+platform: bitly
+display_name: Bitly
+source: langguard-editorial
+updated: "2026-06"
+reference: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+actions:
+  # ---------- Link Management ----------
+  - id: bitly.delete_short_link
+    object: ShortLink
+    action: delete_short_link
+    description: "Permanently delete a short link (unedited links only)."
+    category: Link Management
+    risk: critical
+    business_impact: "Permanently destroys a short link; any QR code, campaign, or printed material pointing at it breaks with no recovery."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bitly.create_short_link
+    object: ShortLink
+    action: create_short_link
+    description: "Create a compact, shareable link with advanced customization options (custom domains, tags, title, keyword)."
+    category: Link Management
+    risk: medium
+    business_impact: "Creates a publicly resolvable redirect; an attacker-controlled destination could be used for phishing under a trusted branded domain."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bitly.create_short_link_with_qr
+    object: ShortLink
+    action: create_short_link_with_qr
+    description: "Create a short link and QR Code in a single step."
+    category: Link Management
+    risk: medium
+    business_impact: "Creates a publicly resolvable redirect plus a scannable QR code in one call; same phishing-surface concern as a standalone short link."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bitly.update_short_link
+    object: ShortLink
+    action: update_short_link
+    description: "Update destination URL, title, archive state, tags, or deeplinks for a short link."
+    category: Link Management
+    risk: medium
+    business_impact: "Re-points an already-distributed short link to a new destination; live traffic on the existing link is silently redirected."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bitly.expand
+    object: ShortLink
+    action: expand
+    description: "Retrieve the original long URL and basic metadata for a short link."
+    category: Link Management
+    risk: low
+    business_impact: "Resolves a short link to its destination URL; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bitly.get_short_link_details
+    object: ShortLink
+    action: get_short_link_details
+    description: "Get complete short link details (title, destination, created, creator, tags, custom domains)."
+    category: Link Management
+    risk: low
+    business_impact: "Reads metadata for a single short link, including the creating user; minimal personal data exposure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Bulk Operations ----------
+  - id: bitly.bulk_upload_validate
+    object: BulkUpload
+    action: bulk_upload_validate
+    description: "Validate a bulk upload request and obtain a signed URL for uploading a link file."
+    category: Link Management
+    risk: medium
+    business_impact: "Initiates a mass link-creation job and issues a signed upload URL; precursor to bulk modification of the link inventory."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: bitly.bulk_upload_file
+    object: BulkUpload
+    action: bulk_upload_file
+    description: "Upload a file to the signed URL returned by bulk_upload_validate."
+    category: Link Management
+    risk: medium
+    business_impact: "Commits a bulk batch of short links in one operation; mass write to the link inventory that is not individually reviewed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- QR Codes ----------
+  - id: bitly.create_qr_code
+    object: QRCode
+    action: create_qr_code
+    description: "Create a new QR Code for a link."
+    category: Link Management
+    risk: medium
+    business_impact: "Creates a scannable QR code that resolves through a Bitly redirect; same destination-trust concern as a short link."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bitly.update_qr_code
+    object: QRCode
+    action: update_qr_code
+    description: "Update a QR Code's title, customizations, or archived status."
+    category: Link Management
+    risk: medium
+    business_impact: "Changes a QR code's customizations or archives it; an archived QR code may stop resolving for already-printed assets."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bitly.get_qr_code
+    object: QRCode
+    action: get_qr_code
+    description: "Get QR Code metadata."
+    category: Link Management
+    risk: low
+    business_impact: "Reads metadata for a single QR code; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bitly.get_qr_code_image
+    object: QRCode
+    action: get_qr_code_image
+    description: "Get a URL to download the QR Code image."
+    category: Link Management
+    risk: low
+    business_impact: "Returns a download URL for a QR code image; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bitly.get_group_qr_codes
+    object: QRCode
+    action: get_group_qr_codes
+    description: "List QR Codes in a group with filtering and pagination."
+    category: Link Management
+    risk: low
+    business_impact: "Lists QR codes within a workspace; read-only inventory listing with no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Analytics ----------
+  - id: bitly.link_metrics
+    object: LinkAnalytics
+    action: link_metrics
+    description: "Time-series click metrics for a link."
+    category: Operations
+    risk: low
+    business_impact: "Reads aggregated time-series click counts for a link; no individual-subject data exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bitly.link_clicks_summary
+    object: LinkAnalytics
+    action: link_clicks_summary
+    description: "Total clicks summary for a link."
+    category: Operations
+    risk: low
+    business_impact: "Reads an aggregated total click count for a link; no individual-subject data exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bitly.link_engagements
+    object: LinkAnalytics
+    action: link_engagements
+    description: "Time-series engagement metrics for a link."
+    category: Operations
+    risk: low
+    business_impact: "Reads aggregated time-series engagement metrics for a link; no individual-subject data exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bitly.link_engagements_summary
+    object: LinkAnalytics
+    action: link_engagements_summary
+    description: "Total engagement counts (clicks + scans + button clicks) for a link."
+    category: Operations
+    risk: low
+    business_impact: "Reads aggregated total engagement counts for a link; no individual-subject data exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bitly.link_countries
+    object: LinkAnalytics
+    action: link_countries
+    description: "Click breakdown by country."
+    category: Operations
+    risk: low
+    business_impact: "Reads aggregated click counts grouped by country; coarse geolocation, not individually identifiable."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bitly.link_cities
+    object: LinkAnalytics
+    action: link_cities
+    description: "Click breakdown by city."
+    category: Operations
+    risk: low
+    business_impact: "Reads aggregated click counts grouped by city; finer-grained geolocation but still aggregated counts, not individual records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: bitly.link_devices
+    object: LinkAnalytics
+    action: link_devices
+    description: "Click breakdown by device type."
+    category: Operations
+    risk: low
+    business_impact: "Reads aggregated click counts grouped by device type; no individual-subject data exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bitly.link_referrers
+    object: LinkAnalytics
+    action: link_referrers
+    description: "Click breakdown by referring source."
+    category: Operations
+    risk: low
+    business_impact: "Reads aggregated click counts grouped by referring source; no individual-subject data exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bitly.link_referring_domains
+    object: LinkAnalytics
+    action: link_referring_domains
+    description: "Click breakdown by referring domain."
+    category: Operations
+    risk: low
+    business_impact: "Reads aggregated click counts grouped by referring domain; no individual-subject data exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- User & Organization ----------
+  - id: bitly.get_user
+    object: User
+    action: get_user
+    description: "Get the authenticated user's profile."
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads the authenticated user's own profile, including name and email; single-subject personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bitly.get_organizations
+    object: Organization
+    action: get_organizations
+    description: "List organizations the user can access."
+    category: Identity & Access
+    risk: low
+    business_impact: "Lists organizations the user belongs to; exposes account-tier and org membership metadata."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: bitly.get_groups
+    object: Group
+    action: get_groups
+    description: "List groups (workspaces); optionally filter by organization."
+    category: Identity & Access
+    risk: low
+    business_impact: "Lists workspaces in the account; exposes org structure and group membership metadata."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: bitly.get_group_details
+    object: Group
+    action: get_group_details
+    description: "Get a group's details."
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads details for a single workspace, including member and configuration metadata."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: bitly.get_group_short_links
+    object: ShortLink
+    action: get_group_short_links
+    description: "List links in a group with rich filtering."
+    category: Identity & Access
+    risk: low
+    business_impact: "Lists all short links in a workspace; bulk read of the link inventory but not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bitly.get_group_short_links_sorted
+    object: ShortLink
+    action: get_group_short_links_sorted
+    description: "List group links sorted by performance."
+    category: Identity & Access
+    risk: low
+    business_impact: "Lists workspace links ranked by click performance; bulk read of the link inventory but not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Custom Domains ----------
+  - id: bitly.get_custom_domains
+    object: CustomDomain
+    action: get_custom_domains
+    description: "List custom domains available to the user."
+    category: Identity & Access
+    risk: low
+    business_impact: "Lists branded custom domains configured on the account; read-only configuration metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: bitly.get_custom_link_details
+    object: CustomDomain
+    action: get_custom_link_details
+    description: "Get custom link metadata and override history."
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads custom link metadata and its override history; read-only configuration data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

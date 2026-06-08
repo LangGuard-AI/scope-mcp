@@ -1,0 +1,93 @@
+schema_version: "1.1"
+platform: polar-analytics
+display_name: Polar Analytics
+source: langguard-editorial
+updated: "2026-06"
+reference: https://intercom.help/polar-app/en/articles/12960325-using-mcp-tools-as-an-open-api
+actions:
+  # ---------- Data Access ----------
+  - id: polar-analytics.generate_report
+    object: Report
+    action: generate_report
+    description: "Generate a custom analytics report with rows, a totals row, and a deep link."
+    category: Data Access
+    risk: high
+    business_impact: "Returns filtered commerce analytics rows (revenue, orders, ad spend, ROAS) that are predominantly aggregate but may include customer-level cohort and LTV breakdowns sourced from Shopify, Klaviyo, and other connected platforms."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: polar-analytics.list_dimensions
+    object: Dimension
+    action: list_dimensions
+    description: "Lists the dimensions compatible with a metric for filtering and breaking down a report."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the catalogue of available filters and breakdown dimensions; metadata only, no underlying records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Operations ----------
+  - id: polar-analytics.get_context
+    object: Workspace
+    action: get_context
+    description: "Retrieves the conversation ID and workspace metadata needed to scope subsequent report calls."
+    category: Operations
+    risk: low
+    business_impact: "Returns workspace and session metadata used to scope queries; no business records exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: polar-analytics.list_dashboards
+    object: Dashboard
+    action: list_dashboards
+    description: "Enumerates the dashboards available in the workspace."
+    category: Operations
+    risk: low
+    business_impact: "Lists dashboard names and identifiers; configuration metadata only, no underlying data values."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: polar-analytics.get_dashboard_details
+    object: Dashboard
+    action: get_dashboard_details
+    description: "Fetches the configuration and structure of a specific dashboard."
+    category: Operations
+    risk: low
+    business_impact: "Returns the layout and metric configuration of one dashboard; configuration metadata, reversible read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: polar-analytics.get_view_details
+    object: View
+    action: get_view_details
+    description: "Retrieves the configuration of a specific saved view."
+    category: Operations
+    risk: low
+    business_impact: "Returns the definition of one saved view; configuration metadata, no business records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- Feedback ----------
+  - id: polar-analytics.rate_report
+    object: Report
+    action: rate_report
+    description: "Submits a numeric rating and free-text feedback for a generated report."
+    category: Feedback
+    risk: low
+    business_impact: "Records a user-submitted rating and feedback note against a report; low-impact telemetry write with no effect on source data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]

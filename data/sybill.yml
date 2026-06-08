@@ -1,0 +1,106 @@
+schema_version: "1.1"
+platform: sybill
+display_name: Sybill
+source: langguard-editorial
+updated: "2026-06"
+reference: https://api.sybill.ai/docs/mcp.html
+actions:
+  # ---------- Conversations ----------
+  - id: sybill.get_conversation
+    object: Conversation
+    action: get_conversation
+    description: "Get the full details of a single conversation/meeting, including summary, transcript, recording URLs, participants, and CRM info."
+    category: Data Access
+    risk: high
+    business_impact: "Returns a complete sales-call transcript with recording URLs and participant identities; exposes private business communications and the PII of every attendee."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: sybill.list_conversations
+    object: Conversation
+    action: list_conversations
+    description: "List sales conversations/meetings for the organization, filterable by date, type, title, attendees, and CRM name."
+    category: Data Access
+    risk: medium
+    business_impact: "Enumerates the organization's meetings with attendee names, emails, and company domains; cursor-paginated read that can sweep the entire call directory."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- AI Query ----------
+  - id: sybill.ask_sybill
+    object: Workspace
+    action: ask_sybill
+    description: "Ask Sybill AI about your sales calls, deals, people, companies, emails, and more."
+    category: Data Access
+    risk: high
+    business_impact: "Free-form AI query that aggregates across all calls, deals, people, and emails; can surface and summarize PII and private-communication content org-wide in a single answer."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: sybill.get_ask_sybill_result
+    object: Workspace
+    action: get_ask_sybill_result
+    description: "Fetch the status and final answer for a previously submitted ask_sybill run."
+    category: Data Access
+    risk: high
+    business_impact: "Retrieves the completed answer of an ask_sybill run; the output field carries the same aggregated cross-call PII and private-communication content as the original query."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  # ---------- CRM Accounts ----------
+  - id: sybill.get_account
+    object: Account
+    action: get_account
+    description: "Get the full details of a single CRM account, including contacts, owner, synced CRM fields, and latest deal information."
+    category: Customer
+    risk: medium
+    business_impact: "Returns a full CRM account record including contact PII and owner identity; single-record read of customer relationship data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  - id: sybill.list_accounts
+    object: Account
+    action: list_accounts
+    description: "List CRM accounts for the organization, filterable by name, website, owner, and activity date ranges."
+    category: Customer
+    risk: medium
+    business_impact: "Enumerates the organization's CRM accounts with owner identities; cursor-paginated read across the customer base."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+
+  # ---------- CRM Deals ----------
+  - id: sybill.get_deal
+    object: Deal
+    action: get_deal
+    description: "Get the full details of a single CRM deal, including summary, contacts, owner, pipeline, and stage information."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Returns a full CRM deal record with associated contact PII and owner identity; single-record read of pipeline data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+
+  - id: sybill.list_deals
+    object: Deal
+    action: list_deals
+    description: "List CRM deals for the organization, filterable by name, stage, closed status, owner, close date, amount, and activity."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Enumerates the organization's pipeline with deal amounts, stages, and owner identities; cursor-paginated read exposing competitively sensitive revenue data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
