@@ -7,7 +7,7 @@
 <p align="center">
   <a href="https://scope-mcp.langguard.ai/register-account"><b>Get an access token</b></a>
   ·
-  <a href="https://discord.gg/TPmBYR6pV"><b>Join the Discord</b></a>
+  <a href="https://discord.gg/KgdwdMn5y4"><b>Join the Discord</b></a>
   ·
   <a href="https://github.com/LangGuard-AI/scope-mcp/issues/new?template=data-revision.yml"><b>File a data revision</b></a>
 </p>
