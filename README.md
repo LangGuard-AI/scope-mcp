@@ -359,7 +359,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for issue templates, the three hard rul
 
 ## Contact
 
-- **Discord (community support, fastest live help)**: [discord.gg/TPmBYR6pV](https://discord.gg/TPmBYR6pV)
+- **Discord (community support, fastest live help)**: [https://discord.gg/KgdwdMn5y4](https://discord.gg/KgdwdMn5y4)
 - **Get an access token**: self-service at [scope-mcp.langguard.ai/register-account](https://scope-mcp.langguard.ai/register-account).
 - **Lost your token, rate-limit increase, commercial inquiries**: [support@langguard.ai](mailto:support@langguard.ai).
 - **Issues / data corrections**: [file a Data revision](https://github.com/LangGuard-AI/scope-mcp/issues/new?template=data-revision.yml) on this repo.
