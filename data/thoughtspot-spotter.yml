@@ -1,0 +1,169 @@
+schema_version: "1.0"
+platform: thoughtspot-spotter
+display_name: ThoughtSpot Spotter
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://developers.thoughtspot.com/docs/mcp-tool-reference-spotter3
+  - id: thoughtspot-spotter.list_orgs
+    object: Org
+    action: list_orgs
+    category: Identity & Access
+    risk: low
+    business_impact: "Enumerates the ThoughtSpot Orgs the current user can access, exposing Org identifiers and which tenant is active."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.thoughtspot.com/docs/mcp-tool-reference-spotter3
+  - id: thoughtspot-spotter.switch_org
+    object: Org
+    action: switch_org
+    category: Identity & Access
+    risk: medium
+    business_impact: "Changes the active Org for the session so all subsequent queries and analytics run against a different tenant's data models."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://developers.thoughtspot.com/docs/mcp-tool-reference-spotter3
+  - id: thoughtspot-spotter.create_analysis_session
+    object: Session
+    action: create_analysis_session
+    category: Data Access
+    risk: low
+    business_impact: "Opens an analytics session with the Spotter agent, the prerequisite handle for submitting any subsequent questions."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.thoughtspot.com/docs/mcp-tool-reference-spotter3
+  - id: thoughtspot-spotter.send_session_message
+    object: Session
+    action: send_session_message
+    category: Data Access
+    risk: medium
+    business_impact: "Submits an arbitrary natural-language question into an active session, driving queries across the connected business data models."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.thoughtspot.com/docs/mcp-tool-reference-spotter3
+  - id: thoughtspot-spotter.get_session_updates
+    object: Session
+    action: get_session_updates
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves the agent's answer for a session, returning business data rows that may include personal or sensitive fields from the underlying models."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.thoughtspot.com/docs/mcp-tool-reference-legacy
+  - id: thoughtspot-spotter.getDataSourceSuggestions
+    object: DataSource
+    action: getDataSourceSuggestions
+    category: Data Access
+    risk: low
+    business_impact: "Suggests matching ThoughtSpot data models for a question, exposing data-source names and identifiers but no row-level data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.thoughtspot.com/docs/mcp-tool-reference-legacy
+  - id: thoughtspot-spotter.getRelevantQuestions
+    object: Query
+    action: getRelevantQuestions
+    category: Data Access
+    risk: low
+    business_impact: "Generates AI-suggested follow-up sub-queries for a data context; produces prompt suggestions only, no underlying data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.thoughtspot.com/docs/mcp-tool-reference-legacy
+  - id: thoughtspot-spotter.getAnswer
+    object: Answer
+    action: getAnswer
+    category: Data Access
+    risk: medium
+    business_impact: "Executes a natural-language query against a data model and returns the result set, which may contain personal or regulated business data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://developers.thoughtspot.com/docs/mcp-tool-reference-spotter3
+  - id: thoughtspot-spotter.create_dashboard
+    object: Dashboard
+    action: create_dashboard
+    category: Operations
+    risk: medium
+    business_impact: "Assembles a persistent ThoughtSpot dashboard from session answers, embedding query results into a reusable, shareable artifact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.thoughtspot.com/docs/mcp-tool-reference-legacy
+  - id: thoughtspot-spotter.createLiveboard
+    object: Liveboard
+    action: createLiveboard
+    category: Operations
+    risk: medium
+    business_impact: "Builds a ThoughtSpot Liveboard from one or more answers, persisting query results into a shareable board."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://developers.thoughtspot.com/docs/mcp-tool-reference-spotter3
+  - id: thoughtspot-spotter.check_connectivity
+    object: Server
+    action: check_connectivity
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Confirms the Spotter MCP server is reachable before a session starts; returns only health status."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.thoughtspot.com/docs/mcp-tool-reference-legacy
+  - id: thoughtspot-spotter.ping
+    object: Server
+    action: ping
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Reports basic reachability of the MCP server; returns only a health signal with no data access."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

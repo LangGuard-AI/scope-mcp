@@ -1,0 +1,327 @@
+schema_version: "1.0"
+platform: datahub
+display_name: DataHub
+source: langguard-editorial
+updated: "2026-07"
+reference: https://docs.datahub.com/docs/features/feature-guides/mcp
+server_website: https://raw.githubusercontent.com/acryldata/mcp-server-datahub/main/README.md
+actions:
+  # ---------- Change Management ----------
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.accept_or_reject_proposals
+    object: Proposal
+    action: accept_or_reject_proposals
+    category: Change Management
+    risk: medium
+    business_impact: "Approves or rejects pending metadata change proposals, committing governance changes to the catalog without a separate reviewer."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.set_lifecycle_stage
+    object: Entity
+    action: set_lifecycle_stage
+    category: Change Management
+    risk: medium
+    business_impact: "Sets an entity or glossary term's lifecycle stage (e.g. deprecated) directly, bypassing the propose-and-approve review workflow."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.propose_lifecycle_stage
+    object: Proposal
+    action: propose_lifecycle_stage
+    category: Change Management
+    risk: low
+    business_impact: "Submits a proposal to change an entity's lifecycle stage, leaving the change pending reviewer approval."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.propose_create_glossary_term
+    object: Proposal
+    action: propose_create_glossary_term
+    category: Change Management
+    risk: low
+    business_impact: "Submits a proposal to create a new glossary term, leaving the change pending reviewer approval."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Governance ----------
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.add_tags
+    object: Entity
+    action: add_tags
+    category: Data Governance
+    risk: medium
+    business_impact: "Applies tags to entities or schema columns in bulk, changing data-classification labels that downstream access and confidentiality policies rely on."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.remove_tags
+    object: Entity
+    action: remove_tags
+    category: Data Governance
+    risk: medium
+    business_impact: "Strips tags from entities or columns in bulk, potentially removing a sensitivity classification and weakening downstream confidentiality controls."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.add_terms
+    object: Entity
+    action: add_terms
+    category: Data Governance
+    risk: medium
+    business_impact: "Attaches glossary terms to entities or columns, applying business definitions and data-classification labels used for governance."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.remove_terms
+    object: Entity
+    action: remove_terms
+    category: Data Governance
+    risk: medium
+    business_impact: "Removes glossary terms from entities or columns, potentially clearing a data-classification label that governance policies depend on."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.add_owners
+    object: Entity
+    action: add_owners
+    category: Data Governance
+    risk: medium
+    business_impact: "Assigns ownership of an entity to a user or group, changing who is accountable for its stewardship and governance."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.remove_owners
+    object: Entity
+    action: remove_owners
+    category: Data Governance
+    risk: medium
+    business_impact: "Removes an ownership assignment from an entity, eroding accountability for its stewardship and governance."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.set_domains
+    object: Entity
+    action: set_domains
+    category: Data Governance
+    risk: low
+    business_impact: "Assigns an entity to a data domain, changing its organizational grouping within the catalog."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.remove_domains
+    object: Entity
+    action: remove_domains
+    category: Data Governance
+    risk: low
+    business_impact: "Removes an entity's domain membership, detaching it from its organizational grouping in the catalog."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.update_description
+    object: Entity
+    action: update_description
+    category: Data Governance
+    risk: low
+    business_impact: "Edits, appends to, or clears the description of an entity or schema field, altering catalog documentation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.add_structured_properties
+    object: Entity
+    action: add_structured_properties
+    category: Data Governance
+    risk: low
+    business_impact: "Sets typed structured-property values on an entity, populating custom metadata fields."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.remove_structured_properties
+    object: Entity
+    action: remove_structured_properties
+    category: Data Governance
+    risk: low
+    business_impact: "Clears typed structured-property values from an entity, removing custom metadata fields."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Knowledge & Glossary ----------
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.create_glossary_term
+    object: GlossaryTerm
+    action: create_glossary_term
+    category: Knowledge & Glossary
+    risk: low
+    business_impact: "Creates a new glossary term directly in the business vocabulary without going through the proposal workflow."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.create_glossary_term_version
+    object: GlossaryTerm
+    action: create_glossary_term_version
+    category: Knowledge & Glossary
+    risk: low
+    business_impact: "Creates a new version of an existing glossary term to capture changes to its definition over time."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.add_related_terms
+    object: GlossaryTerm
+    action: add_related_terms
+    category: Knowledge & Glossary
+    risk: low
+    business_impact: "Links related glossary terms such as synonyms or inherits-from relationships to express structure in the business vocabulary."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.save_document
+    object: Document
+    action: save_document
+    category: Knowledge & Glossary
+    risk: low
+    business_impact: "Saves a standalone knowledge-base document such as an insight, decision, or FAQ under a configured parent folder."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.search
+    object: Entity
+    action: search
+    category: Data Access
+    risk: low
+    business_impact: "Runs a structured keyword search across the catalog with boolean logic, filters, and pagination, returning matching metadata entities."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.get_entities
+    object: Entity
+    action: get_entities
+    category: Data Access
+    risk: low
+    business_impact: "Fetches detailed metadata for one or more entities by URN, supporting batch retrieval across the catalog."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.get_lineage
+    object: Entity
+    action: get_lineage
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves upstream or downstream lineage for an entity, exposing how datasets, columns, and dashboards depend on one another."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.get_dataset_queries
+    object: Dataset
+    action: get_dataset_queries
+    category: Data Access
+    risk: low
+    business_impact: "Returns real SQL queries referencing a dataset or column, revealing usage patterns, joins, filters, and aggregation behavior."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datahub.com/docs/features/feature-guides/mcp
+  - id: datahub.grep_documents
+    object: Document
+    action: grep_documents
+    category: Data Access
+    risk: low
+    business_impact: "Searches knowledge-base document content with regex patterns, surfacing specific information across many stored documents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

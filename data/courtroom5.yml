@@ -1,0 +1,51 @@
+schema_version: "1.1"
+platform: courtroom5
+display_name: Courtroom5
+source: langguard-editorial
+updated: "2026-07"
+reference: https://mcp.courtroom5.com/v1
+server_website: https://courtroom5.com/claude/
+actions:
+  # ---------- Legal Guidance ----------
+
+  # source: https://mcp.courtroom5.com/v1
+  - id: courtroom5.case_intake_assessment
+    object: CaseAssessment
+    action: case_intake_assessment
+    description: "Assesses a self-represented litigant's civil legal situation from their narrative and returns viability, likely claims, the correct court, and concrete first steps."
+    category: Legal Guidance
+    risk: low
+    business_impact: "Analyzes a litigant's self-described legal situation and returns a case-viability opinion, likely claims, and the correct court; advisory only, with no filing or record change, though a wrong read could misdirect a user's legal strategy."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.courtroom5.com/v1
+  - id: courtroom5.deadline_calculator
+    object: Deadline
+    action: deadline_calculator
+    description: "Returns critical procedural deadlines and consequences for a specific legal triggering event using a precomputed lookup table covering an initial set of states."
+    category: Legal Guidance
+    risk: low
+    business_impact: "Returns procedural deadlines and the consequences of missing them for a legal triggering event; an inaccurate or out-of-coverage-state result could lead a self-represented litigant to miscalculate a court filing date."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.courtroom5.com/v1
+  - id: courtroom5.next_step_guidance
+    object: NextStep
+    action: next_step_guidance
+    description: "Returns the two or three most important actions for a self-represented litigant who is already in active civil litigation and knows their case stage."
+    category: Legal Guidance
+    risk: low
+    business_impact: "Returns the two or three most important procedural next steps for a litigant at a known case stage; read-only guidance with no effect on any court record or docket."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial

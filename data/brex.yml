@@ -1,0 +1,338 @@
+schema_version: "1.0"
+platform: brex
+display_name: Brex
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.list_users
+    object: User
+    action: list_users
+    category: Identity & Access
+    risk: medium
+    business_impact: "Enumerates every employee on the Brex account with names, emails, and roles, exposing the full org directory as personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.list_users_by_name_or_email
+    object: User
+    action: list_users_by_name_or_email
+    category: Identity & Access
+    risk: medium
+    business_impact: "Searches the employee directory by name or email, surfacing individual identities and contact details."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.get_user_by_id
+    object: User
+    action: get_user_by_id
+    category: Identity & Access
+    risk: medium
+    business_impact: "Retrieves one employee's Brex profile including identity and contact attributes."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.start_expense_download
+    object: Expense
+    action: start_expense_download
+    category: Data Access
+    risk: high
+    business_impact: "Kicks off a bulk export of company expense records, staging card-spend and employee data for extraction at scale."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.get_expense_download_result
+    object: Expense
+    action: get_expense_download_result
+    category: Data Access
+    risk: high
+    business_impact: "Returns the download URL for a completed expense export, delivering bulk financial records outside the platform."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Financial ----------
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.query_expense_analytics
+    object: Expense
+    action: query_expense_analytics
+    category: Financial
+    risk: medium
+    business_impact: "Answers free-form questions about company-wide spend, exposing aggregate financial-reporting data."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.list_expenses
+    object: Expense
+    action: list_expenses
+    category: Financial
+    risk: medium
+    business_impact: "Lists card and reimbursement expenses across the company with full filtering, revealing transaction-level spend data."
+    compliance: [PCI]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.get_expense_by_id
+    object: Expense
+    action: get_expense_by_id
+    category: Financial
+    risk: low
+    business_impact: "Retrieves a single expense including merchant, amount, and card-transaction detail."
+    compliance: [PCI]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.list_cards
+    object: Card
+    action: list_cards
+    category: Financial
+    risk: medium
+    business_impact: "Lists corporate cards across the account with cardholder and status detail."
+    compliance: [PCI, GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.get_card_by_id
+    object: Card
+    action: get_card_by_id
+    category: Financial
+    risk: medium
+    business_impact: "Retrieves one corporate card's cardholder and configuration detail."
+    compliance: [PCI, GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.list_banking_transactions
+    object: BankingTransaction
+    action: list_banking_transactions
+    category: Financial
+    risk: medium
+    business_impact: "Lists Brex business-account banking transactions, exposing account activity and movements."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.get_banking_transaction
+    object: BankingTransaction
+    action: get_banking_transaction
+    category: Financial
+    risk: low
+    business_impact: "Retrieves a single banking transaction from a Brex business account."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.list_business_accounts
+    object: BusinessAccount
+    action: list_business_accounts
+    category: Financial
+    risk: medium
+    business_impact: "Lists Brex business bank accounts with balances and account identifiers."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.get_business_account
+    object: BusinessAccount
+    action: get_business_account
+    category: Financial
+    risk: low
+    business_impact: "Retrieves one Brex business bank account including balance and identifiers."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.list_bills
+    object: Bill
+    action: list_bills
+    category: Financial
+    risk: medium
+    business_impact: "Lists accounts-payable bills across the company, exposing vendor payment obligations."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.list_vendors
+    object: Vendor
+    action: list_vendors
+    category: Financial
+    risk: medium
+    business_impact: "Lists all vendors on the account, surfacing the vendor master used for payments."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.list_accounting_records
+    object: AccountingRecord
+    action: list_accounting_records
+    category: Financial
+    risk: medium
+    business_impact: "Lists accounting records that feed the company's financial statements."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.list_gl_accounts
+    object: GLAccount
+    action: list_gl_accounts
+    category: Financial
+    risk: medium
+    business_impact: "Lists general-ledger accounts underpinning financial reporting."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.get_active_integration
+    object: AccountingIntegration
+    action: get_active_integration
+    category: Financial
+    risk: medium
+    business_impact: "Reveals which accounting system Brex is synced to, exposing a financial-system integration control."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.list_my_limits
+    object: SpendLimit
+    action: list_my_limits
+    category: Financial
+    risk: low
+    business_impact: "Lists the spend limits that apply to the current user."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.update_expense_memo
+    object: Expense
+    action: update_expense_memo
+    category: Financial
+    risk: high
+    business_impact: "Overwrites memos on many expenses at once, altering substantiation on financial records in bulk."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.upload_card_expense_receipt_from_urls
+    object: Expense
+    action: upload_card_expense_receipt_from_urls
+    category: Financial
+    risk: medium
+    business_impact: "Attaches receipts fetched from external URLs to a card expense, changing its audit substantiation."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.replace_attendees_for_card_expense
+    object: Expense
+    action: replace_attendees_for_card_expense
+    category: Financial
+    risk: medium
+    business_impact: "Replaces the recorded attendees on a card expense, rewriting personal data tied to the transaction."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.assign_limit_for_card_expenses
+    object: Expense
+    action: assign_limit_for_card_expenses
+    category: Financial
+    risk: medium
+    business_impact: "Reassigns card expenses to a spend limit, changing how transactions are controlled and budgeted."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://developer.brex.com/docs/mcp
+  - id: brex.submit_feedback
+    object: Feedback
+    action: submit_feedback
+    category: Operations
+    risk: low
+    business_impact: "Sends free-text product feedback to Brex's team on behalf of the user."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

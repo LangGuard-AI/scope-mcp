@@ -1,0 +1,67 @@
+schema_version: "1.1"
+platform: indeed
+display_name: Indeed
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.indeed.com/mcp/
+  - id: indeed.get_resume
+    object: Resume
+    action: get_resume
+    id_form: capability
+    description: "Get Resume"
+    category: Data Access
+    risk: medium
+    business_impact: "Reads the account holder's Indeed resume and employment history, exposing that personal data to the agent for personalization."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.indeed.com/mcp/
+  - id: indeed.job_search
+    object: Job
+    action: job_search
+    id_form: capability
+    description: "Job Search"
+    category: Data Access
+    risk: low
+    business_impact: "Searches public Indeed job listings by title, keywords, location, and employment type, returning companies, salaries, and application URLs."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.indeed.com/mcp/
+  - id: indeed.job_detail
+    object: Job
+    action: job_detail
+    id_form: capability
+    description: "Job Detail"
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves the full description, requirements, benefits, and company details for a single public job posting by ID."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.indeed.com/mcp/
+  - id: indeed.get_company_data
+    object: Company
+    action: get_company_data
+    id_form: capability
+    description: "Get Company Data"
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregate Indeed employer research covering satisfaction, compensation, culture, management, and reviews for a company."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

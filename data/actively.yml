@@ -1,0 +1,153 @@
+schema_version: "1.0"
+platform: actively
+display_name: Actively AI
+source: langguard-editorial
+updated: "2026-07"
+reference: https://app.actively.ai/docs/mcp
+actions:
+  # ---------- Revenue & Pipeline ----------
+
+  # source: https://app.actively.ai/docs/mcp
+  - id: actively.lookup_accounts
+    object: Account
+    action: lookup_accounts
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Resolves account records by name or Salesforce ID, exposing which companies exist in the connected sales intelligence workspace."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://app.actively.ai/docs/mcp
+  - id: actively.get_recent_account_activity
+    object: Account
+    action: get_recent_account_activity
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Surfaces recent citation-backed activity signals for an account, revealing buying-intent intelligence and the people and events behind it."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://app.actively.ai/docs/mcp
+  - id: actively.get_agent_memory
+    object: AccountMemory
+    action: get_agent_memory
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Returns the full research profile an AI agent compiled on one account, potentially including named contacts, roles, and inferred stakeholder details."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://app.actively.ai/docs/mcp
+  - id: actively.get_agent_memory_sections
+    object: AccountMemory
+    action: get_agent_memory_sections
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Returns selected sections of an account's research profile, narrowing exposure to the memory fields explicitly requested."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://app.actively.ai/docs/mcp
+  - id: actively.get_bulk_agent_memory
+    object: AccountMemory
+    action: get_bulk_agent_memory
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Returns research profiles for up to ten accounts in one call, widening the blast radius of a single request across multiple companies and their contacts."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://app.actively.ai/docs/mcp
+  - id: actively.search_agent_memory
+    object: AccountMemory
+    action: search_agent_memory
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Runs a semantic search across all stored account memory, enabling broad discovery of intelligence and contact details without knowing account IDs in advance."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://app.actively.ai/docs/mcp
+  - id: actively.get_agent_decisions
+    object: AccountDecision
+    action: get_agent_decisions
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Returns the full set of strategic recommendations the agent generated for one account, exposing the vendor's prioritization and go-to-market reasoning."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://app.actively.ai/docs/mcp
+  - id: actively.get_agent_decisions_sections
+    object: AccountDecision
+    action: get_agent_decisions_sections
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Returns selected sections of an account's strategic recommendations, limiting output to the decision fields explicitly requested."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://app.actively.ai/docs/mcp
+  - id: actively.get_bulk_agent_decisions
+    object: AccountDecision
+    action: get_bulk_agent_decisions
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Returns strategic recommendations for multiple accounts at once, exposing pipeline prioritization across a book of business in a single call."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://app.actively.ai/docs/mcp
+  - id: actively.list_workflows
+    object: Workflow
+    action: list_workflows
+    category: Operations
+    risk: low
+    business_impact: "Lists the available workflow templates configured in the workspace, revealing which automated sales plays the organization runs."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://app.actively.ai/docs/mcp
+  - id: actively.get_workflow_instructions
+    object: Workflow
+    action: get_workflow_instructions
+    category: Operations
+    risk: low
+    business_impact: "Fetches the detailed instructions for a named workflow, exposing the internal playbook logic behind an automated sales motion."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,344 @@
+schema_version: "1.0"
+platform: todoist
+display_name: Todoist
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.find-project-collaborators
+    object: User
+    action: find-project-collaborators
+    category: Identity & Access
+    risk: medium
+    business_impact: "Resolves teammates by name or email into user IDs, exposing collaborator names and email addresses to the caller."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.user-info
+    object: User
+    action: user-info
+    category: Identity & Access
+    risk: medium
+    business_impact: "Returns the authenticated user's identity profile including full name, email, and timezone."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.list-workspaces
+    object: Workspace
+    action: list-workspaces
+    category: Identity & Access
+    risk: low
+    business_impact: "Lists every workspace the user belongs to along with plan type and the user's role (ADMIN, MEMBER, or GUEST)."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.manage-assignments
+    object: Task
+    action: manage-assignments
+    category: Identity & Access
+    risk: medium
+    business_impact: "Bulk assigns, unassigns, or reassigns responsibility for many tasks across project collaborators in a single atomic operation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.find-activity
+    object: ActivityLog
+    action: find-activity
+    category: Operations
+    risk: medium
+    business_impact: "Reads the workspace activity log showing who created, completed, or changed items across all users — a cross-user audit trail."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.get-productivity-stats
+    object: ProductivityStats
+    action: get-productivity-stats
+    category: Operations
+    risk: low
+    business_impact: "Returns the user's productivity metrics including completion breakdowns, goal streaks, and karma score and trends."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.delete-object
+    object: "*"
+    action: delete-object
+    category: Operations
+    risk: medium
+    business_impact: "Permanently deletes a project, section, task, comment, label, filter, or reminder by ID; deleting a project cascades to all its contained tasks."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.project-move
+    object: Project
+    action: project-move
+    category: Operations
+    risk: medium
+    business_impact: "Moves a project between personal and workspace contexts, changing which principals can see and act on its tasks."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.project-management
+    object: Project
+    action: project-management
+    category: Operations
+    risk: low
+    business_impact: "Archives or unarchives a project, hiding or restoring it and its tasks from the active workspace view."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.view-attachment
+    object: Attachment
+    action: view-attachment
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves the contents of a file attached to a comment, returning images inline and text or documents as data that may contain sensitive material."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.find-comments
+    object: Comment
+    action: find-comments
+    category: Data Access
+    risk: low
+    business_impact: "Reads comment threads on a task or project, returning free-text discussion content authored by collaborators."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Task Management ----------
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.add-tasks
+    object: Task
+    action: add-tasks
+    category: Task Management
+    risk: low
+    business_impact: "Creates one or more tasks in a project, section, or under a parent, optionally assigning them to project collaborators."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.update-tasks
+    object: Task
+    action: update-tasks
+    category: Task Management
+    risk: low
+    business_impact: "Updates existing task content, dates, priorities, and assignments, reversibly editing work items."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.complete-tasks
+    object: Task
+    action: complete-tasks
+    category: Task Management
+    risk: low
+    business_impact: "Marks one or more tasks complete by ID, a reversible state change on personal work items."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.reschedule-tasks
+    object: Task
+    action: reschedule-tasks
+    category: Task Management
+    risk: low
+    business_impact: "Reschedules tasks to new dates while preserving recurring schedules, a reversible edit to task due dates."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Projects & Structure ----------
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.add-projects
+    object: Project
+    action: add-projects
+    category: Projects & Structure
+    risk: low
+    business_impact: "Creates one or more new projects to organize tasks, a reversible low-impact write."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.update-projects
+    object: Project
+    action: update-projects
+    category: Projects & Structure
+    risk: low
+    business_impact: "Updates names, colors, and settings on existing projects, a reversible metadata edit."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.add-sections
+    object: Section
+    action: add-sections
+    category: Projects & Structure
+    risk: low
+    business_impact: "Creates new sections within projects to group tasks, a reversible low-impact write."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.reorder-objects
+    object: "*"
+    action: reorder-objects
+    category: Projects & Structure
+    risk: low
+    business_impact: "Reorders sibling projects or sections and can move a project under a new parent, restructuring workspace hierarchy reversibly."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Content & Comments ----------
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.add-comments
+    object: Comment
+    action: add-comments
+    category: Content & Comments
+    risk: low
+    business_impact: "Adds comments to tasks or projects, posting free-text notes visible to project collaborators."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.update-comments
+    object: Comment
+    action: update-comments
+    category: Content & Comments
+    risk: low
+    business_impact: "Edits the content of existing comments, reversibly changing discussion text on tasks or projects."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Organization ----------
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.add-labels
+    object: Label
+    action: add-labels
+    category: Organization
+    risk: low
+    business_impact: "Creates new personal labels used to tag and categorize tasks, a reversible low-impact write."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.add-filters
+    object: Filter
+    action: add-filters
+    category: Organization
+    risk: low
+    business_impact: "Creates saved custom filter views using query syntax to organize how tasks are surfaced."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.add-reminders
+    object: Reminder
+    action: add-reminders
+    category: Organization
+    risk: low
+    business_impact: "Adds relative, absolute, or location-based geofence reminders to tasks, capturing places that trigger a notification."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/Doist/todoist-mcp/main/src/utils/tool-names.ts
+  - id: todoist.update-reminders
+    object: Reminder
+    action: update-reminders
+    category: Organization
+    risk: low
+    business_impact: "Updates existing task reminders including their type, time, or location trigger, a reversible edit."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

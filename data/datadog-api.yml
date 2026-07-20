@@ -1,0 +1,325 @@
+schema_version: "1.0"
+platform: datadog-api
+display_name: Datadog
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Secrets & Workflows ----------
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.execute_code
+    object: Sandbox
+    action: execute_code
+    category: Secrets & Workflows
+    risk: critical
+    business_impact: "Runs agent-authored TypeScript inside a Datadog-managed sandbox with a live Datadog client, so a single call can read or move any data the connection's scope permits."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.datadog_remote_action_restricted_shell_run_command
+    object: Host
+    action: datadog_remote_action_restricted_shell_run_command
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Runs read-only shell commands such as cat and ls on a targeted host, exposing on-host files, configuration, and potentially secrets to the caller."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.datadog_secrets_scan
+    object: Code
+    action: datadog_secrets_scan
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Scans code for hardcoded secrets and surfaces detected AWS keys, API keys, and passwords, concentrating credential locations in one result set."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.execute_datadog_workflow
+    object: Workflow
+    action: execute_datadog_workflow
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Triggers a published workflow that carries an agent trigger, running whatever automation steps it defines against connected systems."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.update_datadog_workflow_with_agent_trigger
+    object: Workflow
+    action: update_datadog_workflow_with_agent_trigger
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Adds an agent trigger to a workflow and publishes it, turning a static workflow into one an agent can invoke autonomously in production."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Security ----------
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.create_datadog_security_detection_rule
+    object: DetectionRule
+    action: create_datadog_security_detection_rule
+    category: Security
+    risk: medium
+    business_impact: "Creates a new security detection rule, changing which threat conditions generate signals across the organization."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.update_datadog_security_detection_rule
+    object: DetectionRule
+    action: update_datadog_security_detection_rule
+    category: Security
+    risk: high
+    business_impact: "Replaces an existing detection rule in full, which can broaden, narrow, or silence the conditions under which security signals fire."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.delete_datadog_security_detection_rules
+    object: DetectionRule
+    action: delete_datadog_security_detection_rules
+    category: Security
+    risk: high
+    business_impact: "Removes one or more custom detection rules, eliminating the signals they would have raised and leaving the covered threats unmonitored."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.create_datadog_security_suppression
+    object: Suppression
+    action: create_datadog_security_suppression
+    category: Security
+    risk: high
+    business_impact: "Adds a suppression rule that stops a detection rule from generating signals for matching activity, potentially masking real attacks."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.delete_datadog_security_suppression
+    object: Suppression
+    action: delete_datadog_security_suppression
+    category: Security
+    risk: medium
+    business_impact: "Deletes a suppression rule, restoring the signals a detection rule had been prevented from raising."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.mute_datadog_security_findings
+    object: SecurityFinding
+    action: mute_datadog_security_findings
+    category: Security
+    risk: high
+    business_impact: "Mutes security findings so they no longer surface in alerts or dashboards, hiding them from responders until unmuted."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.update_datadog_security_signals_triage
+    object: SecuritySignal
+    action: update_datadog_security_signals_triage
+    category: Security
+    risk: medium
+    business_impact: "Sets triage state or assignee on up to 500 security signals at once, reshaping the incident queue in a single call."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.upsert_datadog_security_denylist_entry
+    object: DenylistEntry
+    action: upsert_datadog_security_denylist_entry
+    category: Security
+    risk: high
+    business_impact: "Blocks an IP, user, or user agent at the WAF with an expiration, immediately denying the target access to protected applications."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.delete_datadog_security_denylist_entry
+    object: DenylistEntry
+    action: delete_datadog_security_denylist_entry
+    category: Security
+    risk: high
+    business_impact: "Unblocks a previously denylisted entity by expiring its block, restoring access for an IP, user, or user agent that was being denied."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.upsert_datadog_security_passlist
+    object: Passlist
+    action: upsert_datadog_security_passlist
+    category: Security
+    risk: high
+    business_impact: "Creates or updates a WAF exclusion filter that suppresses rules on a matched target, reducing protection coverage on that surface."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.delete_datadog_security_passlist
+    object: Passlist
+    action: delete_datadog_security_passlist
+    category: Security
+    risk: medium
+    business_impact: "Deletes a WAF exclusion filter, reinstating the protection rules that the passlist entry had been suppressing."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.search_datadog_logs
+    object: Log
+    action: search_datadog_logs
+    category: Data Access
+    risk: medium
+    business_impact: "Searches ingested logs by time, query, service, and host, returning raw log events that may contain personal data or credentials."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.analyze_datadog_logs
+    object: Log
+    action: analyze_datadog_logs
+    category: Data Access
+    risk: medium
+    business_impact: "Runs SQL aggregation over ingested logs, which can summarize large volumes of log data including any personal data those logs carry."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.ddsql_run_query
+    object: "*"
+    action: ddsql_run_query
+    category: Data Access
+    risk: high
+    business_impact: "Runs an arbitrary DDSQL query across infrastructure, logs, RUM, and span datasets, exposing broad observability data in a single request."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.sync_datadog_feature_flag_allocations
+    object: FeatureFlag
+    action: sync_datadog_feature_flag_allocations
+    category: Operations
+    risk: medium
+    business_impact: "Syncs feature-flag allocations for an environment, changing which users receive a flag and altering production behavior."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.update_datadog_feature_flag_environment
+    object: FeatureFlag
+    action: update_datadog_feature_flag_environment
+    category: Operations
+    risk: medium
+    business_impact: "Updates a feature flag's configuration in a specific environment, changing rollout state that governs live application behavior."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.delete_datadog_dashboard
+    object: Dashboard
+    action: delete_datadog_dashboard
+    category: Operations
+    risk: medium
+    business_impact: "Permanently deletes a dashboard by ID with no undo, removing shared visualizations other teams may depend on."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.update_datadog_flaky_test_states
+    object: Test
+    action: update_datadog_flaky_test_states
+    category: Operations
+    risk: medium
+    business_impact: "Sets flaky tests to quarantined or disabled, which suppresses or skips their failures in CI and can mask real regressions."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datadoghq.com/mcp_server/tools/
+  - id: datadog-api.edit_synthetics_tests
+    object: SyntheticsTest
+    action: edit_synthetics_tests
+    category: Operations
+    risk: medium
+    business_impact: "Edits Synthetic HTTP API tests, changing what uptime and functional checks run against monitored endpoints."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

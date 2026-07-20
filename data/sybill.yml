@@ -1,0 +1,116 @@
+schema_version: "1.0"
+platform: sybill
+display_name: Sybill
+source: langguard-editorial
+updated: "2026-07"
+reference: https://api.sybill.ai/docs/mcp.html
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://api.sybill.ai/docs/mcp.html
+  - id: sybill.ask_sybill
+    object: "*"
+    action: ask_sybill
+    category: Data Access
+    risk: medium
+    business_impact: "Runs a natural-language AI query across sales calls, deals, people, companies, and emails, potentially surfacing personal data and confidential deal intelligence in one synthesized answer."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.sybill.ai/docs/mcp.html
+  - id: sybill.get_ask_sybill_result
+    object: AskSybillRun
+    action: get_ask_sybill_result
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves the status and final answer for a previously submitted Sybill query by run id, returning whatever content that query surfaced."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Conversation Intelligence ----------
+
+  # source: https://api.sybill.ai/docs/mcp.html
+  - id: sybill.get_conversation
+    object: Conversation
+    action: get_conversation
+    category: Conversation Intelligence
+    risk: medium
+    business_impact: "Returns the full transcript, recording URLs, summary, and participant list for a recorded sales call, exposing private conversation content and identifiable personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.sybill.ai/docs/mcp.html
+  - id: sybill.list_conversations
+    object: Conversation
+    action: list_conversations
+    category: Conversation Intelligence
+    risk: low
+    business_impact: "Enumerates sales meetings for the organization filtered by date, type, title, and attendees, revealing meeting cadence and who met with whom across teams."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Revenue & Pipeline ----------
+
+  # source: https://api.sybill.ai/docs/mcp.html
+  - id: sybill.get_deal
+    object: Deal
+    action: get_deal
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Returns full deal details including contacts, owner, pipeline, and stage, exposing customer contact data and deal-level revenue information for one opportunity."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.sybill.ai/docs/mcp.html
+  - id: sybill.list_deals
+    object: Deal
+    action: list_deals
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Lists CRM deals filtered by stage, owner, amount, and close date, revealing aggregate pipeline value and forecast posture across the organization."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.sybill.ai/docs/mcp.html
+  - id: sybill.get_account
+    object: Account
+    action: get_account
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Returns full account details including contacts, owner, synced CRM fields, and latest deal, exposing customer contact PII and relationship history for one account."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.sybill.ai/docs/mcp.html
+  - id: sybill.list_accounts
+    object: Account
+    action: list_accounts
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Lists CRM accounts filtered by name, website, owner, and activity date, revealing the organization's customer and prospect book of business."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

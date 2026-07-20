@@ -1,0 +1,33 @@
+schema_version: "1.0"
+platform: eedi
+display_name: Eedi
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://www.eedi.com/mcp
+  - id: eedi.search_eedi_questions
+    object: Question
+    action: search_eedi_questions
+    category: Data Access
+    risk: low
+    business_impact: "Searches the Eedi question bank by topic, standard, or keyword; returns curriculum content, not student records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.eedi.com/mcp
+  - id: eedi.get_eedi_questions
+    object: Question
+    action: get_eedi_questions
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves specific curriculum questions by their Eedi question ID; read-only access to the question bank."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

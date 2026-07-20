@@ -1,0 +1,224 @@
+schema_version: "1.1"
+platform: dataverse
+display_name: Microsoft Dataverse
+source: langguard-editorial
+updated: "2026-07"
+reference: https://learn.microsoft.com/en-us/power-apps/maker/data-platform/data-platform-mcp
+actions:
+  # ---------- Platform & DevOps ----------
+
+  # source: https://learn.microsoft.com/en-us/power-apps/maker/data-platform/data-platform-mcp
+  - id: dataverse.delete_table
+    object: Table
+    action: delete_table
+    description: "Deletes a table from Dataverse, only after explicit user approval."
+    category: Platform & DevOps
+    risk: critical
+    business_impact: "Drops an entire Dataverse table and every row it holds — irreversible loss of all business and customer data stored in that table."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/power-apps/maker/data-platform/data-platform-mcp
+  - id: dataverse.create_table
+    object: Table
+    action: create_table
+    description: "Creates a new table with a specified schema."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Adds a new table and schema to the Dataverse environment, altering the data model that downstream apps and flows depend on."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/power-apps/maker/data-platform/data-platform-mcp
+  - id: dataverse.update_table
+    object: Table
+    action: update_table
+    description: "Modifies schema or metadata of an existing table."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Alters the schema or metadata of an existing table, which can break dependent apps, forms, and integrations relying on the old shape."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://learn.microsoft.com/en-us/power-apps/maker/data-platform/data-platform-mcp
+  - id: dataverse.read_query
+    object: "*"
+    action: read_query
+    description: "Run supported Dataverse SQL SELECT queries."
+    category: Data Access
+    risk: high
+    business_impact: "Runs arbitrary SQL SELECT queries across Dataverse tables, capable of returning large volumes of records including personal data in a single call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/power-apps/maker/data-platform/data-platform-mcp
+  - id: dataverse.delete_record
+    object: Record
+    action: delete_record
+    description: "Delete a row, only after explicit user approval."
+    category: Data Access
+    risk: high
+    business_impact: "Permanently removes a row from a Dataverse table, destroying a business record that may contain personal data with no built-in recovery."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/power-apps/maker/data-platform/data-platform-mcp
+  - id: dataverse.create_record
+    object: Record
+    action: create_record
+    description: "Inserts a new row into a Dataverse table and returns the GUID."
+    category: Data Access
+    risk: medium
+    business_impact: "Inserts a new row into a Dataverse table, creating a business record that may contain personal data about identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/power-apps/maker/data-platform/data-platform-mcp
+  - id: dataverse.update_record
+    object: Record
+    action: update_record
+    description: "Updates an existing row in a Dataverse table."
+    category: Data Access
+    risk: medium
+    business_impact: "Overwrites fields on an existing Dataverse row, changing a business record that may hold personal or customer data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/power-apps/maker/data-platform/data-platform-mcp
+  - id: dataverse.search_data
+    object: "*"
+    action: search_data
+    description: "Search structured and unstructured data."
+    category: Data Access
+    risk: medium
+    business_impact: "Searches structured and unstructured Dataverse data, surfacing matching records that may include personal or customer information."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/power-apps/maker/data-platform/data-platform-mcp
+  - id: dataverse.describe
+    object: "*"
+    action: describe
+    description: "Get details from search results for tables, records, schemas, skills, and apps."
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves detailed contents of tables, records, schemas, and skills from search results, which can expose personal data held in matched rows."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/power-apps/maker/data-platform/data-platform-mcp
+  - id: dataverse.search
+    object: Schema
+    action: search
+    description: "Search table schemas and business skills by keyword."
+    category: Data Access
+    risk: low
+    business_impact: "Searches table schemas and business skills by keyword, returning metadata only without exposing row-level data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://learn.microsoft.com/en-us/power-apps/maker/data-platform/data-platform-mcp
+  - id: dataverse.file_download
+    object: File
+    action: file_download
+    description: "Generate a SAS URL for file download."
+    category: Operations
+    risk: high
+    business_impact: "Generates a SAS URL that grants direct download access to a stored Dataverse file, whose contents may include personal or confidential data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/power-apps/maker/data-platform/data-platform-mcp
+  - id: dataverse.init_file_upload
+    object: File
+    action: init_file_upload
+    description: "Generate a SAS URL for file upload."
+    category: Operations
+    risk: medium
+    business_impact: "Generates a time-limited SAS URL granting write access to Dataverse file storage, staging content to be attached to records."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/power-apps/maker/data-platform/data-platform-mcp
+  - id: dataverse.commit_file_upload
+    object: File
+    action: commit_file_upload
+    description: "Commit a file upload."
+    category: Operations
+    risk: low
+    business_impact: "Finalizes a previously staged file upload, attaching the uploaded content to Dataverse."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Secrets & Workflows ----------
+
+  # source: https://learn.microsoft.com/en-us/power-apps/maker/data-platform/data-platform-mcp
+  - id: dataverse.upsert_skill
+    object: Skill
+    action: upsert_skill
+    description: "Add or update a Dataverse skill/playbook."
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Adds or updates a Dataverse skill or playbook, changing reusable automation logic that agents and apps execute against the environment."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/power-apps/maker/data-platform/data-platform-mcp
+  - id: dataverse.delete_skill
+    object: Skill
+    action: delete_skill
+    description: "Delete a Dataverse skill/playbook by name."
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Removes a Dataverse skill or playbook, disabling automation that dependent agents or apps rely on."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

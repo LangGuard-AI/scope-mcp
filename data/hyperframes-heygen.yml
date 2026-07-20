@@ -1,0 +1,88 @@
+schema_version: "1.0"
+platform: hyperframes-heygen
+display_name: HyperFrames by HeyGen
+source: langguard-editorial
+updated: "2026-07"
+reference: https://hyperframes.heygen.com/guides/mcp
+actions:
+  # ---------- Content & Media ----------
+
+  # source: https://hyperframes.heygen.com/guides/mcp
+  - id: hyperframes-heygen.render_video
+    object: Render
+    action: render_video
+    category: Content & Media
+    risk: medium
+    business_impact: "Submits a billable cloud render job that consumes render credits and produces a shareable MP4, WebM, or MOV artifact."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://hyperframes.heygen.com/guides/mcp
+  - id: hyperframes-heygen.compose
+    object: Composition
+    action: compose
+    category: Content & Media
+    risk: medium
+    business_impact: "Creates or edits a video composition, consuming author credits and mutating the stored project that subsequent renders draw from."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://hyperframes.heygen.com/guides/mcp
+  - id: hyperframes-heygen.list_compositions
+    object: Composition
+    action: list_compositions
+    category: Content & Media
+    risk: low
+    business_impact: "Enumerates the account's previously created video compositions for browsing and selection."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://hyperframes.heygen.com/guides/mcp
+  - id: hyperframes-heygen.get_composition
+    object: Composition
+    action: get_composition
+    category: Content & Media
+    risk: low
+    business_impact: "Opens a specific composition in the interactive player for inline preview."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://hyperframes.heygen.com/guides/mcp
+  - id: hyperframes-heygen.get_render_status
+    object: Render
+    action: get_render_status
+    category: Content & Media
+    risk: low
+    business_impact: "Polls the progress of a long-running cloud render job to determine completion or failure."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Financial ----------
+
+  # source: https://hyperframes.heygen.com/guides/mcp
+  - id: hyperframes-heygen.get_credits
+    object: Account
+    action: get_credits
+    category: Financial
+    risk: low
+    business_impact: "Reveals the account's remaining credit balance and subscription tier."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

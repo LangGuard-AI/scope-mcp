@@ -1,0 +1,336 @@
+schema_version: "1.0"
+platform: google-compute-engine
+display_name: Google Compute Engine
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Platform & DevOps ----------
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.delete_instance
+    object: Instance
+    action: delete_instance
+    category: Platform & DevOps
+    risk: critical
+    business_impact: "Permanently destroys a Compute Engine VM instance along with its local SSD data and running workload — irreversible once the operation completes."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.create_instance
+    object: Instance
+    action: create_instance
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Provisions a new Compute Engine VM instance in a project and zone, spinning up billable compute that runs until explicitly stopped or deleted."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.stop_instance
+    object: Instance
+    action: stop_instance
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Halts a running Compute Engine VM instance, taking its workload offline and interrupting any service it hosts."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.start_instance
+    object: Instance
+    action: start_instance
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Boots a stopped Compute Engine VM instance back into a running state, resuming its workload and incurring compute charges."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.reset_instance
+    object: Instance
+    action: reset_instance
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Forces a hard reset of a running Compute Engine VM instance, rebooting it abruptly and risking loss of any in-flight, unsynced work."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.set_instance_machine_type
+    object: Instance
+    action: set_instance_machine_type
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Changes the machine type of a stopped Compute Engine VM instance, altering its CPU and memory allocation and the cost it accrues."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.get_instance_template_properties
+    object: InstanceTemplate
+    action: get_instance_template_properties
+    category: Operations
+    risk: medium
+    business_impact: "Exposes full instance-template properties including attached service accounts, metadata, and network interfaces that can reveal credential-bearing configuration."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.get_instance_basic_info
+    object: Instance
+    action: get_instance_basic_info
+    category: Operations
+    risk: low
+    business_impact: "Returns core metadata for a single VM instance such as status, machine type, and attached accelerators for operational visibility."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.list_instances
+    object: Instance
+    action: list_instances
+    category: Operations
+    risk: low
+    business_impact: "Enumerates VM instances in a zone with their status and machine type, revealing the shape of a project's compute footprint."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.get_instance_group_manager_basic_info
+    object: InstanceGroupManager
+    action: get_instance_group_manager_basic_info
+    category: Operations
+    risk: low
+    business_impact: "Returns configuration of a single managed instance group including its template, target size, and status."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.list_instance_group_managers
+    object: InstanceGroupManager
+    action: list_instance_group_managers
+    category: Operations
+    risk: low
+    business_impact: "Enumerates managed instance groups in a project, exposing autoscaling targets and the instance templates in use."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.list_managed_instances
+    object: ManagedInstance
+    action: list_managed_instances
+    category: Operations
+    risk: low
+    business_impact: "Lists the member instances of a managed instance group along with each instance's status and current action."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.list_instance_templates
+    object: InstanceTemplate
+    action: list_instance_templates
+    category: Operations
+    risk: low
+    business_impact: "Enumerates instance templates in a project, listing their names, machine types, and regions."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.get_instance_template_basic_info
+    object: InstanceTemplate
+    action: get_instance_template_basic_info
+    category: Operations
+    risk: low
+    business_impact: "Returns summary metadata for a single instance template such as its machine type, region, and description."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.get_reservation_basic_info
+    object: Reservation
+    action: get_reservation_basic_info
+    category: Operations
+    risk: low
+    business_impact: "Returns summary information for a single Compute Engine capacity reservation including its status and linked commitments."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.get_reservation_details
+    object: Reservation
+    action: get_reservation_details
+    category: Operations
+    risk: low
+    business_impact: "Returns detailed properties of a Compute Engine reservation such as reserved machine types, accelerators, and local SSDs."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.list_reservations
+    object: Reservation
+    action: list_reservations
+    category: Operations
+    risk: low
+    business_impact: "Enumerates Compute Engine capacity reservations in a zone with their status and commitment linkage."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.list_commitments
+    object: Commitment
+    action: list_commitments
+    category: Operations
+    risk: low
+    business_impact: "Lists committed-use discount contracts in a region, revealing plan, term, and reserved resources tied to billing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.get_commitment_basic_info
+    object: Commitment
+    action: get_commitment_basic_info
+    category: Operations
+    risk: low
+    business_impact: "Returns summary details of a single committed-use contract including its plan, type, and resource commitments."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.list_commitment_reservations
+    object: Commitment
+    action: list_commitment_reservations
+    category: Operations
+    risk: low
+    business_impact: "Lists the reservations bound to a committed-use contract along with their reserved machine types and accelerators."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.list_instance_attached_disks
+    object: Disk
+    action: list_instance_attached_disks
+    category: Data Access
+    risk: low
+    business_impact: "Lists the disks attached to a VM instance including source, boot flag, and mode, mapping a machine's storage layout."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.get_disk_basic_info
+    object: Disk
+    action: get_disk_basic_info
+    category: Data Access
+    risk: low
+    business_impact: "Returns metadata for a single persistent disk such as size, type, status, and attach history."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.get_disk_performance_config
+    object: Disk
+    action: get_disk_performance_config
+    category: Data Access
+    risk: low
+    business_impact: "Returns the performance configuration of a persistent disk including provisioned IOPS, throughput, and storage pool."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.list_disks
+    object: Disk
+    action: list_disks
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates persistent disks in a zone with their size, type, and status, mapping a project's storage footprint."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://compute.googleapis.com/mcp
+  - id: google-compute-engine.list_snapshots
+    object: Snapshot
+    action: list_snapshots
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates disk snapshots in a project with their status, size, and source disk, revealing where backup copies of disk data exist."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial

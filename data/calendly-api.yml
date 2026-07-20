@@ -1,0 +1,298 @@
+schema_version: "1.0"
+platform: calendly-api
+display_name: Calendly
+source: langguard-editorial
+updated: "2026-07"
+reference: https://developer.calendly.com/supported-tools
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://developer.calendly.com/supported-tools
+  - id: calendly-api.organizations-create_organization_invitation
+    object: OrganizationInvitation
+    action: organizations-create_organization_invitation
+    category: Identity & Access
+    risk: medium
+    business_impact: "Emails an organization invitation that provisions a new member into the Calendly org once accepted, writing the invitee's email address."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.calendly.com/supported-tools
+  - id: calendly-api.organizations-revoke_organization_invitation
+    object: OrganizationInvitation
+    action: organizations-revoke_organization_invitation
+    category: Identity & Access
+    risk: medium
+    business_impact: "Revokes a pending organization invitation, removing a prospective member's access before they can join."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.calendly.com/supported-tools
+  - id: calendly-api.organizations-list_organization_memberships
+    object: OrganizationMembership
+    action: organizations-list_organization_memberships
+    category: Identity & Access
+    risk: medium
+    business_impact: "Lists every member of the organization with their names, email addresses, and roles, enabling bulk extraction of the member directory."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.calendly.com/supported-tools
+  - id: calendly-api.organizations-get_organization_membership
+    object: OrganizationMembership
+    action: organizations-get_organization_membership
+    category: Identity & Access
+    risk: medium
+    business_impact: "Returns one organization member's profile, role, and email address."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.calendly.com/supported-tools
+  - id: calendly-api.organizations-list_organization_invitations
+    object: OrganizationInvitation
+    action: organizations-list_organization_invitations
+    category: Identity & Access
+    risk: medium
+    business_impact: "Lists pending organization invitations, exposing the email addresses of everyone invited but not yet joined."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.calendly.com/supported-tools
+  - id: calendly-api.users-get_user
+    object: User
+    action: users-get_user
+    category: Identity & Access
+    risk: medium
+    business_impact: "Returns a specific user's profile including name, email, timezone, and scheduling URL."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://developer.calendly.com/supported-tools
+  - id: calendly-api.meetings-create_invitee
+    object: Invitee
+    action: meetings-create_invitee
+    category: Customer
+    risk: medium
+    business_impact: "Books a meeting on an event type, recording the invitee's name, email, and responses to booking questions."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.calendly.com/supported-tools
+  - id: calendly-api.meetings-list_event_invitees
+    object: Invitee
+    action: meetings-list_event_invitees
+    category: Customer
+    risk: medium
+    business_impact: "Lists all invitees for a scheduled event with their names, emails, and question responses, enabling bulk read of attendee PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.calendly.com/supported-tools
+  - id: calendly-api.meetings-get_event_invitee
+    object: Invitee
+    action: meetings-get_event_invitee
+    category: Customer
+    risk: medium
+    business_impact: "Returns one invitee's booking details including name, email, and answers to scheduling questions."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.calendly.com/supported-tools
+  - id: calendly-api.meetings-create_invitee_no_show
+    object: InviteeNoShow
+    action: meetings-create_invitee_no_show
+    category: Customer
+    risk: low
+    business_impact: "Flags an invitee as a no-show for a scheduled event, recording attendance behavior against that person."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.calendly.com/supported-tools
+  - id: calendly-api.meetings-delete_invitee_no_show
+    object: InviteeNoShow
+    action: meetings-delete_invitee_no_show
+    category: Customer
+    risk: low
+    business_impact: "Clears the no-show flag on an invitee, restoring their attendance record for the event."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.calendly.com/supported-tools
+  - id: calendly-api.routing_forms-list_routing_form_submissions
+    object: RoutingFormSubmission
+    action: routing_forms-list_routing_form_submissions
+    category: Customer
+    risk: medium
+    business_impact: "Lists submissions to a routing form, exposing in bulk the contact details and answers respondents entered."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.calendly.com/supported-tools
+  - id: calendly-api.routing_forms-get_routing_form_submission
+    object: RoutingFormSubmission
+    action: routing_forms-get_routing_form_submission
+    category: Customer
+    risk: medium
+    business_impact: "Retrieves a single routing form submission with the respondent's answers and contact information."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://developer.calendly.com/supported-tools
+  - id: calendly-api.meetings-cancel_event
+    object: ScheduledEvent
+    action: meetings-cancel_event
+    category: Operations
+    risk: medium
+    business_impact: "Cancels a scheduled event, notifying invitees and freeing the booked time slot."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.calendly.com/supported-tools
+  - id: calendly-api.meetings-list_events
+    object: ScheduledEvent
+    action: meetings-list_events
+    category: Operations
+    risk: medium
+    business_impact: "Lists scheduled events across a user or organization with their times, locations, and status."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.calendly.com/supported-tools
+  - id: calendly-api.meetings-get_event
+    object: ScheduledEvent
+    action: meetings-get_event
+    category: Operations
+    risk: low
+    business_impact: "Returns details of one scheduled event including its time, location, and membership."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.calendly.com/supported-tools
+  - id: calendly-api.event_types-create_event_type
+    object: EventType
+    action: event_types-create_event_type
+    category: Operations
+    risk: low
+    business_impact: "Creates a new bookable event type, adding a scheduling offering to the account."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.calendly.com/supported-tools
+  - id: calendly-api.event_types-update_event_type
+    object: EventType
+    action: event_types-update_event_type
+    category: Operations
+    risk: medium
+    business_impact: "Updates an existing event type's configuration, changing how and when it can be booked."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.calendly.com/supported-tools
+  - id: calendly-api.event_types-update_event_type_availability_schedule
+    object: AvailabilitySchedule
+    action: event_types-update_event_type_availability_schedule
+    category: Operations
+    risk: medium
+    business_impact: "Changes the availability schedule tied to an event type, altering the windows when it can be booked."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.calendly.com/supported-tools
+  - id: calendly-api.scheduling_links-create_single_use_scheduling_link
+    object: SchedulingLink
+    action: scheduling_links-create_single_use_scheduling_link
+    category: Operations
+    risk: low
+    business_impact: "Generates a single-use scheduling link for an event type that lets one recipient book a meeting."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.calendly.com/supported-tools
+  - id: calendly-api.shares-create_share
+    object: SchedulingLink
+    action: shares-create_share
+    category: Operations
+    risk: low
+    business_impact: "Creates a customized single-use scheduling link from an event type for sharing with a recipient."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.calendly.com/supported-tools
+  - id: calendly-api.availability-list_user_busy_times
+    object: BusyTime
+    action: availability-list_user_busy_times
+    category: Operations
+    risk: low
+    business_impact: "Lists a user's busy time blocks within a date range, revealing when they are unavailable."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

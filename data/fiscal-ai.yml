@@ -1,0 +1,33 @@
+schema_version: "1.0"
+platform: fiscal-ai
+display_name: Fiscal.ai
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://api.fiscal.ai/.well-known/microsoft-copilot/mcp-tools.json
+  - id: fiscal-ai.execute_code
+    object: FinancialData
+    action: execute_code
+    category: Data Access
+    risk: medium
+    business_impact: "Runs an arbitrary JavaScript function in a read-only, network-isolated sandbox to pull broad Fiscal.ai financial data — company filings, standardized financials, ratios, stock prices, KPIs, and news."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.fiscal.ai/.well-known/microsoft-copilot/mcp-tools.json
+  - id: fiscal-ai.api_docs
+    object: Documentation
+    action: api_docs
+    category: Data Access
+    risk: low
+    business_impact: "Returns Fiscal.ai API documentation, company-identifier rules, and helper signatures used to drive the execute_code tool."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,347 @@
+schema_version: "1.1"
+platform: insider-one
+display_name: Insider One
+source: langguard-editorial
+updated: "2026-07"
+# The Insider One MCP server publishes only plain-language capability labels
+# ("Get Email Campaign Analytics (v2)", "List WhatsApp Campaigns") in its vendor
+# docs — not verbatim `tools/list` identifiers — so every entry uses
+# `id_form: capability` with the label verbatim in `description` and a slugged id.
+# Per the vendor docs the entire surface is read-only: "MCP does not allow
+# campaigns to be launched, configurations to be changed, or customer data to be
+# modified." All actions are aggregate campaign/channel performance analytics,
+# so no action exposes identifiable individuals and `compliance` stays empty.
+# When Insider publishes a real `tools/list`, refresh to `id_form: verbatim`.
+reference: https://academy.insiderone.com/docs/insider-one-mcp-functions
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://academy.insiderone.com/docs/insider-one-mcp-functions
+  - id: insider-one.get_email_campaign_list_v2
+    object: EmailCampaign
+    action: get_email_campaign_list_v2
+    id_form: capability
+    description: "Get Email Campaign List (v2)"
+    category: Data Access
+    risk: low
+    business_impact: "Lists the partner account's email campaigns; read-only enumeration of campaign metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://academy.insiderone.com/docs/insider-one-mcp-functions
+  - id: insider-one.get_email_campaign_analytics_v2
+    object: EmailCampaign
+    action: get_email_campaign_analytics_v2
+    id_form: capability
+    description: "Get Email Campaign Analytics (v2)"
+    category: Data Access
+    risk: low
+    business_impact: "Reveals performance metrics for an individual email campaign such as opens, clicks, and delivery counts."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://academy.insiderone.com/docs/insider-one-mcp-functions
+  - id: insider-one.get_overall_email_analytics_v2
+    object: EmailCampaign
+    action: get_overall_email_analytics_v2
+    id_form: capability
+    description: "Get Overall Email Analytics (v2)"
+    category: Data Access
+    risk: low
+    business_impact: "Reveals aggregated email performance metrics across all campaigns for the account."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://academy.insiderone.com/docs/insider-one-mcp-functions
+  - id: insider-one.get_web_push_top_metrics_analytics
+    object: WebPushCampaign
+    action: get_web_push_top_metrics_analytics
+    id_form: capability
+    description: "Get Web Push Top Metrics Analytics"
+    category: Data Access
+    risk: low
+    business_impact: "Reveals top-level performance metrics for Web Push campaigns."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://academy.insiderone.com/docs/insider-one-mcp-functions
+  - id: insider-one.get_web_push_overall_metrics_analytics
+    object: WebPushCampaign
+    action: get_web_push_overall_metrics_analytics
+    id_form: capability
+    description: "Get Web Push Overall Metrics Analytics"
+    category: Data Access
+    risk: low
+    business_impact: "Reveals aggregated analytics across all Web Push campaigns for the account."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://academy.insiderone.com/docs/insider-one-mcp-functions
+  - id: insider-one.get_web_push_campaign_metrics_analytics
+    object: WebPushCampaign
+    action: get_web_push_campaign_metrics_analytics
+    id_form: capability
+    description: "Get Web Push Campaign Metrics Analytics"
+    category: Data Access
+    risk: low
+    business_impact: "Reveals performance metrics for an individual Web Push campaign."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://academy.insiderone.com/docs/insider-one-mcp-functions
+  - id: insider-one.get_sms_campaign_list
+    object: SmsCampaign
+    action: get_sms_campaign_list
+    id_form: capability
+    description: "Get SMS Campaign List"
+    category: Data Access
+    risk: low
+    business_impact: "Lists the partner account's SMS campaigns; read-only enumeration of campaign metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://academy.insiderone.com/docs/insider-one-mcp-functions
+  - id: insider-one.get_sms_campaign_analytics
+    object: SmsCampaign
+    action: get_sms_campaign_analytics
+    id_form: capability
+    description: "Get SMS Campaign Analytics"
+    category: Data Access
+    risk: low
+    business_impact: "Reveals analytics metrics for an individual SMS campaign such as delivery and click rates."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://academy.insiderone.com/docs/insider-one-mcp-functions
+  - id: insider-one.get_overall_sms_campaign_analytics
+    object: SmsCampaign
+    action: get_overall_sms_campaign_analytics
+    id_form: capability
+    description: "Get Overall SMS Campaign Analytics"
+    category: Data Access
+    risk: low
+    business_impact: "Reveals aggregated analytics across all SMS campaigns for the account."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://academy.insiderone.com/docs/insider-one-mcp-functions
+  - id: insider-one.get_transactional_sms_analytics
+    object: SmsCampaign
+    action: get_transactional_sms_analytics
+    id_form: capability
+    description: "Get Transactional SMS Analytics"
+    category: Data Access
+    risk: low
+    business_impact: "Reveals analytics metrics specific to transactional SMS messages."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://academy.insiderone.com/docs/insider-one-mcp-functions
+  - id: insider-one.get_sms_otp_verify_analytics
+    object: SmsCampaign
+    action: get_sms_otp_verify_analytics
+    id_form: capability
+    description: "Get SMS OTP Verify Analytics"
+    category: Data Access
+    risk: low
+    business_impact: "Reveals aggregate analytics for SMS OTP verification messages such as verification success rates."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://academy.insiderone.com/docs/insider-one-mcp-functions
+  - id: insider-one.get_app_push_statistics
+    object: AppPushCampaign
+    action: get_app_push_statistics
+    id_form: capability
+    description: "Get App Push Statistics"
+    category: Data Access
+    risk: low
+    business_impact: "Reveals analytics metrics for App Push campaigns."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://academy.insiderone.com/docs/insider-one-mcp-functions
+  - id: insider-one.list_whatsapp_campaigns
+    object: WhatsAppCampaign
+    action: list_whatsapp_campaigns
+    id_form: capability
+    description: "List WhatsApp Campaigns"
+    category: Data Access
+    risk: low
+    business_impact: "Lists the partner account's WhatsApp campaigns; read-only enumeration of campaign metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://academy.insiderone.com/docs/insider-one-mcp-functions
+  - id: insider-one.get_whatsapp_campaign_analytics
+    object: WhatsAppCampaign
+    action: get_whatsapp_campaign_analytics
+    id_form: capability
+    description: "Get WhatsApp Campaign Analytics"
+    category: Data Access
+    risk: low
+    business_impact: "Reveals performance metrics for an individual WhatsApp campaign."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://academy.insiderone.com/docs/insider-one-mcp-functions
+  - id: insider-one.get_overall_whatsapp_analytics
+    object: WhatsAppCampaign
+    action: get_overall_whatsapp_analytics
+    id_form: capability
+    description: "Get Overall WhatsApp Analytics"
+    category: Data Access
+    risk: low
+    business_impact: "Reveals aggregated analytics across all WhatsApp campaigns for the account."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://academy.insiderone.com/docs/insider-one-mcp-functions
+  - id: insider-one.get_transactional_whatsapp_analytics
+    object: WhatsAppCampaign
+    action: get_transactional_whatsapp_analytics
+    id_form: capability
+    description: "Get Transactional WhatsApp Analytics"
+    category: Data Access
+    risk: low
+    business_impact: "Reveals analytics for transactional WhatsApp messages."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://academy.insiderone.com/docs/insider-one-mcp-functions
+  - id: insider-one.get_whatsapp_verify_analytics
+    object: WhatsAppCampaign
+    action: get_whatsapp_verify_analytics
+    id_form: capability
+    description: "Get WhatsApp Verify Analytics"
+    category: Data Access
+    risk: low
+    business_impact: "Reveals aggregate analytics for WhatsApp verification messages such as verification success rates."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://academy.insiderone.com/docs/insider-one-mcp-functions
+  - id: insider-one.get_architect_overall_analytics
+    object: Journey
+    action: get_architect_overall_analytics
+    id_form: capability
+    description: "Get Architect Overall Analytics"
+    category: Data Access
+    risk: low
+    business_impact: "Reveals aggregated performance metrics across all Architect journeys."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://academy.insiderone.com/docs/insider-one-mcp-functions
+  - id: insider-one.get_architect_journey_analytics
+    object: Journey
+    action: get_architect_journey_analytics
+    id_form: capability
+    description: "Get Architect Journey Analytics"
+    category: Data Access
+    risk: low
+    business_impact: "Reveals performance metrics for an individual Architect journey."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://academy.insiderone.com/docs/insider-one-mcp-functions
+  - id: insider-one.get_architect_element_analytics
+    object: Journey
+    action: get_architect_element_analytics
+    id_form: capability
+    description: "Get Architect Element Analytics"
+    category: Data Access
+    risk: low
+    business_impact: "Reveals step-level analytics for individual elements within an Architect journey."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://academy.insiderone.com/docs/insider-one-mcp-functions
+  - id: insider-one.get_architect_goals_analytics
+    object: Journey
+    action: get_architect_goals_analytics
+    id_form: capability
+    description: "Get Architect Goals Analytics"
+    category: Data Access
+    risk: low
+    business_impact: "Reveals goal completion metrics for Architect journeys."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://academy.insiderone.com/docs/insider-one-mcp-functions
+  - id: insider-one.get_architect_goals_information
+    object: Journey
+    action: get_architect_goals_information
+    id_form: capability
+    description: "Get Architect Goals Information"
+    category: Data Access
+    risk: low
+    business_impact: "Lists the configured goals for Architect journeys; read-only configuration read."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

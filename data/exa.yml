@@ -1,0 +1,60 @@
+schema_version: "1.0"
+platform: exa
+display_name: Exa
+source: langguard-editorial
+updated: "2026-07"
+reference: https://github.com/exa-labs/exa-mcp-server
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://mcp.exa.ai/mcp
+  - id: exa.web_search_exa
+    object: WebSearch
+    action: web_search_exa
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves live web search results and clean page content for any query, pulling untrusted external text into the agent context that can steer downstream decisions."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.exa.ai/mcp
+  - id: exa.web_fetch_exa
+    object: WebPage
+    action: web_fetch_exa
+    category: Data Access
+    risk: low
+    business_impact: "Reads the full content of one or more arbitrary URLs as markdown, potentially ingesting third-party personal data or injected instructions from those pages."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://exa.ai/docs/reference/exa-mcp
+  - id: exa.web_search_advanced_exa
+    object: WebSearch
+    action: web_search_advanced_exa
+    category: Data Access
+    risk: low
+    business_impact: "Runs filtered web search with domain, date, category, and subpage-crawl controls, surfacing targeted external content and site structure into the agent context."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://exa.ai/docs/reference/exa-mcp
+  - id: exa.agent_run
+    object: Agent
+    action: agent_run
+    category: Data Access
+    risk: medium
+    business_impact: "Runs an autonomous multi-step Exa research agent that crawls, aggregates, and enriches information about people and companies into structured lists, compiling personal data at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,20 @@
+schema_version: "1.0"
+platform: cortellis-regulatory
+display_name: Cortellis Regulatory Intelligence
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://api.clarivate.com/lifesciences/mcp-regulatory/documentation
+  - id: cortellis-regulatory.Cortellis_Regulatory_Intelligence_Agent
+    object: RegulatoryDocument
+    action: Cortellis_Regulatory_Intelligence_Agent
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves subscription-gated Cortellis regulatory documents, guidelines, forms, and pharmacovigilance summaries across countries, exposing licensed reference content to the agent."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

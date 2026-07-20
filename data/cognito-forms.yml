@@ -1,0 +1,151 @@
+schema_version: "1.1"
+platform: cognito-forms
+display_name: Cognito Forms
+source: langguard-editorial
+updated: "2026-07"
+# The Cognito Forms MCP Connector (https://mcp.cognitoforms.com/mcp) is an
+# OAuth-gated hosted server; its vendor docs publish the tool surface only as
+# plain-language capability labels, so every entry below uses id_form: capability.
+# Refresh to id_form: verbatim if a real tools/list capture becomes available.
+reference: https://www.cognitoforms.com/support/1038/data-integration/mcp-connector
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://www.cognitoforms.com/support/1038/data-integration/mcp-connector
+  - id: cognito-forms.get_form_entries
+    object: Entry
+    action: get_form_entries
+    id_form: capability
+    description: "Get Form Entries"
+    category: Data Access
+    risk: high
+    business_impact: "Retrieves many submissions from a form view in one call, enabling bulk export of respondents' personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.cognitoforms.com/support/1038/data-integration/mcp-connector
+  - id: cognito-forms.get_entry
+    object: Entry
+    action: get_entry
+    id_form: capability
+    description: "Get Entry"
+    category: Data Access
+    risk: medium
+    business_impact: "Returns a single submission's full field data, exposing that respondent's personal information to the caller."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.cognitoforms.com/support/1038/data-integration/mcp-connector
+  - id: cognito-forms.get_document
+    object: Document
+    action: get_document
+    id_form: capability
+    description: "Get Document"
+    category: Data Access
+    risk: medium
+    business_impact: "Fetches a generated document such as an invoice or contract, which can embed the submitter's personal details."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.cognitoforms.com/support/1038/data-integration/mcp-connector
+  - id: cognito-forms.get_file
+    object: File
+    action: get_file
+    id_form: capability
+    description: "Get File"
+    category: Data Access
+    risk: medium
+    business_impact: "Downloads uploaded attachments and electronic signatures from a submission, exposing sensitive personal files."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Entry Management ----------
+
+  # source: https://www.cognitoforms.com/support/1038/data-integration/mcp-connector
+  - id: cognito-forms.delete_entry
+    object: Entry
+    action: delete_entry
+    id_form: capability
+    description: "Delete Entry"
+    category: Entry Management
+    risk: high
+    business_impact: "Permanently removes a submission and its collected data, destroying the record irreversibly."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.cognitoforms.com/support/1038/data-integration/mcp-connector
+  - id: cognito-forms.create_entry
+    object: Entry
+    action: create_entry
+    id_form: capability
+    description: "Create Entry"
+    category: Entry Management
+    risk: medium
+    business_impact: "Writes a new submission into a form, injecting respondent data that flows into downstream workflows and notifications."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.cognitoforms.com/support/1038/data-integration/mcp-connector
+  - id: cognito-forms.update_entry
+    object: Entry
+    action: update_entry
+    id_form: capability
+    description: "Update Entry"
+    category: Entry Management
+    risk: medium
+    business_impact: "Overwrites fields on an existing submission, altering the recorded account of what a respondent provided."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Form Management ----------
+
+  # source: https://www.cognitoforms.com/support/1038/data-integration/mcp-connector
+  - id: cognito-forms.set_form_availability
+    object: Form
+    action: set_form_availability
+    id_form: capability
+    description: "Set Form Availability"
+    category: Form Management
+    risk: medium
+    business_impact: "Opens or closes a form to new submissions and sets its closed message, controlling public data intake."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.cognitoforms.com/support/1038/data-integration/mcp-connector
+  - id: cognito-forms.generate_form
+    object: Form
+    action: generate_form
+    id_form: capability
+    description: "Generate Form"
+    category: Form Management
+    risk: low
+    business_impact: "Builds a new form structure from a natural-language description, adding a data-collection surface to the organization."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

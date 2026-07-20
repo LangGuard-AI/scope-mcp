@@ -1,0 +1,205 @@
+schema_version: "1.0"
+platform: healthex
+display_name: HealthEx
+source: langguard-editorial
+updated: "2026-07"
+reference: https://docs.healthex.io/category/healthex-mcp-server
+actions:
+  # ---------- Health Records ----------
+
+  # source: https://docs.healthex.io/mcp-server/mcp-tools
+  - id: healthex.search
+    object: HealthRecord
+    action: search
+    category: Health Records
+    risk: high
+    business_impact: "Semantic natural-language search spanning every category of a patient's record — conditions, medications, labs, procedures, visits, and clinical notes — surfacing the entire health picture in one call."
+    compliance: [HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.healthex.io/mcp-server/mcp-tools
+  - id: healthex.get_health_summary
+    object: HealthSummary
+    action: get_health_summary
+    category: Health Records
+    risk: medium
+    business_impact: "Returns a comprehensive PHI snapshot — date of birth, active conditions, current medications with dosages, allergies, and recent vitals — aggregating the patient's core health profile in a single read."
+    compliance: [HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.healthex.io/mcp-server/mcp-tools
+  - id: healthex.search_clinical_notes
+    object: ClinicalNote
+    action: search_clinical_notes
+    category: Health Records
+    risk: medium
+    business_impact: "Full-text search across all of a patient's clinical notes exposes the most sensitive free-text documentation, including provider narratives that can contain mental-health and behavioral detail."
+    compliance: [HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.healthex.io/mcp-server/mcp-tools
+  - id: healthex.get_notes_by_visit
+    object: ClinicalNote
+    action: get_notes_by_visit
+    category: Health Records
+    risk: medium
+    business_impact: "Retrieves all clinical documentation attached to a single encounter, including provider narrative notes and diagnoses recorded for that visit."
+    compliance: [HIPAA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.healthex.io/mcp-server/mcp-tools
+  - id: healthex.get_conditions
+    object: Condition
+    action: get_conditions
+    category: Health Records
+    risk: medium
+    business_impact: "Exposes a patient's full diagnosis history, including resolved and inactive conditions with start and end dates."
+    compliance: [HIPAA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.healthex.io/mcp-server/mcp-tools
+  - id: healthex.get_medications
+    object: Medication
+    action: get_medications
+    category: Health Records
+    risk: medium
+    business_impact: "Reveals a patient's complete medication record — dosing instructions, prescriber, indication, pharmacy, and refill history — which can imply underlying diagnoses."
+    compliance: [HIPAA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.healthex.io/mcp-server/mcp-tools
+  - id: healthex.get_labs
+    object: LabResult
+    action: get_labs
+    category: Health Records
+    risk: medium
+    business_impact: "Surfaces laboratory results with values, reference ranges, and abnormal flags across blood work, urinalysis, and pathology."
+    compliance: [HIPAA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.healthex.io/mcp-server/mcp-tools
+  - id: healthex.get_procedures
+    object: Procedure
+    action: get_procedures
+    category: Health Records
+    risk: medium
+    business_impact: "Discloses surgical and diagnostic procedure history, including biopsies, endoscopies, colonoscopies, and interventions."
+    compliance: [HIPAA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.healthex.io/mcp-server/mcp-tools
+  - id: healthex.get_visits
+    object: Visit
+    action: get_visits
+    category: Health Records
+    risk: medium
+    business_impact: "Reveals clinical encounter history with dates, visit types, providers, locations, chief complaints, and diagnoses addressed."
+    compliance: [HIPAA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.healthex.io/mcp-server/mcp-tools
+  - id: healthex.get_allergies
+    object: Allergy
+    action: get_allergies
+    category: Health Records
+    risk: medium
+    business_impact: "Lists a patient's allergies and intolerances with allergen, clinical status, criticality, and reaction details used for care-safety decisions."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.healthex.io/mcp-server/mcp-tools
+  - id: healthex.get_vitals
+    object: VitalSign
+    action: get_vitals
+    category: Health Records
+    risk: medium
+    business_impact: "Exposes biometric vital-sign measurements including blood pressure, heart rate, temperature, respiratory rate, oxygen saturation, weight, height, and BMI."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.healthex.io/mcp-server/mcp-tools
+  - id: healthex.get_immunizations
+    object: Immunization
+    action: get_immunizations
+    category: Health Records
+    risk: medium
+    business_impact: "Reveals full vaccination history with vaccine names, dates administered, dose numbers, series completion, and administering providers."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://docs.healthex.io/mcp-server/mcp-tools
+  - id: healthex.update_records
+    object: SyncJob
+    action: update_records
+    category: Operations
+    risk: low
+    business_impact: "Triggers a background refresh that re-pulls the patient's health records from all connected provider locations; reversible and returns no clinical data itself."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.healthex.io/mcp-server/mcp-tools
+  - id: healthex.check_records_status
+    object: SyncJob
+    action: check_records_status
+    category: Operations
+    risk: low
+    business_impact: "Reports the current sync status of connected health records without triggering a refresh or returning clinical data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.healthex.io/mcp-server/mcp-tools
+  - id: healthex.update_and_check_recent_records
+    object: SyncJob
+    action: update_and_check_recent_records
+    category: Operations
+    risk: low
+    business_impact: "Deprecated combined refresh-and-status call that vendor docs direct users to replace with the separate update_records and check_records_status tools."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial

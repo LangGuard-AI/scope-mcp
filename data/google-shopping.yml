@@ -1,0 +1,183 @@
+schema_version: "1.0"
+platform: google-shopping
+display_name: Google Shopping
+source: langguard-editorial
+updated: "2026-07"
+reference: https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp
+  - id: google-shopping.create_data_source
+    object: DataSource
+    action: create_data_source
+    category: Data Access
+    risk: medium
+    business_impact: "Registers a new product data source that determines which products Google ingests and publishes for the merchant."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp
+  - id: google-shopping.fetch_data_source
+    object: DataSource
+    action: fetch_data_source
+    category: Data Access
+    risk: medium
+    business_impact: "Triggers processing of a data source's associated file, pulling new product data into the merchant's live catalog."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp
+  - id: google-shopping.list_data_sources
+    object: DataSource
+    action: list_data_sources
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the merchant's configured product data sources, exposing feed configuration read-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp
+  - id: google-shopping.get_data_source
+    object: DataSource
+    action: get_data_source
+    category: Data Access
+    risk: low
+    business_impact: "Returns configuration detail for a single product data source; read-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp
+  - id: google-shopping.get_file_upload
+    object: FileUpload
+    action: get_file_upload
+    category: Data Access
+    risk: low
+    business_impact: "Reports the processing status of a data source file upload; read-only operational signal."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Catalog & Products ----------
+
+  # source: https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp
+  - id: google-shopping.get_product_by_name
+    object: Product
+    action: get_product_by_name
+    category: Catalog & Products
+    risk: low
+    business_impact: "Returns full detail and review status for a single product in the merchant catalog; read-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp
+  - id: google-shopping.list_products
+    object: Product
+    action: list_products
+    category: Catalog & Products
+    risk: low
+    business_impact: "Searches the merchant's product catalog with per-item status and issue detail; read-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp
+  - id: google-shopping.list_aggregate_product_statuses
+    object: Product
+    action: list_aggregate_product_statuses
+    category: Catalog & Products
+    risk: low
+    business_impact: "Summarizes catalog-wide product data health across the merchant account; read-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Admin ----------
+
+  # source: https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp
+  - id: google-shopping.list_accounts
+    object: Account
+    action: list_accounts
+    category: Identity & Admin
+    risk: low
+    business_impact: "Lists the Merchant Center accounts the caller can access, exposing account structure read-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp
+  - id: google-shopping.list_account_issues
+    object: Account
+    action: list_account_issues
+    category: Identity & Admin
+    risk: low
+    business_impact: "Surfaces account-wide problems affecting the merchant's Shopping presence; read-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp
+  - id: google-shopping.list_programs
+    object: Program
+    action: list_programs
+    category: Identity & Admin
+    risk: low
+    business_impact: "Shows the merchant's program participation and eligibility requirements; read-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp
+  - id: google-shopping.report_search
+    object: Report
+    action: report_search
+    category: Operations
+    risk: low
+    business_impact: "Queries performance metrics, pricing, and competitive visibility for the merchant's listings; read-only analytics."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp
+  - id: google-shopping.get_automatic_improvements
+    object: AutomaticImprovements
+    action: get_automatic_improvements
+    category: Operations
+    risk: low
+    business_impact: "Reveals the account's automatic-improvement automation settings; read-only configuration view."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

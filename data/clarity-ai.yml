@@ -1,0 +1,86 @@
+schema_version: "1.0"
+platform: clarity-ai
+display_name: Clarity AI
+source: langguard-editorial
+updated: "2026-07"
+reference: https://clarity-sfdr20-mcp.pro.clarity.ai/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://clarity-sfdr20-mcp.pro.clarity.ai/mcp
+  - id: clarity-ai.search_securities
+    object: Security
+    action: search_securities
+    category: Data Access
+    risk: low
+    business_impact: "Looks up securities by keyword, ISIN, or CUSIP against the Clarity SFDR demo API; read-only reference lookup with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://clarity-sfdr20-mcp.pro.clarity.ai/mcp
+  - id: clarity-ai.sfdr20_assess_fund_name
+    object: Fund
+    action: sfdr20_assess_fund_name
+    category: Data Access
+    risk: low
+    business_impact: "Resolves a fund from free-text and returns an interpreted SFDR 2.0 sustainability assessment; read-only analysis of public fund data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://clarity-sfdr20-mcp.pro.clarity.ai/mcp
+  - id: clarity-ai.sfdr20_check_by_isin
+    object: Fund
+    action: sfdr20_check_by_isin
+    category: Data Access
+    risk: low
+    business_impact: "Runs an SFDR 2.0 check for a fund identified by an explicit ISIN; read-only regulatory-classification lookup with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://clarity-sfdr20-mcp.pro.clarity.ai/mcp
+  - id: clarity-ai.sfdr20_check_by_query
+    object: Fund
+    action: sfdr20_check_by_query
+    category: Data Access
+    risk: low
+    business_impact: "Deprecated alias resolving a fund by name for an SFDR 2.0 check; read-only lookup retained for backward compatibility."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://clarity-sfdr20-mcp.pro.clarity.ai/mcp
+  - id: clarity-ai.sfdr20_check
+    object: Fund
+    action: sfdr20_check
+    category: Data Access
+    risk: low
+    business_impact: "Deprecated alias running an SFDR 2.0 check by ISIN; read-only lookup retained for backward compatibility."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://clarity-sfdr20-mcp.pro.clarity.ai/mcp
+  - id: clarity-ai.interpret_sfdr20_result
+    object: Assessment
+    action: interpret_sfdr20_result
+    category: Data Access
+    risk: low
+    business_impact: "Normalizes raw SFDR 2.0 flags into category-level assessment evidence; pure read-only transformation of already-retrieved data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

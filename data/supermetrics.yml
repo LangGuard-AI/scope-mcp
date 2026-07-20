@@ -1,0 +1,156 @@
+schema_version: "1.0"
+platform: supermetrics
+display_name: Supermetrics
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://mcp.supermetrics.com/llms-full.txt
+  - id: supermetrics.data_query
+    object: Query
+    action: data_query
+    category: Data Access
+    risk: medium
+    business_impact: "Runs an async query that pulls data from connected marketing and analytics sources, which may include customer-level or personal data at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.supermetrics.com/llms-full.txt
+  - id: supermetrics.get_async_query_results
+    object: Query
+    action: get_async_query_results
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the result set of a scheduled query, delivering the pulled marketing data that may contain personal or customer-level records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.supermetrics.com/llms-full.txt
+  - id: supermetrics.accounts_discovery
+    object: Account
+    action: accounts_discovery
+    category: Data Access
+    risk: low
+    business_impact: "Reveals which advertising and analytics accounts are connected to a data source, exposing account identifiers tied to the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.supermetrics.com/llms-full.txt
+  - id: supermetrics.data_source_discovery
+    object: DataSource
+    action: data_source_discovery
+    category: Data Access
+    risk: low
+    business_impact: "Lists the marketing and analytics data sources available to the account along with their supported metrics and configuration needs."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.supermetrics.com/llms-full.txt
+  - id: supermetrics.field_discovery
+    object: Field
+    action: field_discovery
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the metrics and dimensions exposed by a data source; read-only schema exploration that returns no report data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Advertising ----------
+
+  # source: https://mcp.supermetrics.com/llms-full.txt
+  - id: supermetrics.campaign_create
+    object: Campaign
+    action: campaign_create
+    category: Advertising
+    risk: medium
+    business_impact: "Creates advertising campaigns, ad groups, and ads in one call, committing new ad spend on connected advertising platforms."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.supermetrics.com/llms-full.txt
+  - id: supermetrics.campaign_update
+    object: Campaign
+    action: campaign_update
+    category: Advertising
+    risk: medium
+    business_impact: "Changes a live campaign's status, budget, targeting, or ads, directly altering active advertising spend and delivery."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.supermetrics.com/llms-full.txt
+  - id: supermetrics.campaign_and_resource_get
+    object: Campaign
+    action: campaign_and_resource_get
+    category: Advertising
+    risk: low
+    business_impact: "Lists advertising campaigns and related resources with their configuration details; read-only campaign inspection."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Access ----------
+
+  # source: https://mcp.supermetrics.com/llms-full.txt
+  - id: supermetrics.user_info
+    object: User
+    action: user_info
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns the authenticated user's profile, team membership, and license details for the current session."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://mcp.supermetrics.com/llms-full.txt
+  - id: supermetrics.contact_supermetrics
+    object: SupportTicket
+    action: contact_supermetrics
+    category: Operations
+    risk: low
+    business_impact: "Sends product feedback or opens a support ticket or sales enquiry on the account's behalf."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.supermetrics.com/llms-full.txt
+  - id: supermetrics.get_today
+    object: Date
+    action: get_today
+    category: Operations
+    risk: low
+    business_impact: "Returns the current date for use in query parameters; touches no business or customer data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

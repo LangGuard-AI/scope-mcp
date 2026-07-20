@@ -1,0 +1,343 @@
+schema_version: "1.0"
+platform: box-api
+display_name: Box
+source: langguard-editorial
+updated: "2026-07"
+reference: https://developer.box.com/guides/box-mcp/tools/
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.create_collaboration
+    object: Collaboration
+    action: create_collaboration
+    category: Identity & Access
+    risk: high
+    business_impact: "Grants a user or group access to a file, folder, or hub, widening who can read Box content that may hold confidential or personal data — bypasses access-review controls."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.update_collaboration
+    object: Collaboration
+    action: update_collaboration
+    category: Identity & Access
+    risk: high
+    business_impact: "Changes the role on an existing file, folder, or hub collaboration, escalating or reducing a principal's access to stored content."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.add_file_shared_link
+    object: SharedLink
+    action: add_file_shared_link
+    category: Identity & Access
+    risk: high
+    business_impact: "Creates or updates a shared link for a file, potentially exposing its contents to anyone with the URL outside the organization's access controls."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.add_folder_shared_link
+    object: SharedLink
+    action: add_folder_shared_link
+    category: Identity & Access
+    risk: high
+    business_impact: "Creates or updates a shared link for an entire folder tree, exposing every file inside it externally in a single action."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.list_item_collaborations
+    object: Collaboration
+    action: list_item_collaborations
+    category: Identity & Access
+    risk: low
+    business_impact: "Enumerates who currently collaborates on a file or folder, revealing the access-control state and the identities of collaborators."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.get_download_url
+    object: File
+    action: get_download_url
+    category: Data Access
+    risk: medium
+    business_impact: "Issues a temporary URL to download a file, providing an egress path for content that may contain confidential or personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.get_upload_url
+    object: File
+    action: get_upload_url
+    category: Data Access
+    risk: medium
+    business_impact: "Issues a temporary URL to upload file content into Box, creating an ingress path outside normal application review."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.get_file_content
+    object: File
+    action: get_file_content
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the raw content of a stored file, which may include personal data, credentials, or confidential business records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.search_files_metadata
+    object: File
+    action: search_files_metadata
+    category: Data Access
+    risk: medium
+    business_impact: "Runs SQL-like metadata queries across files, which can surface sensitive documents matching arbitrary attribute filters."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.search_files_keyword
+    object: File
+    action: search_files_keyword
+    category: Data Access
+    risk: low
+    business_impact: "Locates files by keyword across the accessible corpus, a read-only discovery step that helps surface relevant content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- AI Content Intelligence ----------
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.ai_extract_freeform
+    object: File
+    action: ai_extract_freeform
+    category: AI Content Intelligence
+    risk: medium
+    business_impact: "Reads file content through Box AI with a natural-language prompt to extract metadata, potentially pulling personal or confidential values out of documents."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.ai_extract_structured
+    object: File
+    action: ai_extract_structured
+    category: AI Content Intelligence
+    risk: medium
+    business_impact: "Uses the Box AI Enhanced Extract Agent to pull structured key-value data from files, which may include personal or regulated fields."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.ai_qa_multi_file
+    object: File
+    action: ai_qa_multi_file
+    category: AI Content Intelligence
+    risk: medium
+    business_impact: "Answers questions across multiple files via Box AI, synthesizing content that may span confidential or personal information from several documents at once."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.ai_qa_single_file
+    object: File
+    action: ai_qa_single_file
+    category: AI Content Intelligence
+    risk: medium
+    business_impact: "Answers questions about a single file via Box AI, reading its contents which may contain personal or confidential data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Content Operations ----------
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.upload_file
+    object: File
+    action: upload_file
+    category: Content Operations
+    risk: low
+    business_impact: "Uploads a new file to Box, adding content to storage; reversible and low-impact on its own."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.upload_file_version
+    object: File
+    action: upload_file_version
+    category: Content Operations
+    risk: medium
+    business_impact: "Replaces the current version of an existing file with new contents, changing what collaborators see while retaining prior versions in history."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.copy_file
+    object: File
+    action: copy_file
+    category: Content Operations
+    risk: low
+    business_impact: "Duplicates a file into a destination folder; reversible, though it can propagate content into a differently-permissioned location."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.move_file
+    object: File
+    action: move_file
+    category: Content Operations
+    risk: medium
+    business_impact: "Relocates a file to a new folder, which changes the permissions and shared-link context the file inherits from its parent."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.update_file_properties
+    object: File
+    action: update_file_properties
+    category: Content Operations
+    risk: low
+    business_impact: "Updates a file's name, description, tags, and collections; cosmetic metadata changes with no effect on file contents."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Metadata & Templates ----------
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.set_file_metadata
+    object: FileMetadata
+    action: set_file_metadata
+    category: Metadata & Templates
+    risk: low
+    business_impact: "Creates or updates custom metadata on a file, attaching classification or business attributes used by downstream automation."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.create_metadata_template
+    object: MetadataTemplate
+    action: create_metadata_template
+    category: Metadata & Templates
+    risk: medium
+    business_impact: "Creates an enterprise-wide metadata template, defining schema fields that govern how content is classified across the organization."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.update_metadata_template
+    object: MetadataTemplate
+    action: update_metadata_template
+    category: Metadata & Templates
+    risk: medium
+    business_impact: "Alters an existing enterprise metadata template, changing schema fields that every file tagged with the template depends on."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Doc Gen & Hubs ----------
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.create_docgen_batch
+    object: Document
+    action: create_docgen_batch
+    category: Doc Gen & Hubs
+    risk: medium
+    business_impact: "Generates documents from a Doc Gen template by merging supplied data into placeholder tags, producing new files that may embed personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.create_hub
+    object: Hub
+    action: create_hub
+    category: Doc Gen & Hubs
+    risk: low
+    business_impact: "Creates a new hub container for organizing curated content; low-impact and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.box.com/guides/box-mcp/tools/
+  - id: box-api.add_items_to_hub
+    object: Hub
+    action: add_items_to_hub
+    category: Doc Gen & Hubs
+    risk: low
+    business_impact: "Adds files, folders, or web links to a hub, surfacing that content within the hub's curated collection for its members."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

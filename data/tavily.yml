@@ -1,0 +1,73 @@
+schema_version: "1.0"
+platform: tavily
+display_name: Tavily
+source: langguard-editorial
+updated: "2026-07"
+reference: https://github.com/tavily-ai/tavily-mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/tavily-ai/tavily-mcp/main/src/index.ts
+  - id: tavily.tavily_search
+    object: WebSearch
+    action: tavily_search
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves live web search snippets and source URLs, pulling untrusted external content into the agent context that can steer downstream decisions."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/tavily-ai/tavily-mcp/main/src/index.ts
+  - id: tavily.tavily_extract
+    object: WebPage
+    action: tavily_extract
+    category: Data Access
+    risk: low
+    business_impact: "Pulls the full raw content of specified URLs into the agent context, potentially ingesting third-party personal data or injected instructions from those pages."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/tavily-ai/tavily-mcp/main/src/index.ts
+  - id: tavily.tavily_crawl
+    object: Website
+    action: tavily_crawl
+    category: Data Access
+    risk: medium
+    business_impact: "Recursively harvests content across a website at configurable depth and breadth, a bulk scraping operation that ingests large volumes of third-party data and can breach a site's terms of service."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/tavily-ai/tavily-mcp/main/src/index.ts
+  - id: tavily.tavily_map
+    object: Website
+    action: tavily_map
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the URL structure of a target website, exposing its page inventory without fetching page bodies."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/tavily-ai/tavily-mcp/main/src/index.ts
+  - id: tavily.tavily_research
+    object: Research
+    action: tavily_research
+    category: Data Access
+    risk: medium
+    business_impact: "Runs multi-source aggregated research and returns a synthesized answer, blending many untrusted web sources into one response and compounding provenance risk."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

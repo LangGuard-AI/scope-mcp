@@ -1,0 +1,73 @@
+schema_version: "1.0"
+platform: tango
+display_name: Tango
+source: langguard-editorial
+updated: "2026-07"
+reference: https://docs.makegov.com/mcp/
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.makegov.com/mcp/
+  - id: tango.resolve
+    object: "*"
+    action: resolve
+    category: Data Access
+    risk: low
+    business_impact: "Resolves names or keywords to identifiers for entities, vehicles, contracts, opportunities, and other public federal-procurement records with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.makegov.com/mcp/
+  - id: tango.search
+    object: Record
+    action: search
+    category: Data Access
+    risk: low
+    business_impact: "Searches across 13 public federal-contracting record types with filters and aggregate statistics; read-only and reversible-by-nature."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.makegov.com/mcp/
+  - id: tango.search_opportunities
+    object: Opportunity
+    action: search_opportunities
+    category: Data Access
+    risk: low
+    business_impact: "Searches open federal opportunities and agency forecasts by agency, NAICS, PSC, set-aside, and deadline; a read-only query over public data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.makegov.com/mcp/
+  - id: tango.get_details
+    object: Record
+    action: get_details
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves detailed fields for a single public procurement item by ID and type, optionally enriched with related records; no write."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.makegov.com/mcp/
+  - id: tango.fetch_api_docs
+    object: Documentation
+    action: fetch_api_docs
+    category: Data Access
+    risk: low
+    business_impact: "Returns curated markdown documentation for a Tango resource section; a static informational read with no access to customer data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

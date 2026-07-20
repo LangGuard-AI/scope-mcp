@@ -1,0 +1,152 @@
+schema_version: "1.0"
+platform: alphaxiv
+display_name: alphaXiv
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Library ----------
+
+  # source: https://www.alphaxiv.org/docs/mcp
+  - id: alphaxiv.delete_folder
+    object: Folder
+    action: delete_folder
+    category: Library
+    risk: medium
+    business_impact: "Deletes a custom folder and all of its paper memberships in one call; the papers survive but the collection and its organization are lost unless rebuilt by hand."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.alphaxiv.org/docs/mcp
+  - id: alphaxiv.move_papers_between_folders
+    object: Paper
+    action: move_papers_between_folders
+    category: Library
+    risk: low
+    business_impact: "Moves papers from a source folder to a destination folder atomically; reorganizes personal bookmarks and is reversible by moving them back."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.alphaxiv.org/docs/mcp
+  - id: alphaxiv.remove_papers_from_folder
+    object: Paper
+    action: remove_papers_from_folder
+    category: Library
+    risk: low
+    business_impact: "Removes papers from a single folder without deleting them from other folders; reversible by re-adding the paper."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.alphaxiv.org/docs/mcp
+  - id: alphaxiv.save_papers_to_folder
+    object: Paper
+    action: save_papers_to_folder
+    category: Library
+    risk: low
+    business_impact: "Adds papers to one of the user's folders, fetching new ones from arXiv; idempotent and easily undone by removal."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.alphaxiv.org/docs/mcp
+  - id: alphaxiv.create_folder
+    object: Folder
+    action: create_folder
+    category: Library
+    risk: low
+    business_impact: "Creates a new custom folder, optionally nested under an existing one, in the user's personal library; low-impact and easily deleted."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.alphaxiv.org/docs/mcp
+  - id: alphaxiv.rename_folder
+    object: Folder
+    action: rename_folder
+    category: Library
+    risk: low
+    business_impact: "Renames a custom folder in the user's library; a cosmetic change that cannot touch the default reading-status or publications folders."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.alphaxiv.org/docs/mcp
+  - id: alphaxiv.list_library
+    object: Folder
+    action: list_library
+    category: Library
+    risk: low
+    business_impact: "Lists the user's own folders with their ids, names, sharing status, and paper counts; exposes the account's library structure but changes nothing."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://www.alphaxiv.org/docs/mcp
+  - id: alphaxiv.discover_papers
+    object: Paper
+    action: discover_papers
+    category: Data Access
+    risk: low
+    business_impact: "Runs an agentic retrieval loop over arXiv/alphaXiv to rank candidate papers for a research topic; read-only discovery with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.alphaxiv.org/docs/mcp
+  - id: alphaxiv.get_paper_content
+    object: Paper
+    action: get_paper_content
+    category: Data Access
+    risk: low
+    business_impact: "Returns the full text or an AI-generated report of a public arXiv/alphaXiv paper for downstream reading; read-only fetch of published content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.alphaxiv.org/docs/mcp
+  - id: alphaxiv.answer_pdf_queries
+    object: Paper
+    action: answer_pdf_queries
+    category: Data Access
+    risk: low
+    business_impact: "Returns query-relevant page-level text from a single public PDF so citations can be built directly; read-only, no writes."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.alphaxiv.org/docs/mcp
+  - id: alphaxiv.read_files_from_github_repository
+    object: Repository
+    action: read_files_from_github_repository
+    category: Data Access
+    risk: low
+    business_impact: "Reads file trees and file contents from a paper's public GitHub repository; read-only code exploration with no repository writes."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

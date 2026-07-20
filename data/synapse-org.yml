@@ -1,0 +1,72 @@
+schema_version: "1.0"
+platform: synapse-org
+display_name: Synapse.org
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://github.com/susheel/synapse-mcp
+  - id: synapse-org.get_entity
+    object: Entity
+    action: get_entity
+    category: Data Access
+    risk: low
+    business_impact: "Returns core metadata for a single Synapse entity such as a dataset, file, or project, exposing its name, type, and configuration to the caller."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/susheel/synapse-mcp
+  - id: synapse-org.get_entity_annotations
+    object: Annotation
+    action: get_entity_annotations
+    category: Data Access
+    risk: low
+    business_impact: "Returns custom annotations attached to an entity, which may carry descriptive research metadata and free-text fields set by contributors."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/susheel/synapse-mcp
+  - id: synapse-org.get_entity_provenance
+    object: Provenance
+    action: get_entity_provenance
+    category: Data Access
+    risk: low
+    business_impact: "Reveals the provenance chain and recorded activity for an entity version, exposing which contributors and steps produced the data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/susheel/synapse-mcp
+  - id: synapse-org.get_entity_children
+    object: Entity
+    action: get_entity_children
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the child entities within a project or folder, revealing the structure and contents of a container to the caller."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/susheel/synapse-mcp
+  - id: synapse-org.search_synapse
+    object: Entity
+    action: search_synapse
+    category: Data Access
+    risk: low
+    business_impact: "Searches Synapse for entities matching a keyword, surfacing dataset, file, and project metadata across the repository's discoverable surface."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

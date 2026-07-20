@@ -1,0 +1,62 @@
+schema_version: "1.0"
+platform: synthesize-bio
+display_name: Synthesize Bio
+source: langguard-editorial
+updated: "2026-07"
+reference: https://docs.synthesize.bio/platform/tools-reference.md
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.synthesize.bio/platform/tools-reference.md
+  - id: synthesize-bio.get_counts_data_url
+    object: CountsData
+    action: get_counts_data_url
+    category: Data Access
+    risk: medium
+    business_impact: "Issues a presigned URL granting time-limited, unauthenticated download of a completed job's raw gene-expression counts and gene-symbol mapping — the artifact can be shared beyond the chat session."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.synthesize.bio/platform/tools-reference.md
+  - id: synthesize-bio.get_analysis_results
+    object: AnalysisJob
+    action: get_analysis_results
+    category: Data Access
+    risk: low
+    business_impact: "Polls a running analysis job and returns its status and differential-expression results once the pipeline completes."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://docs.synthesize.bio/platform/tools-reference.md
+  - id: synthesize-bio.analyze_gene_expression
+    object: AnalysisJob
+    action: analyze_gene_expression
+    category: Operations
+    risk: medium
+    business_impact: "Launches a differential gene-expression analysis pipeline from confirmed sample groups, consuming compute and producing a downloadable results job."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.synthesize.bio/platform/tools-reference.md
+  - id: synthesize-bio.resolve_sample_metadata
+    object: SampleGroup
+    action: resolve_sample_metadata
+    category: Operations
+    risk: low
+    business_impact: "Parses a natural-language experiment description into structured sample groups — a required preparation step before any analysis pipeline runs."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,311 @@
+schema_version: "1.0"
+platform: felt-maps
+display_name: Felt Maps
+source: langguard-editorial
+updated: "2026-07"
+reference: https://help.felt.com/felt-ai/mcp
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://help.felt.com/felt-ai/mcp
+  - id: felt-maps.share_map
+    object: Map
+    action: share_map
+    category: Identity & Access
+    risk: high
+    business_impact: "Sets a map's public access level up to view-comment-edit and returns a share link, potentially exposing its layers and data to anyone with the URL."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://help.felt.com/felt-ai/mcp
+  - id: felt-maps.get_tabular_data_from_data_source
+    object: DataSource
+    action: get_tabular_data_from_data_source
+    category: Data Access
+    risk: medium
+    business_impact: "Runs an ad-hoc read-only SELECT against a connected production database (Postgres, Snowflake, BigQuery) and returns raw rows, a read path that can surface sensitive records."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.felt.com/felt-ai/mcp
+  - id: felt-maps.get_tabular_data_from_felt_layers
+    object: Layer
+    action: get_tabular_data_from_felt_layers
+    category: Data Access
+    risk: medium
+    business_impact: "Runs an ad-hoc read-only SELECT against existing Felt layers and returns raw tabular rows to the caller."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.felt.com/felt-ai/mcp
+  - id: felt-maps.create_layer_from_data_source
+    object: Layer
+    action: create_layer_from_data_source
+    category: Data Access
+    risk: medium
+    business_impact: "Executes a SQL query against a connected external database and materializes the result as a new map layer, moving production data into Felt."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.felt.com/felt-ai/mcp
+  - id: felt-maps.create_layer_from_felt_layers
+    object: Layer
+    action: create_layer_from_felt_layers
+    category: Data Access
+    risk: medium
+    business_impact: "Runs a SQL query against existing Felt layers and creates a new derived layer from the result."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.felt.com/felt-ai/mcp
+  - id: felt-maps.add_data_source_table_to_map
+    object: Layer
+    action: add_data_source_table_to_map
+    category: Data Access
+    risk: medium
+    business_impact: "Copies an entire table from a connected external database onto a map as a new layer, relocating production data into a shareable surface."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.felt.com/felt-ai/mcp
+  - id: felt-maps.inspect_layer_columns
+    object: Layer
+    action: inspect_layer_columns
+    category: Data Access
+    risk: medium
+    business_impact: "Returns a layer's full column schema along with sample values and summary statistics, exposing representative row-level data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.felt.com/felt-ai/mcp
+  - id: felt-maps.list_data_sources
+    object: DataSource
+    action: list_data_sources
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the external databases connected to the workspace and their types, revealing the organization's data-source inventory."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.felt.com/felt-ai/mcp
+  - id: felt-maps.browse_data_source_tables
+    object: DataSource
+    action: browse_data_source_tables
+    category: Data Access
+    risk: low
+    business_impact: "Lists the tables and saved queries available inside a connected database without returning their contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.felt.com/felt-ai/mcp
+  - id: felt-maps.inspect_data_source_table_columns
+    object: Table
+    action: inspect_data_source_table_columns
+    category: Data Access
+    risk: low
+    business_impact: "Returns the column names and types for a table inside a connected database, exposing schema metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://help.felt.com/felt-ai/mcp
+  - id: felt-maps.delete_map
+    object: Map
+    action: delete_map
+    category: Operations
+    risk: high
+    business_impact: "Permanently deletes a map along with every layer and annotation it contains, with no recovery path."
+    compliance: []
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.felt.com/felt-ai/mcp
+  - id: felt-maps.delete_layer
+    object: Layer
+    action: delete_layer
+    category: Operations
+    risk: medium
+    business_impact: "Removes a data layer from a map, discarding the layer and its imported data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.felt.com/felt-ai/mcp
+  - id: felt-maps.delete_annotation
+    object: Annotation
+    action: delete_annotation
+    category: Operations
+    risk: low
+    business_impact: "Deletes a single annotation from a map."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.felt.com/felt-ai/mcp
+  - id: felt-maps.import_layer_from_url
+    object: Layer
+    action: import_layer_from_url
+    category: Operations
+    risk: medium
+    business_impact: "Fetches data from an external URL (ArcGIS, WMS, GeoJSON, Shapefile) and adds it to a map as a new layer."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.felt.com/felt-ai/mcp
+  - id: felt-maps.prepare_file_upload
+    object: Layer
+    action: prepare_file_upload
+    category: Operations
+    risk: low
+    business_impact: "Issues a presigned S3 upload slot for adding a local file to a map as a new layer."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.felt.com/felt-ai/mcp
+  - id: felt-maps.upload_contents_to_map
+    object: Layer
+    action: upload_contents_to_map
+    category: Operations
+    risk: low
+    business_impact: "Adds inline text content (CSV, TSV, GeoJSON, KML, GPX) to a map as a new layer."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.felt.com/felt-ai/mcp
+  - id: felt-maps.duplicate_layer_to_map
+    object: Layer
+    action: duplicate_layer_to_map
+    category: Operations
+    risk: low
+    business_impact: "Copies a layer from a Felt library dataset, Felt Server, or another map onto a target map."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.felt.com/felt-ai/mcp
+  - id: felt-maps.refresh_url_layer
+    object: Layer
+    action: refresh_url_layer
+    category: Operations
+    risk: low
+    business_impact: "Re-fetches a URL-backed layer's source to pull in the latest upstream data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.felt.com/felt-ai/mcp
+  - id: felt-maps.refresh_data_source_layer
+    object: Layer
+    action: refresh_data_source_layer
+    category: Operations
+    risk: low
+    business_impact: "Re-runs a data-source-backed layer's query to refresh it with the latest database results."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.felt.com/felt-ai/mcp
+  - id: felt-maps.create_map
+    object: Map
+    action: create_map
+    category: Operations
+    risk: low
+    business_impact: "Creates a new map in the workspace with an optional title, basemap, center, and zoom."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.felt.com/felt-ai/mcp
+  - id: felt-maps.update_map
+    object: Map
+    action: update_map
+    category: Operations
+    risk: low
+    business_impact: "Changes a map's title, basemap style, or viewport."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.felt.com/felt-ai/mcp
+  - id: felt-maps.update_layer_properties
+    object: Layer
+    action: update_layer_properties
+    category: Operations
+    risk: low
+    business_impact: "Updates a layer's name, description, or FSL style on the fields supplied."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.felt.com/felt-ai/mcp
+  - id: felt-maps.upsert_annotations
+    object: Annotation
+    action: upsert_annotations
+    category: Operations
+    risk: low
+    business_impact: "Creates or updates annotations on a map in place."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

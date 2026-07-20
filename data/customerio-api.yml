@@ -1,0 +1,116 @@
+schema_version: "1.0"
+platform: customerio-api
+display_name: Customer.io
+source: langguard-editorial
+updated: "2026-07"
+reference: https://docs.customer.io/ai/mcp/get-started/
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.customer.io/ai/mcp/get-started/
+  - id: customerio-api.cio_delete_api
+    object: "*"
+    action: cio_delete_api
+    category: Data Access
+    risk: critical
+    business_impact: "Issues arbitrary authenticated DELETE calls against any Customer.io endpoint, irreversibly removing customer records, segments, or campaigns with no built-in recovery path."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.customer.io/ai/mcp/get-started/
+  - id: customerio-api.cio_write_api
+    object: "*"
+    action: cio_write_api
+    category: Data Access
+    risk: high
+    business_impact: "Issues arbitrary POST, PUT, and PATCH calls to any endpoint, letting the agent create or edit customer profiles, attributes, segments, and campaigns — including messaging that reaches real recipients."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.customer.io/ai/mcp/get-started/
+  - id: customerio-api.cio_read_api
+    object: "*"
+    action: cio_read_api
+    category: Data Access
+    risk: high
+    business_impact: "Issues arbitrary authenticated GET calls against any endpoint, enabling retrieval and listing of customer profiles, attributes, and behavioral event data at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Access ----------
+
+  # source: https://docs.customer.io/ai/mcp/get-started/
+  - id: customerio-api.cio_auth_status
+    object: Session
+    action: cio_auth_status
+    category: Identity & Access
+    risk: low
+    business_impact: "Reveals the current token's authentication state and the set of workspaces it can reach, exposing the credential's effective access scope."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://docs.customer.io/ai/mcp/get-started/
+  - id: customerio-api.cio_schema
+    object: Schema
+    action: cio_schema
+    category: Operations
+    risk: low
+    business_impact: "Enumerates available Customer.io API resources, endpoints, and parameters for discovery before any call is made; read-only metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.customer.io/ai/mcp/get-started/
+  - id: customerio-api.cio_prime
+    object: Reference
+    action: cio_prime
+    category: Operations
+    risk: low
+    business_impact: "Loads the Customer.io API reference bundle into the agent context; a read-only priming call with no data-plane effect."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.customer.io/ai/mcp/get-started/
+  - id: customerio-api.cio_skills_list
+    object: Skill
+    action: cio_skills_list
+    category: Operations
+    risk: low
+    business_impact: "Lists the available agent skills — task-specific instruction sets — without executing any of them."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.customer.io/ai/mcp/get-started/
+  - id: customerio-api.cio_skills_read
+    object: Skill
+    action: cio_skills_read
+    category: Operations
+    risk: low
+    business_impact: "Returns the full step-by-step content of a named agent skill so the agent can follow the workflow; read-only retrieval."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

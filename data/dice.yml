@@ -1,0 +1,20 @@
+schema_version: "1.0"
+platform: dice
+display_name: Dice
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://mcp.dice.com/mcp
+  - id: dice.search_jobs
+    object: Job
+    action: search_jobs
+    category: Data Access
+    risk: low
+    business_impact: "Queries Dice's job-listing index by keyword, location, and filters, returning job details, company info, and application links."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,47 @@
+schema_version: "1.0"
+platform: google-sheets
+display_name: Google Sheets
+source: langguard-editorial
+updated: "2026-07"
+reference: https://github.com/gemini-cli-extensions/workspace
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/gemini-cli-extensions/workspace/main/workspace-server/src/index.ts
+  - id: google-sheets.sheets.getText
+    object: Spreadsheet
+    action: sheets.getText
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the full cell contents of a spreadsheet, a bulk read that surfaces every row the agent can reach and may expose PII held in the sheet."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/gemini-cli-extensions/workspace/main/workspace-server/src/index.ts
+  - id: google-sheets.sheets.getRange
+    object: Spreadsheet
+    action: sheets.getRange
+    category: Data Access
+    risk: low
+    business_impact: "Reads the values in a bounded cell range, returning whatever data those cells hold to the caller."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/gemini-cli-extensions/workspace/main/workspace-server/src/index.ts
+  - id: google-sheets.sheets.getMetadata
+    object: Spreadsheet
+    action: sheets.getMetadata
+    category: Data Access
+    risk: low
+    business_impact: "Returns structural metadata about a spreadsheet such as title, sheet names, and dimensions without exposing cell values."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

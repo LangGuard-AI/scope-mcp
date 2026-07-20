@@ -1,0 +1,341 @@
+schema_version: "1.0"
+platform: attention
+display_name: Attention
+source: langguard-editorial
+updated: "2026-07"
+reference: https://docs.attention.com/mcp/overview.md
+actions:
+  # ---------- Secrets & Workflows ----------
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.create_api_key
+    object: ApiKey
+    action: create_api_key
+    category: Secrets & Workflows
+    risk: critical
+    business_impact: "Mints a new API key whose token is displayed only once, creating a long-lived credential that can authenticate full API access if leaked."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.delete_api_key
+    object: ApiKey
+    action: delete_api_key
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Permanently revokes an API key, immediately breaking any integration or automation that authenticates with it."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.list_api_keys
+    object: ApiKey
+    action: list_api_keys
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Enumerates every API key configured for the org (metadata only, no token values), exposing the credential inventory and integration footprint."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Access ----------
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.manage_user_role
+    object: User
+    action: manage_user_role
+    category: Identity & Access
+    risk: high
+    business_impact: "Assigns or removes a user's role, able to grant elevated privileges that bypass access-review controls."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.update_user
+    object: User
+    action: update_user
+    category: Identity & Access
+    risk: high
+    business_impact: "Changes a user's profile, role, or seat type, potentially escalating permissions or altering billable seat allocation."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.delete_user
+    object: User
+    action: delete_user
+    category: Identity & Access
+    risk: high
+    business_impact: "Deactivates a user account, revoking their access to calls and coaching data; reversible via reactivation but disrupts the user immediately."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.reactivate_user
+    object: User
+    action: reactivate_user
+    category: Identity & Access
+    risk: medium
+    business_impact: "Restores a previously deactivated user, re-granting access to call recordings, transcripts, and coaching data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.invite_user
+    object: User
+    action: invite_user
+    category: Identity & Access
+    risk: medium
+    business_impact: "Sends an email invitation that provisions a new user seat and grants access to the org's call and coaching data on acceptance."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.update_user_teams
+    object: User
+    action: update_user_teams
+    category: Identity & Access
+    risk: medium
+    business_impact: "Adds or removes a user's team memberships in one call, changing which teams' calls and metrics the user can see."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.update_org_settings
+    object: Org
+    action: update_org_settings
+    category: Identity & Access
+    risk: medium
+    business_impact: "Changes org-wide settings such as automatic call joining and recording-bot image, affecting how every meeting is captured."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.delete_crm_account
+    object: CrmIntegration
+    action: delete_crm_account
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Disconnects a CRM account and removes its integrations, halting data sync and breaking field mappings across the org."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.connect_integration
+    object: Integration
+    action: connect_integration
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Generates an OAuth link to connect Salesforce, HubSpot, or Microsoft, establishing a cross-system data flow of CRM and calendar records."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.create_crm_integration
+    object: CrmIntegration
+    action: create_crm_integration
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Creates a CRM integration mapping that governs which entities and fields sync between Attention and the connected CRM."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.update_crm_integration
+    object: CrmIntegration
+    action: update_crm_integration
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Updates a CRM integration's name, field mappings, or status, changing what data flows between Attention and the CRM."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.sync_crm_fields
+    object: CrmIntegration
+    action: sync_crm_fields
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Force-syncs entity and field definitions from the CRM, refreshing the mapping schema used to attach call data to CRM records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.ask_attention
+    object: Call
+    action: ask_attention
+    category: Data Access
+    risk: high
+    business_impact: "Runs AI analysis across up to 25 calls or every call in a deal, aggregating transcript content and insights at scale into a single response."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.get_call_details
+    object: Call
+    action: get_call_details
+    category: Data Access
+    risk: medium
+    business_impact: "Returns a single call's full transcript, scorecard results, and insights, exposing verbatim customer and prospect conversation content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.search_calls
+    object: Call
+    action: search_calls
+    category: Data Access
+    risk: medium
+    business_impact: "Searches call recordings by date, rep, team, keyword, opportunity, CRM field, or transcript content, surfacing sensitive customer conversations."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.create_snippet
+    object: Snippet
+    action: create_snippet
+    category: Data Access
+    risk: medium
+    business_impact: "Creates a shareable clip from a call recording, producing a link that can expose customer conversation content outside the original access scope."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.get_usage_report
+    object: UsageReport
+    action: get_usage_report
+    category: Data Access
+    risk: medium
+    business_impact: "Returns per-user activity metrics (calls, coaching, AI usage) for a date range, exposing individual reps' monitoring data over time."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.send_super_agent_message
+    object: SuperAgentSession
+    action: send_super_agent_message
+    category: Data Access
+    risk: medium
+    business_impact: "Sends an instruction to the super agent, which can act across the workspace's calls, CRM data, and configuration on the user's behalf."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.get_super_agent_session_history
+    object: SuperAgentSession
+    action: get_super_agent_session_history
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves the full message history of a super agent session, which may contain call excerpts and CRM data surfaced in prior responses."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.delete_super_agent_session
+    object: SuperAgentSession
+    action: delete_super_agent_session
+    category: Data Access
+    risk: medium
+    business_impact: "Deletes a super agent session and all its messages, permanently discarding the interaction history for that session."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.add_team_member
+    object: Team
+    action: add_team_member
+    category: Operations
+    risk: medium
+    business_impact: "Adds a user to a team, granting them visibility into that team's calls, scorecards, and metrics."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.attention.com/mcp/tools-overview.md
+  - id: attention.remove_team_member
+    object: Team
+    action: remove_team_member
+    category: Operations
+    risk: medium
+    business_impact: "Removes a user from a team, revoking their visibility into that team's calls and metrics."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

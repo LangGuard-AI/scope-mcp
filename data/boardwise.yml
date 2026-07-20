@@ -1,0 +1,138 @@
+schema_version: "1.0"
+platform: boardwise
+display_name: BoardWise
+source: langguard-editorial
+updated: "2026-07"
+reference: https://boardwise.online/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://boardwise.online/mcp
+  - id: boardwise.get_board_guidance
+    object: Guidance
+    action: get_board_guidance
+    category: Data Access
+    risk: low
+    business_impact: "Returns general educational guidance on a state licensing-board matter, including response-deadline and jurisdictional context; informational only, writing and storing no user data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://boardwise.online/mcp
+  - id: boardwise.get_response_letter_guidance
+    object: ResponseLetterGuidance
+    action: get_response_letter_guidance
+    category: Data Access
+    risk: low
+    business_impact: "Produces a structured outline for a board response letter; guidance only, drafting nothing and persisting no user data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://boardwise.online/mcp
+  - id: boardwise.find_relevant_guide
+    object: Guide
+    action: find_relevant_guide
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces up to three matching BoardWise educational guide URLs for a topic or situation; read-only lookup with no side effects."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://boardwise.online/mcp
+  - id: boardwise.get_resources
+    object: Resource
+    action: get_resources
+    category: Data Access
+    risk: low
+    business_impact: "Lists curated educational guides and tools for a given situation type; read-only retrieval that changes no state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://boardwise.online/mcp
+  - id: boardwise.get_boardwise_capabilities
+    object: Capability
+    action: get_boardwise_capabilities
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the situations and privacy/product features BoardWise supports; a static capability description with no user-data impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://boardwise.online/mcp
+  - id: boardwise.get_ceu_audit_guidance
+    object: Guidance
+    action: get_ceu_audit_guidance
+    category: Data Access
+    risk: low
+    business_impact: "Returns profession- and state-specific guidance for responding to a CEU/CE audit notice; informational only, transmitting no user data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://boardwise.online/mcp
+  - id: boardwise.explain_notice_of_investigation
+    object: InvestigationNotice
+    action: explain_notice_of_investigation
+    category: Data Access
+    risk: low
+    business_impact: "Explains what a notice of investigation generally means and typical process progression; a calm informational read that handles no stored data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://boardwise.online/mcp
+  - id: boardwise.identify_required_documents
+    object: DocumentList
+    action: identify_required_documents
+    category: Data Access
+    risk: low
+    business_impact: "Lists documents commonly requested for a given profession, state, and issue; framed as general information, neither stored nor transmitted."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://boardwise.online/mcp
+  - id: boardwise.extract_deadlines
+    object: Deadline
+    action: extract_deadlines
+    category: Data Access
+    risk: low
+    business_impact: "Parses pasted notice text to surface likely deadlines with dates and context; text is processed in-memory and discarded, storing nothing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://boardwise.online/mcp
+  - id: boardwise.explain_possible_next_steps
+    object: NextSteps
+    action: explain_possible_next_steps
+    category: Data Access
+    risk: low
+    business_impact: "Describes common procedural next steps and timelines for a board matter, branching on the current stage; informational read with no data written."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial

@@ -1,0 +1,79 @@
+schema_version: "1.1"
+platform: cash-app
+display_name: Order by Cash App
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Commerce ----------
+
+  # source: https://connect.squareup.com/v2/mcp/cash-app
+  - id: cash-app.create-cart
+    object: Cart
+    action: create-cart
+    description: "Create a cart for a restaurant location using unit token and a list of item selections."
+    category: Commerce
+    risk: medium
+    business_impact: "Assembles a restaurant order cart from item selections, staging a purchase that a downstream checkout could turn into a paid order."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://connect.squareup.com/v2/mcp/cash-app
+  - id: cash-app.search-brand-by-name
+    object: Brand
+    action: search-brand-by-name
+    description: "Given a restaurant brand name, return its locations, optionally restricted to within 5 miles of a location."
+    category: Data Access
+    risk: low
+    business_impact: "Resolves a restaurant brand name to its physical locations for discovery; returns public storefront data only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://connect.squareup.com/v2/mcp/cash-app
+  - id: cash-app.discover-nearby-restaurants
+    object: Restaurant
+    action: discover-nearby-restaurants
+    description: "Discover restaurants near a given location, returning names, locations, fulfillment hours, and descriptions."
+    category: Data Access
+    risk: low
+    business_impact: "Lists restaurants near a supplied location with fulfillment hours; surfaces public listing data for ordering discovery."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://connect.squareup.com/v2/mcp/cash-app
+  - id: cash-app.get-single-menu
+    object: Menu
+    action: get-single-menu
+    description: "Get menu items for a restaurant location by brand name and address; returns categories, items, prices, and a unit token."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a single restaurant's menu, prices, and the unit token used to seed a cart; exposes public catalog data only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://connect.squareup.com/v2/mcp/cash-app
+  - id: cash-app.get-multiple-menus
+    object: Menu
+    action: get-multiple-menus
+    description: "Research tool: get plain text menus for up to 10 restaurant locations with item names, descriptions, and prices for comparison."
+    category: Data Access
+    risk: low
+    business_impact: "Pulls plain-text menus for up to ten restaurants at once for price comparison; reads public catalog data with no sensitive fields."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

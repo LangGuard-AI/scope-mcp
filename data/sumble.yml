@@ -1,0 +1,339 @@
+schema_version: "1.0"
+platform: sumble
+display_name: Sumble
+source: langguard-editorial
+updated: "2026-07"
+reference: https://docs.sumble.com/api/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.FindMatchAndEnrichPeople
+    object: Person
+    action: FindMatchAndEnrichPeople
+    category: Data Access
+    risk: high
+    business_impact: "Resolves and enriches individuals into names, work emails, LinkedIn profiles, and inferred reporting chains, exposing contact PII at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.RunSqlQuery
+    object: "*"
+    action: RunSqlQuery
+    category: Data Access
+    risk: high
+    business_impact: "Executes arbitrary read-only SQL against Sumble's database, enabling broad ad-hoc extraction of account and contact data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.FindMatchAndEnrichOrganizations
+    object: Organization
+    action: FindMatchAndEnrichOrganizations
+    category: Data Access
+    risk: low
+    business_impact: "Bulk firmographic and technographic enrichment of target accounts feeds prospecting lists and competitive intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.GetIntelligenceBrief
+    object: Organization
+    action: GetIntelligenceBrief
+    category: Data Access
+    risk: low
+    business_impact: "Generates an AI-synthesized sales brief on a target account, routing that account's structured data through a third-party LLM."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.FindMatchAndEnrichJobs
+    object: Job
+    action: FindMatchAndEnrichJobs
+    category: Data Access
+    risk: low
+    business_impact: "Returns enriched job-posting data including full descriptions and extracted technologies for a set of target organizations."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.LookupJobTitles
+    object: JobTitle
+    action: LookupJobTitles
+    category: Data Access
+    risk: low
+    business_impact: "Resolves free-text job titles to canonical functions and levels for downstream targeting."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.SearchSignals
+    object: Signal
+    action: SearchSignals
+    category: Data Access
+    risk: low
+    business_impact: "Searches buying-intent signals across accounts, surfacing recent activity for sales prioritization."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.SearchPrioritySignals
+    object: Signal
+    action: SearchPrioritySignals
+    category: Data Access
+    risk: low
+    business_impact: "Searches the Priority Signals digest for high-value intent items tied to accounts, people, and job posts."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.LookupTechnologies
+    object: Technology
+    action: LookupTechnologies
+    category: Data Access
+    risk: low
+    business_impact: "Resolves technology names and aliases to canonical IDs and categories for filtering and enrichment."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.LookupProjects
+    object: Project
+    action: LookupProjects
+    category: Data Access
+    risk: low
+    business_impact: "Resolves project names and slugs to canonical identifiers for filtering and enrichment."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.ListTables
+    object: Table
+    action: ListTables
+    category: Data Access
+    risk: low
+    business_impact: "Lists database tables and columns, exposing the queryable schema behind the SQL interface."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.GetContactList
+    object: ContactList
+    action: GetContactList
+    category: Customer
+    risk: medium
+    business_impact: "Returns a saved contact list and every person in it, exposing personal contact data for the segment."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.SetOrganizationListDeleted
+    object: OrganizationList
+    action: SetOrganizationListDeleted
+    category: Customer
+    risk: medium
+    business_impact: "Soft-deletes or restores a saved account list, reversibly removing it from prospecting workflows."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.ListOrganizationLists
+    object: OrganizationList
+    action: ListOrganizationLists
+    category: Customer
+    risk: low
+    business_impact: "Enumerates saved account lists with counts and flags, revealing how prospecting is organized."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.GetOrganizationList
+    object: OrganizationList
+    action: GetOrganizationList
+    category: Customer
+    risk: low
+    business_impact: "Returns a saved account list and every organization in it with profile and website URLs."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.CreateOrganizationList
+    object: OrganizationList
+    action: CreateOrganizationList
+    category: Customer
+    risk: low
+    business_impact: "Creates an empty account list for organizing prospecting targets."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.AddOrganizationsToList
+    object: OrganizationList
+    action: AddOrganizationsToList
+    category: Customer
+    risk: low
+    business_impact: "Adds organizations to an existing account list, expanding a prospecting segment."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.SetOrganizationListSignals
+    object: OrganizationList
+    action: SetOrganizationListSignals
+    category: Customer
+    risk: low
+    business_impact: "Includes or excludes a list's accounts from future Signals delivery, changing which intent alerts are surfaced."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.ListContactLists
+    object: ContactList
+    action: ListContactLists
+    category: Customer
+    risk: low
+    business_impact: "Enumerates saved contact lists with people counts."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.CreateContactList
+    object: ContactList
+    action: CreateContactList
+    category: Customer
+    risk: low
+    business_impact: "Creates an empty contact list for organizing prospect people."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.AddContactsToList
+    object: ContactList
+    action: AddContactsToList
+    category: Customer
+    risk: low
+    business_impact: "Adds people to an existing contact list by person ID, building a prospect segment."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.ReportDataQualityIssue
+    object: DataQualityIssue
+    action: ReportDataQualityIssue
+    category: Operations
+    risk: low
+    business_impact: "Files a data-quality or coverage report routed to the Sumble data team."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.SubmitSupportRequest
+    object: SupportRequest
+    action: SubmitSupportRequest
+    category: Operations
+    risk: low
+    business_impact: "Submits an account, billing, or access support request routed to the Sumble support team."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Admin ----------
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.GetAccountInformation
+    object: Account
+    action: GetAccountInformation
+    category: Identity & Admin
+    risk: low
+    business_impact: "Reveals the account's credit balance, API key status, and plan details."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.sumble.com/api/mcp
+  - id: sumble.GetMyCompanyProfile
+    object: CompanyProfile
+    action: GetMyCompanyProfile
+    category: Identity & Admin
+    risk: low
+    business_impact: "Returns your company profile and target-account intelligence configuration."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

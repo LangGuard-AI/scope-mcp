@@ -1,0 +1,112 @@
+schema_version: "1.0"
+platform: cdata-connect-ai
+display_name: CData Connect AI
+source: langguard-editorial
+updated: "2026-07"
+reference: https://docs.cloud.cdata.com/MCP.html
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.cloud.cdata.com/MCP.html
+  - id: cdata-connect-ai.queryData
+    object: "*"
+    action: queryData
+    category: Data Access
+    risk: critical
+    business_impact: "Runs arbitrary SQL against any connected data source and returns the rows, enabling bulk extraction of customer, financial, or other sensitive records across every federated system."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.cloud.cdata.com/MCP.html
+  - id: cdata-connect-ai.executeProcedure
+    object: Procedure
+    action: executeProcedure
+    category: Data Access
+    risk: high
+    business_impact: "Executes a stored procedure against a connected data source, running server-side logic whose effects may include modifying or deleting downstream production data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.cloud.cdata.com/MCP.html
+  - id: cdata-connect-ai.getCatalogs
+    object: Connection
+    action: getCatalogs
+    category: Data Access
+    risk: low
+    business_impact: "Lists the data-source connections registered in Connect AI, revealing which downstream systems (CRMs, databases, warehouses) are reachable through the gateway."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.cloud.cdata.com/MCP.html
+  - id: cdata-connect-ai.getSchemas
+    object: Schema
+    action: getSchemas
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates database schemas within a catalog, exposing how a connected source organizes its tables and stored procedures."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.cloud.cdata.com/MCP.html
+  - id: cdata-connect-ai.getTables
+    object: Table
+    action: getTables
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the tables available in a connected catalog and schema, mapping the queryable surface of a downstream data source."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.cloud.cdata.com/MCP.html
+  - id: cdata-connect-ai.getColumns
+    object: Column
+    action: getColumns
+    category: Data Access
+    risk: low
+    business_impact: "Returns column definitions for a table, exposing field names and data types that can indicate where sensitive or personal data resides in a connected source."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.cloud.cdata.com/MCP.html
+  - id: cdata-connect-ai.getProcedures
+    object: Procedure
+    action: getProcedures
+    category: Data Access
+    risk: low
+    business_impact: "Lists the stored procedures defined in a connected catalog and schema, surfacing executable server-side logic reachable through the gateway."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.cloud.cdata.com/MCP.html
+  - id: cdata-connect-ai.getProcedureParameters
+    object: Procedure
+    action: getProcedureParameters
+    category: Data Access
+    risk: low
+    business_impact: "Returns parameter metadata for a stored procedure, exposing the inputs required to invoke server-side logic against a connected source."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

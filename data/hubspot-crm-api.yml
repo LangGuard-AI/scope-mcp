@@ -1,0 +1,171 @@
+schema_version: "1.0"
+platform: hubspot-crm-api
+display_name: HubSpot CRM API
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://developers.hubspot.com/docs/apps/developer-platform/build-apps/integrate-with-the-remote-hubspot-mcp-server
+  - id: hubspot-crm-api.get_user_details
+    object: User
+    action: get_user_details
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns the authenticated user's account details and per-object read/write scopes, revealing the effective permission surface of the connected token."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/apps/developer-platform/build-apps/integrate-with-the-remote-hubspot-mcp-server
+  - id: hubspot-crm-api.search_owners
+    object: Owner
+    action: search_owners
+    category: Identity & Access
+    risk: low
+    business_impact: "Resolves CRM record owners by name, email, or ID, exposing the names and email addresses of internal staff who own records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://developers.hubspot.com/docs/apps/developer-platform/build-apps/integrate-with-the-remote-hubspot-mcp-server
+  - id: hubspot-crm-api.manage_crm_objects
+    object: "*"
+    action: manage_crm_objects
+    category: Customer
+    risk: medium
+    business_impact: "Creates or updates CRM records and activities across any object type, writing contact and company personal data that downstream sales and marketing workflows act on."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/apps/developer-platform/build-apps/integrate-with-the-remote-hubspot-mcp-server
+  - id: hubspot-crm-api.search_crm_objects
+    object: "*"
+    action: search_crm_objects
+    category: Customer
+    risk: medium
+    business_impact: "Runs arbitrary filtered queries over CRM records and pages through results, capable of surfacing contact personal data in bulk from the whole database."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/apps/developer-platform/build-apps/integrate-with-the-remote-hubspot-mcp-server
+  - id: hubspot-crm-api.get_crm_objects
+    object: "*"
+    action: get_crm_objects
+    category: Customer
+    risk: medium
+    business_impact: "Fetches up to 100 CRM objects by ID in one request, reading contact and company personal data in batches."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Revenue & Pipeline ----------
+
+  # source: https://developers.hubspot.com/docs/apps/developer-platform/build-apps/integrate-with-the-remote-hubspot-mcp-server
+  - id: hubspot-crm-api.get_campaign_contacts_by_type
+    object: Campaign
+    action: get_campaign_contacts_by_type
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Pages through the contact IDs associated with a campaign by attribution type, linking identifiable individuals to marketing engagement."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/apps/developer-platform/build-apps/integrate-with-the-remote-hubspot-mcp-server
+  - id: hubspot-crm-api.get_campaign_analytics
+    object: Campaign
+    action: get_campaign_analytics
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Returns aggregate campaign metrics and revenue-attribution figures for one or more campaigns."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/apps/developer-platform/build-apps/integrate-with-the-remote-hubspot-mcp-server
+  - id: hubspot-crm-api.get_campaign_asset_types
+    object: Campaign
+    action: get_campaign_asset_types
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Lists the asset type names available as campaign assets, such as landing pages or blog posts."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/apps/developer-platform/build-apps/integrate-with-the-remote-hubspot-mcp-server
+  - id: hubspot-crm-api.get_campaign_asset_metrics
+    object: Campaign
+    action: get_campaign_asset_metrics
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Returns metrics and properties for specific CRM objects associated with a campaign."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://developers.hubspot.com/docs/apps/developer-platform/build-apps/integrate-with-the-remote-hubspot-mcp-server
+  - id: hubspot-crm-api.search_properties
+    object: Property
+    action: search_properties
+    category: Data Access
+    risk: low
+    business_impact: "Finds property definitions for an object type by keyword, returning property names, labels, and descriptions."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/apps/developer-platform/build-apps/integrate-with-the-remote-hubspot-mcp-server
+  - id: hubspot-crm-api.get_properties
+    object: Property
+    action: get_properties
+    category: Data Access
+    risk: low
+    business_impact: "Returns full property definitions including data types and enumeration values for an object type's schema."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://developers.hubspot.com/docs/apps/developer-platform/build-apps/integrate-with-the-remote-hubspot-mcp-server
+  - id: hubspot-crm-api.submit_feedback
+    object: Feedback
+    action: submit_feedback
+    category: Operations
+    risk: low
+    business_impact: "Sends free-text feedback about the MCP server experience back to HubSpot."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

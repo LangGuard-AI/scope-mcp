@@ -1,0 +1,221 @@
+schema_version: "1.0"
+platform: confluence
+display_name: Confluence (Atlassian Rovo MCP Server)
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: confluence.atlassianUserInfo
+    object: User
+    action: atlassianUserInfo
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns the authenticated caller's own account profile — display name, email, and account ID — scoped to the requesting identity."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: confluence.getAccessibleAtlassianResources
+    object: Resource
+    action: getAccessibleAtlassianResources
+    category: Identity & Access
+    risk: low
+    business_impact: "Enumerates every Atlassian site and app the caller can reach, exposing cloudId values that map the organization's tenant topology."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: confluence.searchAtlassian
+    object: Content
+    action: searchAtlassian
+    category: Data Access
+    risk: low
+    business_impact: "Runs a natural-language search across all reachable Jira and Confluence content, surfacing whatever the caller is permitted to read."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: confluence.fetchAtlassian
+    object: Content
+    action: fetchAtlassian
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves a single Jira or Confluence item by Atlassian Resource Identifier, returning its full content to the caller."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: confluence.searchConfluenceUsingCql
+    object: Content
+    action: searchConfluenceUsingCql
+    category: Data Access
+    risk: low
+    business_impact: "Executes an arbitrary CQL query against Confluence content, returning any pages and metadata the caller is permitted to see."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Content ----------
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: confluence.getConfluenceSpaces
+    object: Space
+    action: getConfluenceSpaces
+    category: Content
+    risk: low
+    business_impact: "Lists the Confluence spaces visible to the caller, revealing how the knowledge base is partitioned across the organization."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: confluence.getPagesInConfluenceSpace
+    object: Page
+    action: getPagesInConfluenceSpace
+    category: Content
+    risk: low
+    business_impact: "Lists the pages within a given space, exposing document titles and identifiers for that area of the wiki."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: confluence.getConfluencePage
+    object: Page
+    action: getConfluencePage
+    category: Content
+    risk: low
+    business_impact: "Returns the full body of a single Confluence page or live doc by ID to the caller."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: confluence.getConfluencePageDescendants
+    object: Page
+    action: getConfluencePageDescendants
+    category: Content
+    risk: low
+    business_impact: "Lists the descendant pages beneath a parent page, revealing the sub-tree structure of the documentation."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: confluence.createConfluencePage
+    object: Page
+    action: createConfluencePage
+    category: Content
+    risk: low
+    business_impact: "Publishes a new Confluence page or live doc into a space, adding content the wider team may treat as authoritative."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: confluence.updateConfluencePage
+    object: Page
+    action: updateConfluencePage
+    category: Content
+    risk: medium
+    business_impact: "Overwrites the body of an existing Confluence page; prior content is recoverable through version history but the live doc changes immediately for all readers."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Collaboration ----------
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: confluence.getConfluencePageFooterComments
+    object: Comment
+    action: getConfluencePageFooterComments
+    category: Collaboration
+    risk: low
+    business_impact: "Lists the footer comments on a page, returning discussion threads that may include named participants."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: confluence.getConfluencePageInlineComments
+    object: Comment
+    action: getConfluencePageInlineComments
+    category: Collaboration
+    risk: low
+    business_impact: "Lists inline comments anchored to page text, returning reviewer remarks alongside their authors."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: confluence.getConfluenceCommentChildren
+    object: Comment
+    action: getConfluenceCommentChildren
+    category: Collaboration
+    risk: low
+    business_impact: "Lists the reply comments under a parent comment, returning the nested discussion thread and its participants."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: confluence.createConfluenceFooterComment
+    object: Comment
+    action: createConfluenceFooterComment
+    category: Collaboration
+    risk: low
+    business_impact: "Posts a footer comment or reply on a page, attributed to the caller and visible to everyone with access to that page."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: confluence.createConfluenceInlineComment
+    object: Comment
+    action: createConfluenceInlineComment
+    category: Collaboration
+    risk: low
+    business_impact: "Attaches an inline comment to selected page text, attributed to the caller and visible to page readers."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

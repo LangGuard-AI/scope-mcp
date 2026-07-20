@@ -1,0 +1,59 @@
+schema_version: "1.0"
+platform: clickhouse
+display_name: ClickHouse
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/ClickHouse/mcp-clickhouse/main/README.md
+  - id: clickhouse.run_query
+    object: "*"
+    action: run_query
+    category: Data Access
+    risk: critical
+    business_impact: "Executes arbitrary SQL against the ClickHouse cluster, able to bulk-read any table and — depending on the connection's grants — drop databases or mutate rows irreversibly."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/ClickHouse/mcp-clickhouse/main/README.md
+  - id: clickhouse.run_chdb_select_query
+    object: Query
+    action: run_chdb_select_query
+    category: Data Access
+    risk: medium
+    business_impact: "Runs ad-hoc SQL through chDB's embedded engine, which can pull data from local files, S3, and remote endpoints reachable by the MCP host."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/ClickHouse/mcp-clickhouse/main/README.md
+  - id: clickhouse.list_databases
+    object: Database
+    action: list_databases
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates every database name on the ClickHouse cluster, exposing the schema layout to the caller."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/ClickHouse/mcp-clickhouse/main/README.md
+  - id: clickhouse.list_tables
+    object: Table
+    action: list_tables
+    category: Data Access
+    risk: low
+    business_impact: "Lists the tables within a specified database, revealing that database's schema structure to the caller."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

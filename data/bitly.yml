@@ -1,0 +1,336 @@
+schema_version: "1.0"
+platform: bitly
+display_name: Bitly
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Operations ----------
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.create_short_link
+    object: ShortLink
+    action: create_short_link
+    category: Operations
+    risk: low
+    business_impact: "Creates a new branded short link that redirects to a destination URL, publishing a live redirect anyone can follow."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.create_short_link_with_qr
+    object: ShortLink
+    action: create_short_link_with_qr
+    category: Operations
+    risk: low
+    business_impact: "Creates a short link plus a scannable QR code in one step, producing both a live redirect and a printable code."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.update_short_link
+    object: ShortLink
+    action: update_short_link
+    category: Operations
+    risk: medium
+    business_impact: "Changes a live short link's destination URL, title, tags, or archive state, redirecting everyone who already holds the link to a new target."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.delete_short_link
+    object: ShortLink
+    action: delete_short_link
+    category: Operations
+    risk: medium
+    business_impact: "Permanently removes a short link so its redirect stops resolving; the deletion cannot be undone and breaks anywhere the link was already published."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.create_qr_code
+    object: QRCode
+    action: create_qr_code
+    category: Operations
+    risk: low
+    business_impact: "Generates a new QR code tied to a link, producing a scannable asset for print or display campaigns."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.update_qr_code
+    object: QRCode
+    action: update_qr_code
+    category: Operations
+    risk: low
+    business_impact: "Modifies a QR code's title, visual customization, or archived status, altering how an already-distributed code appears or behaves."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.bulk_upload_validate
+    object: BulkUpload
+    action: bulk_upload_validate
+    category: Operations
+    risk: medium
+    business_impact: "Validates a bulk link-upload request and returns a signed URL, opening the path to create or modify many links at once."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.bulk_upload_file
+    object: BulkUpload
+    action: bulk_upload_file
+    category: Operations
+    risk: medium
+    business_impact: "Uploads a CSV or XLSX file to the signed URL to create or modify links in bulk, changing many redirects in a single operation."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.get_short_link_details
+    object: ShortLink
+    action: get_short_link_details
+    category: Data Access
+    risk: low
+    business_impact: "Returns a short link's full metadata including title, destination, creator, tags, and custom domains."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.expand
+    object: ShortLink
+    action: expand
+    category: Data Access
+    risk: low
+    business_impact: "Reveals the original long destination URL and basic metadata behind a short link."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.link_metrics
+    object: ShortLink
+    action: link_metrics
+    category: Data Access
+    risk: low
+    business_impact: "Returns time-series click metrics for a link, exposing traffic volume and timing patterns."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.link_countries
+    object: ShortLink
+    action: link_countries
+    category: Data Access
+    risk: low
+    business_impact: "Returns a per-country breakdown of clicks on a link, exposing aggregate geographic reach."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.link_referrers
+    object: ShortLink
+    action: link_referrers
+    category: Data Access
+    risk: low
+    business_impact: "Returns a breakdown of clicks by referring source, revealing where a link's traffic originates."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.get_qr_code
+    object: QRCode
+    action: get_qr_code
+    category: Data Access
+    risk: low
+    business_impact: "Returns metadata for a QR code such as its title, customizations, and status."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.get_qr_code_image
+    object: QRCode
+    action: get_qr_code_image
+    category: Data Access
+    risk: low
+    business_impact: "Returns a download URL for a QR code image asset."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.get_group_qr_codes
+    object: QRCode
+    action: get_group_qr_codes
+    category: Data Access
+    risk: low
+    business_impact: "Lists QR codes within a group with filtering and pagination, exposing the workspace's QR inventory."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.get_group_short_links
+    object: ShortLink
+    action: get_group_short_links
+    category: Data Access
+    risk: low
+    business_impact: "Lists links in a group with rich filtering, exposing the workspace's full link inventory and destinations."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.get_group_short_links_sorted
+    object: ShortLink
+    action: get_group_short_links_sorted
+    category: Data Access
+    risk: low
+    business_impact: "Lists a group's links ranked by performance, surfacing which links and campaigns drive the most traffic."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.get_custom_link_details
+    object: CustomLink
+    action: get_custom_link_details
+    category: Data Access
+    risk: low
+    business_impact: "Returns metadata and override history for a custom link."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.get_custom_domains
+    object: CustomDomain
+    action: get_custom_domains
+    category: Data Access
+    risk: low
+    business_impact: "Lists custom branded domains available to the user for link creation."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Admin ----------
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.get_user
+    object: User
+    action: get_user
+    category: Identity & Admin
+    risk: low
+    business_impact: "Returns the authenticated user's profile, including their name and email address."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.get_organizations
+    object: Organization
+    action: get_organizations
+    category: Identity & Admin
+    risk: low
+    business_impact: "Lists the organizations the authenticated user can access."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.get_groups
+    object: Group
+    action: get_groups
+    category: Identity & Admin
+    risk: low
+    business_impact: "Lists the groups (workspaces) available to the user, optionally filtered by organization."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.get_group_details
+    object: Group
+    action: get_group_details
+    category: Identity & Admin
+    risk: low
+    business_impact: "Returns configuration details for a specific group."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://dev.bitly.com/bitly-mcp/using-the-bitly-mcp-server/mcp-tools-reference/
+  - id: bitly.get_group_preferences
+    object: Group
+    action: get_group_preferences
+    category: Identity & Admin
+    risk: low
+    business_impact: "Returns a group's preferences, including the default domain applied to newly created links."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,184 @@
+schema_version: "1.0"
+platform: graphos-tools
+display_name: GraphOS Tools
+source: langguard-editorial
+updated: "2026-07"
+reference: https://mcp.apollographql.com
+server_website: https://mcp.apollographql.com
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://mcp.apollographql.com
+  - id: graphos-tools.GetMyIdentity
+    object: Identity
+    action: GetMyIdentity
+    category: Identity & Access
+    risk: low
+    business_impact: "Resolves the caller's GraphOS identity, graph memberships, and service-account context from the supplied API key."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://mcp.apollographql.com
+  - id: graphos-tools.GetVariantDetails
+    object: GraphVariant
+    action: GetVariantDetails
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Exposes a graph variant's federation version, subgraph inventory, router status, and raw router configuration YAML."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.apollographql.com
+  - id: graphos-tools.GetPersistedQueryListStatus
+    object: PersistedQueryList
+    action: GetPersistedQueryListStatus
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Reports whether a graph variant has a Persisted Query List and its current build, revealing a production security-gate gap."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.apollographql.com
+  - id: graphos-tools.GetLatestLaunch
+    object: Launch
+    action: GetLatestLaunch
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Reveals the most recent schema launch's status, subgraph changes, composition errors, and schema diff for a graph variant."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.apollographql.com
+  - id: graphos-tools.GetLaunchHistory
+    object: Launch
+    action: GetLaunchHistory
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Lists recent schema launches for a variant to reveal deployment stability, repeated failures, or frequently superseded launches."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.apollographql.com
+  - id: graphos-tools.GetLaunch
+    object: Launch
+    action: GetLaunch
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns full detail for a single schema launch including status, changed subgraphs, composition errors, and schema diff."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://mcp.apollographql.com
+  - id: graphos-tools.GetSubgraphMetrics
+    object: Subgraph
+    action: GetSubgraphMetrics
+    category: Operations
+    risk: low
+    business_impact: "Returns per-subgraph traffic and health metrics — fetch counts, latency percentiles, and error counts — as CSV over a time window."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.apollographql.com
+  - id: graphos-tools.GetOperationMetrics
+    object: Operation
+    action: GetOperationMetrics
+    category: Operations
+    risk: low
+    business_impact: "Returns per-operation usage and health metrics — request counts, latency percentiles, and error counts — as CSV over a time window."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.apollographql.com
+  - id: graphos-tools.GetTopOperations
+    object: Operation
+    action: GetTopOperations
+    category: Operations
+    risk: low
+    business_impact: "Identifies the highest-traffic GraphQL operations on a variant with request counts, types, and operation signatures."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.apollographql.com
+  - id: graphos-tools.GetLintResults
+    object: LintResult
+    action: GetLintResults
+    category: Operations
+    risk: low
+    business_impact: "Retrieves schema lint violations from recent check workflows, including each diagnostic's coordinate, rule, severity, and source location."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://mcp.apollographql.com
+  - id: graphos-tools.ApolloDocsSearch
+    object: Documentation
+    action: ApolloDocsSearch
+    category: Data Access
+    risk: low
+    business_impact: "Searches official Apollo documentation and returns matching URLs, slugs, and excerpts."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.apollographql.com
+  - id: graphos-tools.ApolloDocsRead
+    object: Documentation
+    action: ApolloDocsRead
+    category: Data Access
+    risk: low
+    business_impact: "Reads a paginated Apollo documentation page by slug and returns its content in chunks."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.apollographql.com
+  - id: graphos-tools.ApolloConnectorsSpec
+    object: Specification
+    action: ApolloConnectorsSpec
+    category: Data Access
+    risk: low
+    business_impact: "Returns the Apollo Connectors specification for authoring @connect and @source directives in GraphQL schemas."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

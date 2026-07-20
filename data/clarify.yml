@@ -1,0 +1,342 @@
+schema_version: "1.0"
+platform: clarify
+display_name: Clarify
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.query-data
+    object: "*"
+    action: query-data
+    category: Data Access
+    risk: medium
+    business_impact: "Searches and analyzes companies, people, deals, and meetings across the workspace, surfacing personal contact data at query scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.query-analytics
+    object: Analytics
+    action: query-analytics
+    category: Data Access
+    risk: medium
+    business_impact: "Runs read-only SQL over workspace analytics, exposing pipeline metrics, win rates, and historical business performance."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.get-records
+    object: Record
+    action: get-records
+    category: Data Access
+    risk: medium
+    business_impact: "Returns full record detail including relationships and AI-generated summaries, exposing complete personal and account data for targeted records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.find-leads
+    object: Lead
+    action: find-leads
+    category: Data Access
+    risk: medium
+    business_impact: "Pulls prospect records from a 175M-person database, surfacing personal contact data of individuals at bulk scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.create-or-update-records
+    object: Record
+    action: create-or-update-records
+    category: Customer
+    risk: medium
+    business_impact: "Creates or updates companies, people, and deals in bulk, mutating core CRM records and the personal data they hold."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.delete-records
+    object: Record
+    action: delete-records
+    category: Customer
+    risk: high
+    business_impact: "Deletes one or more records by ID, destroying customer and contact data that may not be recoverable."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.merge-records
+    object: Record
+    action: merge-records
+    category: Customer
+    risk: medium
+    business_impact: "Merges duplicate records into one primary, irreversibly consolidating personal and account data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.add-comment
+    object: Comment
+    action: add-comment
+    category: Customer
+    risk: low
+    business_impact: "Adds a markdown comment to a record, annotating CRM data without altering underlying fields."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.import-leads
+    object: Lead
+    action: import-leads
+    category: Customer
+    risk: medium
+    business_impact: "Imports prospect-search results into the workspace, ingesting personal contact data at bulk scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Revenue & Pipeline ----------
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.get-campaigns
+    object: Campaign
+    action: get-campaigns
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Lists email campaigns and their configuration, exposing outbound sequence setup and targeting."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.create-campaign
+    object: Campaign
+    action: create-campaign
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Creates a draft email sequence, staging outbound marketing communications to contacts."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.update-campaign
+    object: Campaign
+    action: update-campaign
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Changes a campaign's sender, target list, email steps, or send windows, reshaping outbound communications."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.delete-campaign
+    object: Campaign
+    action: delete-campaign
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Deletes an email campaign, removing its sequence configuration and scheduled outreach."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.create-or-update-custom-object
+    object: CustomObject
+    action: create-or-update-custom-object
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Creates or alters a custom object type, changing the workspace data model that records depend on."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.delete-custom-object
+    object: CustomObject
+    action: delete-custom-object
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Removes a custom object type, destroying its schema and every record stored under it."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.create-or-update-fields
+    object: Field
+    action: create-or-update-fields
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Adds or reconfigures entity fields including AI autofill, changing the CRM data model and how data is captured."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.delete-fields
+    object: Field
+    action: delete-fields
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Deletes custom fields from an entity, erasing the data those fields hold across every record."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.create-or-update-agent
+    object: Agent
+    action: create-or-update-agent
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Creates or reconfigures an automated agent, defining AI-driven behavior that acts on workspace data."
+    compliance: [ISO_42001, NIST_AI_RMF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.delete-agent
+    object: Agent
+    action: delete-agent
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Removes an automated agent, halting its AI-driven behavior over workspace data."
+    compliance: [ISO_42001, NIST_AI_RMF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.get-agents
+    object: Agent
+    action: get-agents
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Lists workspace agents and their configuration, exposing which automated actors are deployed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.get-agent-runs
+    object: AgentRun
+    action: get-agent-runs
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns an agent's run history, exposing past automated activity and outcomes."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.get-lists
+    object: List
+    action: get-lists
+    category: Operations
+    risk: low
+    business_impact: "Browses saved list views for an entity type, exposing how records are segmented and filtered."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.create-or-update-list
+    object: List
+    action: create-or-update-list
+    category: Operations
+    risk: low
+    business_impact: "Creates or edits a saved list view, changing how records are segmented for teams."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.delete-list
+    object: List
+    action: delete-list
+    category: Operations
+    risk: medium
+    business_impact: "Deletes a saved list view, removing a shared segmentation used across the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Admin ----------
+
+  # source: https://docs.clarify.ai/en/articles/13367278-clarify-mcp
+  - id: clarify.get-current-user
+    object: User
+    action: get-current-user
+    category: Identity & Admin
+    risk: low
+    business_impact: "Returns the caller's profile, timezone, and local time for the authenticated session."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

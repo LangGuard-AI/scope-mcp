@@ -1,0 +1,92 @@
+schema_version: "1.0"
+platform: clinical-trials
+display_name: ClinicalTrials.gov Connector
+source: langguard-editorial
+updated: "2026-07"
+reference: https://claude.com/resources/tutorials/using-the-clinicaltrials-gov-connector-in-claude
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/resources/tutorials/using-the-clinicaltrials-gov-connector-in-claude
+  - id: clinical-trials.search_investigators
+    object: Investigator
+    action: search_investigators
+    description: "Finds principal investigators and research sites conducting trials in a given therapeutic area."
+    category: Data Access
+    risk: medium
+    business_impact: "Aggregates identifiable investigator data — names, roles, institutional affiliations, and facility locations — across many sites, enabling profiling of individuals for site selection or recruitment."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/resources/tutorials/using-the-clinicaltrials-gov-connector-in-claude
+  - id: clinical-trials.search_trials
+    object: Trial
+    action: search_trials
+    description: "Finds trials by condition, intervention, location, sponsor, recruitment status, and development phase."
+    category: Data Access
+    risk: low
+    business_impact: "Queries the public trial registry for matching studies; read-only discovery against already-published government data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/resources/tutorials/using-the-clinicaltrials-gov-connector-in-claude
+  - id: clinical-trials.get_trial_details
+    object: Trial
+    action: get_trial_details
+    description: "Retrieves the full protocol record for a specific trial by its NCT identifier."
+    category: Data Access
+    risk: low
+    business_impact: "Returns full protocol detail — eligibility criteria, study design, and endpoints — for one publicly registered trial; read-only lookup."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/resources/tutorials/using-the-clinicaltrials-gov-connector-in-claude
+  - id: clinical-trials.search_by_sponsor
+    object: Trial
+    action: search_by_sponsor
+    description: "Finds all trials funded by a specific company or institution for pipeline analysis."
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces every publicly registered trial tied to a named sponsor, supporting competitive-intelligence and drug-development tracking from public data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/resources/tutorials/using-the-clinicaltrials-gov-connector-in-claude
+  - id: clinical-trials.analyze_endpoints
+    object: Endpoint
+    action: analyze_endpoints
+    description: "Compares outcome measures across trials in single-trial or aggregate mode."
+    category: Data Access
+    risk: low
+    business_impact: "Computes single-trial or cross-trial endpoint comparisons over public registry data; read-only analysis with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/resources/tutorials/using-the-clinicaltrials-gov-connector-in-claude
+  - id: clinical-trials.search_by_eligibility
+    object: Trial
+    action: search_by_eligibility
+    description: "Screens for trials matching demographic and clinical eligibility criteria such as age and sex."
+    category: Data Access
+    risk: low
+    business_impact: "Filters public trials by eligibility criteria to shortlist studies; matches against trial criteria text, not individual patient records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

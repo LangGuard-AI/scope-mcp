@@ -1,0 +1,157 @@
+schema_version: "1.0"
+platform: boltz-api
+display_name: Boltz
+source: langguard-editorial
+updated: "2026-07"
+reference: https://raw.githubusercontent.com/boltz-bio/boltz-mcpb/main/manifest.json
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://raw.githubusercontent.com/boltz-bio/boltz-mcpb/main/manifest.json
+  - id: boltz-api.boltz_auth_login
+    object: Session
+    action: boltz_auth_login
+    category: Identity & Access
+    risk: medium
+    business_impact: "Initiates Boltz account sign-in and returns the linking instructions that establish an authenticated session for the connected account."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://raw.githubusercontent.com/boltz-bio/boltz-mcpb/main/manifest.json
+  - id: boltz-api.boltz_check_setup
+    object: Configuration
+    action: boltz_check_setup
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Reports whether Boltz can authenticate and where results are written, exposing account and output-path configuration state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/boltz-bio/boltz-mcpb/main/manifest.json
+  - id: boltz-api.boltz_install_cli
+    object: Runtime
+    action: boltz_install_cli
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Installs or updates the local Boltz components, changing the executable software present on the host machine."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # ---------- Compute & Jobs ----------
+
+  # source: https://raw.githubusercontent.com/boltz-bio/boltz-mcpb/main/manifest.json
+  - id: boltz-api.boltz_structure_and_binding
+    object: Job
+    action: boltz_structure_and_binding
+    category: Compute & Jobs
+    risk: medium
+    business_impact: "Launches a billable structure-and-binding prediction job on Boltz compute, consuming GPU resources and producing downloadable results."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/boltz-bio/boltz-mcpb/main/manifest.json
+  - id: boltz-api.boltz_small_molecule_screen
+    object: Job
+    action: boltz_small_molecule_screen
+    category: Compute & Jobs
+    risk: medium
+    business_impact: "Starts a billable small-molecule library screen on Boltz compute, consuming substantial GPU resources across the screened library."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/boltz-bio/boltz-mcpb/main/manifest.json
+  - id: boltz-api.boltz_small_molecule_design
+    object: Job
+    action: boltz_small_molecule_design
+    category: Compute & Jobs
+    risk: medium
+    business_impact: "Starts a billable small-molecule design job on Boltz compute, generating candidate molecules and consuming GPU resources."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/boltz-bio/boltz-mcpb/main/manifest.json
+  - id: boltz-api.boltz_protein_screen
+    object: Job
+    action: boltz_protein_screen
+    category: Compute & Jobs
+    risk: medium
+    business_impact: "Starts a billable protein-family screen on Boltz compute, consuming GPU resources across the screened protein family."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/boltz-bio/boltz-mcpb/main/manifest.json
+  - id: boltz-api.boltz_protein_design
+    object: Job
+    action: boltz_protein_design
+    category: Compute & Jobs
+    risk: medium
+    business_impact: "Starts a billable protein design job on Boltz compute, generating candidate proteins and consuming GPU resources."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/boltz-bio/boltz-mcpb/main/manifest.json
+  - id: boltz-api.boltz_download_results
+    object: Job
+    action: boltz_download_results
+    category: Compute & Jobs
+    risk: low
+    business_impact: "Downloads computed results for an existing Boltz job into the local output directory."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/boltz-bio/boltz-mcpb/main/manifest.json
+  - id: boltz-api.boltz_job_status
+    object: Job
+    action: boltz_job_status
+    category: Compute & Jobs
+    risk: low
+    business_impact: "Reports job progress and local download state for Boltz jobs without altering any job or data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/boltz-bio/boltz-mcpb/main/manifest.json
+  - id: boltz-api.boltz_get_guidance
+    object: Documentation
+    action: boltz_get_guidance
+    category: Data Access
+    risk: low
+    business_impact: "Returns bundled Boltz workflow documentation with no change to any account, job, or stored data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial

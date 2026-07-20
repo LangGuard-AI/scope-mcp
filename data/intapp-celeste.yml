@@ -1,0 +1,140 @@
+schema_version: "1.0"
+platform: intapp-celeste
+display_name: Intapp Celeste
+source: langguard-editorial
+updated: "2026-07"
+reference: https://www.intapp.com/mcp-documentation/
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://www.intapp.com/mcp-documentation/
+  - id: intapp-celeste.dc_query
+    object: "*"
+    action: dc_query
+    category: Data Access
+    risk: high
+    business_impact: "Turns a plain-English question into a SQL query that can retrieve any DealCloud data, including contact and deal PII, across the entire dataset."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.intapp.com/mcp-documentation/
+  - id: intapp-celeste.dc_find_records
+    object: "*"
+    action: dc_find_records
+    category: Data Access
+    risk: high
+    business_impact: "Queries DealCloud with an all-records mode that can return large sets of Deal, Company, and Contact data including personal information."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.intapp.com/mcp-documentation/
+  - id: intapp-celeste.dc_entry
+    object: Record
+    action: dc_entry
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves full DealCloud entity records for known IDs, exposing every field on those records including contact PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.intapp.com/mcp-documentation/
+  - id: intapp-celeste.dc_lookup
+    object: Record
+    action: dc_lookup
+    category: Data Access
+    risk: medium
+    business_impact: "Resolves natural-language phrases to DealCloud record IDs and key fields, surfacing names and other identifying details."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.intapp.com/mcp-documentation/
+  - id: intapp-celeste.dc_aggregate
+    object: Record
+    action: dc_aggregate
+    category: Data Access
+    risk: low
+    business_impact: "Groups and aggregates DealCloud records into counts and summary statistics without exposing individual record contents."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.intapp.com/mcp-documentation/
+  - id: intapp-celeste.dc_list_objects
+    object: ObjectType
+    action: dc_list_objects
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the DealCloud object types available in the tenant; schema metadata only, no record data returned."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.intapp.com/mcp-documentation/
+  - id: intapp-celeste.dc_list_fields
+    object: Field
+    action: dc_list_fields
+    category: Data Access
+    risk: low
+    business_impact: "Returns field definitions, types, and validation rules for a DealCloud entity type; schema metadata only, no record data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Documents ----------
+
+  # source: https://www.intapp.com/mcp-documentation/
+  - id: intapp-celeste.get_file_content
+    object: File
+    action: get_file_content
+    category: Documents
+    risk: medium
+    business_impact: "Downloads a single SharePoint file and extracts its text, exposing document contents that may include contract terms and contact PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.intapp.com/mcp-documentation/
+  - id: intapp-celeste.search_files
+    object: File
+    action: search_files
+    category: Documents
+    risk: medium
+    business_impact: "Searches the connected SharePoint site by file name and content, surfacing references to potentially confidential deal documents."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.intapp.com/mcp-documentation/
+  - id: intapp-celeste.list_folder
+    object: Folder
+    action: list_folder
+    category: Documents
+    risk: low
+    business_impact: "Lists the contents of a SharePoint directory, revealing file and folder names but no document content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,339 @@
+schema_version: "1.0"
+platform: affinity
+display_name: Affinity
+source: langguard-editorial
+updated: "2026-07"
+reference: https://developer.affinity.co/pages/mcp/available-tools.md
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.get_transcript_fragments
+    object: Transcript
+    action: get_transcript_fragments
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves dialogue fragments from the team's meeting transcripts, exposing verbatim private conversation content and participant identities."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.get_person_info
+    object: Person
+    action: get_person_info
+    category: Data Access
+    risk: medium
+    business_impact: "Returns a full contact profile including email addresses, company links, and custom field data for one identified individual."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.search_persons
+    object: Person
+    action: search_persons
+    category: Data Access
+    risk: medium
+    business_impact: "Searches the address book by name or email and returns matching people, enabling enumeration of contact PII across the team's network."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.get_list_entries
+    object: ListEntry
+    action: get_list_entries
+    category: Data Access
+    risk: medium
+    business_impact: "Browses all entries on a list with their field data, exposing bulk contact and deal records held on that list."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.get_saved_view_list_entries
+    object: ListEntry
+    action: get_saved_view_list_entries
+    category: Data Access
+    risk: medium
+    business_impact: "Pulls every list entry matching a saved view's filters, enabling bulk extraction of the contacts and companies behind a curated segment."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.get_person_relationships
+    object: Person
+    action: get_person_relationships
+    category: Data Access
+    risk: medium
+    business_impact: "Reveals which teammates know a given individual and how strong each relationship is, exposing relationship-intelligence data about that person."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.get_company_relationships
+    object: Company
+    action: get_company_relationships
+    category: Data Access
+    risk: medium
+    business_impact: "Reveals which teammates have relationships at a company and their strength, exposing the firm's private network map into that account."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.get_meetings
+    object: Meeting
+    action: get_meetings
+    category: Data Access
+    risk: medium
+    business_impact: "Returns past and upcoming meeting interactions and their attendees, exposing who met whom and when across the team's calendar."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.search_notes
+    object: Note
+    action: search_notes
+    category: Data Access
+    risk: medium
+    business_impact: "Searches note content by keyword across the workspace, potentially surfacing sensitive freeform details recorded about people and deals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.semantic_search
+    object: Company
+    action: semantic_search
+    category: Data Access
+    risk: low
+    business_impact: "Finds companies via natural-language description when exact names are unknown, returning matching company records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.get_field_value_changes
+    object: Field
+    action: get_field_value_changes
+    category: Data Access
+    risk: low
+    business_impact: "Returns the history of changes to a field's values over time, exposing an audit trail of how a record was edited."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.create_person
+    object: Person
+    action: create_person
+    category: Customer
+    risk: medium
+    business_impact: "Adds a new person record with names, email addresses, and company associations to the team's address book."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.update_person
+    object: Person
+    action: update_person
+    category: Customer
+    risk: medium
+    business_impact: "Changes an existing person's name, email addresses, or company associations, mutating stored contact PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.create_company
+    object: Company
+    action: create_company
+    category: Customer
+    risk: medium
+    business_impact: "Creates a new company record in the workspace with its name and domain."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.update_company
+    object: Company
+    action: update_company
+    category: Customer
+    risk: medium
+    business_impact: "Renames a company or changes its domain and associated people, mutating a shared account record."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.upsert_entity_field_values
+    object: Person
+    action: upsert_entity_field_values
+    category: Customer
+    risk: medium
+    business_impact: "Creates or updates field values on a person or company record, writing potentially sensitive attributes to contact data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.upsert_list_entry_field_values
+    object: ListEntry
+    action: upsert_list_entry_field_values
+    category: Customer
+    risk: medium
+    business_impact: "Creates or updates field values in bulk for a list entry, rewriting the deal or contact attributes tracked on that list."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.create_interaction
+    object: Interaction
+    action: create_interaction
+    category: Customer
+    risk: medium
+    business_impact: "Logs a meeting, call, or chat message tied to one or more people, recording communications metadata against their profiles."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.create_note
+    object: Note
+    action: create_note
+    category: Customer
+    risk: low
+    business_impact: "Creates a freeform note and attaches it to a person, company, opportunity, or meeting."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Revenue & Pipeline ----------
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.create_opportunity
+    object: Opportunity
+    action: create_opportunity
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Creates a new deal and attaches it to a list, seeding pipeline that drives forecasting and reporting."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.update_opportunity
+    object: Opportunity
+    action: update_opportunity
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Renames an opportunity or changes its company and person associations, altering pipeline records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.create_field
+    object: Field
+    action: create_field
+    category: Operations
+    risk: medium
+    business_impact: "Defines a new field on a list, company, person, or opportunity, changing the workspace data schema all records inherit."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.delete_list_field_dropdown_option
+    object: Field
+    action: delete_list_field_dropdown_option
+    category: Operations
+    risk: medium
+    business_impact: "Removes a selectable option from a list dropdown field, which can orphan the value on any records currently set to it."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.create_list
+    object: List
+    action: create_list
+    category: Operations
+    risk: low
+    business_impact: "Creates a new list for organizing companies, people, or opportunities in the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.affinity.co/pages/mcp/available-tools.md
+  - id: affinity.delete_reminder
+    object: Reminder
+    action: delete_reminder
+    category: Operations
+    risk: low
+    business_impact: "Deletes an existing reminder, removing a scheduled follow-up from the team's queue."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

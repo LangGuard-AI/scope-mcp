@@ -1,0 +1,141 @@
+schema_version: "1.0"
+platform: superhuman-mail
+display_name: Superhuman Mail
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.superhuman.com/@emma-hong/superhuman-mail-mcp-overview
+  - id: superhuman-mail.query_email_and_calendar
+    object: Mailbox
+    action: query_email_and_calendar
+    category: Data Access
+    risk: high
+    business_impact: "Runs semantic search across the entire mailbox and calendar; a single query can surface PII, credentials, contracts, and confidential meeting details."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Messaging ----------
+
+  # source: https://docs.superhuman.com/@emma-hong/superhuman-mail-mcp-overview
+  - id: superhuman-mail.list_email
+    object: Email
+    action: list_email
+    category: Messaging
+    risk: high
+    business_impact: "Searches and returns emails matching sender, subject, or date criteria; can pull message content and PII across correspondence at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.superhuman.com/@emma-hong/superhuman-mail-mcp-overview
+  - id: superhuman-mail.get_email_thread
+    object: Thread
+    action: get_email_thread
+    category: Messaging
+    risk: high
+    business_impact: "Fetches a full email thread's contents; entire message bodies and quoted history enter agent context."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.superhuman.com/@emma-hong/superhuman-mail-mcp-overview
+  - id: superhuman-mail.send_email
+    object: Email
+    action: send_email
+    category: Messaging
+    risk: high
+    business_impact: "Sends an email to arbitrary recipients on the user's behalf; irreversible once delivered and can transmit confidential data outside the organization."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.superhuman.com/@emma-hong/superhuman-mail-mcp-overview
+  - id: superhuman-mail.create_or_update_draft
+    object: Draft
+    action: create_or_update_draft
+    category: Messaging
+    risk: medium
+    business_impact: "Composes or edits an email draft in the user's voice; not auto-sent but stages outbound content that may include personal or confidential information."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.superhuman.com/@emma-hong/superhuman-mail-mcp-overview
+  - id: superhuman-mail.update_email
+    object: Email
+    action: update_email
+    category: Messaging
+    risk: medium
+    business_impact: "Applies labels, reminders, star, trash, done, or read/unread state to emails; reversible mailbox organization changes."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.superhuman.com/@emma-hong/superhuman-mail-mcp-overview
+  - id: superhuman-mail.get_read_statuses
+    object: Email
+    action: get_read_statuses
+    category: Messaging
+    risk: low
+    business_impact: "Returns read/unread status for emails matching criteria; exposes recipient engagement metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://docs.superhuman.com/@emma-hong/superhuman-mail-mcp-overview
+  - id: superhuman-mail.create_or_update_event
+    object: CalendarEvent
+    action: create_or_update_event
+    category: Operations
+    risk: medium
+    business_impact: "Creates or updates calendar events including attendees, times, and details; writes participant personal data to the user's calendar."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.superhuman.com/@emma-hong/superhuman-mail-mcp-overview
+  - id: superhuman-mail.get_availability_calendar
+    object: Calendar
+    action: get_availability_calendar
+    category: Operations
+    risk: low
+    business_impact: "Finds free meeting times across a group of participants; reveals attendees' availability but not event contents."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.superhuman.com/@emma-hong/superhuman-mail-mcp-overview
+  - id: superhuman-mail.update_preferences_email_and_calendar
+    object: Preferences
+    action: update_preferences_email_and_calendar
+    category: Operations
+    risk: low
+    business_impact: "Updates the writing style, calendar preferences, and stored facts the assistant uses to draft emails and events on the user's behalf."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

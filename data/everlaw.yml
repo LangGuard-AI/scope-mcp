@@ -1,0 +1,114 @@
+schema_version: "1.0"
+platform: everlaw
+display_name: Everlaw
+source: langguard-editorial
+updated: "2026-07"
+reference: https://support.everlaw.com/hc/en-us/articles/49986656959771-Everlaw-MCP-Server
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://support.everlaw.com/hc/en-us/articles/49986656959771-Everlaw-MCP-Server
+  - id: everlaw.GetProjectSearchResult
+    object: Document
+    action: GetProjectSearchResult
+    category: Data Access
+    risk: high
+    business_impact: "Pages through litigation documents matched by a search, returning Bates numbers, review URLs, document text, download links, and AI-extracted values across the matched set — bulk access to potentially privileged, PII-laden discovery material."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.everlaw.com/hc/en-us/articles/49986656959771-Everlaw-MCP-Server
+  - id: everlaw.PostProjectSearch
+    object: Search
+    action: PostProjectSearch
+    category: Data Access
+    risk: low
+    business_impact: "Runs a search query against a project's document corpus and returns match counts, group counts, and a search ID to retrieve results — surfaces the presence of responsive documents without returning their content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.everlaw.com/hc/en-us/articles/49986656959771-Everlaw-MCP-Server
+  - id: everlaw.GetProjectDatasets
+    object: Dataset
+    action: GetProjectDatasets
+    category: Data Access
+    risk: low
+    business_impact: "Lists the native datasets available in a project, exposing dataset names and structure but not the underlying document contents."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.everlaw.com/hc/en-us/articles/49986656959771-Everlaw-MCP-Server
+  - id: everlaw.GetProjectProcessedUploads
+    object: Upload
+    action: GetProjectProcessedUploads
+    category: Data Access
+    risk: low
+    business_impact: "Lists the completed processed uploads in a project, revealing which document batches have been ingested for review."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.everlaw.com/hc/en-us/articles/49986656959771-Everlaw-MCP-Server
+  - id: everlaw.GetProjectMetadataFields
+    object: MetadataField
+    action: GetProjectMetadataFields
+    category: Data Access
+    risk: low
+    business_impact: "Returns the project-level searchable metadata fields, exposing the project's field schema used to construct document searches."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.everlaw.com/hc/en-us/articles/49986656959771-Everlaw-MCP-Server
+  - id: everlaw.DescribeProjectSearchTerm
+    object: SearchTerm
+    action: DescribeProjectSearchTerm
+    category: Data Access
+    risk: low
+    business_impact: "Returns the query-property schema and an example for a single search term, aiding search construction with no document data exposure."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://support.everlaw.com/hc/en-us/articles/49986656959771-Everlaw-MCP-Server
+  - id: everlaw.GetProjects
+    object: Project
+    action: GetProjects
+    category: Operations
+    risk: low
+    business_impact: "Lists the projects the authenticated user can access, exposing project names and IDs across the user's matter portfolio."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.everlaw.com/hc/en-us/articles/49986656959771-Everlaw-MCP-Server
+  - id: everlaw.GetProjectBinders
+    object: Binder
+    action: GetProjectBinders
+    category: Operations
+    risk: low
+    business_impact: "Lists the binders in a project along with their names, IDs, and owning users, exposing case-organization structure and reviewer identities."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

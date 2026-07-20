@@ -1,0 +1,243 @@
+schema_version: "1.0"
+platform: factset
+display_name: FactSet AI-Ready Data
+source: langguard-editorial
+updated: "2026-07"
+reference: https://developer.factset.com/mcp/factset-ai-ready-data-mcp
+server_website: https://developer.factset.com/mcp/factset-ai-ready-data-mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://developer.factset.com/mcp/factset-ai-ready-data-mcp
+  - id: factset.FactSet_People
+    object: Person
+    action: FactSet_People
+    category: Data Access
+    risk: medium
+    business_impact: "Returns biographical and role data on identifiable corporate executives and directors worldwide, surfacing personal data from FactSet's people database."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.factset.com/mcp/factset-ai-ready-data-mcp
+  - id: factset.FactSet_Fundamentals
+    object: Fundamentals
+    action: FactSet_Fundamentals
+    category: Data Access
+    risk: low
+    business_impact: "Returns standardized company financial-statement fundamentals (income, balance sheet, cash flow) from FactSet's database for analysis."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.factset.com/mcp/factset-ai-ready-data-mcp
+  - id: factset.FactSet_EstimatesConsensus
+    object: Estimate
+    action: FactSet_EstimatesConsensus
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces sell-side analyst consensus estimates and forecasts for covered securities."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.factset.com/mcp/factset-ai-ready-data-mcp
+  - id: factset.FactSet_GlobalPrices
+    object: Price
+    action: FactSet_GlobalPrices
+    category: Data Access
+    risk: low
+    business_impact: "Returns historical and current global security pricing data across equities and other instruments."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.factset.com/mcp/factset-ai-ready-data-mcp
+  - id: factset.FactSet_Ownership
+    object: Ownership
+    action: FactSet_Ownership
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces institutional and insider ownership positions and holdings for a security."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.factset.com/mcp/factset-ai-ready-data-mcp
+  - id: factset.FactSet_MergersAcquisitions
+    object: Deal
+    action: FactSet_MergersAcquisitions
+    category: Data Access
+    risk: low
+    business_impact: "Returns merger and acquisition deal data including transaction terms and the parties involved."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.factset.com/mcp/factset-ai-ready-data-mcp
+  - id: factset.FactSet_CalendarEvents
+    object: Event
+    action: FactSet_CalendarEvents
+    category: Data Access
+    risk: low
+    business_impact: "Returns scheduled corporate calendar events such as earnings dates and shareholder meetings."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.factset.com/mcp/factset-ai-ready-data-mcp
+  - id: factset.FactSet_EntityReference
+    object: Entity
+    action: FactSet_EntityReference
+    category: Data Access
+    risk: low
+    business_impact: "Returns entity reference and identifier data used to resolve companies and securities to FactSet keys."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.factset.com/mcp/factset-ai-ready-data-mcp
+  - id: factset.FactSet_FundsETF
+    object: Fund
+    action: FactSet_FundsETF
+    category: Data Access
+    risk: low
+    business_impact: "Returns fund and ETF profile, holdings, and performance data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.factset.com/mcp/factset-ai-ready-data-mcp
+  - id: factset.FactSet_FundsScreener
+    object: Fund
+    action: FactSet_FundsScreener
+    category: Data Access
+    risk: low
+    business_impact: "Screens the fund and ETF universe against supplied criteria, returning matching funds in bulk."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.factset.com/mcp/factset-ai-ready-data-mcp
+  - id: factset.FactSet_CompanyScreener
+    object: Company
+    action: FactSet_CompanyScreener
+    category: Data Access
+    risk: low
+    business_impact: "Screens the global company universe against supplied criteria, returning matching companies in bulk."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.factset.com/mcp/factset-ai-ready-data-mcp
+  - id: factset.FactSet_UnstructuredContent
+    object: Document
+    action: FactSet_UnstructuredContent
+    category: Data Access
+    risk: low
+    business_impact: "Returns unstructured content such as filings, transcripts, and documents for a given entity."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.factset.com/mcp/factset-ai-ready-data-mcp
+  - id: factset.FactSet_PrivateEquityVC
+    object: Company
+    action: FactSet_PrivateEquityVC
+    category: Data Access
+    risk: low
+    business_impact: "Returns private equity and venture capital deal, fund, and portfolio-company data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.factset.com/mcp/factset-ai-ready-data-mcp
+  - id: factset.FactSet_SupplyChain
+    object: SupplyChain
+    action: FactSet_SupplyChain
+    category: Data Access
+    risk: low
+    business_impact: "Returns supply-chain relationship data mapping a company's suppliers and customers."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.factset.com/mcp/factset-ai-ready-data-mcp
+  - id: factset.FactSet_Metrics
+    object: Metric
+    action: FactSet_Metrics
+    category: Data Access
+    risk: low
+    business_impact: "Returns computed financial and market metrics for requested securities or entities."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.factset.com/mcp/factset-ai-ready-data-mcp
+  - id: factset.FactSet_GeoRev
+    object: GeoRevenue
+    action: FactSet_GeoRev
+    category: Data Access
+    risk: low
+    business_impact: "Returns geographic revenue-exposure estimates broken down by region for a company."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.factset.com/mcp/factset-ai-ready-data-mcp
+  - id: factset.FactSet_RBICS
+    object: Classification
+    action: FactSet_RBICS
+    category: Data Access
+    risk: low
+    business_impact: "Returns FactSet RBICS industry and sector classification data for companies."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.factset.com/mcp/factset-ai-ready-data-mcp
+  - id: factset.FactSet_TermsConditions
+    object: Security
+    action: FactSet_TermsConditions
+    category: Data Access
+    risk: low
+    business_impact: "Returns fixed-income security terms-and-conditions reference data such as coupon and maturity."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial

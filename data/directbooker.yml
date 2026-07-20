@@ -1,0 +1,33 @@
+schema_version: "1.0"
+platform: directbooker
+display_name: DirectBooker
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://www.directbooker.ai/products/mcp-server-documentation
+  - id: directbooker.hotel-search
+    object: Hotel
+    action: hotel-search
+    category: Data Access
+    risk: low
+    business_impact: "Returns hotels matching a traveler's destination, dates, and stated preferences; read-only lookup that stores no search history, though queries may carry loyalty-program identifiers."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.directbooker.ai/products/mcp-server-documentation
+  - id: directbooker.hotel-details
+    object: Hotel
+    action: hotel-details
+    category: Data Access
+    risk: low
+    business_impact: "Returns detailed information for a single hotel including amenities, real-time availability, and direct-booking rates; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

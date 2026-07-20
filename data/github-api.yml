@@ -1,0 +1,332 @@
+schema_version: "1.0"
+platform: github-api
+display_name: GitHub
+source: langguard-editorial
+updated: "2026-07"
+reference: https://github.com/github/github-mcp-server
+actions:
+  # ---------- Secrets & Workflows ----------
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.list_secret_scanning_alerts
+    object: SecretScanningAlert
+    action: list_secret_scanning_alerts
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Enumerates every secret-scanning alert in a repository, revealing the locations of leaked credentials, tokens, and keys at scale."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.get_secret_scanning_alert
+    object: SecretScanningAlert
+    action: get_secret_scanning_alert
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Returns the details of a single secret-scanning alert, exposing which credential leaked and where it was committed."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.actions_run_trigger
+    object: WorkflowRun
+    action: actions_run_trigger
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Triggers a GitHub Actions workflow run, executing CI/CD pipeline code that can build, test, or deploy without a review gate."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.get_job_logs
+    object: WorkflowJob
+    action: get_job_logs
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Retrieves raw Actions job logs, which frequently contain leaked environment variables, tokens, and internal endpoint details."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # ---------- Identity & Access ----------
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.get_team_members
+    object: TeamMember
+    action: get_team_members
+    category: Identity & Access
+    risk: medium
+    business_impact: "Lists the members of an organization team, exposing developer identities and the access-boundary of that team."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.list_repository_collaborators
+    object: Collaborator
+    action: list_repository_collaborators
+    category: Identity & Access
+    risk: medium
+    business_impact: "Reveals every principal with access to a repository and their permission level, mapping the codebase's access-control surface."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.list_code_scanning_alerts
+    object: CodeScanningAlert
+    action: list_code_scanning_alerts
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Enumerates code-scanning alerts, surfacing exploitable security weaknesses across a repository's source before they are remediated."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.list_dependabot_alerts
+    object: DependabotAlert
+    action: list_dependabot_alerts
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Lists Dependabot vulnerability alerts, disclosing which dependencies carry known exploitable flaws across the repository."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.create_pull_request_with_copilot
+    object: PullRequest
+    action: create_pull_request_with_copilot
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Delegates a coding task to the autonomous Copilot agent, which writes code and opens a pull request with minimal human authorship."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # ---------- Repository ----------
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.merge_pull_request
+    object: PullRequest
+    action: merge_pull_request
+    category: Repository
+    risk: high
+    business_impact: "Merges a pull request into its base branch, landing code changes; self-merging bypasses the review control on the codebase."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.pull_request_review_write
+    object: PullRequestReview
+    action: pull_request_review_write
+    category: Repository
+    risk: high
+    business_impact: "Creates, submits, or deletes pull-request reviews; approving one's own PR or deleting a review erases the change-approval trail."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.create_pull_request
+    object: PullRequest
+    action: create_pull_request
+    category: Repository
+    risk: low
+    business_impact: "Opens a new pull request proposing changes; reviewable and reversible before any merge occurs."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.update_pull_request
+    object: PullRequest
+    action: update_pull_request
+    category: Repository
+    risk: low
+    business_impact: "Edits a pull request's title, body, state, or base branch; metadata-level and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # ---------- Code & Release ----------
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.delete_file
+    object: File
+    action: delete_file
+    category: Code & Release
+    risk: high
+    business_impact: "Removes a file from a branch in a commit; destructive to the working tree though recoverable through the repository's history."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.push_files
+    object: File
+    action: push_files
+    category: Code & Release
+    risk: medium
+    business_impact: "Pushes multiple files to a branch in a single commit, writing source directly to the repository without a pull request."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.create_or_update_file
+    object: File
+    action: create_or_update_file
+    category: Code & Release
+    risk: medium
+    business_impact: "Creates or overwrites a single file on a branch via commit, changing source code directly in the repository."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.create_branch
+    object: Branch
+    action: create_branch
+    category: Code & Release
+    risk: low
+    business_impact: "Creates a new branch from an existing ref; isolated from other branches and trivially reversible."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.create_repository
+    object: Repository
+    action: create_repository
+    category: Code & Release
+    risk: medium
+    business_impact: "Provisions a new repository under the account or organization, expanding the managed code surface and its default access grants."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.fork_repository
+    object: Repository
+    action: fork_repository
+    category: Code & Release
+    risk: low
+    business_impact: "Forks a repository into a new namespace; a copy operation with no effect on the source repository."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.search_code
+    object: Code
+    action: search_code
+    category: Code & Release
+    risk: medium
+    business_impact: "Searches code across every repository the token can read, which can surface hardcoded secrets or proprietary snippets at scale."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # ---------- Issues ----------
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.issue_write
+    object: Issue
+    action: issue_write
+    category: Issues
+    risk: low
+    business_impact: "Creates or updates an issue or pull request; reversible tracker content with no direct effect on code or access."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.label_write
+    object: Label
+    action: label_write
+    category: Issues
+    risk: low
+    business_impact: "Creates, updates, or deletes repository labels used to categorize issues and pull requests; low-impact metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.projects_write
+    object: Project
+    action: projects_write
+    category: Operations
+    risk: low
+    business_impact: "Manages GitHub Projects boards, fields, and items; planning-layer changes that are reviewable and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/github/github-mcp-server/main/README.md
+  - id: github-api.create_gist
+    object: Gist
+    action: create_gist
+    category: Operations
+    risk: medium
+    business_impact: "Creates a gist that can be public, providing a path to expose proprietary code or embedded secrets outside the organization."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial

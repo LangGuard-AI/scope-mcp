@@ -1,0 +1,33 @@
+schema_version: "1.0"
+platform: context7
+display_name: Context7
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://mcp.context7.com/mcp
+  - id: context7.resolve-library-id
+    object: Library
+    action: resolve-library-id
+    category: Data Access
+    risk: low
+    business_impact: "Resolves a package or product name to a Context7 library ID; read-only lookup over public library metadata with no write path or customer-data exposure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.context7.com/mcp
+  - id: context7.query-docs
+    object: Documentation
+    action: query-docs
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves public documentation and code examples for a named library; read-only fetch of already-public reference content with no access to customer or account data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

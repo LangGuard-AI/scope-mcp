@@ -1,0 +1,21 @@
+schema_version: "1.0"
+platform: e2b
+display_name: E2B
+source: langguard-editorial
+updated: "2026-07"
+reference: https://github.com/e2b-dev/mcp-server
+actions:
+  # ---------- Code Execution ----------
+
+  # source: https://raw.githubusercontent.com/e2b-dev/mcp-server/main/packages/js/src/index.ts
+  - id: e2b.run_code
+    object: Sandbox
+    action: run_code
+    category: Code Execution
+    risk: high
+    business_impact: "Executes arbitrary Python in an ephemeral E2B sandbox with network access; code can process and exfiltrate any data passed to it or make outbound calls, though it cannot reach the caller's own production systems."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

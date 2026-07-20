@@ -1,0 +1,126 @@
+schema_version: "1.0"
+platform: clarivate-compumark
+display_name: Clarivate IPOne CompuMark Trademarks
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://ipone.clarivate.com/trademarks/mcp/docs
+  - id: clarivate-compumark.trademark-knockout-search
+    object: Trademark
+    action: trademark-knockout-search
+    category: Data Access
+    risk: low
+    business_impact: "Runs an identical (exact) knockout search over the CompuMark trademark databases and returns matching trademark IDs — read-only query of public registry data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://ipone.clarivate.com/trademarks/mcp/docs
+  - id: clarivate-compumark.trademark-search
+    object: Trademark
+    action: trademark-search
+    category: Data Access
+    risk: low
+    business_impact: "Queries CompuMark trademark databases with structured field/operator/value filters plus phonetic and regional matching, returning matching public trademark records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://ipone.clarivate.com/trademarks/mcp/docs
+  - id: clarivate-compumark.trademark-count
+    object: Trademark
+    action: trademark-count
+    category: Data Access
+    risk: low
+    business_impact: "Returns only the result count for a trademark search, letting a caller gauge search volume before retrieving records — no record data exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://ipone.clarivate.com/trademarks/mcp/docs
+  - id: clarivate-compumark.trademark-content
+    object: Trademark
+    action: trademark-content
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves trademark record details (excluding goods) for up to 100 IDs per call from the public CompuMark registry."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://ipone.clarivate.com/trademarks/mcp/docs
+  - id: clarivate-compumark.trademark-goods
+    object: Trademark
+    action: trademark-goods
+    category: Data Access
+    risk: low
+    business_impact: "Returns the goods and services text for a single trademark ID from the public CompuMark registry."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://ipone.clarivate.com/trademarks/mcp/docs
+  - id: clarivate-compumark.trademark-fulltext
+    object: Trademark
+    action: trademark-fulltext
+    category: Data Access
+    risk: low
+    business_impact: "Returns CompuMark full-text URLs for a list of trademark IDs for canonical linking back to the source registry records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://ipone.clarivate.com/trademarks/mcp/docs
+  - id: clarivate-compumark.trademark-search-register-office-codes
+    object: RegisterOfficeCode
+    action: trademark-search-register-office-codes
+    category: Operations
+    risk: low
+    business_impact: "Lists valid registration office codes (WIPO 2-letter format) used to build search parameters — static reference metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://ipone.clarivate.com/trademarks/mcp/docs
+  - id: clarivate-compumark.trademark-search-field-names
+    object: SearchField
+    action: trademark-search-field-names
+    category: Operations
+    risk: low
+    business_impact: "Lists valid field names for constructing searchFields in trademark-search and trademark-count — static schema reference."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://ipone.clarivate.com/trademarks/mcp/docs
+  - id: clarivate-compumark.trademark-search-field-operators
+    object: SearchField
+    action: trademark-search-field-operators
+    category: Operations
+    risk: low
+    business_impact: "Returns the valid operators for a given search field name — static schema reference for query construction."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

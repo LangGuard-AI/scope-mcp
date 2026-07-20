@@ -1,0 +1,318 @@
+schema_version: "1.0"
+platform: cloudinary
+display_name: Cloudinary
+source: langguard-editorial
+updated: "2026-07"
+reference: https://github.com/cloudinary/asset-management-mcp
+server_website: https://github.com/cloudinary/asset-management-mcp
+actions:
+  # ---------- Media Library ----------
+
+  # source: https://github.com/cloudinary/asset-management-mcp
+  - id: cloudinary.delete-folder
+    object: Folder
+    action: delete-folder
+    category: Media Library
+    risk: critical
+    business_impact: "Deletes a folder together with every asset it contains in one call, an irreversible mass removal of customer media with no per-asset confirmation."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/cloudinary/asset-management-mcp
+  - id: cloudinary.move-folder
+    object: Folder
+    action: move-folder
+    category: Media Library
+    risk: medium
+    business_impact: "Relocates or renames an entire folder and all its assets, changing every contained asset's delivery URL and breaking existing references at scale."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Media Assets ----------
+
+  # source: https://github.com/cloudinary/asset-management-mcp
+  - id: cloudinary.delete-asset
+    object: Asset
+    action: delete-asset
+    category: Media Assets
+    risk: high
+    business_impact: "Permanently removes a single asset by its immutable ID, taking down its delivery URLs and any dependent transformations."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/cloudinary/asset-management-mcp
+  - id: cloudinary.generate-archive
+    object: Archive
+    action: generate-archive
+    category: Media Assets
+    risk: high
+    business_impact: "Packages an arbitrary set of assets into a downloadable ZIP or TGZ, enabling bulk export of media that may contain images of identifiable people."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/cloudinary/asset-management-mcp
+  - id: cloudinary.download-asset-backup
+    object: Asset
+    action: download-asset-backup
+    category: Media Assets
+    risk: medium
+    business_impact: "Retrieves a stored backup copy of an asset, exposing original media that may include personal or sensitive imagery outside the live library."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/cloudinary/asset-management-mcp
+  - id: cloudinary.upload-asset
+    object: Asset
+    action: upload-asset
+    category: Media Assets
+    risk: medium
+    business_impact: "Ingests new image, video, or raw files into the product environment, adding externally-sourced media that downstream delivery and transformations will serve."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/cloudinary/asset-management-mcp
+  - id: cloudinary.asset-update
+    object: Asset
+    action: asset-update
+    category: Media Assets
+    risk: medium
+    business_impact: "Modifies an existing asset's metadata, tags, and attributes, altering how it is categorized, searched, and surfaced across the media library."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/cloudinary/asset-management-mcp
+  - id: cloudinary.asset-rename
+    object: Asset
+    action: asset-rename
+    category: Media Assets
+    risk: medium
+    business_impact: "Changes an asset's public ID, which rewrites its canonical delivery URL and can break every embed or link that referenced the old identifier."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/cloudinary/asset-management-mcp
+  - id: cloudinary.delete-derived-assets
+    object: DerivedAsset
+    action: delete-derived-assets
+    category: Media Assets
+    risk: medium
+    business_impact: "Purges cached derived renditions of assets, forcing regeneration on next request and temporarily increasing transformation load and delivery latency."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/cloudinary/asset-management-mcp
+  - id: cloudinary.create-asset-relations
+    object: AssetRelation
+    action: create-asset-relations
+    category: Media Assets
+    risk: low
+    business_impact: "Links an asset to related assets by ID, adding relationship metadata used for grouping and recommendation surfaces."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/cloudinary/asset-management-mcp
+  - id: cloudinary.delete-asset-relations
+    object: AssetRelation
+    action: delete-asset-relations
+    category: Media Assets
+    risk: low
+    business_impact: "Removes relationship links between assets, detaching grouping metadata without affecting the underlying media."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/cloudinary/asset-management-mcp
+  - id: cloudinary.search-assets
+    object: Asset
+    action: search-assets
+    category: Media Assets
+    risk: medium
+    business_impact: "Runs an arbitrary expression query across the asset library, returning asset details and metadata that could surface sensitive media in bulk."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/cloudinary/asset-management-mcp
+  - id: cloudinary.visual-search-assets
+    object: Asset
+    action: visual-search-assets
+    category: Media Assets
+    risk: medium
+    business_impact: "Finds images by visual similarity or content, which can be used to locate photos of a specific person and raises biometric-matching concerns."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Secrets & Workflows ----------
+
+  # source: https://github.com/cloudinary/environment-config-mcp
+  - id: cloudinary.create-trigger
+    object: Trigger
+    action: create-trigger
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Registers a webhook that streams product-environment events to an external destination URL, opening an outbound data channel to a third party."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/cloudinary/environment-config-mcp
+  - id: cloudinary.update-trigger
+    object: Trigger
+    action: update-trigger
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Repoints an existing webhook's callback URL, which can silently redirect event notifications and their payloads to an attacker-controlled endpoint."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/cloudinary/environment-config-mcp
+  - id: cloudinary.delete-trigger
+    object: Trigger
+    action: delete-trigger
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Removes a configured webhook, halting event notifications to its downstream consumer and potentially breaking dependent automation."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://github.com/cloudinary/environment-config-mcp
+  - id: cloudinary.create-upload-mapping
+    object: UploadMapping
+    action: create-upload-mapping
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Defines a folder-to-remote-URL fetch mapping, letting the platform pull and cache assets from an external source on demand."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/cloudinary/environment-config-mcp
+  - id: cloudinary.update-upload-mapping
+    object: UploadMapping
+    action: update-upload-mapping
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Changes the remote URL template of an existing upload mapping, redirecting where fetched assets originate from for a given folder."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/cloudinary/environment-config-mcp
+  - id: cloudinary.create-upload-preset
+    object: UploadPreset
+    action: create-upload-preset
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Creates a reusable upload preset whose settings govern default access mode, moderation, and transformations applied to future uploads."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/cloudinary/environment-config-mcp
+  - id: cloudinary.update-upload-preset
+    object: UploadPreset
+    action: update-upload-preset
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Alters an existing upload preset's configuration, which can weaken default moderation or make future uploads publicly accessible."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- AI & Analysis ----------
+
+  # source: https://github.com/cloudinary/analysis-js
+  - id: cloudinary.analyze-ai-vision-moderation
+    object: Asset
+    action: analyze-ai-vision-moderation
+    category: AI & Analysis
+    risk: medium
+    business_impact: "Submits media to an AI moderation model that flags unsafe or restricted content, producing automated classifications used to gate assets."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/cloudinary/analysis-js
+  - id: cloudinary.analyze-ai-vision-general
+    object: Asset
+    action: analyze-ai-vision-general
+    category: AI & Analysis
+    risk: medium
+    business_impact: "Sends an image to a general-purpose AI vision model for open-ended analysis, returning inferred descriptions and attributes about its contents."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://github.com/cloudinary/asset-management-mcp
+  - id: cloudinary.get-usage-details
+    object: Usage
+    action: get-usage-details
+    category: Operations
+    risk: low
+    business_impact: "Returns aggregate account usage metrics such as storage, bandwidth, and transformation counts for the product environment."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

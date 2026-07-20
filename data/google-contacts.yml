@@ -1,0 +1,49 @@
+schema_version: "1.0"
+platform: google-contacts
+display_name: Google Contacts (People API MCP Server)
+source: langguard-editorial
+updated: "2026-07"
+reference: https://developers.google.com/people/api/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://people.googleapis.com/mcp/v1
+  - id: google-contacts.search_directory_people
+    object: DirectoryPerson
+    action: search_directory_people
+    category: Data Access
+    risk: low
+    business_impact: "Searches an organization's Google Workspace directory, exposing colleague names, email addresses, and directory profile attributes for every matching person."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://people.googleapis.com/mcp/v1
+  - id: google-contacts.search_contacts
+    object: Contact
+    action: search_contacts
+    category: Data Access
+    risk: low
+    business_impact: "Returns the authenticated user's saved contacts, exposing names, email addresses, phone numbers, and other personal details for matching entries."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Admin ----------
+
+  # source: https://people.googleapis.com/mcp/v1
+  - id: google-contacts.get_user_profile
+    object: UserProfile
+    action: get_user_profile
+    category: Identity & Admin
+    risk: low
+    business_impact: "Returns the authenticated user's own name and email address from their Google account profile."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

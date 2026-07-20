@@ -1,0 +1,100 @@
+schema_version: "1.1"
+platform: instrumentl
+display_name: Instrumentl
+source: langguard-editorial
+updated: "2026-07"
+reference: https://help.instrumentl.com/en/articles/15182556-instrumentl-claude-connector
+actions:
+  # ---------- Operations ----------
+
+  # source: https://help.instrumentl.com/en/articles/15182556-instrumentl-claude-connector
+  - id: instrumentl.save_grant_matches_to_your_projects
+    object: GrantMatch
+    action: save_grant_matches_to_your_projects
+    id_form: capability
+    description: "Save grant matches to your projects"
+    category: Operations
+    risk: low
+    business_impact: "Saves a grant match to the project tracker, adding a funding opportunity to the organization's pipeline; reversible and low-impact."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.instrumentl.com/en/articles/15182556-instrumentl-claude-connector
+  - id: instrumentl.hide_remove_saved_matches
+    object: GrantMatch
+    action: hide_remove_saved_matches
+    id_form: capability
+    description: "Hide/Remove saved matches"
+    category: Operations
+    risk: low
+    business_impact: "Removes a previously saved grant from the project tracker, limited to matches saved in the current session; reversible pipeline change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://help.instrumentl.com/en/articles/15182556-instrumentl-claude-connector
+  - id: instrumentl.list_your_projects
+    object: Project
+    action: list_your_projects
+    id_form: capability
+    description: "List your projects"
+    category: Data Access
+    risk: low
+    business_impact: "Returns up to 20 Instrumentl projects showing project name and creation date; read-only listing of the organization's own projects."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.instrumentl.com/en/articles/15182556-instrumentl-claude-connector
+  - id: instrumentl.view_grant_matches_for_a_project
+    object: GrantMatch
+    action: view_grant_matches_for_a_project
+    id_form: capability
+    description: "View grant matches for a project"
+    category: Data Access
+    risk: low
+    business_impact: "Displays ranked grant matches for an active project with grant name, funder, and next deadline; read-only opportunity data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.instrumentl.com/en/articles/15182556-instrumentl-claude-connector
+  - id: instrumentl.retrieve_details_on_a_specific_grant_match
+    object: GrantMatch
+    action: retrieve_details_on_a_specific_grant_match
+    id_form: capability
+    description: "Retrieve details on a specific grant match"
+    category: Data Access
+    risk: low
+    business_impact: "Returns funder background, funding priorities, eligibility, locations, and deadlines for a grant match; read-only public-opportunity detail."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.instrumentl.com/en/articles/15182556-instrumentl-claude-connector
+  - id: instrumentl.fetch_basic_account_information
+    object: Account
+    action: fetch_basic_account_information
+    id_form: capability
+    description: "Fetch basic account information"
+    category: Data Access
+    risk: low
+    business_impact: "Returns high-level account data including Account ID, organization name, type, created/updated dates, and account owner; read-only account metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

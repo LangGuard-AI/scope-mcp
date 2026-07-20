@@ -1,0 +1,124 @@
+schema_version: "1.0"
+platform: crypto-com
+display_name: Crypto.com Market Data
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Market Data ----------
+
+  # source: https://mcp.crypto.com/market-data/mcp
+  - id: crypto-com.get_instruments
+    object: Instrument
+    action: get_instruments
+    category: Market Data
+    risk: low
+    business_impact: "Lists every tradable instrument on the exchange; public catalog data an agent uses to discover and resolve symbols."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.crypto.com/market-data/mcp
+  - id: crypto-com.get_instrument
+    object: Instrument
+    action: get_instrument
+    category: Market Data
+    risk: low
+    business_impact: "Returns configuration detail for a single trading instrument; public reference data with no account or personal information."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.crypto.com/market-data/mcp
+  - id: crypto-com.get_tickers
+    object: Ticker
+    action: get_tickers
+    category: Market Data
+    risk: low
+    business_impact: "Returns current ticker snapshots for one or all instruments; public price data exposing no account state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.crypto.com/market-data/mcp
+  - id: crypto-com.get_ticker
+    object: Ticker
+    action: get_ticker
+    category: Market Data
+    risk: low
+    business_impact: "Returns the current ticker for a single instrument; public price snapshot with no counterparty identity."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.crypto.com/market-data/mcp
+  - id: crypto-com.get_book
+    object: OrderBook
+    action: get_book
+    category: Market Data
+    risk: low
+    business_impact: "Returns a live order-book snapshot of bids and asks for an instrument; public market-depth data with no trader identities."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.crypto.com/market-data/mcp
+  - id: crypto-com.get_candlestick
+    object: Candlestick
+    action: get_candlestick
+    category: Market Data
+    risk: low
+    business_impact: "Returns recent OHLC candlestick history for an instrument and timeframe; public market data used for charting and analysis."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.crypto.com/market-data/mcp
+  - id: crypto-com.get_trades
+    object: Trade
+    action: get_trades
+    category: Market Data
+    risk: low
+    business_impact: "Returns the most recent public trades for an instrument; aggregate market activity that carries no counterparty identity."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.crypto.com/market-data/mcp
+  - id: crypto-com.get_mark_price
+    object: MarkPrice
+    action: get_mark_price
+    category: Market Data
+    risk: low
+    business_impact: "Returns the mark price for an instrument; public derivatives-valuation data with no account context."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.crypto.com/market-data/mcp
+  - id: crypto-com.get_index_price
+    object: IndexPrice
+    action: get_index_price
+    category: Market Data
+    risk: low
+    business_impact: "Returns the index price for an instrument; public reference-rate data with no account or personal information."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

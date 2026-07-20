@@ -1,0 +1,368 @@
+schema_version: "1.1"
+platform: incident-io
+display_name: incident.io
+source: langguard-editorial
+updated: "2026-07"
+reference: https://docs.incident.io/ai/remote-mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.investigation_sync
+    object: Investigation
+    action: investigation_sync
+    description: "Download a full investigation as an archive for LLM analysis"
+    category: Data Access
+    risk: high
+    business_impact: "Downloads a complete incident investigation as an archive of timeline, telemetry, and communications, creating an offline copy of potentially sensitive operational and personal data outside incident.io's controls."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- AI Agents ----------
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.ask
+    object: "*"
+    action: ask
+    description: "AI agent for on-call queries, schedule management, and general questions"
+    category: AI Agents
+    risk: medium
+    business_impact: "Runs the on-call AI agent that answers queries and takes schedule-management actions, giving broad natural-language reach across on-call state in a single call."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.ask_incident
+    object: Incident
+    action: ask_incident
+    description: "AI agent for incident investigation and management actions"
+    category: AI Agents
+    risk: medium
+    business_impact: "Runs the incident AI agent that investigates and takes management actions on incidents, so a single prompt can mutate live incident state."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.ask_telemetry
+    object: Telemetry
+    action: ask_telemetry
+    description: "AI agent for querying logs, metrics, traces, and dashboards"
+    category: AI Agents
+    risk: medium
+    business_impact: "Queries logs, metrics, traces, and dashboards through the telemetry AI agent, exposing observability data that may include internal identifiers or secrets."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Incident Management ----------
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.incident_create
+    object: Incident
+    action: incident_create
+    description: "Create a new incident"
+    category: Incident Management
+    risk: medium
+    business_impact: "Opens a new incident record, kicking off on-call paging and response workflows for the affected team."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.incident_update
+    object: Incident
+    action: incident_update
+    description: "Update incident fields (status, severity, roles, custom fields)"
+    category: Incident Management
+    risk: medium
+    business_impact: "Changes incident status, severity, roles, or custom fields, altering both the live response and the post-incident record."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.follow_up_create
+    object: FollowUp
+    action: follow_up_create
+    description: "Create a follow-up on an incident"
+    category: Incident Management
+    risk: low
+    business_impact: "Adds a post-incident follow-up item, recording a remediation commitment against the incident."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.incident_show
+    object: Incident
+    action: incident_show
+    description: "Full incident details with optional investigation, post-mortem, and update history"
+    category: Incident Management
+    risk: low
+    business_impact: "Returns full incident details including investigation notes and post-mortem, exposing the complete response record for one incident."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.incident_list
+    object: Incident
+    action: incident_list
+    description: "Search and browse incidents with filters, sortable by workload"
+    category: Incident Management
+    risk: low
+    business_impact: "Lists and filters incidents, surfacing the incident backlog and its workload distribution."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.incident_stats
+    object: Incident
+    action: incident_stats
+    description: "Aggregate counts and workload by 10+ dimensions"
+    category: Incident Management
+    risk: low
+    business_impact: "Returns aggregate incident counts and workload across many dimensions, revealing operational health metrics."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- On-Call & Escalation ----------
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.escalation_respond
+    object: Escalation
+    action: escalation_respond
+    description: "Acknowledge or decline a page"
+    category: On-Call & Escalation
+    risk: medium
+    business_impact: "Acknowledges or declines a page, redirecting who owns the live response to an escalation."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.escalation_path_show
+    object: Escalation
+    action: escalation_path_show
+    description: "Who would be paged at each level"
+    category: On-Call & Escalation
+    risk: low
+    business_impact: "Reveals who would be paged at each level of an escalation path, exposing the responder contact chain."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.escalation_list
+    object: Escalation
+    action: escalation_list
+    description: "Search escalations (pages)"
+    category: On-Call & Escalation
+    risk: low
+    business_impact: "Searches escalations (pages), surfacing recent and active paging activity."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.escalation_stats
+    object: Escalation
+    action: escalation_stats
+    description: "Paging counts by path, priority, time of day"
+    category: On-Call & Escalation
+    risk: low
+    business_impact: "Returns paging counts by path, priority, and time of day, exposing on-call load patterns."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.schedule_show
+    object: Schedule
+    action: schedule_show
+    description: "Schedule details with current and upcoming shifts"
+    category: On-Call & Escalation
+    risk: low
+    business_impact: "Shows an on-call schedule with current and upcoming shifts, revealing which named individuals are on call and when."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.schedule_list
+    object: Schedule
+    action: schedule_list
+    description: "List on-call schedules"
+    category: On-Call & Escalation
+    risk: low
+    business_impact: "Lists on-call schedules configured across the organisation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Alerts ----------
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.alert_show
+    object: Alert
+    action: alert_show
+    description: "Full alert details with linked incidents"
+    category: Alerts
+    risk: low
+    business_impact: "Returns full alert details and its linked incidents for one alert."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.alert_list
+    object: Alert
+    action: alert_list
+    description: "Search and browse alerts"
+    category: Alerts
+    risk: low
+    business_impact: "Searches and browses alerts across configured sources."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.analysis_start
+    object: Analysis
+    action: analysis_start
+    description: "Start a structured operational analysis with playbooks and report template"
+    category: Operations
+    risk: low
+    business_impact: "Kicks off a structured operational analysis using playbooks and a report template, creating a new analysis workspace."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.resource_show
+    object: Resource
+    action: resource_show
+    description: "Read organisation config, analysis playbooks, or telemetry datasources"
+    category: Operations
+    risk: low
+    business_impact: "Reads organisation configuration, analysis playbooks, or telemetry datasources, exposing platform setup details."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.catalog_entry_show
+    object: CatalogEntry
+    action: catalog_entry_show
+    description: "Full catalog entry with all attributes"
+    category: Operations
+    risk: low
+    business_impact: "Returns a full catalog entry with all attributes, exposing service or ownership metadata for one resource."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.catalog_type_list
+    object: CatalogType
+    action: catalog_type_list
+    description: "List catalog types (Service, Team, etc.)"
+    category: Operations
+    risk: low
+    business_impact: "Lists catalog types such as Service and Team defined in the organisation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.team_show
+    object: Team
+    action: team_show
+    description: "Team details with owned escalation paths, alert sources, and schedules"
+    category: Operations
+    risk: low
+    business_impact: "Returns team details including owned escalation paths, alert sources, and schedules."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.team_list
+    object: Team
+    action: team_list
+    description: "List teams"
+    category: Operations
+    risk: low
+    business_impact: "Lists teams defined in the organisation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.incident.io/ai/remote-mcp
+  - id: incident-io.feedback
+    object: Feedback
+    action: feedback
+    description: "Submit feedback about the tools"
+    category: Operations
+    risk: low
+    business_impact: "Submits feedback about the MCP tools back to incident.io."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

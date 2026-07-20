@@ -1,0 +1,312 @@
+schema_version: "1.0"
+platform: figma-api
+display_name: Figma
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Design Authoring ----------
+
+  # source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+  - id: figma-api.use_figma
+    object: "*"
+    action: use_figma
+    category: Design Authoring
+    risk: medium
+    business_impact: "General-purpose write tool that can create, edit, or delete any object in a Figma file; effects depend on parameters."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+  - id: figma-api.create_new_file
+    object: File
+    action: create_new_file
+    category: Design Authoring
+    risk: low
+    business_impact: "Creates a blank Figma Design, FigJam, or Slides file in the authenticated user's drafts."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+  - id: figma-api.generate_figma_design
+    object: File
+    action: generate_figma_design
+    category: Design Authoring
+    risk: low
+    business_impact: "Generates Figma design layers from supplied interfaces."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+  - id: figma-api.generate_diagram
+    object: FigJamFile
+    action: generate_diagram
+    category: Design Authoring
+    risk: low
+    business_impact: "Generates a FigJam diagram from Mermaid syntax."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+  - id: figma-api.upload_assets
+    object: Asset
+    action: upload_assets
+    category: Design Authoring
+    risk: low
+    business_impact: "Uploads PNG, JPG, GIF, or WebP assets into a Figma file."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Design Inspection ----------
+
+  # source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+  - id: figma-api.get_design_context
+    object: Selection
+    action: get_design_context
+    category: Design Inspection
+    risk: low
+    business_impact: "Reads the design context for a layer or the current selection."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+  - id: figma-api.get_metadata
+    object: Node
+    action: get_metadata
+    category: Design Inspection
+    risk: low
+    business_impact: "Returns a sparse XML view of layer IDs, names, types, positions, and sizes for a selection."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+  - id: figma-api.get_screenshot
+    object: Selection
+    action: get_screenshot
+    category: Design Inspection
+    risk: low
+    business_impact: "Captures a screenshot of the current design selection."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+  - id: figma-api.get_variable_defs
+    object: Variable
+    action: get_variable_defs
+    category: Design Inspection
+    risk: low
+    business_impact: "Reads the variables and styles used in a Figma selection."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+  - id: figma-api.get_figjam
+    object: FigJamFile
+    action: get_figjam
+    category: Design Inspection
+    risk: low
+    business_impact: "Converts a FigJam diagram such as an architecture workflow into XML."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+  - id: figma-api.get_libraries
+    object: Library
+    action: get_libraries
+    category: Design Inspection
+    risk: low
+    business_impact: "Lists libraries subscribed to the file and community or org libraries available to add."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+  - id: figma-api.search_design_system
+    object: Component
+    action: search_design_system
+    category: Design Inspection
+    risk: low
+    business_impact: "Searches design libraries for components, variables, and styles matching a text query."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+  - id: figma-api.download_assets
+    object: Asset
+    action: download_assets
+    category: Design Inspection
+    risk: low
+    business_impact: "Downloads rendered exports and original source images out of a Figma file."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+  - id: figma-api.get_shader_effect
+    object: ShaderEffect
+    action: get_shader_effect
+    category: Design Inspection
+    risk: low
+    business_impact: "Retrieves a shader effect and its source files."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+  - id: figma-api.get_shader_fill
+    object: ShaderFill
+    action: get_shader_fill
+    category: Design Inspection
+    risk: low
+    business_impact: "Retrieves a shader fill and its source files."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+  - id: figma-api.list_shader_effects
+    object: ShaderEffect
+    action: list_shader_effects
+    category: Design Inspection
+    risk: low
+    business_impact: "Lists the shader effects in the authenticated account library."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+  - id: figma-api.list_shader_fills
+    object: ShaderFill
+    action: list_shader_fills
+    category: Design Inspection
+    risk: low
+    business_impact: "Lists the shader fills in the authenticated account library."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Code Connect ----------
+
+  # source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+  - id: figma-api.get_code_connect_map
+    object: CodeConnectMap
+    action: get_code_connect_map
+    category: Code Connect
+    risk: low
+    business_impact: "Reads existing mappings between Figma node IDs and code components in the codebase."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+  - id: figma-api.add_code_connect_map
+    object: CodeConnectMap
+    action: add_code_connect_map
+    category: Code Connect
+    risk: low
+    business_impact: "Adds a mapping between a Figma node ID and a code component in the codebase."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+  - id: figma-api.get_code_connect_suggestions
+    object: CodeConnectMap
+    action: get_code_connect_suggestions
+    category: Code Connect
+    risk: low
+    business_impact: "Finds suggested mappings between Figma node IDs and code components using Code Connect."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+  - id: figma-api.get_context_for_code_connect
+    object: CodeConnectMap
+    action: get_context_for_code_connect
+    category: Code Connect
+    risk: low
+    business_impact: "Gathers context for generating Code Connect templates."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+  - id: figma-api.send_code_connect_mappings
+    object: CodeConnectMap
+    action: send_code_connect_mappings
+    category: Code Connect
+    risk: low
+    business_impact: "Confirms and persists suggested Code Connect mappings into the design system."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Identity ----------
+
+  # source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+  - id: figma-api.whoami
+    object: User
+    action: whoami
+    category: Identity
+    risk: low
+    business_impact: "Returns the identity of the user authenticated to Figma."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

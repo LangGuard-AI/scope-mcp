@@ -1,0 +1,335 @@
+schema_version: "1.0"
+platform: adobe-cja
+display_name: Adobe Customer Journey Analytics
+source: langguard-editorial
+updated: "2026-07"
+reference: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.runReport
+    object: Report
+    action: runReport
+    category: Data Access
+    risk: high
+    business_impact: "Pulls analytics data from Customer Journey Analytics, potentially returning person-level journey and behavioral records that can expose PII at query scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.searchDimensionItems
+    object: Dimension
+    action: searchDimensionItems
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the top values of a dimension, which for identity dimensions can surface customer IDs, emails, or other personal identifiers."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.setDefaultSessionDataViewId
+    object: Session
+    action: setDefaultSessionDataViewId
+    category: Operations
+    risk: low
+    business_impact: "Sets the default data view for the current session, changing which dataset subsequent tool calls read from."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.upsertSegment
+    object: Segment
+    action: upsertSegment
+    category: Operations
+    risk: medium
+    business_impact: "Creates or overwrites a segment definition, changing which population of records downstream reports and audiences resolve to."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.upsertCalculatedMetric
+    object: CalculatedMetric
+    action: upsertCalculatedMetric
+    category: Operations
+    risk: medium
+    business_impact: "Creates or overwrites a calculated metric formula, altering the numbers reported across every project that references it."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.upsertProject
+    object: Project
+    action: upsertProject
+    category: Operations
+    risk: medium
+    business_impact: "Creates or overwrites a workspace project, changing saved analysis layouts and reports shared with other analysts."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.upsertAudience
+    object: Audience
+    action: upsertAudience
+    category: Operations
+    risk: medium
+    business_impact: "Creates or overwrites an audience, redefining which identifiable individuals are grouped for analysis and downstream activation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.createDateRange
+    object: DateRange
+    action: createDateRange
+    category: Operations
+    risk: low
+    business_impact: "Adds a reusable date-range component available to other analysts; low-impact and easily removed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.findDimensions
+    object: Dimension
+    action: findDimensions
+    category: Operations
+    risk: low
+    business_impact: "Lists dimensions available in a data view; read-only metadata with no record-level exposure."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.findMetrics
+    object: Metric
+    action: findMetrics
+    category: Operations
+    risk: low
+    business_impact: "Lists standard and custom metrics defined in a data view; read-only component metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.findCalculatedMetrics
+    object: CalculatedMetric
+    action: findCalculatedMetrics
+    category: Operations
+    risk: low
+    business_impact: "Lists calculated metrics available to the user; read-only component metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.findSegments
+    object: Segment
+    action: findSegments
+    category: Operations
+    risk: low
+    business_impact: "Lists segments available to the user; read-only component metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.findDateRanges
+    object: DateRange
+    action: findDateRanges
+    category: Operations
+    risk: low
+    business_impact: "Lists saved date-range components available to the user; read-only metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.findDataViews
+    object: DataView
+    action: findDataViews
+    category: Operations
+    risk: low
+    business_impact: "Lists data views the user can access; read-only metadata revealing dataset structure."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.findProjects
+    object: Project
+    action: findProjects
+    category: Operations
+    risk: low
+    business_impact: "Lists workspace projects available to the user; read-only metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.findAudiences
+    object: Audience
+    action: findAudiences
+    category: Operations
+    risk: low
+    business_impact: "Lists audiences available to the user; returns audience metadata, not member-level records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.describeDimension
+    object: Dimension
+    action: describeDimension
+    category: Operations
+    risk: low
+    business_impact: "Returns metadata for a dimension, including its type and settings; no record-level data exposed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.describeMetric
+    object: Metric
+    action: describeMetric
+    category: Operations
+    risk: low
+    business_impact: "Returns metadata for a metric; read-only definition detail with no record-level data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.describeSegment
+    object: Segment
+    action: describeSegment
+    category: Operations
+    risk: low
+    business_impact: "Returns a segment's definition and criteria; read-only metadata about how records are filtered."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.describeCalculatedMetric
+    object: CalculatedMetric
+    action: describeCalculatedMetric
+    category: Operations
+    risk: low
+    business_impact: "Returns a calculated metric's formula and base metrics; read-only definition detail."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.describeProject
+    object: Project
+    action: describeProject
+    category: Operations
+    risk: low
+    business_impact: "Returns details about a workspace project; read-only configuration metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.describeAudience
+    object: Audience
+    action: describeAudience
+    category: Operations
+    risk: low
+    business_impact: "Returns metadata for an audience such as size and criteria; not member-level records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.listComponentUsage
+    object: Component
+    action: listComponentUsage
+    category: Operations
+    risk: low
+    business_impact: "Ranks components by how often they appear in reports; read-only usage metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.listFrequentlyUsedWith
+    object: Component
+    action: listFrequentlyUsedWith
+    category: Operations
+    risk: low
+    business_impact: "Lists components frequently used together in reports; read-only usage metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.adobe.com/analytics-mcp/docs/cja/reference
+  - id: adobe-cja.listSimilarComponents
+    object: Component
+    action: listSimilarComponents
+    category: Operations
+    risk: low
+    business_impact: "Lists components similar to a given one; read-only metadata to aid component discovery."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

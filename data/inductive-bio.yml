@@ -1,0 +1,33 @@
+schema_version: "1.0"
+platform: inductive-bio
+display_name: Inductive Bio
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://www.inductive.bio/mcp-connector
+  - id: inductive-bio.list_available_models
+    object: Model
+    action: list_available_models
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the ADMET property-prediction models exposed by the connector, returning model IDs, assay names, and units; read-only metadata lookup with no chemical input or write path."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.inductive.bio/mcp-connector
+  - id: inductive-bio.predict_properties
+    object: Molecule
+    action: predict_properties
+    category: Data Access
+    risk: low
+    business_impact: "Runs ADMET property predictions over caller-supplied SMILES structures and returns per-molecule values; compute-only call with no persistence of structures or write to customer systems."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

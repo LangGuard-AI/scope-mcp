@@ -1,0 +1,243 @@
+schema_version: "1.0"
+platform: airwallex
+display_name: Airwallex Developer MCP
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Financial ----------
+
+  # source: https://www.npmjs.com/package/@airwallex/developer-mcp
+  - id: airwallex.create_transfer
+    object: Transfer
+    action: create_transfer
+    category: Financial
+    risk: critical
+    business_impact: "Sends funds from an Airwallex balance to a beneficiary; irreversible outbound payment with direct general-ledger impact."
+    compliance: [SOX, COSO, GLBA, PSD2, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.npmjs.com/package/@airwallex/developer-mcp
+  - id: airwallex.list_beneficiaries
+    object: Beneficiary
+    action: list_beneficiaries
+    category: Financial
+    risk: medium
+    business_impact: "Returns saved transfer recipients including names and bank account details across the organization."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.npmjs.com/package/@airwallex/developer-mcp
+  - id: airwallex.list_transfers
+    object: Transfer
+    action: list_transfers
+    category: Financial
+    risk: medium
+    business_impact: "Reads outbound transfer history including amounts, currencies, and recipient references."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.npmjs.com/package/@airwallex/developer-mcp
+  - id: airwallex.get_balances
+    object: Balance
+    action: get_balances
+    category: Financial
+    risk: medium
+    business_impact: "Discloses current cash balances held across every currency in the account."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.npmjs.com/package/@airwallex/developer-mcp
+  - id: airwallex.list_global_accounts
+    object: GlobalAccount
+    action: list_global_accounts
+    category: Financial
+    risk: medium
+    business_impact: "Enumerates the organization's global collection accounts and their identifying details."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.npmjs.com/package/@airwallex/developer-mcp
+  - id: airwallex.create_billing_product
+    object: BillingProduct
+    action: create_billing_product
+    category: Financial
+    risk: medium
+    business_impact: "Adds a new billing product to the catalog, shaping what customers can be charged for."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.npmjs.com/package/@airwallex/developer-mcp
+  - id: airwallex.create_billing_price
+    object: BillingPrice
+    action: create_billing_price
+    category: Financial
+    risk: medium
+    business_impact: "Defines a new price for a billing product, affecting amounts billed to customers."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.npmjs.com/package/@airwallex/developer-mcp
+  - id: airwallex.create_billing_checkout
+    object: BillingCheckout
+    action: create_billing_checkout
+    category: Financial
+    risk: medium
+    business_impact: "Generates a hosted checkout page that collects customer card payments."
+    compliance: [PCI]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.npmjs.com/package/@airwallex/developer-mcp
+  - id: airwallex.create_payment_link
+    object: PaymentLink
+    action: create_payment_link
+    category: Financial
+    risk: medium
+    business_impact: "Creates a shareable payment link that collects card payments from customers."
+    compliance: [PCI]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.npmjs.com/package/@airwallex/developer-mcp
+  - id: airwallex.list_payment_links
+    object: PaymentLink
+    action: list_payment_links
+    category: Financial
+    risk: low
+    business_impact: "Reads previously created payment links and their configured amounts."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.npmjs.com/package/@airwallex/developer-mcp
+  - id: airwallex.list_billing_products
+    object: BillingProduct
+    action: list_billing_products
+    category: Financial
+    risk: low
+    business_impact: "Reads the catalog of billing products configured for the account."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.npmjs.com/package/@airwallex/developer-mcp
+  - id: airwallex.list_billing_prices
+    object: BillingPrice
+    action: list_billing_prices
+    category: Financial
+    risk: low
+    business_impact: "Reads configured billing prices attached to products."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.npmjs.com/package/@airwallex/developer-mcp
+  - id: airwallex.get_fx_quote
+    object: FXQuote
+    action: get_fx_quote
+    category: Financial
+    risk: low
+    business_impact: "Returns an indicative foreign-exchange conversion rate; no conversion is executed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.npmjs.com/package/@airwallex/developer-mcp
+  - id: airwallex.simulate_create_deposit
+    object: Deposit
+    action: simulate_create_deposit
+    category: Financial
+    risk: low
+    business_impact: "Simulates an inbound deposit in the sandbox environment; no real funds move."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.npmjs.com/package/@airwallex/developer-mcp
+  - id: airwallex.simulate_transfer_result
+    object: Transfer
+    action: simulate_transfer_result
+    category: Financial
+    risk: low
+    business_impact: "Simulates a transfer status in the sandbox environment; no real payment occurs."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://mcp-demo.airwallex.com/docs
+  - id: airwallex.search_public_docs
+    object: Documentation
+    action: search_public_docs
+    category: Operations
+    risk: low
+    business_impact: "Searches Airwallex product, API, and SDK documentation for reference content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp-demo.airwallex.com/docs
+  - id: airwallex.read_integration_best_practices
+    object: Documentation
+    action: read_integration_best_practices
+    category: Operations
+    risk: low
+    business_impact: "Returns Airwallex integration guidance as read-only reference content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.npmjs.com/package/@airwallex/developer-mcp
+  - id: airwallex.get_default_api_version
+    object: ApiVersion
+    action: get_default_api_version
+    category: Operations
+    risk: low
+    business_impact: "Reports the default API version bound to the account or organization."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,62 @@
+schema_version: "1.0"
+platform: aurora
+display_name: Aurora MCP (Consilio)
+source: langguard-editorial
+updated: "2026-07"
+reference: https://mcp-docs.ai.consilio.com/docs/reference/tools/
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://mcp-docs.ai.consilio.com/docs/reference/tools/
+  - id: aurora.aurora_search_documents
+    object: Document
+    action: aurora_search_documents
+    category: Data Access
+    risk: medium
+    business_impact: "Runs Consilio's AI Investigate retrieval engine across a matter's document workspaces, surfacing e-discovery record content that routinely contains personal data, privileged material, and sensitive case evidence."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp-docs.ai.consilio.com/docs/reference/tools/
+  - id: aurora.aurora_search_matters
+    object: Matter
+    action: aurora_search_matters
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the legal engagements (matters) the signed-in Consilio user can access, revealing which confidential client cases exist and their identifiers."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp-docs.ai.consilio.com/docs/reference/tools/
+  - id: aurora.aurora_search_workspaces
+    object: Workspace
+    action: aurora_search_workspaces
+    category: Data Access
+    risk: low
+    business_impact: "Lists every workspace inside a matter, exposing the internal structure of a confidential legal engagement to the caller."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Service ----------
+
+  # source: https://mcp-docs.ai.consilio.com/docs/quickstart/
+  - id: aurora.aurora_search_tickets
+    object: SupportTicket
+    action: aurora_search_tickets
+    category: Service
+    risk: low
+    business_impact: "Searches the signed-in user's own Consilio support tickets, returning their status and contents to the caller."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

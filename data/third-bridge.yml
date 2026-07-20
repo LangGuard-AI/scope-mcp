@@ -1,0 +1,21 @@
+schema_version: "1.0"
+platform: third-bridge
+display_name: Third Bridge
+source: langguard-editorial
+updated: "2026-07"
+reference: https://github.com/third-bridge/mcp-skills/blob/master/docs/mcp-server.md
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://github.com/third-bridge/mcp-skills/blob/master/docs/mcp-server.md
+  - id: third-bridge.third_bridge_content_query
+    object: Content
+    action: third_bridge_content_query
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves snippets from Third Bridge's proprietary expert-interview transcript library, surfacing licensed, access-controlled investment-research content scoped to the caller's Forum entitlements."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

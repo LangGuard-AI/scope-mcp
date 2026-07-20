@@ -1,0 +1,338 @@
+schema_version: "1.0"
+platform: airtable-api
+display_name: Airtable
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.create_records_for_table
+    object: Record
+    action: create_records_for_table
+    category: Data Access
+    risk: medium
+    business_impact: "Writes new records into an Airtable table; the arbitrary field values can carry personal or regulated data an agent introduces without review."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.update_records_for_table
+    object: Record
+    action: update_records_for_table
+    category: Data Access
+    risk: medium
+    business_impact: "Overwrites specified fields on existing records, silently mutating potentially personal or business-critical data while leaving other fields intact."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.list_records_for_table
+    object: Record
+    action: list_records_for_table
+    category: Data Access
+    risk: medium
+    business_impact: "Queries and returns records in bulk from a table, surfacing potentially personal data at scale in a single call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.search_records
+    object: Record
+    action: search_records
+    category: Data Access
+    risk: medium
+    business_impact: "Free-text search across a table's records surfaces matching rows, exposing personal data at scale without a predefined filter scope."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.list_records_for_page
+    object: Record
+    action: list_records_for_page
+    category: Data Access
+    risk: low
+    business_impact: "Reads records surfaced through an interface page, including hierarchy pages, potentially returning personal data scoped to that interface view."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.get_record_for_page
+    object: Record
+    action: get_record_for_page
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves a single record's details from an interface page element, which may include personal fields for that record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.display_records_for_table
+    object: Record
+    action: display_records_for_table
+    category: Data Access
+    risk: low
+    business_impact: "Renders queried table records in an interactive widget for supporting clients, exposing potentially personal data to the connected app surface."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Interfaces ----------
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.publish_interface
+    object: Interface
+    action: publish_interface
+    category: Interfaces
+    risk: high
+    business_impact: "Publishes an interface, broadening who can view the records it surfaces and effecting a sharing-scope change over potentially personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.create_interface
+    object: Interface
+    action: create_interface
+    category: Interfaces
+    risk: low
+    business_impact: "Creates a new interface grouping one or more pages; a reversible layout addition with no direct data change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.create_page
+    object: Page
+    action: create_page
+    category: Interfaces
+    risk: low
+    business_impact: "Adds an interface page; a reversible presentation-layer change that does not itself alter underlying records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.delete_page
+    object: Page
+    action: delete_page
+    category: Interfaces
+    risk: medium
+    business_impact: "Deletes an interface page, removing its configuration and the data view it presented to users who relied on it."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.list_pages_for_base
+    object: Page
+    action: list_pages_for_base
+    category: Interfaces
+    risk: low
+    business_impact: "Enumerates a base's interfaces and pages with the tables and visible fields each shows; a read-only structural discovery call."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.describe_page_element
+    object: Page
+    action: describe_page_element
+    category: Interfaces
+    risk: low
+    business_impact: "Returns guidance on configuring an interface page element; a metadata discovery call with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.describe_page_type
+    object: Page
+    action: describe_page_type
+    category: Interfaces
+    risk: low
+    business_impact: "Returns guidance on configuring an interface page of a given type; a metadata discovery call with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.create_base
+    object: Base
+    action: create_base
+    category: Operations
+    risk: medium
+    business_impact: "Provisions a new base in a workspace, standing up a fresh data store that counts against workspace entitlements and governance scope."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.create_table
+    object: Table
+    action: create_table
+    category: Operations
+    risk: low
+    business_impact: "Adds a new table to an existing base; a reversible schema addition that expands where data can be stored."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.create_field
+    object: Field
+    action: create_field
+    category: Operations
+    risk: low
+    business_impact: "Adds a new field to an existing table; a minor, reversible schema change to the table's data model."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.update_table
+    object: Table
+    action: update_table
+    category: Operations
+    risk: low
+    business_impact: "Renames a table or edits its description; a reversible metadata change with no effect on stored records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.update_field
+    object: Field
+    action: update_field
+    category: Operations
+    risk: low
+    business_impact: "Renames a field or edits its description; a reversible metadata change to the table schema."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.get_table_schema
+    object: Table
+    action: get_table_schema
+    category: Operations
+    risk: low
+    business_impact: "Returns field IDs, types, and configuration for specified tables; a read-only schema inspection with no data exposure."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.list_tables_for_base
+    object: Table
+    action: list_tables_for_base
+    category: Operations
+    risk: low
+    business_impact: "Summarizes a base's tables and their field names and types; a read-only schema discovery call."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.list_bases
+    object: Base
+    action: list_bases
+    category: Operations
+    risk: low
+    business_impact: "Lists all bases the account can access along with their IDs; a read-only inventory of available data stores."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.list_workspaces
+    object: Workspace
+    action: list_workspaces
+    category: Operations
+    risk: low
+    business_impact: "Lists accessible workspaces and the caller's permission level in each; a read-only call that reveals access posture."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.search_bases
+    object: Base
+    action: search_bases
+    category: Operations
+    risk: low
+    business_impact: "Finds bases by partial name match and ranks them by relevance; a read-only lookup over the account's base inventory."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://support.airtable.com/docs/using-the-airtable-mcp-server
+  - id: airtable-api.ping
+    object: Server
+    action: ping
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Checks that the MCP server is running; a health probe with no data access or state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,402 @@
+schema_version: "1.1"
+platform: govtribe
+display_name: GovTribe
+source: langguard-editorial
+updated: "2026-07"
+# The GovTribe "for agents" MCP server is OAuth-gated and does not expose a
+# token-less `tools/list`. GovTribe's agent docs publish the tool surface only
+# as plain-language capability labels in a docs table — verbatim tool
+# identifiers are not publicly available. Per the rubric's capability-form
+# escape hatch, every entry below uses `id_form: capability` with the label
+# carried verbatim in `description`. The manifest enumerates 100 tools; this
+# file curates the 25 highest-value action surfaces (see report for the
+# omitted set). When a real `tools/list` capture becomes available, refresh
+# this file to `id_form: verbatim` with the actual identifier strings.
+reference: https://govtribe.com/docs/govtribe-for-agents/tools
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.search_users
+    object: User
+    action: search_users
+    id_form: capability
+    description: "Search users"
+    category: Identity & Access
+    risk: medium
+    business_impact: "Returns the workspace user directory including names and email addresses of the customer's own team members."
+    compliance: [CCPA, GDPR, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.search_contacts
+    object: Contact
+    action: search_contacts
+    id_form: capability
+    description: "Search contacts"
+    category: Customer
+    risk: high
+    business_impact: "Bulk-reads contact records with names, communication details, and linked organizations, exposing points-of-contact PII at scale."
+    compliance: [CCPA, GDPR, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.search_vendors
+    object: Vendor
+    action: search_vendors
+    id_form: capability
+    description: "Search vendors"
+    category: Customer
+    risk: low
+    business_impact: "Surfaces vendor profiles, identifiers, and certifications drawn from public procurement records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Revenue & Pipeline ----------
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.delete_pipeline
+    object: Pipeline
+    action: delete_pipeline
+    id_form: capability
+    description: "Delete pipeline"
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Removes a pipeline and cascades the deletion to every pursuit inside it, wiping an entire capture workspace with no restore path."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.delete_pursuit
+    object: Pursuit
+    action: delete_pursuit
+    id_form: capability
+    description: "Delete pursuit"
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Removes a single pursuit and its capture context from the pipeline."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.delete_stage
+    object: Stage
+    action: delete_stage
+    id_form: capability
+    description: "Delete stage"
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Removes a pipeline stage and detaches the pursuits tracked within it."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.create_pursuit
+    object: Pursuit
+    action: create_pursuit
+    id_form: capability
+    description: "Create pursuit"
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Adds a new pursuit to a pipeline stage, optionally linked to a tracked opportunity or award."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.update_pursuit
+    object: Pursuit
+    action: update_pursuit
+    id_form: capability
+    description: "Update pursuit"
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Edits an existing pursuit's fields and pipeline placement."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.create_pipeline
+    object: Pipeline
+    action: create_pipeline
+    id_form: capability
+    description: "Create pipeline"
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Adds a new capture pipeline to the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.update_pipeline
+    object: Pipeline
+    action: update_pipeline
+    id_form: capability
+    description: "Update pipeline"
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Changes a pipeline's configuration, affecting every pursuit it organizes."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.search_user_files
+    object: File
+    action: search_user_files
+    id_form: capability
+    description: "Search user files"
+    category: Data Access
+    risk: medium
+    business_impact: "Reads team-uploaded files including summaries and extracted text that may contain confidential business material."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.add_to_vector_store
+    object: File
+    action: add_to_vector_store
+    id_form: capability
+    description: "Add to vector store"
+    category: Data Access
+    risk: medium
+    business_impact: "Ingests files and file-backed records into a searchable vector store, replicating their full text into a new index."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.create_memories
+    object: Memory
+    action: create_memories
+    id_form: capability
+    description: "Create memories"
+    category: Data Access
+    risk: medium
+    business_impact: "Persists durable user memory that shapes the agent's future behavior and stored context."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.delete_memories
+    object: Memory
+    action: delete_memories
+    id_form: capability
+    description: "Delete memories"
+    category: Data Access
+    risk: medium
+    business_impact: "Removes a stored user memory, permanently dropping context the agent would otherwise reuse."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.create_automation
+    object: Automation
+    action: create_automation
+    id_form: capability
+    description: "Create automation"
+    category: Operations
+    risk: medium
+    business_impact: "Deploys a new autonomous GovTribe AI automation that runs on its own schedule inside a new project."
+    compliance: [ISO_42001, NIST_AI_RMF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.update_automation
+    object: Automation
+    action: update_automation
+    id_form: capability
+    description: "Update automation"
+    category: Operations
+    risk: medium
+    business_impact: "Reconfigures an existing AI automation and can rename its linked project, altering how the autonomous system runs."
+    compliance: [ISO_42001, NIST_AI_RMF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.delete_automation
+    object: Automation
+    action: delete_automation
+    id_form: capability
+    description: "Delete automation"
+    category: Operations
+    risk: medium
+    business_impact: "Archives an AI automation so it stops running."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.test_run_automation
+    object: Automation
+    action: test_run_automation
+    id_form: capability
+    description: "Test run automation"
+    category: Operations
+    risk: medium
+    business_impact: "Triggers a manual run of an AI automation and returns the started conversation."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.delete_task
+    object: Task
+    action: delete_task
+    id_form: capability
+    description: "Delete task"
+    category: Operations
+    risk: low
+    business_impact: "Removes a single task from a pipeline pursuit."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.delete_saved_search
+    object: SavedSearch
+    action: delete_saved_search
+    id_form: capability
+    description: "Delete saved search"
+    category: Operations
+    risk: low
+    business_impact: "Removes a saved search definition and its notification cadence."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Teaming & Collaboration ----------
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.send_teaming_message
+    object: Message
+    action: send_teaming_message
+    id_form: capability
+    description: "Send teaming message"
+    category: Teaming & Collaboration
+    risk: medium
+    business_impact: "Posts a chat message as the user into a teaming conversation with prospective partners."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.get_teaming_messages
+    object: Message
+    action: get_teaming_messages
+    id_form: capability
+    description: "Get teaming messages"
+    category: Teaming & Collaboration
+    risk: medium
+    business_impact: "Reads a teaming or team-hub conversation history, exposing private business communications between partners."
+    compliance: [CCPA, GDPR, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.create_teaming_interest
+    object: TeamingInterest
+    action: create_teaming_interest
+    id_form: capability
+    description: "Create teaming interest"
+    category: Teaming & Collaboration
+    risk: low
+    business_impact: "Publishes a prime or sub teaming interest on a federal opportunity, discoverable by other users."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.respond_to_teaming_match
+    object: TeamingMatch
+    action: respond_to_teaming_match
+    id_form: capability
+    description: "Respond to teaming match"
+    category: Teaming & Collaboration
+    risk: low
+    business_impact: "Accepts or declines an inbound teaming match request from another party."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://govtribe.com/docs/govtribe-for-agents/tools
+  - id: govtribe.disband_teaming_team
+    object: TeamingTeam
+    action: disband_teaming_team
+    id_form: capability
+    description: "Disband teaming team"
+    category: Teaming & Collaboration
+    risk: medium
+    business_impact: "Ends an accepted prime team and releases every subcontractor partner from it."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

@@ -1,0 +1,142 @@
+schema_version: "1.0"
+platform: digits
+display_name: Digits
+source: langguard-editorial
+updated: "2026-07"
+reference: https://help.digits.com/business-connections/digits-mcp.md
+actions:
+  # ---------- Financial ----------
+
+  # source: https://help.digits.com/business-connections/digits-mcp.md
+  - id: digits.query_transactions
+    object: Transaction
+    action: query_transactions
+    category: Financial
+    risk: medium
+    business_impact: "Searches and returns individual transaction records by date, amount, party, and category, exposing ledger and counterparty data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.digits.com/business-connections/digits-mcp.md
+  - id: digits.financial_statement
+    object: FinancialStatement
+    action: financial_statement
+    category: Financial
+    risk: medium
+    business_impact: "Generates complete P&L, balance sheet, cash flow, and AR/AP aging statements, exposing the business's confidential financial position."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.digits.com/business-connections/digits-mcp.md
+  - id: digits.dimensional_summarize_transactions
+    object: Transaction
+    action: dimensional_summarize_transactions
+    category: Financial
+    risk: medium
+    business_impact: "Aggregates transactions into multi-dimensional summaries such as spend by category or revenue by customer over time, revealing financial performance detail."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.digits.com/business-connections/digits-mcp.md
+  - id: digits.search_term
+    object: Term
+    action: search_term
+    category: Financial
+    risk: medium
+    business_impact: "Resolves customer, vendor, category, department, or location names via fuzzy matching, exposing counterparty identities present in the ledger."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Access ----------
+
+  # source: https://help.digits.com/business-connections/digits-mcp.md
+  - id: digits.list_business_users
+    object: BusinessUser
+    action: list_business_users
+    category: Identity & Access
+    risk: medium
+    business_impact: "Enumerates every user with access to a business, revealing the access-control roster for the entity's financial data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.digits.com/business-connections/digits-mcp.md
+  - id: digits.list_businesses
+    object: Business
+    action: list_businesses
+    category: Identity & Access
+    risk: low
+    business_impact: "Enumerates all businesses the caller can access, including affiliated entities, mapping the scope of reachable financial data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.digits.com/business-connections/digits-mcp.md
+  - id: digits.select_business
+    object: Business
+    action: select_business
+    category: Identity & Access
+    risk: low
+    business_impact: "Sets the active business context for subsequent queries without modifying any stored data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://help.digits.com/business-connections/digits-mcp.md
+  - id: digits.list_departments
+    object: Department
+    action: list_departments
+    category: Data Access
+    risk: low
+    business_impact: "Lists a business's departments and their identifiers, low-sensitivity organizational metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.digits.com/business-connections/digits-mcp.md
+  - id: digits.list_locations
+    object: Location
+    action: list_locations
+    category: Data Access
+    risk: low
+    business_impact: "Lists a business's locations and their identifiers, low-sensitivity organizational metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.digits.com/business-connections/digits-mcp.md
+  - id: digits.list_categories
+    object: Category
+    action: list_categories
+    category: Data Access
+    risk: low
+    business_impact: "Lists a business's account categories and their types, low-sensitivity chart-of-accounts metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

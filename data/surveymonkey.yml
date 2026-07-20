@@ -1,0 +1,101 @@
+schema_version: "1.1"
+platform: surveymonkey
+display_name: SurveyMonkey
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Response Data ----------
+
+  # source: https://help.surveymonkey.com/en/surveymonkey/integrations/claude-app/
+  - id: surveymonkey.analyze_results
+    object: SurveyResponse
+    action: analyze_results
+    id_form: capability
+    description: "Analyze results"
+    category: Response Data
+    risk: medium
+    business_impact: "Retrieves all responses to a survey for summarization, pulling respondent-submitted data that can include open-text personal details and contact information at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.surveymonkey.com/en/surveymonkey/integrations/claude-app/
+  - id: surveymonkey.get_response_metadata
+    object: SurveyResponse
+    action: get_response_metadata
+    id_form: capability
+    description: "Get response metadata"
+    category: Response Data
+    risk: low
+    business_impact: "Returns aggregate response counts for a survey, a read-only metadata lookup that exposes no individual respondent data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Distribution ----------
+
+  # source: https://help.surveymonkey.com/en/surveymonkey/integrations/claude-app/
+  - id: surveymonkey.generate_a_shareable_link
+    object: Collector
+    action: generate_a_shareable_link
+    id_form: capability
+    description: "Generate a shareable link"
+    category: Distribution
+    risk: medium
+    business_impact: "Creates a web link collector and returns a public URL that makes the survey live and open to collect responses from anyone with the link."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Survey Management ----------
+
+  # source: https://help.surveymonkey.com/en/surveymonkey/integrations/claude-app/
+  - id: surveymonkey.create_a_survey
+    object: Survey
+    action: create_a_survey
+    id_form: capability
+    description: "Create a survey"
+    category: Survey Management
+    risk: low
+    business_impact: "Drafts a new survey with generated questions and structure, a reversible low-impact create of a non-sensitive content artifact."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.surveymonkey.com/en/surveymonkey/integrations/claude-app/
+  - id: surveymonkey.edit_surveys
+    object: Survey
+    action: edit_surveys
+    id_form: capability
+    description: "Edit surveys"
+    category: Survey Management
+    risk: low
+    business_impact: "Updates question wording and content on an existing draft survey, a reversible edit to non-sensitive survey structure."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.surveymonkey.com/en/surveymonkey/integrations/claude-app/
+  - id: surveymonkey.search_surveys
+    object: Survey
+    action: search_surveys
+    id_form: capability
+    description: "Search surveys"
+    category: Survey Management
+    risk: low
+    business_impact: "Searches the account's surveys and returns their content and details, a read-only lookup over survey definitions."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

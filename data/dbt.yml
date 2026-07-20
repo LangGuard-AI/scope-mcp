@@ -1,0 +1,299 @@
+schema_version: "1.0"
+platform: dbt
+display_name: dbt
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.getdbt.com/docs/dbt-ai/mcp-available-tools
+  - id: dbt.execute_sql
+    object: Query
+    action: execute_sql
+    category: Data Access
+    risk: high
+    business_impact: "Runs arbitrary SQL against warehouse infrastructure via the Semantic Layer, exposing any table the connection can reach — potential bulk read of personal or financial data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.getdbt.com/docs/dbt-ai/mcp-available-tools
+  - id: dbt.show
+    object: Query
+    action: show
+    category: Data Access
+    risk: medium
+    business_impact: "Executes arbitrary SQL against the database and returns a result preview, surfacing raw column values that may include personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.getdbt.com/docs/dbt-ai/mcp-available-tools
+  - id: dbt.query_metrics
+    object: Metric
+    action: query_metrics
+    category: Data Access
+    risk: medium
+    business_impact: "Executes Semantic Layer metric queries with filtering and grouping, returning aggregated business data that can be sliced by dimensions carrying personal identifiers."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.getdbt.com/docs/dbt-ai/mcp-available-tools
+  - id: dbt.get_dimension_values
+    object: Dimension
+    action: get_dimension_values
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the distinct values of a dimension column, directly exposing raw field contents such as customer names, emails, or region codes."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.getdbt.com/docs/dbt-ai/mcp-available-tools
+  - id: dbt.text_to_sql
+    object: Query
+    action: text_to_sql
+    category: Data Access
+    risk: low
+    business_impact: "Generates SQL from a natural-language prompt using project context without executing it; output must still be reviewed before it touches data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.getdbt.com/docs/dbt-ai/mcp-available-tools
+  - id: dbt.compile
+    object: Model
+    action: compile
+    category: Data Access
+    risk: low
+    business_impact: "Renders executable SQL from models, tests, and analyses to validate Jinja logic without running it against the database."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.getdbt.com/docs/dbt-ai/mcp-available-tools
+  - id: dbt.get_model_details
+    object: Model
+    action: get_model_details
+    category: Data Access
+    risk: low
+    business_impact: "Returns a model's compiled SQL, columns, and schema, revealing the structure of the underlying data warehouse tables."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://docs.getdbt.com/docs/dbt-ai/mcp-available-tools
+  - id: dbt.build
+    object: Project
+    action: build
+    category: Operations
+    risk: high
+    business_impact: "Executes models, tests, snapshots, and seeds across the whole DAG in dependency order, rewriting production tables project-wide in a single invocation."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.getdbt.com/docs/dbt-ai/mcp-available-tools
+  - id: dbt.run
+    object: Model
+    action: run
+    category: Operations
+    risk: medium
+    business_impact: "Materializes selected models in the database, overwriting the target tables with freshly transformed data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.getdbt.com/docs/dbt-ai/mcp-available-tools
+  - id: dbt.clone
+    object: Node
+    action: clone
+    category: Operations
+    risk: medium
+    business_impact: "Clones selected nodes from a source state into target schemas, duplicating tables and any personal data they hold into a new location."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.getdbt.com/docs/dbt-ai/mcp-available-tools
+  - id: dbt.test
+    object: Test
+    action: test
+    category: Operations
+    risk: low
+    business_impact: "Runs data and model integrity tests against the warehouse; read-only validation that materializes no new state."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.getdbt.com/docs/dbt-ai/mcp-available-tools
+  - id: dbt.parse
+    object: Project
+    action: parse
+    category: Operations
+    risk: low
+    business_impact: "Parses and validates project files for syntax correctness without touching the database."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.getdbt.com/docs/dbt-ai/mcp-available-tools
+  - id: dbt.docs
+    object: Project
+    action: docs
+    category: Operations
+    risk: low
+    business_impact: "Generates the project documentation site from model and column metadata; no impact on warehouse data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://docs.getdbt.com/docs/dbt-ai/mcp-available-tools
+  - id: dbt.trigger_job_run
+    object: JobRun
+    action: trigger_job_run
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Triggers a production job run and can override the git branch, target schema, or other settings, letting one principal deploy and execute pipeline code outside normal change control."
+    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.getdbt.com/docs/dbt-ai/mcp-available-tools
+  - id: dbt.cancel_job_run
+    object: JobRun
+    action: cancel_job_run
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Cancels an in-flight job run, interrupting a scheduled production pipeline and potentially leaving downstream tables stale."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.getdbt.com/docs/dbt-ai/mcp-available-tools
+  - id: dbt.retry_job_run
+    object: JobRun
+    action: retry_job_run
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Re-executes a failed job run, re-materializing production models without a fresh review of the failure cause."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.getdbt.com/docs/dbt-ai/mcp-available-tools
+  - id: dbt.list_job_run_artifacts
+    object: JobRun
+    action: list_job_run_artifacts
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Lists the artifacts a job run produced, such as run results and compiled catalogs that describe the project's data structures."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.getdbt.com/docs/dbt-ai/mcp-available-tools
+  - id: dbt.get_job_run_error
+    object: JobRun
+    action: get_job_run_error
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Retrieves error and warning details for a job run, which may echo query fragments or data values from the failing step."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.getdbt.com/docs/dbt-ai/mcp-available-tools
+  - id: dbt.get_job_details
+    object: Job
+    action: get_job_details
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns a job's configuration including its triggers, schedule, and dbt commands, exposing how the production pipeline is orchestrated."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Code & Release ----------
+
+  # source: https://docs.getdbt.com/docs/dbt-ai/mcp-available-tools
+  - id: dbt.generate_source
+    object: Source
+    action: generate_source
+    category: Code & Release
+    risk: low
+    business_impact: "Introspects database schemas to generate source YAML, reading table and column names from the warehouse into project files."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.getdbt.com/docs/dbt-ai/mcp-available-tools
+  - id: dbt.generate_model_yaml
+    object: Model
+    action: generate_model_yaml
+    category: Code & Release
+    risk: low
+    business_impact: "Generates model YAML with columns, optionally inheriting upstream descriptions; a scaffolding write to project files, not to data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.getdbt.com/docs/dbt-ai/mcp-available-tools
+  - id: dbt.generate_staging_model
+    object: Model
+    action: generate_staging_model
+    category: Code & Release
+    risk: low
+    business_impact: "Generates staging model SQL from a source table, producing boilerplate transformation code for review before it is run."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

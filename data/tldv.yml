@@ -1,0 +1,61 @@
+schema_version: "1.0"
+platform: tldv
+display_name: tl;dv
+source: langguard-editorial
+updated: "2026-07"
+reference: https://github.com/tldv-public/tldv-mcp-server
+server_website: https://github.com/tldv-public/tldv-mcp-server
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/tldv-public/tldv-mcp-server/main/src/index.ts
+  - id: tldv.get-transcript
+    object: Transcript
+    action: get-transcript
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves a meeting's full time-stamped transcript, exposing the verbatim private conversation and each speaker's remarks."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/tldv-public/tldv-mcp-server/main/src/index.ts
+  - id: tldv.get-meeting-metadata
+    object: Meeting
+    action: get-meeting-metadata
+    category: Data Access
+    risk: low
+    business_impact: "Returns a meeting's metadata including organizer and participant identities, revealing who attended and when."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/tldv-public/tldv-mcp-server/main/src/index.ts
+  - id: tldv.get-highlights
+    object: Highlight
+    action: get-highlights
+    category: Data Access
+    risk: low
+    business_impact: "Returns the highlighted key moments captured from a meeting recording."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/tldv-public/tldv-mcp-server/main/src/index.ts
+  - id: tldv.list-meetings
+    object: Meeting
+    action: list-meetings
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the meetings the caller can access, filterable by date and status."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

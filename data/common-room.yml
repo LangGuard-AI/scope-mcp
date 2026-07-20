@@ -1,0 +1,77 @@
+schema_version: "1.0"
+platform: common-room
+display_name: Common Room
+source: langguard-editorial
+updated: "2026-07"
+reference: https://www.commonroom.io/docs/using-common-room/mcp-server/
+actions:
+  # ---------- Customer ----------
+
+  # source: https://www.commonroom.io/docs/using-common-room/mcp-server/
+  - id: common-room.commonroom_list_objects
+    object: "*"
+    action: commonroom_list_objects
+    category: Customer
+    risk: medium
+    business_impact: "Queries and paginates through contact, organization, and activity records, exposing community-member PII in bulk to the caller."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.commonroom.io/docs/using-common-room/mcp-server/
+  - id: common-room.commonroom_create_object
+    object: "*"
+    action: commonroom_create_object
+    category: Customer
+    risk: medium
+    business_impact: "Creates new contacts, organizations, segments, activities, or notes, writing personal data of community members into the workspace."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.commonroom.io/docs/using-common-room/mcp-server/
+  - id: common-room.commonroom_update_object
+    object: "*"
+    action: commonroom_update_object
+    category: Customer
+    risk: medium
+    business_impact: "Overwrites fields on existing contact and organization records by ID, altering stored personal data of community members."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://www.commonroom.io/docs/using-common-room/mcp-server/
+  - id: common-room.commonroom_get_catalog
+    object: Catalog
+    action: commonroom_get_catalog
+    category: Data Access
+    risk: low
+    business_impact: "Returns the object schema — available object types, properties, filters, and sort fields; metadata only, exposes no member records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://www.commonroom.io/docs/using-common-room/mcp-server/
+  - id: common-room.commonroom_submit_feedback
+    object: Feedback
+    action: commonroom_submit_feedback
+    category: Operations
+    risk: low
+    business_impact: "Records feedback on query results to tune future response quality; affects no member records and stores no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

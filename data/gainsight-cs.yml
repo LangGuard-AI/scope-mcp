@@ -1,0 +1,280 @@
+schema_version: "1.1"
+platform: gainsight-cs
+display_name: Gainsight CS
+source: langguard-editorial
+updated: "2026-07"
+reference: https://support.gainsight.com/gainsight_nxt/AI_Assistants/MCP_Integration/Admin_Guide/Gainsight_CS_MCP_Server_Integration
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://support.gainsight.com/gainsight_nxt/AI_Assistants/MCP_Integration/Admin_Guide/Gainsight_CS_MCP_Server_Integration
+  - id: gainsight-cs.end_user_contact_search
+    object: Contact
+    action: end_user_contact_search
+    id_form: capability
+    description: "End User Contact Search"
+    category: Data Access
+    risk: medium
+    business_impact: "Searches end-user contact records across accounts, returning names, emails, and other personal contact details to the agent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.gainsight.com/gainsight_nxt/AI_Assistants/MCP_Integration/Admin_Guide/Gainsight_CS_MCP_Server_Integration
+  - id: gainsight-cs.cross_account_analysis
+    object: Account
+    action: cross_account_analysis
+    id_form: capability
+    description: "Cross-account analysis"
+    category: Data Access
+    risk: medium
+    business_impact: "Runs analysis spanning multiple customer accounts, exposing aggregated relationship and health data across the entire book of business."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.gainsight.com/gainsight_nxt/AI_Assistants/MCP_Integration/Admin_Guide/Gainsight_CS_MCP_Server_Integration
+  - id: gainsight-cs.reports_that_users_can_see_in_ui
+    object: Report
+    action: reports_that_users_can_see_in_ui
+    id_form: capability
+    description: "Reports (that users can see in UI)"
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves any Gainsight report the user can see in the UI, surfacing whatever customer and usage data those reports contain."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.gainsight.com/gainsight_nxt/AI_Assistants/MCP_Integration/Admin_Guide/Gainsight_CS_MCP_Server_Integration
+  - id: gainsight-cs.query_portfolio_data_gs_home_filters
+    object: Portfolio
+    action: query_portfolio_data_gs_home_filters
+    id_form: capability
+    description: "Query Portfolio Data (GS Home filters)"
+    category: Data Access
+    risk: low
+    business_impact: "Queries portfolio data using GS Home filters, revealing the full filtered book of accounts and their status to the agent."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://support.gainsight.com/gainsight_nxt/AI_Assistants/MCP_Integration/Admin_Guide/Gainsight_CS_MCP_Server_Integration
+  - id: gainsight-cs.detailed_account_summary
+    object: Account
+    action: detailed_account_summary
+    id_form: capability
+    description: "Detailed Account Summary"
+    category: Customer
+    risk: low
+    business_impact: "Returns a detailed summary of a customer account, exposing health, engagement, and associated contact information."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.gainsight.com/gainsight_nxt/AI_Assistants/MCP_Integration/Admin_Guide/Gainsight_CS_MCP_Server_Integration
+  - id: gainsight-cs.query_company_and_relationship
+    object: Company
+    action: query_company_and_relationship
+    id_form: capability
+    description: "Query Company and Relationship"
+    category: Customer
+    risk: low
+    business_impact: "Reads company records and their relationship hierarchy, revealing the customer's organizational structure and account linkages."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.gainsight.com/gainsight_nxt/AI_Assistants/MCP_Integration/Admin_Guide/Gainsight_CS_MCP_Server_Integration
+  - id: gainsight-cs.fetch_ctas_for_a_company
+    object: CTA
+    action: fetch_ctas_for_a_company
+    id_form: capability
+    description: "Fetch CTAs for a company"
+    category: Customer
+    risk: low
+    business_impact: "Lists the Calls to Action open against a company, exposing at-risk signals and CSM follow-up items for that customer."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.gainsight.com/gainsight_nxt/AI_Assistants/MCP_Integration/Admin_Guide/Gainsight_CS_MCP_Server_Integration
+  - id: gainsight-cs.read_tasks_in_cta
+    object: Task
+    action: read_tasks_in_cta
+    id_form: capability
+    description: "Read Tasks in CTA"
+    category: Customer
+    risk: low
+    business_impact: "Reads the tasks nested inside a Call to Action, surfacing the planned follow-up steps for a customer engagement."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.gainsight.com/gainsight_nxt/AI_Assistants/MCP_Integration/Admin_Guide/Gainsight_CS_MCP_Server_Integration
+  - id: gainsight-cs.fetch_success_plans
+    object: SuccessPlan
+    action: fetch_success_plans
+    id_form: capability
+    description: "Fetch Success Plans"
+    category: Customer
+    risk: low
+    business_impact: "Retrieves the success plans defined for a customer, exposing strategic objectives and milestones agreed with the account."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.gainsight.com/gainsight_nxt/AI_Assistants/MCP_Integration/Admin_Guide/Gainsight_CS_MCP_Server_Integration
+  - id: gainsight-cs.read_timeline_activities
+    object: TimelineActivity
+    action: read_timeline_activities
+    id_form: capability
+    description: "Read Timeline activities"
+    category: Customer
+    risk: low
+    business_impact: "Reads logged Timeline activities, surfacing meeting notes, emails, and interaction history that may contain personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.gainsight.com/gainsight_nxt/AI_Assistants/MCP_Integration/Admin_Guide/Gainsight_CS_MCP_Server_Integration
+  - id: gainsight-cs.scorecards_read_only
+    object: Scorecard
+    action: scorecards_read_only
+    id_form: capability
+    description: "Scorecards (read only)"
+    category: Customer
+    risk: low
+    business_impact: "Reads customer health scorecards, exposing account risk scores and the measures underlying renewal forecasts."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.gainsight.com/gainsight_nxt/AI_Assistants/MCP_Integration/Admin_Guide/Gainsight_CS_MCP_Server_Integration
+  - id: gainsight-cs.create_ctas
+    object: CTA
+    action: create_ctas
+    id_form: capability
+    description: "Create CTAs"
+    category: Customer
+    risk: low
+    business_impact: "Creates a new Call to Action on an account, adding a follow-up alert into a CSM's workflow."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.gainsight.com/gainsight_nxt/AI_Assistants/MCP_Integration/Admin_Guide/Gainsight_CS_MCP_Server_Integration
+  - id: gainsight-cs.update_ctas
+    object: CTA
+    action: update_ctas
+    id_form: capability
+    description: "Update CTAs"
+    category: Customer
+    risk: medium
+    business_impact: "Modifies an existing Call to Action, changing status, owner, or details that drive customer-success follow-up."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.gainsight.com/gainsight_nxt/AI_Assistants/MCP_Integration/Admin_Guide/Gainsight_CS_MCP_Server_Integration
+  - id: gainsight-cs.create_tasks_in_ctas
+    object: Task
+    action: create_tasks_in_ctas
+    id_form: capability
+    description: "Create Tasks in CTAs"
+    category: Customer
+    risk: low
+    business_impact: "Adds a task under an existing Call to Action, extending the follow-up checklist for a customer engagement."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.gainsight.com/gainsight_nxt/AI_Assistants/MCP_Integration/Admin_Guide/Gainsight_CS_MCP_Server_Integration
+  - id: gainsight-cs.create_success_plans
+    object: SuccessPlan
+    action: create_success_plans
+    id_form: capability
+    description: "Create Success Plans"
+    category: Customer
+    risk: low
+    business_impact: "Creates a new success plan for a customer, recording strategic objectives and milestones for the account."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.gainsight.com/gainsight_nxt/AI_Assistants/MCP_Integration/Admin_Guide/Gainsight_CS_MCP_Server_Integration
+  - id: gainsight-cs.update_success_plans
+    object: SuccessPlan
+    action: update_success_plans
+    id_form: capability
+    description: "Update Success Plans"
+    category: Customer
+    risk: medium
+    business_impact: "Updates an existing success plan, altering the objectives, milestones, or status tracked for a customer account."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.gainsight.com/gainsight_nxt/AI_Assistants/MCP_Integration/Admin_Guide/Gainsight_CS_MCP_Server_Integration
+  - id: gainsight-cs.create_timeline_activities
+    object: TimelineActivity
+    action: create_timeline_activities
+    id_form: capability
+    description: "Create Timeline Activities"
+    category: Customer
+    risk: low
+    business_impact: "Logs a new Timeline activity against a customer, recording interaction notes that may contain personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.gainsight.com/gainsight_nxt/AI_Assistants/MCP_Integration/Admin_Guide/Gainsight_CS_MCP_Server_Integration
+  - id: gainsight-cs.update_timeline_activities
+    object: TimelineActivity
+    action: update_timeline_activities
+    id_form: capability
+    description: "Update Timeline Activities"
+    category: Customer
+    risk: medium
+    business_impact: "Edits an existing Timeline activity, changing logged interaction records that may contain personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,341 @@
+schema_version: "1.0"
+platform: coindesk
+display_name: CoinDesk Data & Indices
+source: langguard-editorial
+updated: "2026-07"
+reference: https://mcp.coindesk.com/
+actions:
+  # ---------- Spot & Index Data ----------
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_spot_tick
+    object: SpotMarket
+    action: fetch_spot_tick
+    category: Spot & Index Data
+    risk: low
+    business_impact: "Reads the latest spot price and trade tick for a crypto instrument, consuming metered CoinDesk API quota."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_spot_ohlcv
+    object: SpotMarket
+    action: fetch_spot_ohlcv
+    category: Spot & Index Data
+    risk: low
+    business_impact: "Returns historical spot open/high/low/close/volume candles for a market pair, drawing against API rate limits."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_spot_orderbook_metrics
+    object: SpotMarket
+    action: fetch_spot_orderbook_metrics
+    category: Spot & Index Data
+    risk: low
+    business_impact: "Retrieves aggregated spot order-book depth metrics for a venue, consuming metered API quota."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_spot_orderbook_snapshot
+    object: SpotMarket
+    action: fetch_spot_orderbook_snapshot
+    category: Spot & Index Data
+    risk: low
+    business_impact: "Returns a point-in-time spot order-book snapshot for a trading pair, consuming metered API quota."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_spot_trades
+    object: SpotMarket
+    action: fetch_spot_trades
+    category: Spot & Index Data
+    risk: low
+    business_impact: "Reads recent individual spot trade prints for a market pair from CoinDesk's data feed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_spot_toplist
+    object: SpotMarket
+    action: fetch_spot_toplist
+    category: Spot & Index Data
+    risk: low
+    business_impact: "Ranks spot trading pairs by volume or other metrics, returning a read-only market leaderboard."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_index_tick
+    object: Index
+    action: fetch_index_tick
+    category: Spot & Index Data
+    risk: low
+    business_impact: "Reads the latest value of a CoinDesk crypto index, consuming metered API quota."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_index_ohlcv
+    object: Index
+    action: fetch_index_ohlcv
+    category: Spot & Index Data
+    risk: low
+    business_impact: "Returns historical OHLCV candles for a CoinDesk crypto index across a requested time range."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Futures Data ----------
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_futures_tick
+    object: FuturesMarket
+    action: fetch_futures_tick
+    category: Futures Data
+    risk: low
+    business_impact: "Reads the latest futures contract price tick for a derivatives instrument from CoinDesk data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_futures_ohlcv
+    object: FuturesMarket
+    action: fetch_futures_ohlcv
+    category: Futures Data
+    risk: low
+    business_impact: "Returns historical OHLCV candles for a futures contract, drawing against API rate limits."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_futures_oi_tick
+    object: FuturesMarket
+    action: fetch_futures_oi_tick
+    category: Futures Data
+    risk: low
+    business_impact: "Reads current open-interest figures for a futures contract, consuming metered API quota."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_futures_oi_ohlcv
+    object: FuturesMarket
+    action: fetch_futures_oi_ohlcv
+    category: Futures Data
+    risk: low
+    business_impact: "Returns historical open-interest candles for a futures contract across a requested time range."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_futures_orderbook_metrics
+    object: FuturesMarket
+    action: fetch_futures_orderbook_metrics
+    category: Futures Data
+    risk: low
+    business_impact: "Retrieves aggregated futures order-book depth metrics for a venue, consuming metered API quota."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_futures_orderbook_snapshot
+    object: FuturesMarket
+    action: fetch_futures_orderbook_snapshot
+    category: Futures Data
+    risk: low
+    business_impact: "Returns a point-in-time futures order-book snapshot for a contract, consuming metered API quota."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_futures_trades
+    object: FuturesMarket
+    action: fetch_futures_trades
+    category: Futures Data
+    risk: low
+    business_impact: "Reads recent futures trade prints for a derivatives contract from CoinDesk's data feed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Options Data ----------
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_options_tick
+    object: OptionsMarket
+    action: fetch_options_tick
+    category: Options Data
+    risk: low
+    business_impact: "Reads the latest options contract price tick from CoinDesk derivatives data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_options_ohlcv
+    object: OptionsMarket
+    action: fetch_options_ohlcv
+    category: Options Data
+    risk: low
+    business_impact: "Returns historical OHLCV candles for an options contract across a requested time range."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_options_oi_tick
+    object: OptionsMarket
+    action: fetch_options_oi_tick
+    category: Options Data
+    risk: low
+    business_impact: "Reads current open-interest figures for an options contract, consuming metered API quota."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_options_orderbook_metrics
+    object: OptionsMarket
+    action: fetch_options_orderbook_metrics
+    category: Options Data
+    risk: low
+    business_impact: "Retrieves aggregated options order-book depth metrics for a venue, consuming metered API quota."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_options_orderbook_snapshot
+    object: OptionsMarket
+    action: fetch_options_orderbook_snapshot
+    category: Options Data
+    risk: low
+    business_impact: "Returns a point-in-time options order-book snapshot for a contract, consuming metered API quota."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_options_trades
+    object: OptionsMarket
+    action: fetch_options_trades
+    category: Options Data
+    risk: low
+    business_impact: "Reads recent options trade prints for a derivatives contract from CoinDesk's data feed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- News ----------
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_news
+    object: News
+    action: fetch_news
+    category: News
+    risk: low
+    business_impact: "Returns recent cryptocurrency news articles from CoinDesk's editorial feed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Onchain Data ----------
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_onchain_dex_tick
+    object: OnchainMarket
+    action: fetch_onchain_dex_tick
+    category: Onchain Data
+    risk: low
+    business_impact: "Reads the latest on-chain DEX price tick for a token pair, consuming metered API quota."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_onchain_dex_ohlcv
+    object: OnchainMarket
+    action: fetch_onchain_dex_ohlcv
+    category: Onchain Data
+    risk: low
+    business_impact: "Returns historical OHLCV candles for an on-chain DEX token pair across a requested time range."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.coindesk.com/
+  - id: coindesk.fetch_onchain_historical_supply
+    object: OnchainMarket
+    action: fetch_onchain_historical_supply
+    category: Onchain Data
+    risk: low
+    business_impact: "Returns historical circulating and staked supply figures for a blockchain asset."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
