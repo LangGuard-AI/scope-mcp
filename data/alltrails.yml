@@ -1,0 +1,73 @@
+schema_version: "1.0"
+platform: alltrails
+display_name: AllTrails
+source: langguard-editorial
+updated: "2026-07"
+reference: https://www.alltrails.com/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://www.alltrails.com/mcp
+  - id: alltrails.find_trails_near_location
+    object: Trail
+    action: find_trails_near_location
+    category: Data Access
+    risk: low
+    business_impact: "Returns public trail listings near a set of coordinates; read-only geographic lookup with no write path or personal-data exposure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.alltrails.com/mcp
+  - id: alltrails.find_trails_within_bounds
+    object: Trail
+    action: find_trails_within_bounds
+    category: Data Access
+    risk: low
+    business_impact: "Returns public trail listings inside a geographic bounding box; read-only lookup that neither writes state nor exposes personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.alltrails.com/mcp
+  - id: alltrails.search_trails_by_name
+    object: Trail
+    action: search_trails_by_name
+    category: Data Access
+    risk: low
+    business_impact: "Returns public trails matching a full or partial name query; read-only search with no write path or personal-data access."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.alltrails.com/mcp
+  - id: alltrails.get_trail_details
+    object: Trail
+    action: get_trail_details
+    category: Data Access
+    risk: low
+    business_impact: "Returns descriptive, accessibility, and aggregate usage details for a single public trail; read-only lookup exposing no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.alltrails.com/mcp
+  - id: alltrails.get_trail_weather_overview
+    object: Trail
+    action: get_trail_weather_overview
+    category: Data Access
+    risk: low
+    business_impact: "Returns a 7-day trailhead weather forecast for a public trail; read-only lookup with no write path or personal-data exposure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

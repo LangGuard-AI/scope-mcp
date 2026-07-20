@@ -1,0 +1,99 @@
+schema_version: "1.0"
+platform: cms-coverage
+display_name: CMS Coverage
+source: langguard-editorial
+updated: "2026-07"
+reference: https://hcls.mcp.claude.com/cms_coverage/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://hcls.mcp.claude.com/cms_coverage/mcp
+  - id: cms-coverage.search_national_coverage
+    object: CoverageDocument
+    action: search_national_coverage
+    category: Data Access
+    risk: low
+    business_impact: "Returns national Medicare coverage determinations, assessments, and meeting records matching a query from CMS's public policy corpus."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://hcls.mcp.claude.com/cms_coverage/mcp
+  - id: cms-coverage.search_local_coverage
+    object: CoverageDocument
+    action: search_local_coverage
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces regional Medicare LCDs, proposed LCDs, and articles matching a query from CMS's public local-coverage records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://hcls.mcp.claude.com/cms_coverage/mcp
+  - id: cms-coverage.get_coverage_document
+    object: CoverageDocument
+    action: get_coverage_document
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves the full text of a single Medicare coverage document by type and ID from public CMS policy records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://hcls.mcp.claude.com/cms_coverage/mcp
+  - id: cms-coverage.get_contractors
+    object: Contractor
+    action: get_contractors
+    category: Data Access
+    risk: low
+    business_impact: "Looks up Medicare Administrative Contractors that process Part B claims, returning public directory information about those companies."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://hcls.mcp.claude.com/cms_coverage/mcp
+  - id: cms-coverage.get_whats_new_report
+    object: CoverageDocument
+    action: get_whats_new_report
+    category: Data Access
+    risk: low
+    business_impact: "Lists recently published or updated Medicare coverage documents, tracking public CMS policy changes over time."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://hcls.mcp.claude.com/cms_coverage/mcp
+  - id: cms-coverage.batch_get_ncds
+    object: CoverageDocument
+    action: batch_get_ncds
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves details for multiple National Coverage Determinations in a single call from CMS's public policy dataset."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://hcls.mcp.claude.com/cms_coverage/mcp
+  - id: cms-coverage.sad_exclusion_list
+    object: DrugExclusion
+    action: sad_exclusion_list
+    category: Data Access
+    risk: low
+    business_impact: "Searches the Self-Administered Drug exclusion list, identifying drugs that cannot be billed under Medicare Part B."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

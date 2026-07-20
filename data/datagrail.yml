@@ -1,0 +1,317 @@
+schema_version: "1.0"
+platform: datagrail
+display_name: DataGrail (Vera)
+source: langguard-editorial
+updated: "2026-07"
+reference: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+actions:
+  # ---------- Privacy Requests ----------
+
+  # source: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+  - id: datagrail.search_tickets
+    object: PrivacyRequestTicket
+    action: search_tickets
+    category: Privacy Requests
+    risk: medium
+    business_impact: "Returns privacy request (DSAR) tickets containing requester personal data such as names and emails; a broad filter can surface many data-subjects at once."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+  - id: datagrail.get_ticket_activity_log
+    object: PrivacyRequestTicket
+    action: get_ticket_activity_log
+    category: Privacy Requests
+    risk: medium
+    business_impact: "Exposes a privacy request's full activity trail including state changes and emails sent to the data-subject, revealing that individual's personal data and handling history."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+  - id: datagrail.search_opt_outs
+    object: OptOutRequest
+    action: search_opt_outs
+    category: Privacy Requests
+    risk: medium
+    business_impact: "Returns opt-out (do-not-sell/share) requests keyed to requester identifiers such as email; a broad filter exposes many consumers' opt-out choices at once."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+  - id: datagrail.get_request_policies
+    object: RequestPolicy
+    action: get_request_policies
+    category: Privacy Requests
+    risk: low
+    business_impact: "Reads the configured privacy request policies, including legal frameworks, verification methods, and supported rights; configuration metadata with no individual personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Risk & Assessments ----------
+
+  # source: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+  - id: datagrail.create_assessment
+    object: Assessment
+    action: create_assessment
+    category: Risk & Assessments
+    risk: medium
+    business_impact: "Creates a new privacy/risk assessment (PIA, DPIA, or vendor review) record from a template, establishing a governance artifact in the compliance program."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+  - id: datagrail.update_assessment
+    object: Assessment
+    action: update_assessment
+    category: Risk & Assessments
+    risk: medium
+    business_impact: "Changes an assessment's name, due date, or status; altering status can prematurely mark a DPIA or vendor review complete and distort compliance tracking."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+  - id: datagrail.answer_assessment_question
+    object: Assessment
+    action: answer_assessment_question
+    category: Risk & Assessments
+    risk: medium
+    business_impact: "Records an answer to a question within a risk assessment, directly populating the compliance documentation that DPIA and vendor-review conclusions rest on."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+  - id: datagrail.search_risks
+    object: Risk
+    action: search_risks
+    category: Risk & Assessments
+    risk: low
+    business_impact: "Reads the risk register listing identified risks and their mitigation status; internal governance data with no individual personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+  - id: datagrail.search_assessments
+    object: Assessment
+    action: search_assessments
+    category: Risk & Assessments
+    risk: low
+    business_impact: "Reads completed and in-progress assessments with deadlines and contributors; internal governance metadata, read-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+  - id: datagrail.search_assessment_templates
+    object: AssessmentTemplate
+    action: search_assessment_templates
+    category: Risk & Assessments
+    risk: low
+    business_impact: "Lists prebuilt and custom assessment templates and their IDs; template metadata with no sensitive data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Inventory ----------
+
+  # source: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+  - id: datagrail.add_system
+    object: InventorySystem
+    action: add_system
+    category: Data Inventory
+    risk: medium
+    business_impact: "Adds a new system to the Live Data Map inventory, changing the record of where the organization processes and stores data for its RoPA and audits."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+  - id: datagrail.associate_processing_activity
+    object: InventorySystem
+    action: associate_processing_activity
+    category: Data Inventory
+    risk: medium
+    business_impact: "Links processing activities to an inventory system in the Live Data Map, reshaping the record-of-processing that regulators and auditors rely on."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+  - id: datagrail.search_inventory
+    object: InventorySystem
+    action: search_inventory
+    category: Data Inventory
+    risk: low
+    business_impact: "Reads the Live Data Map inventory of detected systems and data stores with risk indicators; system-level metadata, read-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Consent Management ----------
+
+  # source: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+  - id: datagrail.fetch_cookies
+    object: Cookie
+    action: fetch_cookies
+    category: Consent Management
+    risk: low
+    business_impact: "Reads cookies awaiting categorization along with suggested and existing consent rules; cookie-configuration metadata, read-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+  - id: datagrail.fetch_tags
+    object: Tag
+    action: fetch_tags
+    category: Consent Management
+    risk: low
+    business_impact: "Reads tags (services) that still need a consent category assigned; configuration metadata, read-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+  - id: datagrail.get_banner_status
+    object: ConsentBanner
+    action: get_banner_status
+    category: Consent Management
+    risk: low
+    business_impact: "Reports consent banner and container status, publish state, consent categories, and deployed domains; deployment configuration, read-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+  - id: datagrail.get_consent_updates
+    object: ConsentBanner
+    action: get_consent_updates
+    category: Consent Management
+    risk: low
+    business_impact: "Reads the consent configuration change timeline, including publish events, draft changes, and failed publishes; change-history metadata, read-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+  - id: datagrail.get_consent_privacy_policies
+    object: ConsentPrivacyPolicy
+    action: get_consent_privacy_policies
+    category: Consent Management
+    risk: low
+    business_impact: "Reads consent privacy policies defining banner behavior per framework, including consent modes and GPC/DNT settings; configuration metadata, read-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Integrations ----------
+
+  # source: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+  - id: datagrail.fetch_configured_integration_catalog
+    object: Integration
+    action: fetch_configured_integration_catalog
+    category: Integrations
+    risk: low
+    business_impact: "Lists the organization's connected integrations with connection status and capabilities, revealing which systems are wired to DataGrail; configuration only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+  - id: datagrail.fetch_integration_catalog
+    object: Integration
+    action: fetch_integration_catalog
+    category: Integrations
+    risk: low
+    business_impact: "Browses the catalog of available and discovered integrations; product-catalog metadata, read-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+  - id: datagrail.fetch_integration_errors
+    object: Integration
+    action: fetch_integration_errors
+    category: Integrations
+    risk: low
+    business_impact: "Retrieves integration errors grouped by integration and type with sample details for troubleshooting; operational diagnostics, read-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Knowledge & Feedback ----------
+
+  # source: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+  - id: datagrail.search_knowledgebase_docs
+    object: KnowledgebaseDoc
+    action: search_knowledgebase_docs
+    category: Knowledge & Feedback
+    risk: low
+    business_impact: "Runs a semantic search over DataGrail's knowledgebase documentation; public product content, read-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.datagrail.io/docs/vera/vera-mcp/tool-reference/
+  - id: datagrail.submit_product_feedback
+    object: ProductFeedback
+    action: submit_product_feedback
+    category: Knowledge & Feedback
+    risk: low
+    business_impact: "Submits product feedback, a feature request, or a bug report on behalf of the user; low-impact and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,152 @@
+schema_version: "1.0"
+platform: brighthire
+display_name: BrightHire
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://help.brighthire.ai/en/articles/14808753-brighthire-mcp
+  - id: brighthire.get_transcripts
+    object: Transcript
+    action: get_transcripts
+    category: Data Access
+    risk: high
+    business_impact: "Retrieves full verbatim interview transcripts and call notes for up to 20 interviews at once, exposing everything candidates disclosed during recorded interviews in bulk."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.brighthire.ai/en/articles/14808753-brighthire-mcp
+  - id: brighthire.get_call_ai_notes
+    object: Interview
+    action: get_call_ai_notes
+    category: Data Access
+    risk: medium
+    business_impact: "Pulls AI-extracted question-and-answer pairs drawn from interview transcripts for up to 20 interviews, revealing what candidates said across a batch of recordings."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.brighthire.ai/en/articles/14808753-brighthire-mcp
+  - id: brighthire.get_scorecards
+    object: Scorecard
+    action: get_scorecards
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves ATS scorecards with hiring recommendations and attribute ratings for up to 20 interviews, exposing evaluative decisions recorded about candidates."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.brighthire.ai/en/articles/14808753-brighthire-mcp
+  - id: brighthire.get_interview_context
+    object: Interview
+    action: get_interview_context
+    category: Data Access
+    risk: medium
+    business_impact: "Surfaces a scheduled interview's full prep packet, including candidate summary and position metadata — personal data about a specific job applicant."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.brighthire.ai/en/articles/14808753-brighthire-mcp
+  - id: brighthire.get_interview_summary
+    object: Interview
+    action: get_interview_summary
+    category: Data Access
+    risk: medium
+    business_impact: "Exposes post-interview notes, reactions, and follow-up links containing an interviewer's evaluative commentary about a candidate."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.brighthire.ai/en/articles/14808753-brighthire-mcp
+  - id: brighthire.get_candidate_summary
+    object: Candidate
+    action: get_candidate_summary
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the latest summary notes compiled about a job candidate, aggregating recruiter impressions and personal details into one record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.brighthire.ai/en/articles/14808753-brighthire-mcp
+  - id: brighthire.search
+    object: Interview
+    action: search
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates interview records across the org by candidate, interviewer, position, or stage, mapping out the recruiting pipeline for whoever holds the token."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://help.brighthire.ai/en/articles/14808753-brighthire-mcp
+  - id: brighthire.get_coaching_report
+    object: CoachingReport
+    action: get_coaching_report
+    category: Operations
+    risk: medium
+    business_impact: "Returns an interviewer's personal AI coaching report summarizing performance trends and feedback across their recent interviews — employee performance data."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.brighthire.ai/en/articles/14808753-brighthire-mcp
+  - id: brighthire.get_scheduled_interviews
+    object: Interview
+    action: get_scheduled_interviews
+    category: Operations
+    risk: low
+    business_impact: "Lists upcoming scheduled interviews with candidate and position metadata, defaulting to the next seven days of the hiring calendar."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.brighthire.ai/en/articles/14808753-brighthire-mcp
+  - id: brighthire.get_interview_guide
+    object: InterviewGuide
+    action: get_interview_guide
+    category: Operations
+    risk: low
+    business_impact: "Retrieves the interview question guides for up to 20 scheduled interviews; hiring-process content rather than applicant personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.brighthire.ai/en/articles/14808753-brighthire-mcp
+  - id: brighthire.get_job_description
+    object: Position
+    action: get_job_description
+    category: Operations
+    risk: low
+    business_impact: "Fetches the posted job description for a position by its id; role-definition content carrying no applicant data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

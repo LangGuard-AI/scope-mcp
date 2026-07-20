@@ -1,0 +1,99 @@
+schema_version: "1.1"
+platform: cargoai
+display_name: CargoAi
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Messaging ----------
+
+  # source: https://cargoai.readme.io/reference/cargoai-mcp-connector-setup-documentation
+  - id: cargoai.subscribe_to_shipment_tracking
+    object: TrackingSubscription
+    action: subscribe_to_shipment_tracking
+    id_form: capability
+    description: "Subscribe to Shipment Tracking"
+    category: Messaging
+    risk: medium
+    business_impact: "Adds one or more email addresses to a shipment's tracking-notification list, processing third-party personal data and, without recipient consent, risking unsolicited messaging."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://cargoai.readme.io/reference/cargoai-mcp-connector-setup-documentation
+  - id: cargoai.unsubscribe_from_shipment_tracking
+    object: TrackingSubscription
+    action: unsubscribe_from_shipment_tracking
+    id_form: capability
+    description: "Unsubscribe from Shipment Tracking"
+    category: Messaging
+    risk: low
+    business_impact: "Removes one or more email addresses from a shipment's tracking-notification list, halting further tracking alerts to those recipients."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://cargoai.readme.io/reference/cargoai-mcp-connector-setup-documentation
+  - id: cargoai.track_shipment
+    object: Shipment
+    action: track_shipment
+    id_form: capability
+    description: "Track Shipment"
+    category: Operations
+    risk: low
+    business_impact: "Returns current status, location, and full event history for a shipment identified by its Air Waybill number."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://cargoai.readme.io/reference/cargoai-mcp-connector-setup-documentation
+  - id: cargoai.search_flight_rates
+    object: FlightRate
+    action: search_flight_rates
+    id_form: capability
+    description: "Search Flight Rates"
+    category: Operations
+    risk: low
+    business_impact: "Returns available flight rates, schedules, transit times, and carrier pricing between two airports to inform cargo-booking decisions."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://cargoai.readme.io/reference/cargoai-mcp-connector-setup-documentation
+  - id: cargoai.get_airline_contact
+    object: AirlineContact
+    action: get_airline_contact
+    id_form: capability
+    description: "Get Airline Contact"
+    category: Operations
+    risk: low
+    business_impact: "Returns an airline's cargo contact details at a specified location, exposing directory information filtered by country, origin airport, or IATA code."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://cargoai.readme.io/reference/cargoai-mcp-connector-setup-documentation
+  - id: cargoai.get_ground_handling_agent_info
+    object: GroundHandlingAgent
+    action: get_ground_handling_agent_info
+    id_form: capability
+    description: "Get Ground Handling Agent Info"
+    category: Operations
+    risk: low
+    business_impact: "Returns the ground handling agent responsible for cargo handling at a given airport for a specific airline."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

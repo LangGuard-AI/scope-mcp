@@ -1,0 +1,33 @@
+schema_version: "1.0"
+platform: autodesk-product-help
+display_name: Autodesk Product Help
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://developer.api.autodesk.com/knowledge/public/v1/mcp
+  - id: autodesk-product-help.get_available_products
+    object: Product
+    action: get_available_products
+    category: Data Access
+    risk: low
+    business_impact: "Returns the public Autodesk product catalog of names, product codes, and release codes used to validate product-scoped help queries."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.api.autodesk.com/knowledge/public/v1/mcp
+  - id: autodesk-product-help.search_help_content
+    object: Document
+    action: search_help_content
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces the most relevant Autodesk help and support documents for a natural-language product question, reading only public documentation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

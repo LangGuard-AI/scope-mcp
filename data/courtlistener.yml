@@ -1,0 +1,191 @@
+schema_version: "1.0"
+platform: courtlistener
+display_name: CourtListener
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Alerts & Subscriptions ----------
+
+  # source: https://raw.githubusercontent.com/freelawproject/courtlistener-api-client/main/MCP_README.md
+  - id: courtlistener.create_search_alert
+    object: SearchAlert
+    action: create_search_alert
+    category: Alerts & Subscriptions
+    risk: low
+    business_impact: "Creates a saved search alert on the user's account that emails matching new results at the chosen real-time, daily, weekly, or monthly frequency."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/freelawproject/courtlistener-api-client/main/MCP_README.md
+  - id: courtlistener.delete_search_alert
+    object: SearchAlert
+    action: delete_search_alert
+    category: Alerts & Subscriptions
+    risk: low
+    business_impact: "Removes a saved search alert from the user's account by ID; reversible by recreating the alert."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/freelawproject/courtlistener-api-client/main/MCP_README.md
+  - id: courtlistener.subscribe_to_docket_alert
+    object: DocketAlert
+    action: subscribe_to_docket_alert
+    category: Alerts & Subscriptions
+    risk: low
+    business_impact: "Enrolls the user's account in email notifications for new activity on a specific docket."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/freelawproject/courtlistener-api-client/main/MCP_README.md
+  - id: courtlistener.unsubscribe_from_docket_alert
+    object: DocketAlert
+    action: unsubscribe_from_docket_alert
+    category: Alerts & Subscriptions
+    risk: low
+    business_impact: "Cancels the user's email notifications for a docket alert."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/freelawproject/courtlistener-api-client/main/MCP_README.md
+  - id: courtlistener.call_endpoint
+    object: "*"
+    action: call_endpoint
+    category: Data Access
+    risk: medium
+    business_impact: "Invokes any CourtListener API endpoint with caller-supplied parameters, widening reach beyond the curated tool set to any read or account-alert endpoint the token permits."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/freelawproject/courtlistener-api-client/main/MCP_README.md
+  - id: courtlistener.search
+    object: SearchResult
+    action: search
+    category: Data Access
+    risk: low
+    business_impact: "Queries public case law, dockets, judges, and oral arguments with the full range of CourtListener filters; read-only over public court records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/freelawproject/courtlistener-api-client/main/MCP_README.md
+  - id: courtlistener.get_endpoint_item
+    object: Record
+    action: get_endpoint_item
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves a single public record — opinion, docket, or judge — by its CourtListener ID."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/freelawproject/courtlistener-api-client/main/MCP_README.md
+  - id: courtlistener.get_more_results
+    object: SearchResult
+    action: get_more_results
+    category: Data Access
+    risk: low
+    business_impact: "Pages through additional results from a prior search or call_endpoint query; read-only, no state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/freelawproject/courtlistener-api-client/main/MCP_README.md
+  - id: courtlistener.get_counts
+    object: SearchResult
+    action: get_counts
+    category: Data Access
+    risk: low
+    business_impact: "Returns the total result count for a prior query; read-only metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/freelawproject/courtlistener-api-client/main/MCP_README.md
+  - id: courtlistener.get_endpoint_schema
+    object: Endpoint
+    action: get_endpoint_schema
+    category: Data Access
+    risk: low
+    business_impact: "Returns the JSON schema of filters and response fields for an endpoint; documentation-only metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/freelawproject/courtlistener-api-client/main/MCP_README.md
+  - id: courtlistener.get_choices
+    object: Endpoint
+    action: get_choices
+    category: Data Access
+    risk: low
+    business_impact: "Looks up valid enum values such as court IDs and case statuses; read-only reference metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/freelawproject/courtlistener-api-client/main/MCP_README.md
+  - id: courtlistener.extract_citations
+    object: Citation
+    action: extract_citations
+    category: Data Access
+    risk: low
+    business_impact: "Parses legal citations out of supplied text locally on the server with no external API calls or data writes."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/freelawproject/courtlistener-api-client/main/MCP_README.md
+  - id: courtlistener.analyze_citations
+    object: Citation
+    action: analyze_citations
+    category: Data Access
+    risk: low
+    business_impact: "Verifies extracted citations against the CourtListener database, returning canonical case name, court, date, and status for each."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/freelawproject/courtlistener-api-client/main/MCP_README.md
+  - id: courtlistener.resume_citation_analysis
+    object: Citation
+    action: resume_citation_analysis
+    category: Data Access
+    risk: low
+    business_impact: "Continues a batched citation-verification job that exceeded the per-call limit; read-only continuation of prior work."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

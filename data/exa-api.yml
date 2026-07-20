@@ -1,0 +1,100 @@
+schema_version: "1.0"
+platform: exa-api
+display_name: Exa
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Operations ----------
+
+  # source: https://raw.githubusercontent.com/exa-labs/exa-mcp-server/master/README.md
+  - id: exa-api.agent_create_run
+    object: AgentRun
+    action: agent_create_run
+    category: Operations
+    risk: medium
+    business_impact: "Starts a billable async research agent that can aggregate personal and company data from across the public web into structured lists."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/exa-labs/exa-mcp-server/master/README.md
+  - id: exa-api.agent_wait_for_run
+    object: AgentRun
+    action: agent_wait_for_run
+    category: Operations
+    risk: low
+    business_impact: "Polls a running research agent until it reaches a terminal status or times out."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/exa-labs/exa-mcp-server/master/README.md
+  - id: exa-api.agent_get_run_output
+    object: AgentRun
+    action: agent_get_run_output
+    category: Operations
+    risk: low
+    business_impact: "Retrieves a completed agent run's text, structured output, grounding, and usage or cost details."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/exa-labs/exa-mcp-server/master/README.md
+  - id: exa-api.agent_cancel_run
+    object: AgentRun
+    action: agent_cancel_run
+    category: Operations
+    risk: low
+    business_impact: "Cancels a queued or running research agent job before it completes."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://mcp.exa.ai/mcp
+  - id: exa-api.web_search_exa
+    object: SearchResult
+    action: web_search_exa
+    category: Data Access
+    risk: low
+    business_impact: "Searches the public web and returns clean, ready-to-use page content for a query."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.exa.ai/mcp
+  - id: exa-api.web_fetch_exa
+    object: Webpage
+    action: web_fetch_exa
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves the full markdown content of a specific webpage from a known URL."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/exa-labs/exa-mcp-server/master/README.md
+  - id: exa-api.web_search_advanced_exa
+    object: SearchResult
+    action: web_search_advanced_exa
+    category: Data Access
+    risk: low
+    business_impact: "Runs a filtered web search with control over domains, dates, and content options."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

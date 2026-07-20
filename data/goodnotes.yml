@@ -1,0 +1,47 @@
+schema_version: "1.0"
+platform: goodnotes
+display_name: Goodnotes
+source: langguard-editorial
+updated: "2026-07"
+reference: https://claude-mcp-api.ml.goodnotes.com/mcp
+actions:
+  # ---------- Content ----------
+
+  # source: https://claude-mcp-api.ml.goodnotes.com/mcp
+  - id: goodnotes.draw_svg_image
+    object: Widget
+    action: draw_svg_image
+    category: Content
+    risk: low
+    business_impact: "Renders caller-supplied SVG code into a Goodnotes drawing widget; reversible content creation with no access to existing notes or user data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude-mcp-api.ml.goodnotes.com/mcp
+  - id: goodnotes.generate_mermaid_diagram
+    object: Widget
+    action: generate_mermaid_diagram
+    category: Content
+    risk: low
+    business_impact: "Renders a Mermaid flowchart, mindmap, or timeline into a Goodnotes widget; reversible content generation that touches no stored user data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude-mcp-api.ml.goodnotes.com/mcp
+  - id: goodnotes.create_markdown_text_document
+    object: Widget
+    action: create_markdown_text_document
+    category: Content
+    risk: low
+    business_impact: "Renders caller-supplied markdown as a formatted Goodnotes document widget; reversible content creation with no read access to existing notes."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial

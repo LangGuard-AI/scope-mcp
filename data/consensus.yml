@@ -1,0 +1,33 @@
+schema_version: "1.0"
+platform: consensus
+display_name: Consensus
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.consensus.app/docs/mcp
+  - id: consensus.search
+    object: ResearchPaper
+    action: search
+    category: Data Access
+    risk: low
+    business_impact: "Queries Consensus for peer-reviewed research papers by keyword and filters, returning a read-only list of public academic results."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.consensus.app/docs/mcp
+  - id: consensus.fetch
+    object: ResearchPaper
+    action: fetch
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves the full title, abstract, URL, and citation metadata for a single peer-reviewed paper surfaced by search."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

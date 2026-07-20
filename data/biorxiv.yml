@@ -1,0 +1,101 @@
+schema_version: "1.0"
+platform: biorxiv
+display_name: bioRxiv / medRxiv
+source: langguard-editorial
+updated: "2026-07"
+reference: https://hcls.mcp.claude.com/biorxiv/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://hcls.mcp.claude.com/biorxiv/mcp
+  - id: biorxiv.search_preprints
+    object: Preprint
+    action: search_preprints
+    category: Data Access
+    risk: low
+    business_impact: "Queries the public bioRxiv/medRxiv preprint corpus, returning DOIs, titles, authors, and abstract previews for matching biomedical research; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://hcls.mcp.claude.com/biorxiv/mcp
+  - id: biorxiv.get_preprint
+    object: Preprint
+    action: get_preprint
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves complete public metadata for a single preprint by DOI, including all authors, corresponding-author institution, abstract, license, and funding; read-only over published records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://hcls.mcp.claude.com/biorxiv/mcp
+  - id: biorxiv.get_categories
+    object: Category
+    action: get_categories
+    category: Data Access
+    risk: low
+    business_impact: "Lists the 27 bioRxiv subject categories used to scope preprint searches; exposes only static taxonomy data with no modification effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://hcls.mcp.claude.com/biorxiv/mcp
+  - id: biorxiv.search_published_preprints
+    object: Preprint
+    action: search_published_preprints
+    category: Data Access
+    risk: low
+    business_impact: "Identifies which bioRxiv/medRxiv preprints later appeared in peer-reviewed journals, revealing publication outcomes for tracked research; read-only over public bibliographic data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://hcls.mcp.claude.com/biorxiv/mcp
+  - id: biorxiv.search_by_funder
+    object: Preprint
+    action: search_by_funder
+    category: Data Access
+    risk: low
+    business_impact: "Finds preprints attributed to a specific funding organization by ROR ID, surfacing an institution's tracked public research output; read-only over public funding metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://hcls.mcp.claude.com/biorxiv/mcp
+  - id: biorxiv.get_content_statistics
+    object: Statistics
+    action: get_content_statistics
+    category: Operations
+    risk: low
+    business_impact: "Returns aggregate bioRxiv submission counts over time (new, revised, and cumulative papers and authors); exposes only non-personal corpus-level trend data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://hcls.mcp.claude.com/biorxiv/mcp
+  - id: biorxiv.get_usage_statistics
+    object: Statistics
+    action: get_usage_statistics
+    category: Operations
+    risk: low
+    business_impact: "Returns aggregate bioRxiv readership and engagement metrics over time (abstract views, full-text views, PDF downloads); exposes only non-personal platform-level trends."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,222 @@
+schema_version: "1.0"
+platform: tomtom-maps
+display_name: TomTom Maps
+source: langguard-editorial
+updated: "2026-07"
+reference: https://github.com/tomtom-international/tomtom-maps-mcp
+actions:
+  # ---------- Geocoding & Search ----------
+
+  # source: https://docs.tomtom.com/tomtom-maps-mcp/documentation/tools
+  - id: tomtom-maps.tomtom-geocode
+    object: Address
+    action: tomtom-geocode
+    category: Geocoding & Search
+    risk: low
+    business_impact: "Resolves a street address to latitude/longitude coordinates via a stateless lookup; returns geospatial data only, holds no record."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tomtom.com/tomtom-maps-mcp/documentation/tools
+  - id: tomtom-maps.tomtom-reverse-geocode
+    object: Coordinate
+    action: tomtom-reverse-geocode
+    category: Geocoding & Search
+    risk: low
+    business_impact: "Resolves latitude/longitude coordinates back to a nearest street address; a read-only geospatial lookup with no stored state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tomtom.com/tomtom-maps-mcp/documentation/tools
+  - id: tomtom-maps.tomtom-fuzzy-search
+    object: Place
+    action: tomtom-fuzzy-search
+    category: Geocoding & Search
+    risk: low
+    business_impact: "Runs a typo-tolerant lookup over addresses, points of interest, and geographies; returns public map results, writes nothing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tomtom.com/tomtom-maps-mcp/documentation/tools
+  - id: tomtom-maps.tomtom-poi-search
+    object: PointOfInterest
+    action: tomtom-poi-search
+    category: Geocoding & Search
+    risk: low
+    business_impact: "Finds businesses by category from TomTom's public place index; read-only search over non-personal map data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tomtom.com/tomtom-maps-mcp/documentation/tools
+  - id: tomtom-maps.tomtom-nearby
+    object: PointOfInterest
+    action: tomtom-nearby
+    category: Geocoding & Search
+    risk: low
+    business_impact: "Lists services within a radius of a point; a read-only proximity query against public place data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Routing & Navigation ----------
+
+  # source: https://docs.tomtom.com/tomtom-maps-mcp/documentation/tools
+  - id: tomtom-maps.tomtom-routing
+    object: Route
+    action: tomtom-routing
+    category: Routing & Navigation
+    risk: low
+    business_impact: "Computes an optimal route between two locations; a stateless calculation returning geometry and travel estimates."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tomtom.com/tomtom-maps-mcp/documentation/tools
+  - id: tomtom-maps.tomtom-waypoint-routing
+    object: Route
+    action: tomtom-waypoint-routing
+    category: Routing & Navigation
+    risk: low
+    business_impact: "Plans a multi-stop route across supplied waypoints; a read-only routing computation that persists no data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tomtom.com/tomtom-maps-mcp/documentation/tools
+  - id: tomtom-maps.tomtom-reachable-range
+    object: Route
+    action: tomtom-reachable-range
+    category: Routing & Navigation
+    risk: low
+    business_impact: "Calculates the area reachable within a given time or driving distance; a stateless isochrone computation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Traffic & Maps ----------
+
+  # source: https://docs.tomtom.com/tomtom-maps-mcp/documentation/tools
+  - id: tomtom-maps.tomtom-traffic
+    object: TrafficIncident
+    action: tomtom-traffic
+    category: Traffic & Maps
+    risk: low
+    business_impact: "Looks up traffic incidents, closures, and hazards in an area; a read-only query over public traffic feeds."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tomtom.com/tomtom-maps-mcp/documentation/tools
+  - id: tomtom-maps.tomtom-static-map
+    object: MapImage
+    action: tomtom-static-map
+    category: Traffic & Maps
+    risk: low
+    business_impact: "Renders a static map image for supplied parameters; produces an image artifact and stores nothing on the platform."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tomtom.com/tomtom-maps-mcp/documentation/tools
+  - id: tomtom-maps.tomtom-dynamic-map
+    object: MapImage
+    action: tomtom-dynamic-map
+    category: Traffic & Maps
+    risk: low
+    business_impact: "Renders an advanced map with custom markers, routes, and traffic overlays; a read-only visualization with no persisted state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- EV & Advanced Search ----------
+
+  # source: https://docs.tomtom.com/tomtom-maps-mcp/documentation/tools
+  - id: tomtom-maps.tomtom-ev-routing
+    object: Route
+    action: tomtom-ev-routing
+    category: Routing & Navigation
+    risk: low
+    business_impact: "Plans a long-distance EV route with automatic charging-stop optimization; a stateless routing computation over the Orbis backend."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tomtom.com/tomtom-maps-mcp/documentation/tools
+  - id: tomtom-maps.tomtom-ev-search
+    object: ChargingStation
+    action: tomtom-ev-search
+    category: Geocoding & Search
+    risk: low
+    business_impact: "Finds EV charging stations with real-time availability, connector types, and power levels; a read-only lookup over public station data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tomtom.com/tomtom-maps-mcp/documentation/tools
+  - id: tomtom-maps.tomtom-search-along-route
+    object: PointOfInterest
+    action: tomtom-search-along-route
+    category: Geocoding & Search
+    risk: low
+    business_impact: "Finds points of interest along a route corridor between origin and destination; a read-only geospatial search."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tomtom.com/tomtom-maps-mcp/documentation/tools
+  - id: tomtom-maps.tomtom-area-search
+    object: Place
+    action: tomtom-area-search
+    category: Geocoding & Search
+    risk: low
+    business_impact: "Searches for places within a circle, polygon, or bounding box; a read-only geospatial query over public map data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tomtom.com/tomtom-maps-mcp/documentation/tools
+  - id: tomtom-maps.tomtom-data-viz
+    object: MapImage
+    action: tomtom-data-viz
+    category: Traffic & Maps
+    risk: low
+    business_impact: "Visualizes caller-supplied GeoJSON on an interactive TomTom basemap; a rendering operation that persists no data on the platform."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,192 @@
+schema_version: "1.0"
+platform: imanage
+display_name: iManage Work
+source: langguard-editorial
+updated: "2026-07"
+reference: https://docs.imanage.com/ai/mcpserver-user-help/en-US/Tools_for_iManage_Work_connector.html
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.imanage.com/ai/mcpserver-user-help/en-US/Tools_for_iManage_Work_connector.html
+  - id: imanage.download_document
+    object: Document
+    action: download_document
+    category: Data Access
+    risk: high
+    business_impact: "Retrieves the full text content of a stored document, exposing privileged or personal information held in a law firm's matter files."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.imanage.com/ai/mcpserver-user-help/en-US/Tools_for_iManage_Work_connector.html
+  - id: imanage.fetch
+    object: Document
+    action: fetch
+    category: Data Access
+    risk: medium
+    business_impact: "Returns document or workspace details by ID, surfacing metadata about legal matters and the individuals named in them."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.imanage.com/ai/mcpserver-user-help/en-US/Tools_for_iManage_Work_connector.html
+  - id: imanage.search
+    object: Document
+    action: search
+    category: Data Access
+    risk: medium
+    business_impact: "Queries across document content in the repository, potentially surfacing privileged or personal information from matter files at once."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.imanage.com/ai/mcpserver-user-help/en-US/Tools_for_iManage_Work_connector.html
+  - id: imanage.get_document_profile
+    object: Document
+    action: get_document_profile
+    category: Data Access
+    risk: medium
+    business_impact: "Accesses a document's properties and workspace context, including author and matter metadata that can identify individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.imanage.com/ai/mcpserver-user-help/en-US/Tools_for_iManage_Work_connector.html
+  - id: imanage.get_rows_from_csv_document
+    object: Document
+    action: get_rows_from_csv_document
+    category: Data Access
+    risk: medium
+    business_impact: "Extracts structured rows from a CSV document, which may contain lists of personal or client data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.imanage.com/ai/mcpserver-user-help/en-US/Tools_for_iManage_Work_connector.html
+  - id: imanage.get_document_versions
+    object: Document
+    action: get_document_versions
+    category: Data Access
+    risk: low
+    business_impact: "Provides the complete version history and metadata of a document, revealing who edited it and when."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.imanage.com/ai/mcpserver-user-help/en-US/Tools_for_iManage_Work_connector.html
+  - id: imanage.get_container_children
+    object: Container
+    action: get_container_children
+    category: Data Access
+    risk: low
+    business_impact: "Lists up to 500 items inside a folder or workspace, revealing the structure and filenames of a legal matter."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.imanage.com/ai/mcpserver-user-help/en-US/Tools_for_iManage_Work_connector.html
+  - id: imanage.get_recent_documents
+    object: Document
+    action: get_recent_documents
+    category: Data Access
+    risk: low
+    business_impact: "Displays recently accessed documents for the user, exposing which matters and files were recently touched."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.imanage.com/ai/mcpserver-user-help/en-US/Tools_for_iManage_Work_connector.html
+  - id: imanage.get_recent_workspaces
+    object: Workspace
+    action: get_recent_workspaces
+    category: Data Access
+    risk: low
+    business_impact: "Displays recently accessed workspaces, revealing which legal matters the user has been working in."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.imanage.com/ai/mcpserver-user-help/en-US/Tools_for_iManage_Work_connector.html
+  - id: imanage.search_workspaces
+    object: Workspace
+    action: search_workspaces
+    category: Data Access
+    risk: low
+    business_impact: "Finds workspaces by criteria, exposing the names and existence of legal matters in the environment."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.imanage.com/ai/mcpserver-user-help/en-US/Tools_for_iManage_Work_connector.html
+  - id: imanage.get_workspace_profile
+    object: Workspace
+    action: get_workspace_profile
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves details of a workspace, exposing the configuration and metadata of a legal matter."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.imanage.com/ai/mcpserver-user-help/en-US/Tools_for_iManage_Work_connector.html
+  - id: imanage.get_workspace_templates
+    object: WorkspaceTemplate
+    action: get_workspace_templates
+    category: Data Access
+    risk: low
+    business_impact: "Lists predefined folder-structure templates used to create new matter workspaces."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.imanage.com/ai/mcpserver-user-help/en-US/Tools_for_iManage_Work_connector.html
+  - id: imanage.get_libraries
+    object: Library
+    action: get_libraries
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves the list of available document libraries in the iManage environment."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Admin ----------
+
+  # source: https://docs.imanage.com/ai/mcpserver-user-help/en-US/Tools_for_iManage_Work_connector.html
+  - id: imanage.get_user_information
+    object: User
+    action: get_user_information
+    category: Identity & Admin
+    risk: medium
+    business_impact: "Returns user details across roles such as authors, reviewers, and workspace owners, exposing personal information about firm staff and collaborators."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

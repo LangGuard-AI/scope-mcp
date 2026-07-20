@@ -1,0 +1,85 @@
+schema_version: "1.1"
+platform: glovo
+display_name: Glovo
+source: langguard-editorial
+updated: "2026-07"
+reference: https://glovoapp.com/docs/en/legal/mcp/
+actions:
+  # ---------- Operations ----------
+
+  # source: https://glovoapp.com/docs/en/legal/mcp/
+  - id: glovo.hand_off_to_checkout
+    object: Order
+    action: hand_off_to_checkout
+    id_form: capability
+    description: "Hand off to checkout"
+    category: Operations
+    risk: medium
+    business_impact: "Hands the user off to Glovo checkout in the app or website to place an order, initiating a purchase flow the user completes and pays for outside the tool."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://glovoapp.com/docs/en/legal/mcp/
+  - id: glovo.search_for_specific_products
+    object: Product
+    action: search_for_specific_products
+    id_form: capability
+    description: "Search for specific products"
+    category: Data Access
+    risk: low
+    business_impact: "Searches product listings across thousands of local stores and supermarkets, returning catalog data an agent can surface to the user."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://glovoapp.com/docs/en/legal/mcp/
+  - id: glovo.filter_results
+    object: Product
+    action: filter_results
+    id_form: capability
+    description: "Filter results"
+    category: Data Access
+    risk: low
+    business_impact: "Narrows a product search by budget, brand, features, ratings, or preferred stores; refines read-only results without changing any state."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://glovoapp.com/docs/en/legal/mcp/
+  - id: glovo.view_live_information
+    object: Product
+    action: view_live_information
+    id_form: capability
+    description: "View live information"
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves live availability, prices, and store details for products; read-only exposure of current commercial data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://glovoapp.com/docs/en/legal/mcp/
+  - id: glovo.compare_options
+    object: Product
+    action: compare_options
+    id_form: capability
+    description: "Compare options"
+    category: Data Access
+    risk: low
+    business_impact: "Presents product options side by side to speed a purchase decision; read-only comparison that changes no state."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,202 @@
+schema_version: "1.1"
+platform: descrybe-legal-engine
+display_name: Descrybe Legal Engine
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://descrybe.com/connect
+  - id: descrybe-legal-engine.analyze_a_legal_question
+    object: LegalQuery
+    action: analyze_a_legal_question
+    id_form: capability
+    description: "Analyze a legal question"
+    category: Data Access
+    risk: low
+    business_impact: "Determines whether a legal question has enough detail to research and prompts for missing facts, shaping downstream research without acting on any primary-law record."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://descrybe.com/connect
+  - id: descrybe-legal-engine.concept_case_search
+    object: Case
+    action: concept_case_search
+    id_form: capability
+    description: "Concept case search"
+    category: Data Access
+    risk: low
+    business_impact: "Returns case law matching a legal issue, rule, or fact pattern, surfacing prioritized public authorities for research without altering any record."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://descrybe.com/connect
+  - id: descrybe-legal-engine.laws_and_rules_search
+    object: Statute
+    action: laws_and_rules_search
+    id_form: capability
+    description: "Laws and rules search"
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves statutes, regulations, and constitutional provisions matching a topic, phrase, or citation for research reference."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://descrybe.com/connect
+  - id: descrybe-legal-engine.exact_case_text_search
+    object: Case
+    action: exact_case_text_search
+    id_form: capability
+    description: "Exact case-text search"
+    category: Data Access
+    risk: low
+    business_impact: "Returns judicial opinions containing exact words or phrases, exposing full-text public case passages for quote and terminology checks."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://descrybe.com/connect
+  - id: descrybe-legal-engine.case_reference_resolver
+    object: Citation
+    action: case_reference_resolver
+    id_form: capability
+    description: "Case reference resolver"
+    category: Data Access
+    risk: low
+    business_impact: "Resolves citations, case names, or docket numbers into the correct case, returning candidate matches for verification."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://descrybe.com/connect
+  - id: descrybe-legal-engine.case_reference_extractor
+    object: Citation
+    action: case_reference_extractor
+    id_form: capability
+    description: "Case reference extractor"
+    category: Data Access
+    risk: low
+    business_impact: "Extracts and groups cited cases from pasted legal text, producing an authority overview from user-supplied material."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://descrybe.com/connect
+  - id: descrybe-legal-engine.case_summary_and_analysis
+    object: Case
+    action: case_summary_and_analysis
+    id_form: capability
+    description: "Case summary and analysis"
+    category: Data Access
+    risk: low
+    business_impact: "Returns a summary and analysis of a known case for research use, surfacing court reasoning without modifying source records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://descrybe.com/connect
+  - id: descrybe-legal-engine.focused_case_passages
+    object: Case
+    action: focused_case_passages
+    id_form: capability
+    description: "Focused case passages"
+    category: Data Access
+    risk: low
+    business_impact: "Returns the most relevant source passages from a known case for targeted review."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://descrybe.com/connect
+  - id: descrybe-legal-engine.case_details
+    object: Case
+    action: case_details
+    id_form: capability
+    description: "Case details"
+    category: Data Access
+    risk: low
+    business_impact: "Consolidates a case's caption, court, dates, summaries, and treatment overview into a single research view."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://descrybe.com/connect
+  - id: descrybe-legal-engine.case_status_check
+    object: Case
+    action: case_status_check
+    id_form: capability
+    description: "Case status check"
+    category: Data Access
+    risk: low
+    business_impact: "Reports how later cases treat an authority with positive, negative, or cautionary signals, informing whether a case is still good law."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://descrybe.com/connect
+  - id: descrybe-legal-engine.citing_cases
+    object: Case
+    action: citing_cases
+    id_form: capability
+    description: "Citing cases"
+    category: Data Access
+    risk: low
+    business_impact: "Returns newer cases citing a given authority for follow-on research and treatment review."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://descrybe.com/connect
+  - id: descrybe-legal-engine.quote_verification
+    object: Case
+    action: quote_verification
+    id_form: capability
+    description: "Quote verification"
+    category: Data Access
+    risk: low
+    business_impact: "Confirms whether quoted language appears in a known case and reports its location, guarding against misquotation in filings."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://descrybe.com/connect
+  - id: descrybe-legal-engine.source_pdfs
+    object: Case
+    action: source_pdfs
+    id_form: capability
+    description: "Source PDFs"
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves a case opinion PDF for inspection, printing, or sharing, disclosing the full public source document."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

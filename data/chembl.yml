@@ -1,0 +1,85 @@
+schema_version: "1.0"
+platform: chembl
+display_name: ChEMBL
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/resources/tutorials/using-the-chembl-connector-in-claude
+  - id: chembl.compound_search
+    object: Compound
+    action: compound_search
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces molecular properties, synonyms, approval status, and ATC classifications for compounds matched by name, ChEMBL ID, or SMILES structure."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/resources/tutorials/using-the-chembl-connector-in-claude
+  - id: chembl.target_search
+    object: Target
+    action: target_search
+    category: Data Access
+    risk: low
+    business_impact: "Returns biological target records with protein accessions, GO annotations, and UniProt cross-references for proteins, enzymes, and receptors."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/resources/tutorials/using-the-chembl-connector-in-claude
+  - id: chembl.get_bioactivity
+    object: Bioactivity
+    action: get_bioactivity
+    category: Data Access
+    risk: low
+    business_impact: "Exposes quantitative activity measurements (IC50, EC50, Ki, Kd) with assay descriptions, pChEMBL scores, and literature references for compound-target pairs."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/resources/tutorials/using-the-chembl-connector-in-claude
+  - id: chembl.get_mechanism
+    object: Mechanism
+    action: get_mechanism
+    category: Data Access
+    risk: low
+    business_impact: "Reveals curated mechanism-of-action data and action types for approved drugs alongside supporting references."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/resources/tutorials/using-the-chembl-connector-in-claude
+  - id: chembl.drug_search
+    object: Drug
+    action: drug_search
+    category: Data Access
+    risk: low
+    business_impact: "Lists approved drugs and clinical candidates by therapeutic indication with development phase, approval dates, and safety warnings."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/resources/tutorials/using-the-chembl-connector-in-claude
+  - id: chembl.get_admet
+    object: MolecularProperties
+    action: get_admet
+    category: Data Access
+    risk: low
+    business_impact: "Computes drug-likeness properties including ALogP, polar surface area, hydrogen-bond counts, Rule of Five violations, and QED scores for a molecule."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

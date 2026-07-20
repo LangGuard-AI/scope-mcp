@@ -1,0 +1,153 @@
+schema_version: "1.0"
+platform: dremio-cloud
+display_name: Dremio Cloud
+source: langguard-editorial
+updated: "2026-07"
+reference: https://docs.dremio.com/cloud/sonar/mcp-server/
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/dremio/dremio-mcp/main/docs/tools.md
+  - id: dremio-cloud.RunSqlQuery
+    object: Query
+    action: RunSqlQuery
+    category: Data Access
+    risk: critical
+    business_impact: "Runs arbitrary SELECT queries against the lakehouse, enabling bulk read of entire tables and mass extraction of any personal or confidential data the connected identity can reach."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/dremio/dremio-mcp/main/docs/tools.md
+  - id: dremio-cloud.SemanticSearch
+    object: Search
+    action: SemanticSearch
+    category: Data Access
+    risk: high
+    business_impact: "Searches semantically across the whole cluster, surfacing table contents that may include PII or proprietary business data in the results."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/dremio/dremio-mcp/main/docs/tools.md
+  - id: dremio-cloud.GetSchemaOfTable
+    object: Table
+    action: GetSchemaOfTable
+    category: Data Access
+    risk: low
+    business_impact: "Returns column and type metadata for a table, exposing schema structure but no row-level data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/dremio/dremio-mcp/main/docs/tools.md
+  - id: dremio-cloud.GetTableOrViewLineage
+    object: Table
+    action: GetTableOrViewLineage
+    category: Data Access
+    risk: low
+    business_impact: "Traces upstream and downstream lineage of a table or view, revealing dataset relationships without returning underlying data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://raw.githubusercontent.com/dremio/dremio-mcp/main/docs/tools.md
+  - id: dremio-cloud.RunPromQL
+    object: Metric
+    action: RunPromQL
+    category: Operations
+    risk: medium
+    business_impact: "Executes arbitrary Prometheus queries over cluster telemetry, exposing operational and performance metrics for the deployment."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/dremio/dremio-mcp/main/docs/tools.md
+  - id: dremio-cloud.GetFailedJobDetails
+    object: Job
+    action: GetFailedJobDetails
+    category: Operations
+    risk: low
+    business_impact: "Reports on failed and canceled jobs from the past 7 days for operational diagnostics."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/dremio/dremio-mcp/main/docs/tools.md
+  - id: dremio-cloud.BuildUsageReport
+    object: UsageReport
+    action: BuildUsageReport
+    category: Operations
+    risk: low
+    business_impact: "Generates usage reports grouped by engine or project for capacity and cost review."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/dremio/dremio-mcp/main/docs/tools.md
+  - id: dremio-cloud.GetRelevantMetrics
+    object: Metric
+    action: GetRelevantMetrics
+    category: Operations
+    risk: low
+    business_impact: "Retrieves Prometheus metrics for the cluster, surfacing operational health telemetry."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/dremio/dremio-mcp/main/docs/tools.md
+  - id: dremio-cloud.GetMetricSchema
+    object: Metric
+    action: GetMetricSchema
+    category: Operations
+    risk: low
+    business_impact: "Returns available metric labels and sample values to help construct monitoring queries."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/dremio/dremio-mcp/main/docs/tools.md
+  - id: dremio-cloud.GetNameOfJobsRecentTable
+    object: SystemTable
+    action: GetNameOfJobsRecentTable
+    category: Operations
+    risk: low
+    business_impact: "Returns the name of the system table that holds recent job information, a metadata lookup only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/dremio/dremio-mcp/main/docs/tools.md
+  - id: dremio-cloud.GetUsefulSystemTableNames
+    object: SystemTable
+    action: GetUsefulSystemTableNames
+    category: Operations
+    risk: low
+    business_impact: "Lists important system table names available for querying, a metadata discovery helper."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

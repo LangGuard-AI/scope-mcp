@@ -1,0 +1,75 @@
+schema_version: "1.0"
+platform: discord-bot
+display_name: Discord
+source: langguard-editorial
+updated: "2026-07"
+reference: https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/discord
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/external_plugins/discord/README.md
+  - id: discord-bot.fetch_messages
+    object: Message
+    action: fetch_messages
+    category: Data Access
+    risk: medium
+    business_impact: "Pulls recent channel or DM history including message content, surfacing personal communications data to the caller."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/external_plugins/discord/README.md
+  - id: discord-bot.download_attachment
+    object: Attachment
+    action: download_attachment
+    category: Data Access
+    risk: medium
+    business_impact: "Downloads a message's attachments to the local filesystem; file content can include PII, credentials, or regulated data egressed to disk."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Messaging ----------
+
+  # source: https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/external_plugins/discord/README.md
+  - id: discord-bot.reply
+    object: Message
+    action: reply
+    category: Messaging
+    risk: low
+    business_impact: "Posts a message with optional file attachments to a Discord channel or DM as the bot; agent speech in Discord."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/external_plugins/discord/README.md
+  - id: discord-bot.react
+    object: Message
+    action: react
+    category: Messaging
+    risk: low
+    business_impact: "Adds an emoji reaction to any message by ID; a low-impact, reversible acknowledgement signal from the bot."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/external_plugins/discord/README.md
+  - id: discord-bot.edit_message
+    object: Message
+    action: edit_message
+    category: Messaging
+    risk: low
+    business_impact: "Edits a message the bot previously sent; scoped to the bot's own messages and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

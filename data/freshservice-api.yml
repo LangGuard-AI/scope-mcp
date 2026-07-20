@@ -1,0 +1,312 @@
+schema_version: "1.0"
+platform: freshservice-api
+display_name: Freshservice
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://support.freshservice.com/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-
+  - id: freshservice-api.fetchAgents
+    object: Agent
+    action: fetchAgents
+    category: Identity & Access
+    risk: high
+    business_impact: "Returns the full agent directory including names, emails, and role assignments, exposing the entire IT-staff roster in one call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshservice.com/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-
+  - id: freshservice-api.fetchAgent
+    object: Agent
+    action: fetchAgent
+    category: Identity & Access
+    risk: medium
+    business_impact: "Reads a single agent's profile including contact details and role, exposing one staff member's personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshservice.com/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-
+  - id: freshservice-api.fetchRequesters
+    object: Requester
+    action: fetchRequesters
+    category: Identity & Access
+    risk: high
+    business_impact: "Returns every requester on the account with their contact details, exposing the full employee and end-user directory in one call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshservice.com/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-
+  - id: freshservice-api.fetchRequester
+    object: Requester
+    action: fetchRequester
+    category: Identity & Access
+    risk: medium
+    business_impact: "Reads one requester's profile including name, email, and department, exposing a single individual's personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshservice.com/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-
+  - id: freshservice-api.fetchOnboardingRequest
+    object: OnboardingRequest
+    action: fetchOnboardingRequest
+    category: Identity & Access
+    risk: medium
+    business_impact: "Reads a new-hire onboarding request including the employee's personal details and requested access, exposing HR-sensitive data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshservice.com/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-
+  - id: freshservice-api.createOnboardingRequest
+    object: OnboardingRequest
+    action: createOnboardingRequest
+    category: Identity & Access
+    risk: medium
+    business_impact: "Opens an onboarding request that triggers provisioning of accounts and access for a new employee across connected systems."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshservice.com/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-
+  - id: freshservice-api.fetchOffboardingRequests
+    object: OffboardingRequest
+    action: fetchOffboardingRequests
+    category: Identity & Access
+    risk: high
+    business_impact: "Lists all offboarding requests with departing-employee details, exposing HR-sensitive termination data across the organization at once."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshservice.com/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-
+  - id: freshservice-api.createOffboardingRequest
+    object: OffboardingRequest
+    action: createOffboardingRequest
+    category: Identity & Access
+    risk: medium
+    business_impact: "Initiates an offboarding workflow that deprovisions a departing employee's accounts and access across connected systems."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshservice.com/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-
+  - id: freshservice-api.fetchOffboardingRequestTickets
+    object: OffboardingRequest
+    action: fetchOffboardingRequestTickets
+    category: Identity & Access
+    risk: medium
+    business_impact: "Returns the tickets generated for an offboarding request, exposing departing-employee details and outstanding deprovisioning tasks."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Service ----------
+
+  # source: https://support.freshservice.com/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-
+  - id: freshservice-api.fetchTickets
+    object: Ticket
+    action: fetchTickets
+    category: Service
+    risk: high
+    business_impact: "Returns every ticket on the account, exposing support content that can include personal data and credentials pasted into descriptions at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshservice.com/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-
+  - id: freshservice-api.fetchTicket
+    object: Ticket
+    action: fetchTicket
+    category: Service
+    risk: medium
+    business_impact: "Reads a single ticket including its description, requester, and conversation, exposing whatever sensitive content that ticket holds."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshservice.com/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-
+  - id: freshservice-api.fetchTicketFilter
+    object: Ticket
+    action: fetchTicketFilter
+    category: Service
+    risk: high
+    business_impact: "Runs an arbitrary field-based query across all tickets, letting the caller extract targeted subsets of potentially sensitive ticket data at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshservice.com/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-
+  - id: freshservice-api.createTicket
+    object: Ticket
+    action: createTicket
+    category: Service
+    risk: medium
+    business_impact: "Opens a new service-desk ticket in the account, entering the support queue and notifying assigned agents."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshservice.com/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-
+  - id: freshservice-api.updateTicket
+    object: Ticket
+    action: updateTicket
+    category: Service
+    risk: medium
+    business_impact: "Modifies an existing ticket's fields such as status, priority, or assignee, changing how the request is handled."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshservice.com/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-
+  - id: freshservice-api.createTicketNote
+    object: Ticket
+    action: createTicketNote
+    category: Service
+    risk: low
+    business_impact: "Appends a note to a ticket's conversation thread, visible to agents or the requester depending on the note's privacy setting."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshservice.com/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-
+  - id: freshservice-api.placeRequestServiceCatalogItem
+    object: ServiceCatalogItem
+    action: placeRequestServiceCatalogItem
+    category: Service
+    risk: medium
+    business_impact: "Submits a service catalog request on the account, entering approval and fulfillment workflows for the requested item."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://support.freshservice.com/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-
+  - id: freshservice-api.fetchAssets
+    object: Asset
+    action: fetchAssets
+    category: Operations
+    risk: high
+    business_impact: "Returns the full asset inventory (CMDB), exposing hardware, software, and configuration-item records for the entire estate in one call."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshservice.com/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-
+  - id: freshservice-api.fetchAsset
+    object: Asset
+    action: fetchAsset
+    category: Operations
+    risk: medium
+    business_impact: "Reads a single asset record including its configuration and assignment details from the CMDB."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshservice.com/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-
+  - id: freshservice-api.createAsset
+    object: Asset
+    action: createAsset
+    category: Operations
+    risk: medium
+    business_impact: "Adds a new asset record to the CMDB, expanding the tracked configuration-item inventory."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshservice.com/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-
+  - id: freshservice-api.updateAsset
+    object: Asset
+    action: updateAsset
+    category: Operations
+    risk: medium
+    business_impact: "Modifies an existing asset's attributes or assignment in the CMDB, altering the recorded configuration state."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Knowledge Base ----------
+
+  # source: https://support.freshservice.com/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-
+  - id: freshservice-api.createSolutionFolder
+    object: SolutionFolder
+    action: createSolutionFolder
+    category: Knowledge Base
+    risk: low
+    business_impact: "Creates a new knowledge-base folder to organize solution articles within a category."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshservice.com/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-
+  - id: freshservice-api.createSolutionArticle
+    object: SolutionArticle
+    action: createSolutionArticle
+    category: Knowledge Base
+    risk: medium
+    business_impact: "Publishes a new knowledge-base article that becomes self-service content visible to requesters."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshservice.com/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-
+  - id: freshservice-api.updateSolutionArticle
+    object: SolutionArticle
+    action: updateSolutionArticle
+    category: Knowledge Base
+    risk: medium
+    business_impact: "Edits an existing knowledge-base article, changing live self-service content shown to requesters."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

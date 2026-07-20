@@ -1,0 +1,256 @@
+schema_version: "1.0"
+platform: firecrawl
+display_name: Firecrawl
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/firecrawl/firecrawl-mcp-server/main/README.md
+  - id: firecrawl.firecrawl_scrape
+    object: WebPage
+    action: firecrawl_scrape
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves the full content of a single web page, which may include personal data published on that page."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/firecrawl/firecrawl-mcp-server/main/README.md
+  - id: firecrawl.firecrawl_map
+    object: Website
+    action: firecrawl_map
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates all discoverable URLs on a target website, revealing its structure and otherwise unlinked pages."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/firecrawl/firecrawl-mcp-server/main/README.md
+  - id: firecrawl.firecrawl_search
+    object: SearchResult
+    action: firecrawl_search
+    category: Data Access
+    risk: low
+    business_impact: "Runs a web search and can pull content from the results, potentially surfacing personal data from third-party sites."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/firecrawl/firecrawl-mcp-server/main/README.md
+  - id: firecrawl.firecrawl_crawl
+    object: Website
+    action: firecrawl_crawl
+    category: Data Access
+    risk: medium
+    business_impact: "Systematically harvests content across an entire website, collecting personal data at scale in a single job."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/firecrawl/firecrawl-mcp-server/main/README.md
+  - id: firecrawl.firecrawl_parse
+    object: Document
+    action: firecrawl_parse
+    category: Data Access
+    risk: low
+    business_impact: "Reads and parses local files or hosted upload references, exposing whatever sensitive content those documents hold."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/firecrawl/firecrawl-mcp-server/main/README.md
+  - id: firecrawl.firecrawl_extract
+    object: WebPage
+    action: firecrawl_extract
+    category: Data Access
+    risk: low
+    business_impact: "Uses an LLM to pull targeted structured fields from web pages, which can single out names, emails, and other personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/firecrawl/firecrawl-mcp-server/main/README.md
+  - id: firecrawl.firecrawl_agent
+    object: ResearchTask
+    action: firecrawl_agent
+    category: Data Access
+    risk: medium
+    business_impact: "Dispatches an autonomous agent that independently browses the web and extracts structured data across many pages."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/firecrawl/firecrawl-mcp-server/main/README.md
+  - id: firecrawl.firecrawl_interact
+    object: WebPage
+    action: firecrawl_interact
+    category: Data Access
+    risk: medium
+    business_impact: "Drives a live browser session to click, type, and navigate on a page, able to submit forms and trigger site-side actions."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/firecrawl/firecrawl-mcp-server/main/README.md
+  - id: firecrawl.firecrawl_research_search_papers
+    object: ResearchPaper
+    action: firecrawl_research_search_papers
+    category: Data Access
+    risk: low
+    business_impact: "Searches academic research papers matching a query and returns the candidate results."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/firecrawl/firecrawl-mcp-server/main/README.md
+  - id: firecrawl.firecrawl_research_inspect_paper
+    object: ResearchPaper
+    action: firecrawl_research_inspect_paper
+    category: Data Access
+    risk: low
+    business_impact: "Returns metadata and detail for a single research paper."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/firecrawl/firecrawl-mcp-server/main/README.md
+  - id: firecrawl.firecrawl_research_related_papers
+    object: ResearchPaper
+    action: firecrawl_research_related_papers
+    category: Data Access
+    risk: low
+    business_impact: "Returns papers related to a given research paper."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/firecrawl/firecrawl-mcp-server/main/README.md
+  - id: firecrawl.firecrawl_research_read_paper
+    object: ResearchPaper
+    action: firecrawl_research_read_paper
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves the full text content of a research paper."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/firecrawl/firecrawl-mcp-server/main/README.md
+  - id: firecrawl.firecrawl_research_search_github
+    object: Repository
+    action: firecrawl_research_search_github
+    category: Data Access
+    risk: low
+    business_impact: "Searches GitHub repositories matching a query and returns the candidate matches."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://raw.githubusercontent.com/firecrawl/firecrawl-mcp-server/main/README.md
+  - id: firecrawl.firecrawl_monitor_create
+    object: Monitor
+    action: firecrawl_monitor_create
+    category: Operations
+    risk: medium
+    business_impact: "Schedules a recurring scrape or crawl that diffs page changes and pushes results to an external webhook or email address."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/firecrawl/firecrawl-mcp-server/main/README.md
+  - id: firecrawl.firecrawl_monitor_update
+    object: Monitor
+    action: firecrawl_monitor_update
+    category: Operations
+    risk: medium
+    business_impact: "Changes monitor settings including the webhook and notification target, which can redirect collected page data to a new destination."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/firecrawl/firecrawl-mcp-server/main/README.md
+  - id: firecrawl.firecrawl_monitor_delete
+    object: Monitor
+    action: firecrawl_monitor_delete
+    category: Operations
+    risk: medium
+    business_impact: "Permanently removes a configured page monitor and all of its scheduled checks."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/firecrawl/firecrawl-mcp-server/main/README.md
+  - id: firecrawl.firecrawl_monitor_run
+    object: Monitor
+    action: firecrawl_monitor_run
+    category: Operations
+    risk: medium
+    business_impact: "Triggers an immediate check for an existing monitor, running its scrape or crawl on demand."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/firecrawl/firecrawl-mcp-server/main/README.md
+  - id: firecrawl.firecrawl_search_feedback
+    object: Feedback
+    action: firecrawl_search_feedback
+    category: Operations
+    risk: low
+    business_impact: "Submits feedback on a prior search result and refunds one usage credit on the first submission per search."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/firecrawl/firecrawl-mcp-server/main/README.md
+  - id: firecrawl.firecrawl_feedback
+    object: Feedback
+    action: firecrawl_feedback
+    category: Operations
+    risk: low
+    business_impact: "Submits structured feedback for a completed job to the Firecrawl v2 feedback endpoint."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

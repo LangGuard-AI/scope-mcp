@@ -1,0 +1,312 @@
+schema_version: "1.0"
+platform: ticktick-api
+display_name: TickTick
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Task Management ----------
+
+  # source: https://help.ticktick.com/articles/7438129581631995904
+  - id: ticktick-api.create_task
+    object: Task
+    action: create_task
+    category: Task Management
+    risk: low
+    business_impact: "Adds a new task with title, description, date, priority, list, and tags to the account; reversible and low-impact."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ticktick.com/articles/7438129581631995904
+  - id: ticktick-api.batch_add_tasks
+    object: Task
+    action: batch_add_tasks
+    category: Task Management
+    risk: medium
+    business_impact: "Creates many tasks in a single call, letting an agent bulk-populate an account's task list faster than a human can review each entry."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ticktick.com/articles/7438129581631995904
+  - id: ticktick-api.complete_task
+    object: Task
+    action: complete_task
+    category: Task Management
+    risk: low
+    business_impact: "Marks a task as completed; reversible state change with no data loss."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ticktick.com/articles/7438129581631995904
+  - id: ticktick-api.complete_tasks_in_project
+    object: Task
+    action: complete_tasks_in_project
+    category: Task Management
+    risk: medium
+    business_impact: "Marks up to 20 tasks in a list as completed in one call, sweeping an entire list's open items without per-task confirmation."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ticktick.com/articles/7438129581631995904
+  - id: ticktick-api.update_task
+    object: Task
+    action: update_task
+    category: Task Management
+    risk: low
+    business_impact: "Edits a task's title, description, date, or priority; reversible and scoped to a single record."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ticktick.com/articles/7438129581631995904
+  - id: ticktick-api.move_task
+    object: Task
+    action: move_task
+    category: Task Management
+    risk: low
+    business_impact: "Relocates a task to a different list; reorganizes where a task lives without altering its content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ticktick.com/articles/7438129581631995904
+  - id: ticktick-api.batch_update_tasks
+    object: Task
+    action: batch_update_tasks
+    category: Task Management
+    risk: medium
+    business_impact: "Rewrites properties across many tasks at once, so a single call can overwrite fields on a large swath of the account's tasks."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ticktick.com/articles/7438129581631995904
+  - id: ticktick-api.delete_task
+    object: Task
+    action: delete_task
+    category: Task Management
+    risk: medium
+    business_impact: "Moves a task to the Trash, removing it from active lists; recoverable from Trash until it is purged."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Organization ----------
+
+  # source: https://help.ticktick.com/articles/7438129581631995904
+  - id: ticktick-api.create_project
+    object: Project
+    action: create_project
+    category: Organization
+    risk: low
+    business_impact: "Creates a new list (project) in the account; reversible structural addition."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ticktick.com/articles/7438129581631995904
+  - id: ticktick-api.update_project
+    object: Project
+    action: update_project
+    category: Organization
+    risk: low
+    business_impact: "Changes a list's settings such as name and view; reversible configuration edit on one list."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ticktick.com/articles/7438129581631995904
+  - id: ticktick-api.create_column
+    object: Column
+    action: create_column
+    category: Organization
+    risk: low
+    business_impact: "Adds a new section to a list; reversible structural change that organizes tasks within the list."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ticktick.com/articles/7438129581631995904
+  - id: ticktick-api.update_column
+    object: Column
+    action: update_column
+    category: Organization
+    risk: low
+    business_impact: "Renames a section within a list; cosmetic reversible edit."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ticktick.com/articles/7438129581631995904
+  - id: ticktick-api.create_project_group
+    object: ProjectGroup
+    action: create_project_group
+    category: Organization
+    risk: low
+    business_impact: "Creates a new folder for grouping lists; reversible organizational addition."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ticktick.com/articles/7438129581631995904
+  - id: ticktick-api.update_project_group
+    object: ProjectGroup
+    action: update_project_group
+    category: Organization
+    risk: low
+    business_impact: "Renames a folder; cosmetic reversible edit to list organization."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ticktick.com/articles/7438129581631995904
+  - id: ticktick-api.delete_project_group
+    object: ProjectGroup
+    action: delete_project_group
+    category: Organization
+    risk: medium
+    business_impact: "Dissolves a folder and ungroups every list inside it, flattening the account's organizational hierarchy in one call; lists survive but their grouping is lost."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ticktick.com/articles/7438129581631995904
+  - id: ticktick-api.create_tag
+    object: Tag
+    action: create_tag
+    category: Organization
+    risk: low
+    business_impact: "Creates a new tag for labeling tasks; reversible metadata addition."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Collaboration ----------
+
+  # source: https://help.ticktick.com/articles/7438129581631995904
+  - id: ticktick-api.add_comment
+    object: Comment
+    action: add_comment
+    category: Collaboration
+    risk: low
+    business_impact: "Posts a comment on a task; reversible, low-impact note that may be visible to collaborators on a shared list."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ticktick.com/articles/7438129581631995904
+  - id: ticktick-api.delete_comment
+    object: Comment
+    action: delete_comment
+    category: Collaboration
+    risk: medium
+    business_impact: "Permanently removes a comment from a task, erasing a discussion record with no built-in recovery."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Habits & Focus ----------
+
+  # source: https://help.ticktick.com/articles/7438129581631995904
+  - id: ticktick-api.create_habit
+    object: Habit
+    action: create_habit
+    category: Habits & Focus
+    risk: low
+    business_impact: "Creates a new habit to track in the account; reversible personal-tracking addition."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ticktick.com/articles/7438129581631995904
+  - id: ticktick-api.update_habit
+    object: Habit
+    action: update_habit
+    category: Habits & Focus
+    risk: low
+    business_impact: "Changes a habit's settings such as goal and schedule; reversible edit to one habit."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ticktick.com/articles/7438129581631995904
+  - id: ticktick-api.upsert_habit_checkins
+    object: HabitCheckin
+    action: upsert_habit_checkins
+    category: Habits & Focus
+    risk: low
+    business_impact: "Creates or overwrites habit check-in records within the past 90 days, editing the account's habit-completion history."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ticktick.com/articles/7438129581631995904
+  - id: ticktick-api.create_focus
+    object: Focus
+    action: create_focus
+    category: Habits & Focus
+    risk: low
+    business_impact: "Adds a focus (Pomodoro) record to the account's time-tracking history; reversible low-impact write."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ticktick.com/articles/7438129581631995904
+  - id: ticktick-api.delete_focus
+    object: Focus
+    action: delete_focus
+    category: Habits & Focus
+    risk: medium
+    business_impact: "Permanently removes a focus record from the account's time-tracking history with no built-in recovery."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

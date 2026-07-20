@@ -1,0 +1,191 @@
+schema_version: "1.0"
+platform: canary-data
+display_name: Canary Data
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Financial ----------
+
+  # source: https://api.canary-data.com/mcp/documentation/
+  - id: canary-data.insider_trading
+    object: InsiderTransaction
+    action: insider_trading
+    category: Financial
+    risk: low
+    business_impact: "Returns insider transaction flags naming individuals' trading activity drawn from a company's regulatory filings."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.canary-data.com/mcp/documentation/
+  - id: canary-data.management_background
+    object: Executive
+    action: management_background
+    category: Financial
+    risk: low
+    business_impact: "Surfaces executive turnover, bankruptcies, and related-party transactions naming a company's leadership and their governance risk."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.canary-data.com/mcp/documentation/
+  - id: canary-data.new_accounting_issue
+    object: Company
+    action: new_accounting_issue
+    category: Financial
+    risk: low
+    business_impact: "Surfaces accounting and disclosure red flags across revenue recognition, receivables, inventory, and auditor changes for a named company."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.canary-data.com/mcp/documentation/
+  - id: canary-data.fundamentals_analysis
+    object: Company
+    action: fundamentals_analysis
+    category: Financial
+    risk: low
+    business_impact: "Exposes fundamental business-risk flags such as declining sales, going-concern letters, and leverage concerns for a company."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.canary-data.com/mcp/documentation/
+  - id: canary-data.fraud_and_malfeasance
+    object: Company
+    action: fraud_and_malfeasance
+    category: Financial
+    risk: low
+    business_impact: "Retrieves fraud, illegal-activity, investigation, and questionable-association flags forming a company's risk profile."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.canary-data.com/mcp/documentation/
+  - id: canary-data.kpi_snapshot
+    object: KPI
+    action: kpi_snapshot
+    category: Financial
+    risk: low
+    business_impact: "Returns the latest value per KPI metric for a company extracted from earnings-call transcripts."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.canary-data.com/mcp/documentation/
+  - id: canary-data.kpi_history
+    object: KPI
+    action: kpi_history
+    category: Financial
+    risk: low
+    business_impact: "Retrieves the full historical time series for a single company KPI metric."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://api.canary-data.com/mcp/documentation/
+  - id: canary-data.document_summaries
+    object: Transcript
+    action: document_summaries
+    category: Data Access
+    risk: low
+    business_impact: "Returns structured summaries of a company's earnings-call transcripts covering performance, outlook, and challenges."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.canary-data.com/mcp/documentation/
+  - id: canary-data.document_topics
+    object: Transcript
+    action: document_topics
+    category: Data Access
+    risk: low
+    business_impact: "Lists topics discussed across a company's earnings transcripts with mention counts and example quotes."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.canary-data.com/mcp/documentation/
+  - id: canary-data.document_topic_mentions
+    object: Transcript
+    action: document_topic_mentions
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves every mention of a single topic across a company's earnings-call transcript history."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.canary-data.com/mcp/documentation/
+  - id: canary-data.superanalyst_questions_list
+    object: ResearchQuestion
+    action: superanalyst_questions_list
+    category: Data Access
+    risk: low
+    business_impact: "Lists active research questions grouped by category to frame a company's investment analysis."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.canary-data.com/mcp/documentation/
+  - id: canary-data.superanalyst_research_plan
+    object: ResearchQuestion
+    action: superanalyst_research_plan
+    category: Data Access
+    risk: low
+    business_impact: "Returns the research methodology, variables, and recommended actions for a single analyst research question."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.canary-data.com/mcp/documentation/
+  - id: canary-data.key_debates_list
+    object: Debate
+    action: key_debates_list
+    category: Data Access
+    risk: low
+    business_impact: "Lists bull and bear debate summaries framing the investment case for a company."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.canary-data.com/mcp/documentation/
+  - id: canary-data.key_debates_detail
+    object: Debate
+    action: key_debates_detail
+    category: Data Access
+    risk: low
+    business_impact: "Expands a selected bull/bear debate with full cases and supporting evidence for a company."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,128 @@
+schema_version: "1.0"
+platform: crossbeam
+display_name: Crossbeam
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://help.crossbeam.com/en/articles/12601327-crossbeam-mcp-server-limited-availability
+  - id: crossbeam.get_account_context
+    object: Account
+    action: get_account_context
+    category: Data Access
+    risk: low
+    business_impact: "Returns a single account's details, population membership, and owner identity, exposing the named account owner's personal information."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.crossbeam.com/en/articles/12601327-crossbeam-mcp-server-limited-availability
+  - id: crossbeam.get_ecosystem_activity
+    object: Activity
+    action: get_ecosystem_activity
+    category: Data Access
+    risk: medium
+    business_impact: "Streams recent cross-partner deal and greenfield signals with attached contact details, exposing partner activity and individuals' contact information."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.crossbeam.com/en/articles/12601327-crossbeam-mcp-server-limited-availability
+  - id: crossbeam.get_list_link
+    object: List
+    action: get_list_link
+    category: Data Access
+    risk: medium
+    business_impact: "Generates a shareable Crossbeam list link to overlap data that anyone holding the URL can open, widening the audience for account-overlap information."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Revenue & Pipeline ----------
+
+  # source: https://help.crossbeam.com/en/articles/12601327-crossbeam-mcp-server-limited-availability
+  - id: crossbeam.find_overlaps
+    object: Overlap
+    action: find_overlaps
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Reads shared-account overlap lists across the entire partner ecosystem, exposing which prospects and customers overlap with named partners."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.crossbeam.com/en/articles/12601327-crossbeam-mcp-server-limited-availability
+  - id: crossbeam.find_overlap_partners
+    object: Partner
+    action: find_overlap_partners
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reveals which partners hold a given account in their data, exposing co-sell relationships tied to a specific prospect or customer."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.crossbeam.com/en/articles/12601327-crossbeam-mcp-server-limited-availability
+  - id: crossbeam.get_partner_context
+    object: Partner
+    action: get_partner_context
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Exposes aggregated partner metrics including open deals, potential revenue, win rate, and deal size across the partner relationship."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.crossbeam.com/en/articles/12601327-crossbeam-mcp-server-limited-availability
+  - id: crossbeam.find_partner_recommendations
+    object: Partner
+    action: find_partner_recommendations
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Surfaces ranked partner suggestions for an open opportunity, revealing which partners could influence a specific in-flight deal."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.crossbeam.com/en/articles/12601327-crossbeam-mcp-server-limited-availability
+  - id: crossbeam.get_partner_suggestions
+    object: Partner
+    action: get_partner_suggestions
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Surfaces prospective partner companies based on ecosystem fit with a direct invite link, drawing on Partnerbase network data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://help.crossbeam.com/en/articles/12601327-crossbeam-mcp-server-limited-availability
+  - id: crossbeam.search_crossbeam_knowledge
+    object: Knowledge
+    action: search_crossbeam_knowledge
+    category: Operations
+    risk: low
+    business_impact: "Returns Crossbeam product guidance and Ecosystem-Led Growth best practices sourced from help docs, exposing no customer or partner data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

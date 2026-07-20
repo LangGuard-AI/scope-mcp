@@ -1,0 +1,125 @@
+schema_version: "1.0"
+platform: dovetail
+display_name: Dovetail
+source: langguard-editorial
+updated: "2026-07"
+reference: https://developers.dovetail.com/docs/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://developers.dovetail.com/docs/mcp
+  - id: dovetail.get_dovetail_projects
+    object: Project
+    action: get_dovetail_projects
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates every research project in the workspace, revealing the shape and scope of the org's user-research program."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.dovetail.com/docs/mcp
+  - id: dovetail.list_project_insights
+    object: Insight
+    action: list_project_insights
+    category: Data Access
+    risk: low
+    business_impact: "Lists the insights catalogued for a project, exposing research finding titles and structure without their full body."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.dovetail.com/docs/mcp
+  - id: dovetail.list_project_data
+    object: Data
+    action: list_project_data
+    category: Data Access
+    risk: low
+    business_impact: "Lists the raw data entries (interviews, notes, recordings) in a project, revealing what research material exists."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.dovetail.com/docs/mcp
+  - id: dovetail.get_project_insight
+    object: Insight
+    action: get_project_insight
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves one synthesized insight by ID, surfacing a research finding that may reference participant observations."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.dovetail.com/docs/mcp
+  - id: dovetail.get_project_highlights
+    object: Highlight
+    action: get_project_highlights
+    category: Data Access
+    risk: medium
+    business_impact: "Returns tagged highlight excerpts for a project, which quote research participants verbatim and may contain their personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.dovetail.com/docs/mcp
+  - id: dovetail.get_insight_content
+    object: Insight
+    action: get_insight_content
+    category: Data Access
+    risk: medium
+    business_impact: "Reads the full markdown body of a research insight, which can embed participant quotes and identifying details."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.dovetail.com/docs/mcp
+  - id: dovetail.get_project_data
+    object: Data
+    action: get_project_data
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves a specific research data entry such as an interview record, which routinely contains participant personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.dovetail.com/docs/mcp
+  - id: dovetail.get_data_content
+    object: Data
+    action: get_data_content
+    category: Data Access
+    risk: medium
+    business_impact: "Reads the raw markdown content of a data entry — interview transcripts and notes that expose participant PII in full."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.dovetail.com/docs/mcp
+  - id: dovetail.search_workspace
+    object: Workspace
+    action: search_workspace
+    category: Data Access
+    risk: medium
+    business_impact: "Searches across all workspace content in a single call, able to surface participant PII from any project spanning the entire org."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

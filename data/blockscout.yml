@@ -1,0 +1,217 @@
+schema_version: "1.0"
+platform: blockscout
+display_name: Blockscout
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://mcp.blockscout.com/mcp
+  - id: blockscout.direct_api_call
+    object: "*"
+    action: direct_api_call
+    category: Data Access
+    risk: medium
+    business_impact: "Issues an arbitrary raw call to any Blockscout REST endpoint, giving broad unscoped read access to the explorer's public data surface including paginated bulk results."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.blockscout.com/mcp
+  - id: blockscout.get_transactions_by_address
+    object: Transaction
+    action: get_transactions_by_address
+    category: Data Access
+    risk: low
+    business_impact: "Returns an address's native-currency transfers and smart-contract interactions from public chain data, revealing its on-chain activity history."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.blockscout.com/mcp
+  - id: blockscout.get_token_transfers_by_address
+    object: TokenTransfer
+    action: get_token_transfers_by_address
+    category: Data Access
+    risk: low
+    business_impact: "Returns an address's ERC-20 token transfer history from public chain data, exposing its token movement over a time range."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.blockscout.com/mcp
+  - id: blockscout.get_tokens_by_address
+    object: Token
+    action: get_tokens_by_address
+    category: Data Access
+    risk: low
+    business_impact: "Returns an address's ERC-20 holdings enriched with market data from public chain data, exposing its token portfolio and balances."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.blockscout.com/mcp
+  - id: blockscout.nft_tokens_by_address
+    object: NFT
+    action: nft_tokens_by_address
+    category: Data Access
+    risk: low
+    business_impact: "Returns NFT holdings owned by an address grouped by collection from public chain data, exposing its NFT portfolio."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.blockscout.com/mcp
+  - id: blockscout.get_address_info
+    object: Address
+    action: get_address_info
+    category: Data Access
+    risk: low
+    business_impact: "Returns comprehensive public information about an address including native balance, first-transaction age, and ENS association."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.blockscout.com/mcp
+  - id: blockscout.get_address_by_ens_name
+    object: Address
+    action: get_address_by_ens_name
+    category: Data Access
+    risk: low
+    business_impact: "Resolves an ENS domain to its on-chain address using public registry data; read-only lookup with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.blockscout.com/mcp
+  - id: blockscout.get_transaction_info
+    object: Transaction
+    action: get_transaction_info
+    category: Data Access
+    risk: low
+    business_impact: "Returns enriched public details for a transaction including decoded inputs, token transfers, and fee breakdown; read-only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.blockscout.com/mcp
+  - id: blockscout.read_contract
+    object: Contract
+    action: read_contract
+    category: Data Access
+    risk: low
+    business_impact: "Calls a contract view/pure function or simulates a call via eth_call and returns the decoded result without altering chain state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.blockscout.com/mcp
+  - id: blockscout.get_contract_abi
+    object: Contract
+    action: get_contract_abi
+    category: Data Access
+    risk: low
+    business_impact: "Returns a verified contract's public ABI describing its functions, events, and parameters; read-only metadata lookup."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.blockscout.com/mcp
+  - id: blockscout.inspect_contract_code
+    object: Contract
+    action: inspect_contract_code
+    category: Data Access
+    risk: low
+    business_impact: "Returns a verified contract's public source code or metadata; read-only inspection with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.blockscout.com/mcp
+  - id: blockscout.lookup_token_by_symbol
+    object: Token
+    action: lookup_token_by_symbol
+    category: Data Access
+    risk: low
+    business_impact: "Searches public token metadata to resolve a symbol or name to candidate contract addresses; read-only lookup."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.blockscout.com/mcp
+  - id: blockscout.get_block_info
+    object: Block
+    action: get_block_info
+    category: Data Access
+    risk: low
+    business_impact: "Reads public block metadata such as timestamp, gas used, burnt fees, and transaction count for a given block; no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.blockscout.com/mcp
+  - id: blockscout.get_block_number
+    object: Block
+    action: get_block_number
+    category: Data Access
+    risk: low
+    business_impact: "Resolves a block height for a given date or the current chain tip from public chain data; read-only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.blockscout.com/mcp
+  - id: blockscout.get_chains_list
+    object: Chain
+    action: get_chains_list
+    category: Data Access
+    risk: low
+    business_impact: "Returns the registry of supported blockchain chains and their chain IDs; read-only reference lookup."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://mcp.blockscout.com/mcp
+  - id: blockscout.__unlock_blockchain_analysis__
+    object: Session
+    action: __unlock_blockchain_analysis__
+    category: Operations
+    risk: low
+    business_impact: "Returns server reference data and the analysis-skill pointer for a session; a mandatory read-only initialization step with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

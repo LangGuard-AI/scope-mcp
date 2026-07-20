@@ -1,0 +1,37 @@
+schema_version: "1.1"
+platform: google-slides
+display_name: Google Slides
+source: langguard-editorial
+updated: "2026-07"
+reference: https://developers.google.com/workspace/slides/api/reference/rest/v1/presentations
+server_website: https://slidesmcp.googleapis.com/mcp/v1
+actions:
+  # ---------- Content ----------
+
+  # source: https://slidesmcp.googleapis.com/mcp/v1
+  - id: google-slides.update_presentation
+    object: Presentation
+    action: update_presentation
+    description: "Applies a batch of batchUpdate requests to a presentation (create/insert/replace/delete slides, shapes, tables, text, images, and charts)."
+    category: Content
+    risk: medium
+    business_impact: "Overwrites live presentation content in a single batch that can delete slides, objects, and text or replace all matching text, with no API-level undo."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://slidesmcp.googleapis.com/mcp/v1
+  - id: google-slides.read_presentation
+    object: Presentation
+    action: read_presentation
+    description: "Reads a JSON representation of a Google Slides presentation."
+    category: Content
+    risk: low
+    business_impact: "Returns the full JSON of a presentation, exposing all slide text, speaker notes, and embedded chart data to the caller."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

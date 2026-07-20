@@ -1,0 +1,311 @@
+schema_version: "1.0"
+platform: asana-api
+display_name: Asana
+source: langguard-editorial
+updated: "2026-07"
+reference: https://developers.asana.com/docs/mcp-tools-reference
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://developers.asana.com/docs/mcp-tools-reference
+  - id: asana-api.get_user
+    object: User
+    action: get_user
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads a single user record including name and email by GID, email, or 'me'."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.asana.com/docs/mcp-tools-reference
+  - id: asana-api.get_me
+    object: User
+    action: get_me
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads the authenticated user's own name, email, and workspace memberships."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.asana.com/docs/mcp-tools-reference
+  - id: asana-api.get_users
+    object: User
+    action: get_users
+    category: Identity & Access
+    risk: medium
+    business_impact: "Enumerates the workspace user roster including names and emails, exposing directory PII at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.asana.com/docs/mcp-tools-reference
+  - id: asana-api.get_teams
+    object: Team
+    action: get_teams
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads the workspace teams the user belongs to, with optional user filtering."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.asana.com/docs/mcp-tools-reference
+  - id: asana-api.get_agent
+    object: Agent
+    action: get_agent
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads a single AI Teammate agent record by GID, revealing how an automated workspace principal is configured."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.asana.com/docs/mcp-tools-reference
+  - id: asana-api.get_workspace_agents
+    object: Agent
+    action: get_workspace_agents
+    category: Identity & Access
+    risk: low
+    business_impact: "Lists the AI Teammate agents configured across the workspace and their identifiers."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://developers.asana.com/docs/mcp-tools-reference
+  - id: asana-api.search_objects
+    object: "*"
+    action: search_objects
+    category: Data Access
+    risk: medium
+    business_impact: "Universal typeahead search across tasks, projects, portfolios, goals, teams, users, and tags; can surface confidential content the caller would not otherwise browse to."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.asana.com/docs/mcp-tools-reference
+  - id: asana-api.get_attachments
+    object: Attachment
+    action: get_attachments
+    category: Data Access
+    risk: medium
+    business_impact: "Returns attachment URLs on tasks, projects, or briefs; attached files may contain PII or confidential documents."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Issues ----------
+
+  # source: https://developers.asana.com/docs/mcp-tools-reference
+  - id: asana-api.delete_task
+    object: Task
+    action: delete_task
+    category: Issues
+    risk: high
+    business_impact: "Permanently deletes a task and all of its subtasks; the manifest states this cannot be undone, so a single caller destroys work irreversibly."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.asana.com/docs/mcp-tools-reference
+  - id: asana-api.update_tasks
+    object: Task
+    action: update_tasks
+    category: Issues
+    risk: medium
+    business_impact: "Modifies up to 50 tasks in one call, changing assignee, due date, or completion state across a batch of work items."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.asana.com/docs/mcp-tools-reference
+  - id: asana-api.create_tasks
+    object: Task
+    action: create_tasks
+    category: Issues
+    risk: low
+    business_impact: "Creates up to 50 tasks immediately without a confirmation step."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.asana.com/docs/mcp-tools-reference
+  - id: asana-api.create_project
+    object: Project
+    action: create_project
+    category: Issues
+    risk: low
+    business_impact: "Creates a new project, optionally seeding sections and tasks in a single operation."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.asana.com/docs/mcp-tools-reference
+  - id: asana-api.add_comment
+    object: Comment
+    action: add_comment
+    category: Issues
+    risk: low
+    business_impact: "Posts a comment on a task under the authenticated user's identity, supporting @-mentions and pinned comments."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.asana.com/docs/mcp-tools-reference
+  - id: asana-api.create_project_status_update
+    object: ProjectStatusUpdate
+    action: create_project_status_update
+    category: Issues
+    risk: low
+    business_impact: "Posts a status update with a color status to a project or portfolio, visible to its members."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.asana.com/docs/mcp-tools-reference
+  - id: asana-api.get_task
+    object: Task
+    action: get_task
+    category: Issues
+    risk: low
+    business_impact: "Reads full detail for one task including description, assignee, due dates, custom fields, and comments."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.asana.com/docs/mcp-tools-reference
+  - id: asana-api.get_tasks
+    object: Task
+    action: get_tasks
+    category: Issues
+    risk: low
+    business_impact: "Returns a filtered list of tasks scoped by project, section, or assignee context."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.asana.com/docs/mcp-tools-reference
+  - id: asana-api.get_my_tasks
+    object: Task
+    action: get_my_tasks
+    category: Issues
+    risk: low
+    business_impact: "Returns tasks assigned to the authenticated user with completion-status filtering."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.asana.com/docs/mcp-tools-reference
+  - id: asana-api.search_tasks
+    object: Task
+    action: search_tasks
+    category: Issues
+    risk: low
+    business_impact: "Advanced full-text task search with complex filters across the workspace (Premium accounts only)."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.asana.com/docs/mcp-tools-reference
+  - id: asana-api.get_project
+    object: Project
+    action: get_project
+    category: Issues
+    risk: low
+    business_impact: "Reads one project's details including owner, members, task counts, and sections."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.asana.com/docs/mcp-tools-reference
+  - id: asana-api.get_projects
+    object: Project
+    action: get_projects
+    category: Issues
+    risk: low
+    business_impact: "Lists projects in the workspace with optional team and archive filters."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.asana.com/docs/mcp-tools-reference
+  - id: asana-api.get_status_overview
+    object: ProjectStatusUpdate
+    action: get_status_overview
+    category: Issues
+    risk: low
+    business_impact: "Returns an aggregated status report across one or more projects or portfolios."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.asana.com/docs/mcp-tools-reference
+  - id: asana-api.get_portfolio
+    object: Portfolio
+    action: get_portfolio
+    category: Issues
+    risk: low
+    business_impact: "Reads one portfolio's details including name, owner, and associated projects."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.asana.com/docs/mcp-tools-reference
+  - id: asana-api.get_portfolios
+    object: Portfolio
+    action: get_portfolios
+    category: Issues
+    risk: low
+    business_impact: "Lists the portfolios owned by the authenticated user."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

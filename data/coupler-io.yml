@@ -1,0 +1,59 @@
+schema_version: "1.0"
+platform: coupler-io
+display_name: Coupler.io
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/railsware/coupler-io-mcp-server/main/src/tools/get-data/index.ts
+  - id: coupler-io.get-data
+    object: DataFlow
+    action: get-data
+    category: Data Access
+    risk: high
+    business_impact: "Executes arbitrary read-only SQL against a data flow's aggregated table, potentially returning personal or business data pulled from every connected source in one query."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/railsware/coupler-io-mcp-server/main/src/tools/get-dataflow/index.ts
+  - id: coupler-io.get-dataflow
+    object: DataFlow
+    action: get-dataflow
+    category: Data Access
+    risk: low
+    business_impact: "Returns a data flow's configuration metadata, including source connections, last execution status, and error details that reveal integration internals."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/railsware/coupler-io-mcp-server/main/src/tools/get-schema/index.ts
+  - id: coupler-io.get-schema
+    object: DataFlow
+    action: get-schema
+    category: Data Access
+    risk: low
+    business_impact: "Reveals the column names and typed definitions of a data flow's data table, exposing its structure but not the underlying row values."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/railsware/coupler-io-mcp-server/main/src/tools/list-dataflows/index.ts
+  - id: coupler-io.list-dataflows
+    object: DataFlow
+    action: list-dataflows
+    category: Data Access
+    risk: low
+    business_impact: "Lists the data flows available to the authenticated user along with their IDs, exposing which integrations and destinations are configured."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

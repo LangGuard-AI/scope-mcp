@@ -1,0 +1,59 @@
+schema_version: "1.0"
+platform: adisinsight
+display_name: AdisInsight
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://adisinsight-mcp.springer.com/
+  - id: adisinsight.search_drugs
+    object: Drug
+    action: search_drugs
+    category: Data Access
+    risk: low
+    business_impact: "Queries the Adis pharmaceutical database across drug name, therapeutic area, developer, mechanism, phase, and 60+ filters, returning commercial drug-intelligence results only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://adisinsight-mcp.springer.com/
+  - id: adisinsight.get_drug
+    object: Drug
+    action: get_drug
+    category: Data Access
+    risk: low
+    business_impact: "Returns a full drug profile including development history, aggregate adverse-event data, organizations, and brand names from the Adis intelligence database."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://adisinsight-mcp.springer.com/
+  - id: adisinsight.search_trials
+    object: Trial
+    action: search_trials
+    category: Data Access
+    risk: low
+    business_impact: "Searches clinical-trial records by condition, sponsor, compound, phase, status, and demographic criteria, exposing competitive trial-intelligence but no individual patient records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://adisinsight-mcp.springer.com/
+  - id: adisinsight.get_trial
+    object: Trial
+    action: get_trial
+    category: Data Access
+    risk: low
+    business_impact: "Returns a complete clinical-trial profile including investigators, study centres, compounds, indications, endpoints, and eligibility criteria from published trial intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,390 @@
+schema_version: "1.1"
+platform: clickup
+display_name: ClickUp
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.get_workspace_members
+    object: Member
+    action: get_workspace_members
+    category: Identity & Access
+    risk: medium
+    business_impact: "Returns every member and guest in the workspace along with their names and email addresses, exposing the full user directory in one call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Get Workspace Members"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.find_member_by_name
+    object: Member
+    action: find_member_by_name
+    category: Identity & Access
+    risk: low
+    business_impact: "Looks up a workspace member by name or email, returning that individual's user record and contact details."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Find Member by Name"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.resolve_assignees
+    object: User
+    action: resolve_assignees
+    category: Identity & Access
+    risk: low
+    business_impact: "Resolves a set of potential assignees into full user objects, surfacing identifying details for each matched person."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Resolve Assignees"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.search_workspace
+    object: "*"
+    action: search_workspace
+    category: Data Access
+    risk: low
+    business_impact: "Runs a workspace-wide search across tasks, Lists, Folders, and Docs, returning any matching items the caller can reach."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Search Workspace"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.create_task
+    object: Task
+    action: create_task
+    category: Operations
+    risk: low
+    business_impact: "Adds a new task to a List with name, description, assignees, due date, and priority, creating live work data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Create Task"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.update_task
+    object: Task
+    action: update_task
+    category: Operations
+    risk: low
+    business_impact: "Modifies properties of an existing task such as status, assignees, or dates, changing live project data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Update Task"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.delete_task
+    object: Task
+    action: delete_task
+    category: Operations
+    risk: medium
+    business_impact: "Deletes a task or subtask, removing its content, comments, and history from the List it belonged to."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Delete task"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.create_bulk_tasks
+    object: Task
+    action: create_bulk_tasks
+    category: Operations
+    risk: medium
+    business_impact: "Creates many tasks in a List in a single call, writing a large batch of work items at once."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Create Bulk Tasks"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.update_bulk_tasks
+    object: Task
+    action: update_bulk_tasks
+    category: Operations
+    risk: medium
+    business_impact: "Modifies many tasks in a single call, applying wide-reaching changes across a batch of work items."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Update Bulk Tasks"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.set_custom_fields
+    object: Task
+    action: set_custom_fields
+    category: Operations
+    risk: low
+    business_impact: "Writes values to custom fields on a task, changing structured data used for reporting and automation."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Set Custom Fields"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.move_task_to_a_new_list
+    object: Task
+    action: move_task_to_a_new_list
+    category: Operations
+    risk: low
+    business_impact: "Relocates a task to a different home List, changing its ownership, permission context, and workflow."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Move task to a new List"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.attach_file_to_task
+    object: Task
+    action: attach_file_to_task
+    category: Operations
+    risk: low
+    business_impact: "Uploads and attaches a file to a task, adding potentially sensitive content into the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Attach File to Task"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.create_list
+    object: List
+    action: create_list
+    category: Operations
+    risk: low
+    business_impact: "Creates a new List within a Folder or Space, extending where work items can be stored."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Create List"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.update_list
+    object: List
+    action: update_list
+    category: Operations
+    risk: low
+    business_impact: "Changes the settings of an existing List, altering how its tasks are organized and displayed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Update List"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.create_folder
+    object: Folder
+    action: create_folder
+    category: Operations
+    risk: low
+    business_impact: "Creates a new Folder within a Space, adding structure to the workspace hierarchy."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Create Folder"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.update_folder
+    object: Folder
+    action: update_folder
+    category: Operations
+    risk: low
+    business_impact: "Modifies the settings of an existing Folder, changing how its Lists are grouped."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Update Folder"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.add_time_entry
+    object: TimeEntry
+    action: add_time_entry
+    category: Operations
+    risk: low
+    business_impact: "Manually logs a block of time against a task, writing time-tracking data that can feed billing and payroll."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Add Time Entry"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.get_time_entries_for_multiple_tasks
+    object: TimeEntry
+    action: get_time_entries_for_multiple_tasks
+    category: Operations
+    risk: low
+    business_impact: "Returns aggregated time-tracking entries for tasks across a Space, Folder, or List, exposing effort and labor data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Get time entries for multiple tasks"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Messaging ----------
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.send_chat_message
+    object: ChatMessage
+    action: send_chat_message
+    category: Messaging
+    risk: low
+    business_impact: "Posts a message to a workspace Chat channel, communicating outward to every member of that channel."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Send Chat Message"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.get_task_comments
+    object: Comment
+    action: get_task_comments
+    category: Messaging
+    risk: low
+    business_impact: "Retrieves all comments on a task, which may include personal data or sensitive discussion between collaborators."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Get Task Comments"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.create_task_comment
+    object: Comment
+    action: create_task_comment
+    category: Messaging
+    risk: low
+    business_impact: "Adds a comment to a task, posting content visible to everyone with access to that task."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Create Task Comment"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Documents ----------
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.create_document
+    object: Document
+    action: create_document
+    category: Documents
+    risk: low
+    business_impact: "Creates a new Doc in the workspace, adding a document that can hold arbitrary content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Create Document"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.get_document_pages
+    object: Document
+    action: get_document_pages
+    category: Documents
+    risk: low
+    business_impact: "Returns the content of one or more Doc pages, exposing whatever confidential material those pages hold."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Get Document Pages"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.update_document_page
+    object: Document
+    action: update_document_page
+    category: Documents
+    risk: low
+    business_impact: "Edits the content of an existing Doc page, overwriting document material in place."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Update Document Page"
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.clickup.com/docs/mcp-tools
+  - id: clickup.create_document_page
+    object: Document
+    action: create_document_page
+    category: Documents
+    risk: low
+    business_impact: "Adds a new page to an existing Doc, extending its content with new material."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    id_form: capability
+    description: "Create Document Page"
+    access_methods: [REST, MCP]
+    source: langguard-editorial

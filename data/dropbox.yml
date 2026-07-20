@@ -1,0 +1,313 @@
+schema_version: "1.0"
+platform: dropbox
+display_name: Dropbox
+source: langguard-editorial
+updated: "2026-07"
+reference: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+actions:
+  # ---------- Sharing & Links ----------
+
+  # source: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+  - id: dropbox.CreateSharedLink
+    object: SharedLink
+    action: CreateSharedLink
+    category: Sharing & Links
+    risk: high
+    business_impact: "Generates an externally-reachable link to a file or folder and can email it to up to 25 recipients, exposing content that may contain personal data outside the account."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+  - id: dropbox.DownloadLink
+    object: File
+    action: DownloadLink
+    category: Sharing & Links
+    risk: medium
+    business_impact: "Mints a temporary single-use download URL for a file, creating an egress path for content that may include personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+  - id: dropbox.CreateFileRequest
+    object: FileRequest
+    action: CreateFileRequest
+    category: Sharing & Links
+    risk: medium
+    business_impact: "Opens an inbound upload surface letting external parties deposit files into a designated folder without an account."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+  - id: dropbox.ListSharedLinks
+    object: SharedLink
+    action: ListSharedLinks
+    category: Sharing & Links
+    risk: low
+    business_impact: "Lists the caller's existing shared links with optional filtering; read-only visibility into current external exposure."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+  - id: dropbox.GetSharedLinkMetadata
+    object: SharedLink
+    action: GetSharedLinkMetadata
+    category: Sharing & Links
+    risk: low
+    business_impact: "Returns a shared link's audience, expiration, and password-protection settings; read-only sharing metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+  - id: dropbox.GetFileRequest
+    object: FileRequest
+    action: GetFileRequest
+    category: Sharing & Links
+    risk: low
+    business_impact: "Retrieves the details of a single file request; read-only lookup."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+  - id: dropbox.ListFileRequests
+    object: FileRequest
+    action: ListFileRequests
+    category: Sharing & Links
+    risk: low
+    business_impact: "Enumerates the file requests owned by the caller with their metadata; read-only listing."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+  - id: dropbox.GetFileContent
+    object: File
+    action: GetFileContent
+    category: Data Access
+    risk: medium
+    business_impact: "Extracts and returns the text of a PDF, Word, or text file up to 5 MB, surfacing document contents that may include personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+  - id: dropbox.Search
+    object: File
+    action: Search
+    category: Data Access
+    risk: low
+    business_impact: "Finds files and folders by name or content with filtering and sorting; read-only discovery across the account."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+  - id: dropbox.ListFolder
+    object: Folder
+    action: ListFolder
+    category: Data Access
+    risk: low
+    business_impact: "Browses directory contents up to 100 items returning names, sizes, and dates; read-only navigation."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+  - id: dropbox.GetFileMetadata
+    object: File
+    action: GetFileMetadata
+    category: Data Access
+    risk: low
+    business_impact: "Returns detailed properties for a file such as size, dates, and MIME type; read-only metadata lookup."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+  - id: dropbox.CreateFolder
+    object: Folder
+    action: CreateFolder
+    category: Data Access
+    risk: low
+    business_impact: "Creates a folder at a specified path; reversible, low-impact structural write."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+  - id: dropbox.CreateFile
+    object: File
+    action: CreateFile
+    category: Data Access
+    risk: low
+    business_impact: "Generates a text-based file up to 5 MB such as a note, markdown, or code; reversible content write."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+  - id: dropbox.Copy
+    object: File
+    action: Copy
+    category: Data Access
+    risk: low
+    business_impact: "Duplicates a file or folder to another location; additive and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+  - id: dropbox.Move
+    object: File
+    action: Move
+    category: Data Access
+    risk: low
+    business_impact: "Relocates or renames a file or folder; reversible reorganization of storage."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+  - id: dropbox.Delete
+    object: File
+    action: Delete
+    category: Data Access
+    risk: medium
+    business_impact: "Moves a file or folder to Deleted files; recoverable depending on plan retention but removes it from active use."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+  - id: dropbox.ListFileRevisions
+    object: File
+    action: ListFileRevisions
+    category: Data Access
+    risk: low
+    business_impact: "Reads a file's revision history up to 100 entries newest-first; read-only version listing."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+  - id: dropbox.RestoreFileRevision
+    object: File
+    action: RestoreFileRevision
+    category: Data Access
+    risk: medium
+    business_impact: "Restores an older version of a file to a path, overwriting the current content with a prior revision."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+  - id: dropbox.RestoreFolder
+    object: Folder
+    action: RestoreFolder
+    category: Data Access
+    risk: medium
+    business_impact: "Rewinds an entire folder to an earlier point in time, reverting recent changes across many files at once."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+  - id: dropbox.ListRestoreEvents
+    object: File
+    action: ListRestoreEvents
+    category: Data Access
+    risk: low
+    business_impact: "Reads file and folder activity history including edits, deletions, moves, and restores; read-only audit trail."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Access ----------
+
+  # source: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+  - id: dropbox.WhoAmI
+    object: Account
+    action: WhoAmI
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns the authenticated user's identity and account context; read-only self lookup."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+  - id: dropbox.GetUsageAndQuota
+    object: Account
+    action: GetUsageAndQuota
+    category: Operations
+    risk: low
+    business_impact: "Retrieves storage usage and quota in bytes for an individual or team; read-only capacity metric."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.dropbox.com/integrations/connect-dropbox-mcp-server
+  - id: dropbox.CheckJobStatus
+    object: Job
+    action: CheckJobStatus
+    category: Operations
+    risk: low
+    business_impact: "Monitors the status of a background copy, move, delete, or restore operation; read-only progress check."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

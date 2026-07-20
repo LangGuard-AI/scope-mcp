@@ -1,0 +1,60 @@
+schema_version: "1.0"
+platform: cocounsel-legal
+display_name: CoCounsel Legal
+source: langguard-editorial
+updated: "2026-07"
+reference: https://legal-mcp.thomsonreuters.com/docs/connector-guide
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://legal-mcp.thomsonreuters.com/docs/connector-guide
+  - id: cocounsel-legal.start_deep_research
+    object: ResearchSession
+    action: start_deep_research
+    category: Data Access
+    risk: medium
+    business_impact: "Launches a jurisdiction-aware deep legal research run across statutes, case law, and regulations, consuming subscription capacity and producing synthesized legal analysis that can steer legal decisions."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://legal-mcp.thomsonreuters.com/docs/connector-guide
+  - id: cocounsel-legal.check_deep_research_status
+    object: ResearchSession
+    action: check_deep_research_status
+    category: Data Access
+    risk: low
+    business_impact: "Reports progress and the working research plan for an in-flight legal research session, a read-only status lookup that changes no record."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://legal-mcp.thomsonreuters.com/docs/connector-guide
+  - id: cocounsel-legal.get_deep_research_report
+    object: ResearchReport
+    action: get_deep_research_report
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the final synthesized legal research report with Westlaw citations, blending many authoritative and secondary sources into one answer that can directly inform legal advice and compound provenance risk."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://legal-mcp.thomsonreuters.com/docs/connector-guide
+  - id: cocounsel-legal.follow_up_deep_research
+    object: ResearchSession
+    action: follow_up_deep_research
+    category: Data Access
+    risk: medium
+    business_impact: "Poses a follow-up legal question against an existing completed research conversation, initiating another read-only research run that extends prior analysis."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,122 @@
+schema_version: "1.1"
+platform: definely
+display_name: Definely
+source: langguard-editorial
+updated: "2026-07"
+# The Definely connector for Claude (https://claude.com/connectors/definely, US
+# region https://mcp.us.definely.com) is an OAuth-gated MCP server whose
+# tools/list is not publicly enumerable. Definely's vendor docs publish the tool
+# surface only as plain-language capability labels. Per the rubric's
+# id_form: capability path, every entry below carries a slug `action` and the
+# verbatim label in `description`. Refresh to id_form: verbatim when a real
+# tools/list capture becomes available.
+reference: https://help.definely.com/en/articles/634922-definely-connector-for-claude-user-guide
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://help.definely.com/en/articles/634922-definely-connector-for-claude-user-guide
+  - id: definely.vault_search
+    object: Document
+    action: vault_search
+    id_form: capability
+    description: "Vault Search"
+    category: Data Access
+    risk: medium
+    business_impact: "Runs semantic and keyword search across the user's entire document library, surfacing matching contracts and their contents at corpus scale."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Document Analysis ----------
+
+  # source: https://help.definely.com/en/articles/634922-definely-connector-for-claude-user-guide
+  - id: definely.ask_from_document
+    object: Document
+    action: ask_from_document
+    id_form: capability
+    description: "Ask From Document"
+    category: Document Analysis
+    risk: low
+    business_impact: "Answers free-form questions about the uploaded contract, returning clause content and structural analysis within the session."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://help.definely.com/en/articles/634922-definely-connector-for-claude-user-guide
+  - id: definely.defined_terms
+    object: Document
+    action: defined_terms
+    id_form: capability
+    description: "Defined Terms"
+    category: Document Analysis
+    risk: low
+    business_impact: "Enumerates every capitalised or formally defined term in the uploaded contract for review."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://help.definely.com/en/articles/634922-definely-connector-for-claude-user-guide
+  - id: definely.undefined_terms
+    object: Document
+    action: undefined_terms
+    id_form: capability
+    description: "Undefined Terms"
+    category: Document Analysis
+    risk: low
+    business_impact: "Flags terms used as if defined but never actually defined in the uploaded contract."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://help.definely.com/en/articles/634922-definely-connector-for-claude-user-guide
+  - id: definely.reference_report
+    object: Document
+    action: reference_report
+    id_form: capability
+    description: "Reference Report"
+    category: Document Analysis
+    risk: low
+    business_impact: "Maps all cross-references in the uploaded document and flags broken or circular ones."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://help.definely.com/en/articles/634922-definely-connector-for-claude-user-guide
+  - id: definely.issues_list
+    object: Document
+    action: issues_list
+    id_form: capability
+    description: "Issues List"
+    category: Document Analysis
+    risk: low
+    business_impact: "Compiles a drafting issues report from the document's comments, track changes, and markups."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://help.definely.com/en/articles/634922-definely-connector-for-claude-user-guide
+  - id: definely.proof_check
+    object: Document
+    action: proof_check
+    id_form: capability
+    description: "Proof Check"
+    category: Document Analysis
+    risk: low
+    business_impact: "Reviews specified clauses or sections for errors and inconsistencies."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

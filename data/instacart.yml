@@ -1,0 +1,34 @@
+schema_version: "1.0"
+platform: instacart
+display_name: Instacart
+source: langguard-editorial
+updated: "2026-07"
+reference: https://docs.instacart.com/developer_platform_api/guide/tutorials/mcp
+actions:
+  # ---------- Operations ----------
+
+  # source: https://mcp.instacart.com/mcp
+  - id: instacart.create-recipe
+    object: Recipe
+    action: create-recipe
+    category: Operations
+    risk: low
+    business_impact: "Publishes a recipe page with ingredients to Instacart Marketplace, creating a shoppable public landing page under the partner's brand."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.instacart.com/mcp
+  - id: instacart.create-shopping-list
+    object: ShoppingList
+    action: create-shopping-list
+    category: Operations
+    risk: low
+    business_impact: "Publishes a shopping list page with line items to Instacart Marketplace, creating a shoppable public landing page that can carry a partner linkback."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

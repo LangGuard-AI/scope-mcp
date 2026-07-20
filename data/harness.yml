@@ -1,0 +1,154 @@
+schema_version: "1.0"
+platform: harness
+display_name: Harness
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Platform & DevOps ----------
+
+  # source: https://developer.harness.io/docs/platform/harness-ai/harness-mcp-server/
+  - id: harness.harness_delete
+    object: "*"
+    action: harness_delete
+    category: Platform & DevOps
+    risk: critical
+    business_impact: "Permanently removes a Harness resource such as a pipeline, connector, or secret; irreversible loss of delivery configuration with no built-in recovery."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.harness.io/docs/platform/harness-ai/harness-mcp-server/
+  - id: harness.harness_create
+    object: "*"
+    action: harness_create
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Creates an arbitrary Harness resource — including secrets, connectors, and deployment pipelines — adding new credentials or delivery config to the account."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.harness.io/docs/platform/harness-ai/harness-mcp-server/
+  - id: harness.harness_update
+    object: "*"
+    action: harness_update
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Modifies an existing Harness resource such as a pipeline, connector, or secret, altering deployment behavior or stored credential configuration."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Code & Release ----------
+
+  # source: https://developer.harness.io/docs/platform/harness-ai/harness-mcp-server/
+  - id: harness.harness_execute
+    object: "*"
+    action: harness_execute
+    category: Code & Release
+    risk: high
+    business_impact: "Runs an action on a resource — triggering a pipeline deploy, retrying a run, toggling a feature flag, or syncing a GitOps app — pushing changes into a live environment."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://developer.harness.io/docs/platform/harness-ai/harness-mcp-server/
+  - id: harness.harness_get
+    object: "*"
+    action: harness_get
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves a single Harness resource by identifier, exposing its configuration metadata to the caller."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.harness.io/docs/platform/harness-ai/harness-mcp-server/
+  - id: harness.harness_list
+    object: "*"
+    action: harness_list
+    category: Data Access
+    risk: low
+    business_impact: "Lists Harness resources of a given type with filtering and pagination, surfacing an inventory of pipelines, connectors, and other config objects."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.harness.io/docs/platform/harness-ai/harness-mcp-server/
+  - id: harness.harness_search
+    object: "*"
+    action: harness_search
+    category: Data Access
+    risk: low
+    business_impact: "Searches across multiple Harness resource types in parallel, returning matching configuration objects for a single query."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.harness.io/docs/platform/harness-ai/harness-mcp-server/
+  - id: harness.harness_diagnose
+    object: "*"
+    action: harness_diagnose
+    category: Data Access
+    risk: low
+    business_impact: "Analyzes pipeline, connector, delegate, and GitOps failures, returning structured diagnostic detail about delivery-system state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.harness.io/docs/platform/harness-ai/harness-mcp-server/
+  - id: harness.harness_status
+    object: "*"
+    action: harness_status
+    category: Data Access
+    risk: low
+    business_impact: "Returns a real-time project health dashboard covering recent executions, failure rates, and deep links into the delivery system."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.harness.io/docs/platform/harness-ai/harness-mcp-server/
+  - id: harness.harness_describe
+    object: "*"
+    action: harness_describe
+    category: Data Access
+    risk: low
+    business_impact: "Returns local registry metadata describing available resource types, operations, and fields; no API call is made."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.harness.io/docs/platform/harness-ai/harness-mcp-server/
+  - id: harness.harness_schema
+    object: "*"
+    action: harness_schema
+    category: Data Access
+    risk: low
+    business_impact: "Returns JSON Schema definitions used to create or update resources, revealing the shape of configurable Harness objects."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

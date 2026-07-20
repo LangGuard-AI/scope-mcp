@@ -1,0 +1,189 @@
+schema_version: "1.0"
+platform: dhs-program
+display_name: The DHS Program
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://api.dhsprogram.com/#/mcp-overview.html
+  - id: dhs-program.search_dhs_indicator_data
+    object: Indicator
+    action: search_dhs_indicator_data
+    category: Data Access
+    risk: low
+    business_impact: "Returns bounded rows of public DHS demographic and health indicator data filtered by country, survey, and indicator."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.dhsprogram.com/#/mcp-overview.html
+  - id: dhs-program.search_dhs_indicators_by_text
+    object: Indicator
+    action: search_dhs_indicators_by_text
+    category: Data Access
+    risk: low
+    business_impact: "Maps natural-language text to likely DHS indicator IDs to help a caller discover the right indicator."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.dhsprogram.com/#/mcp-overview.html
+  - id: dhs-program.get_dhs_indicator_profile
+    object: Indicator
+    action: get_dhs_indicator_profile
+    category: Data Access
+    risk: low
+    business_impact: "Returns descriptive metadata for a single known DHS indicator ID."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.dhsprogram.com/#/mcp-overview.html
+  - id: dhs-program.get_dhs_data_availability
+    object: Survey
+    action: get_dhs_data_availability
+    category: Data Access
+    risk: low
+    business_impact: "Summarizes which countries, surveys, years, and breakdowns hold data so a caller can scope a query before requesting rows."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.dhsprogram.com/#/mcp-overview.html
+  - id: dhs-program.resolve_dhs_filters
+    object: Filter
+    action: resolve_dhs_filters
+    category: Data Access
+    risk: low
+    business_impact: "Normalizes country names, survey types, survey IDs, and indicator IDs into canonical filter values for downstream queries."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.dhsprogram.com/#/mcp-overview.html
+  - id: dhs-program.list_dhs_indicators
+    object: Indicator
+    action: list_dhs_indicators
+    category: Data Access
+    risk: low
+    business_impact: "Lists the DHS indicators available for use as query filters."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.dhsprogram.com/#/mcp-overview.html
+  - id: dhs-program.list_dhs_countries
+    object: Country
+    action: list_dhs_countries
+    category: Data Access
+    risk: low
+    business_impact: "Lists the countries covered by DHS surveys for use as query filters."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.dhsprogram.com/#/mcp-overview.html
+  - id: dhs-program.list_dhs_surveys
+    object: Survey
+    action: list_dhs_surveys
+    category: Data Access
+    risk: low
+    business_impact: "Lists the DHS surveys available as query filters."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.dhsprogram.com/#/mcp-overview.html
+  - id: dhs-program.list_dhs_datasets
+    object: Dataset
+    action: list_dhs_datasets
+    category: Data Access
+    risk: low
+    business_impact: "Lists the downloadable DHS survey datasets available as supporting resources."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.dhsprogram.com/#/mcp-overview.html
+  - id: dhs-program.list_dhs_publications
+    object: Publication
+    action: list_dhs_publications
+    category: Data Access
+    risk: low
+    business_impact: "Lists DHS publications available for reference and citation."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.dhsprogram.com/#/mcp-overview.html
+  - id: dhs-program.list_dhs_survey_characteristics
+    object: SurveyCharacteristic
+    action: list_dhs_survey_characteristics
+    category: Data Access
+    risk: low
+    business_impact: "Lists survey characteristics used to categorize and filter DHS surveys."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.dhsprogram.com/#/mcp-overview.html
+  - id: dhs-program.list_dhs_tags
+    object: Tag
+    action: list_dhs_tags
+    category: Data Access
+    risk: low
+    business_impact: "Lists the topical tags used to categorize DHS indicators."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.dhsprogram.com/#/mcp-overview.html
+  - id: dhs-program.list_dhs_geometry
+    object: Geometry
+    action: list_dhs_geometry
+    category: Data Access
+    risk: low
+    business_impact: "Lists the geographic boundary data associated with DHS surveys."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://api.dhsprogram.com/#/mcp-overview.html
+  - id: dhs-program.list_dhs_data_updates
+    object: DataUpdate
+    action: list_dhs_data_updates
+    category: Data Access
+    risk: low
+    business_impact: "Lists recent updates to DHS datasets and indicators so callers can detect refreshed data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

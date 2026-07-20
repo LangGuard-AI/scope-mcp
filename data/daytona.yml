@@ -1,0 +1,184 @@
+schema_version: "1.2"
+platform: daytona
+display_name: Daytona
+source: langguard-editorial
+updated: "2026-07"
+reference: https://github.com/daytonaio/daytona
+server_website: https://www.daytona.io
+maintainer: https://github.com/daytonaio/daytona/issues
+actions:
+  # ---------- Platform & DevOps ----------
+
+  # source: https://raw.githubusercontent.com/daytonaio/daytona/v0.190.0/apps/cli/mcp/tools/create_sandbox.go
+  - id: daytona.create_sandbox
+    object: Sandbox
+    action: create_sandbox
+    description: "Create a new sandbox with Daytona."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Provisions a new ephemeral Daytona sandbox, consuming compute entitlements and standing up an isolated Linux environment the agent can run code in."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/daytonaio/daytona/v0.190.0/apps/cli/mcp/tools/destroy_sandbox.go
+  - id: daytona.destroy_sandbox
+    object: Sandbox
+    action: destroy_sandbox
+    description: "Destroy a sandbox with Daytona."
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Permanently destroys a Daytona sandbox and all files, processes, and state within it; irreversible loss of any unsaved work in that environment."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/daytonaio/daytona/v0.190.0/apps/cli/mcp/tools/execute_command.go
+  - id: daytona.execute_command
+    object: Command
+    action: execute_command
+    description: "Execute shell commands in the ephemeral Daytona Linux environment. Returns full stdout and stderr output with exit codes."
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Runs arbitrary shell commands with sandbox-user permissions — can install packages, modify files, reach network services, and exfiltrate anything readable in the environment."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/daytonaio/daytona/v0.190.0/apps/cli/mcp/tools/preview_link.go
+  - id: daytona.preview_link
+    object: PreviewLink
+    action: preview_link
+    description: "Generate accessible preview URLs for web applications running in the Daytona sandbox via a secure tunnel that exposes local ports externally."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Opens a public tunnel exposing a local sandbox port to the internet without configured authentication, potentially surfacing an internal service or its data externally."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # ---------- Code & Release ----------
+
+  # source: https://raw.githubusercontent.com/daytonaio/daytona/v0.190.0/apps/cli/mcp/tools/git_clone.go
+  - id: daytona.git_clone
+    object: Repository
+    action: git_clone
+    description: "Clone a Git repository into the Daytona sandbox."
+    category: Code & Release
+    risk: low
+    business_impact: "Clones a Git repository into the sandbox, pulling its full contents into the ephemeral environment for use by later tool calls."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/daytonaio/daytona/v0.190.0/apps/cli/mcp/tools/download_file.go
+  - id: daytona.file_download
+    object: File
+    action: file_download
+    description: "Download a file from the Daytona sandbox. Returns the file content either as text or as a base64 encoded image."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads a file out of the sandbox and returns its content as text or base64, potentially surfacing source code, secrets, or generated artifacts to the caller."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/daytonaio/daytona/v0.190.0/apps/cli/mcp/tools/file_info.go
+  - id: daytona.get_file_info
+    object: File
+    action: get_file_info
+    description: "Get information about a file in the Daytona sandbox."
+    category: Data Access
+    risk: low
+    business_impact: "Returns metadata about a single sandbox file such as size and type; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/daytonaio/daytona/v0.190.0/apps/cli/mcp/tools/list_files.go
+  - id: daytona.list_files
+    object: File
+    action: list_files
+    description: "List files in a directory in the Daytona sandbox."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the files in a sandbox directory; read-only reconnaissance of the environment's contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://raw.githubusercontent.com/daytonaio/daytona/v0.190.0/apps/cli/mcp/tools/create_folder.go
+  - id: daytona.create_folder
+    object: Folder
+    action: create_folder
+    description: "Create a new folder in the Daytona sandbox."
+    category: Operations
+    risk: low
+    business_impact: "Creates a new directory in the sandbox filesystem; low-impact, reversible workspace setup."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/daytonaio/daytona/v0.190.0/apps/cli/mcp/tools/delete_file.go
+  - id: daytona.delete_file
+    object: File
+    action: delete_file
+    description: "Delete a file or directory in the Daytona sandbox."
+    category: Operations
+    risk: medium
+    business_impact: "Removes a file or directory from the sandbox; destructive within the ephemeral environment but scoped to that session's data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/daytonaio/daytona/v0.190.0/apps/cli/mcp/tools/move_file.go
+  - id: daytona.move_file
+    object: File
+    action: move_file
+    description: "Move or rename a file in the Daytona sandbox."
+    category: Operations
+    risk: low
+    business_impact: "Moves or renames a file within the sandbox filesystem; reversible reorganization of workspace contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/daytonaio/daytona/v0.190.0/apps/cli/mcp/tools/upload_file.go
+  - id: daytona.file_upload
+    object: File
+    action: file_upload
+    description: "Upload files to the Daytona sandbox from text or base64-encoded binary content, with overwrite controls."
+    category: Operations
+    risk: low
+    business_impact: "Writes files into the sandbox from text or base64 content with overwrite controls, seeding the environment for subsequent tool operations."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial

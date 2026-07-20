@@ -1,0 +1,279 @@
+schema_version: "1.1"
+platform: ashby-api
+display_name: Ashby
+source: langguard-editorial
+updated: "2026-07"
+server_website: https://docs.ashbyhq.com/ashby-mcp-server-beta
+reference: https://docs.ashbyhq.com/ashby-mcp-server-beta
+# The Ashby MCP server (https://mcp.ashbyhq.com/mcp/v1) gates tools/list behind a
+# per-user OAuth flow, so the server only returns data the authenticated user can
+# already see in Ashby. Ashby's vendor docs publish the tool surface only as
+# plain-language capability labels — verbatim MCP identifiers are not available.
+# Per the rubric's id_form: capability path, every entry below carries a slugified
+# action and the verbatim label in `description`. Refresh to `id_form: verbatim`
+# when a real tools/list capture becomes available.
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.ashbyhq.com/ashby-mcp-server-beta
+  - id: ashby-api.filter_records
+    object: Record
+    action: filter_records
+    id_form: capability
+    description: "filter records"
+    category: Data Access
+    risk: high
+    business_impact: "Runs criteria-based queries across candidates, applications, and jobs, returning matching records in bulk — an exfiltration path for candidate PII at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.ashbyhq.com/ashby-mcp-server-beta
+  - id: ashby-api.search_records_by_name
+    object: Record
+    action: search_records_by_name
+    id_form: capability
+    description: "search records by name"
+    category: Data Access
+    risk: medium
+    business_impact: "Locates candidates, jobs, applications, and email templates by name, surfacing identifying candidate details to the caller."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.ashbyhq.com/ashby-mcp-server-beta
+  - id: ashby-api.get_record_details
+    object: Record
+    action: get_record_details
+    id_form: capability
+    description: "get record details"
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves full information for a job, application, or offer, including offer compensation terms and applicant details."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.ashbyhq.com/ashby-mcp-server-beta
+  - id: ashby-api.describe_object_fields
+    object: Schema
+    action: describe_object_fields
+    id_form: capability
+    description: "describe object fields"
+    category: Data Access
+    risk: low
+    business_impact: "Returns the filterable field metadata for an object type as a backend helper; exposes schema shape, not record data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Candidate Records ----------
+
+  # source: https://docs.ashbyhq.com/ashby-mcp-server-beta
+  - id: ashby-api.get_candidate
+    object: Candidate
+    action: get_candidate
+    id_form: capability
+    description: "get candidate"
+    category: Candidate Records
+    risk: medium
+    business_impact: "Pulls a comprehensive candidate profile including resume and interview feedback — a rich single-record disclosure of applicant personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.ashbyhq.com/ashby-mcp-server-beta
+  - id: ashby-api.create_candidate
+    object: Candidate
+    action: create_candidate
+    id_form: capability
+    description: "create candidate"
+    category: Candidate Records
+    risk: medium
+    business_impact: "Adds a new candidate record with contact information, writing applicant personal data into the ATS."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.ashbyhq.com/ashby-mcp-server-beta
+  - id: ashby-api.add_note_to_candidate
+    object: Candidate
+    action: add_note_to_candidate
+    id_form: capability
+    description: "add note to candidate"
+    category: Candidate Records
+    risk: low
+    business_impact: "Drafts a profile note on a candidate for later confirmation; reversible and does not commit until the user approves it."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Pipeline & Applications ----------
+
+  # source: https://docs.ashbyhq.com/ashby-mcp-server-beta
+  - id: ashby-api.change_application_stage
+    object: Application
+    action: change_application_stage
+    id_form: capability
+    description: "change application stage"
+    category: Pipeline & Applications
+    risk: medium
+    business_impact: "Advances a candidate's application through interview stages, effecting a consequential step in an automated hiring pipeline."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, EU_AI_ACT, NIST_AI_RMF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.ashbyhq.com/ashby-mcp-server-beta
+  - id: ashby-api.consider_candidate_for_job
+    object: Application
+    action: consider_candidate_for_job
+    id_form: capability
+    description: "consider candidate for job"
+    category: Pipeline & Applications
+    risk: medium
+    business_impact: "Creates a new application linking a candidate to a job, entering that person into the hiring pipeline for the role."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.ashbyhq.com/ashby-mcp-server-beta
+  - id: ashby-api.get_job_pipeline
+    object: Job
+    action: get_job_pipeline
+    id_form: capability
+    description: "get job pipeline"
+    category: Pipeline & Applications
+    risk: low
+    business_impact: "Displays aggregate candidate counts at each pipeline stage for a job; exposes summary metrics rather than individual records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.ashbyhq.com/ashby-mcp-server-beta
+  - id: ashby-api.get_pending_tasks
+    object: Task
+    action: get_pending_tasks
+    id_form: capability
+    description: "get pending tasks"
+    category: Pipeline & Applications
+    risk: low
+    business_impact: "Lists the caller's own outstanding scorecards and approvals; a personal task queue read scoped to the authenticated user."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Interviews & Feedback ----------
+
+  # source: https://docs.ashbyhq.com/ashby-mcp-server-beta
+  - id: ashby-api.get_upcoming_interviews
+    object: Interview
+    action: get_upcoming_interviews
+    id_form: capability
+    description: "get upcoming interviews"
+    category: Interviews & Feedback
+    risk: medium
+    business_impact: "Lists scheduled interviews with candidate and job details, surfacing identifying applicant information and schedules."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.ashbyhq.com/ashby-mcp-server-beta
+  - id: ashby-api.get_interview_details
+    object: Interview
+    action: get_interview_details
+    id_form: capability
+    description: "get interview details"
+    category: Interviews & Feedback
+    risk: medium
+    business_impact: "Provides pre-interview briefing materials for a scheduled interview, including candidate-specific context."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.ashbyhq.com/ashby-mcp-server-beta
+  - id: ashby-api.get_interview_plan
+    object: InterviewPlan
+    action: get_interview_plan
+    id_form: capability
+    description: "get interview plan"
+    category: Interviews & Feedback
+    risk: low
+    business_impact: "Shows the configured candidate progression stages for an interview plan; largely structural pipeline configuration."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.ashbyhq.com/ashby-mcp-server-beta
+  - id: ashby-api.get_submitted_feedback
+    object: Feedback
+    action: get_submitted_feedback
+    id_form: capability
+    description: "get submitted feedback"
+    category: Interviews & Feedback
+    risk: low
+    business_impact: "Retrieves the caller's own submitted scorecard feedback, scoped to the authenticated interviewer."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Support ----------
+
+  # source: https://docs.ashbyhq.com/ashby-mcp-server-beta
+  - id: ashby-api.search_product_docs
+    object: Documentation
+    action: search_product_docs
+    id_form: capability
+    description: "search product docs"
+    category: Support
+    risk: low
+    business_impact: "Queries Ashby's product documentation; a read of public help content with no customer data exposure."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.ashbyhq.com/ashby-mcp-server-beta
+  - id: ashby-api.submit_mcp_feedback
+    object: Feedback
+    action: submit_mcp_feedback
+    id_form: capability
+    description: "submit mcp feedback"
+    category: Support
+    risk: low
+    business_impact: "Sends a suggestion to the Ashby team about the MCP server; a low-impact outbound feedback message."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

@@ -1,0 +1,75 @@
+schema_version: "1.0"
+platform: docuseal
+display_name: DocuSeal
+source: langguard-editorial
+updated: "2026-07"
+reference: https://www.docuseal.com/guides/integrate-with-ai-agents-using-mcp
+actions:
+  # ---------- Documents & Signing ----------
+
+  # source: https://www.docuseal.com/guides/integrate-with-ai-agents-using-mcp
+  - id: docuseal.send_documents
+    object: Submission
+    action: send_documents
+    category: Documents & Signing
+    risk: high
+    business_impact: "Dispatches a signing request to specified submitters, emailing each a signing link and transmitting personal data to initiate a legally binding e-signature workflow."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.docuseal.com/guides/integrate-with-ai-agents-using-mcp
+  - id: docuseal.search_documents
+    object: Document
+    action: search_documents
+    category: Documents & Signing
+    risk: medium
+    business_impact: "Returns signed and pending documents matched by submitter name, email, or phone, exposing submitter PII and completed agreements at query scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Templates ----------
+
+  # source: https://www.docuseal.com/guides/integrate-with-ai-agents-using-mcp
+  - id: docuseal.create_template
+    object: Template
+    action: create_template
+    category: Templates
+    risk: low
+    business_impact: "Creates a new signing template from an uploaded PDF or DOCX; establishes reusable document structure with no signing or data transmission on its own."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.docuseal.com/guides/integrate-with-ai-agents-using-mcp
+  - id: docuseal.load_template
+    object: Template
+    action: load_template
+    category: Templates
+    risk: low
+    business_impact: "Returns a template's field definitions and signing role names; read-only structural detail carrying no submitter data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.docuseal.com/guides/integrate-with-ai-agents-using-mcp
+  - id: docuseal.search_templates
+    object: Template
+    action: search_templates
+    category: Templates
+    risk: low
+    business_impact: "Returns document templates matching a name query along with their IDs; read-only metadata lookup exposing no submitter data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,78 @@
+schema_version: "1.1"
+platform: ice-data-services
+display_name: ICE Data Services
+source: langguard-editorial
+updated: "2026-07"
+reference: https://www.ice.com/fixed-income-data-services/access-and-delivery/claude-mcp-connector
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://www.ice.com/fixed-income-data-services/access-and-delivery/claude-mcp-connector
+  - id: ice-data-services.query_trades
+    object: Trade
+    action: query_trades
+    description: "Search and filter U.S. bond trades by date, issuer, sector, trade size, credit rating, and more, with aggregation for volume and trend analysis."
+    category: Data Access
+    risk: low
+    business_impact: "Returns filtered and aggregated U.S. bond trade records including price, yield, size, and counterparty classification for market analysis; read-only market data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.ice.com/fixed-income-data-services/access-and-delivery/claude-mcp-connector
+  - id: ice-data-services.get_reference_data
+    object: Bond
+    action: get_reference_data
+    description: "Retrieve bond characteristics by identifier or filters, returning credit ratings, coupon rate, maturity date, issuer name, sector, and amount outstanding."
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces instrument reference attributes for one or many bonds; read-only market reference data with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.ice.com/fixed-income-data-services/access-and-delivery/claude-mcp-connector
+  - id: ice-data-services.get_schema
+    object: Schema
+    action: get_schema
+    description: "Explore the full set of queryable dimensions and measures, their descriptions, and how they can be used in filters and aggregations."
+    category: Data Access
+    risk: low
+    business_impact: "Lists available trade and instrument fields and their semantics to help build queries; a read-only metadata lookup."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.ice.com/fixed-income-data-services/access-and-delivery/claude-mcp-connector
+  - id: ice-data-services.describe_concept
+    object: Concept
+    action: describe_concept
+    description: "Access authoritative definitions for financial concepts such as institutional trade thresholds, asset classifications, and sector definitions."
+    category: Data Access
+    risk: low
+    business_impact: "Returns auditable definitions for domain terminology such as trade thresholds and sector classifications; read-only and non-sensitive."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.ice.com/fixed-income-data-services/access-and-delivery/claude-mcp-connector
+  - id: ice-data-services.classify_trade_size
+    object: Trade
+    action: classify_trade_size
+    description: "Categorize a trade by its notional value into standard market classifications, Institutional vs. under $1 MM."
+    category: Data Access
+    risk: low
+    business_impact: "Buckets a supplied notional value into a standard market size classification; a stateless computation with no data persistence."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

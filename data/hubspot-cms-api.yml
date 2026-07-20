@@ -1,0 +1,307 @@
+schema_version: "1.2"
+platform: hubspot-cms-api
+display_name: HubSpot Developer MCP Server (App & CMS Development)
+source: langguard-editorial
+updated: "2026-07"
+reference: https://developers.hubspot.com/docs/developer-tooling/local-development/developer-mcp/tools
+server_website: https://developers.hubspot.com/docs/developer-tooling/local-development/developer-mcp/setup
+actions:
+  # ---------- Platform & DevOps ----------
+
+  # source: https://developers.hubspot.com/docs/developer-tooling/local-development/developer-mcp/tools
+  - id: hubspot-cms-api.deploy-project
+    object: Project
+    action: deploy-project
+    description: "Deploys a previously uploaded build to the connected HubSpot account."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Promotes a build to the connected HubSpot account, changing live app and CMS behavior without a separate review gate."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/developer-tooling/local-development/developer-mcp/tools
+  - id: hubspot-cms-api.upload-project
+    object: Project
+    action: upload-project
+    description: "Uploads (builds) a local project to HubSpot, creating it remotely if it does not exist yet."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Pushes a local project to HubSpot and triggers a remote build the vendor flags as potentially destructive, mutating remote project state."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/developer-tooling/local-development/developer-mcp/tools
+  - id: hubspot-cms-api.create-test-account
+    object: Account
+    action: create-test-account
+    description: "Creates a temporary HubSpot developer test account for local development and QA."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Provisions a temporary developer test account defaulting to Enterprise tier, consuming developer-account entitlements."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/developer-tooling/local-development/developer-mcp/tools
+  - id: hubspot-cms-api.create-project
+    object: Project
+    action: create-project
+    description: "Scaffolds a new HubSpot developer project."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Scaffolds a new local developer project from a template; auth type and distribution are locked after first upload."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/developer-tooling/local-development/developer-mcp/tools
+  - id: hubspot-cms-api.add-feature-to-project
+    object: Project
+    action: add-feature-to-project
+    description: "Adds a new feature to an existing HubSpot project."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Adds a feature to an existing local project, expanding its configuration ahead of the next upload."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/developer-tooling/local-development/developer-mcp/tools
+  - id: hubspot-cms-api.validate-project
+    object: Project
+    action: validate-project
+    description: "Validates a project's configuration files locally without uploading anything."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Checks project configuration files locally for errors; no remote state is touched."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/developer-tooling/local-development/developer-mcp/tools
+  - id: hubspot-cms-api.find-projects
+    object: Project
+    action: find-projects
+    description: "Recursively searches a given directory for hsproject.json files, returning the paths of all discovered projects."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Discovers local project directories by walking the filesystem; read-only enumeration of paths."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/developer-tooling/local-development/developer-mcp/tools
+  - id: hubspot-cms-api.get-build-status
+    object: Build
+    action: get-build-status
+    description: "Retrieves build status and error messages for a HubSpot project."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Reports build status and error messages for a project's recent or specified build."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/developer-tooling/local-development/developer-mcp/tools
+  - id: hubspot-cms-api.get-build-logs
+    object: Build
+    action: get-build-logs
+    description: "Retrieves full pipeline logs for a specific build."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns full pipeline logs for a build, which may surface configuration detail useful for debugging failures."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/developer-tooling/local-development/developer-mcp/tools
+  - id: hubspot-cms-api.get-apps-info
+    object: App
+    action: get-apps-info
+    description: "Lists all HubSpot applications registered in the connected account."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Enumerates registered applications and their IDs for the connected account; read-only inventory."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/developer-tooling/local-development/developer-mcp/tools
+  - id: hubspot-cms-api.get-feature-config-schema
+    object: FeatureConfig
+    action: get-feature-config-schema
+    description: "Returns the JSON schema for a feature's -hsmeta.json configuration file."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns the JSON schema for a feature configuration file so valid values and constraints are known before editing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/developer-tooling/local-development/developer-mcp/tools
+  - id: hubspot-cms-api.guided-walkthrough-cli
+    object: CLI
+    action: guided-walkthrough-cli
+    description: "Provides step-by-step guided help for key HubSpot CLI commands."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Walks a developer through key HubSpot CLI commands; informational guidance with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Code & Release ----------
+
+  # source: https://developers.hubspot.com/docs/developer-tooling/local-development/developer-mcp/tools
+  - id: hubspot-cms-api.create-cms-function
+    object: ServerlessFunction
+    action: create-cms-function
+    description: "Creates a new CMS serverless function using hs create function."
+    category: Code & Release
+    risk: low
+    business_impact: "Scaffolds a new CMS serverless function supporting any HTTP method; local code artifact until uploaded."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/developer-tooling/local-development/developer-mcp/tools
+  - id: hubspot-cms-api.create-cms-template
+    object: Template
+    action: create-cms-template
+    description: "Creates a new HubSpot CMS template using hs create template."
+    category: Code & Release
+    risk: low
+    business_impact: "Scaffolds a new CMS template of a chosen type; local artifact that shapes page, email, or blog rendering once deployed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/developer-tooling/local-development/developer-mcp/tools
+  - id: hubspot-cms-api.create-cms-module
+    object: Module
+    action: create-cms-module
+    description: "Creates a new HubSpot CMS module (HubL or React)."
+    category: Code & Release
+    risk: low
+    business_impact: "Scaffolds a new CMS module in HubL or React with content-type targeting; local artifact until deployed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/developer-tooling/local-development/developer-mcp/tools
+  - id: hubspot-cms-api.get-cms-serverless-function-logs
+    object: ServerlessFunction
+    action: get-cms-serverless-function-logs
+    description: "Retrieves production logs for a deployed CMS serverless function."
+    category: Code & Release
+    risk: medium
+    business_impact: "Returns production execution logs for a deployed serverless function, which may contain request data or other runtime detail."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/developer-tooling/local-development/developer-mcp/tools
+  - id: hubspot-cms-api.list-cms-serverless-functions
+    object: ServerlessFunction
+    action: list-cms-serverless-functions
+    description: "Deprecated. Lists all serverless functions deployed to a HubSpot account."
+    category: Code & Release
+    risk: low
+    business_impact: "Enumerates serverless functions deployed to the account; deprecated read-only listing superseded by the hs CLI."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/developer-tooling/local-development/developer-mcp/tools
+  - id: hubspot-cms-api.list-cms-remote-contents
+    object: CmsFile
+    action: list-cms-remote-contents
+    description: "Deprecated. Lists the contents of a remote HubSpot CMS directory."
+    category: Code & Release
+    risk: low
+    business_impact: "Lists files in a remote CMS directory; deprecated read-only listing superseded by the hs CLI."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://developers.hubspot.com/docs/developer-tooling/local-development/developer-mcp/tools
+  - id: hubspot-cms-api.get-api-usage-patterns-by-app-id
+    object: App
+    action: get-api-usage-patterns-by-app-id
+    description: "Returns API usage analytics for a specific app showing which endpoint patterns are called and across how many accounts."
+    category: Data Access
+    risk: low
+    business_impact: "Exposes aggregate API usage analytics for an app, including which endpoints are called and across how many accounts."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/developer-tooling/local-development/developer-mcp/tools
+  - id: hubspot-cms-api.search-docs
+    object: Documentation
+    action: search-docs
+    description: "Searches the official HubSpot developer documentation and returns the most relevant pages with URLs."
+    category: Data Access
+    risk: low
+    business_impact: "Searches HubSpot developer documentation and returns relevant page URLs; read-only knowledge lookup."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://developers.hubspot.com/docs/developer-tooling/local-development/developer-mcp/tools
+  - id: hubspot-cms-api.fetch-doc
+    object: Documentation
+    action: fetch-doc
+    description: "Fetches the full authoritative content of a HubSpot developer documentation page from its URL."
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves the full content of a HubSpot developer documentation page; read-only knowledge lookup."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial

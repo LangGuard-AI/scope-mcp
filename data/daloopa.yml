@@ -1,0 +1,126 @@
+schema_version: "1.0"
+platform: daloopa
+display_name: Daloopa
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.daloopa.com/docs/daloopa-mcp
+  - id: daloopa.discover_companies
+    object: Company
+    action: discover_companies
+    category: Data Access
+    risk: low
+    business_impact: "Returns ticker symbols, corporate names, and Daloopa company identifiers matching a query — public reference data used to resolve companies before pulling financials."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.daloopa.com/docs/daloopa-mcp
+  - id: daloopa.discover_company_series
+    object: FinancialSeries
+    action: discover_company_series
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces the available financial metrics and series IDs for a company, exposing which datapoints can be pulled without returning any proprietary values itself."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.daloopa.com/docs/daloopa-mcp
+  - id: daloopa.discover_company_documents
+    object: Document
+    action: discover_company_documents
+    category: Data Access
+    risk: low
+    business_impact: "Lists indexed filings, transcripts, and presentations for a company by quarter, returning document identifiers that gate access to full filing text."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.daloopa.com/docs/daloopa-mcp
+  - id: daloopa.get_company_fundamentals
+    object: Fundamentals
+    action: get_company_fundamentals
+    category: Data Access
+    risk: low
+    business_impact: "Returns income-statement, balance-sheet, and cash-flow values for a company across periods — publicly-disclosed financial data consumed for investment analysis."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.daloopa.com/docs/daloopa-mcp
+  - id: daloopa.get_document_content
+    object: Document
+    action: get_document_content
+    category: Data Access
+    risk: low
+    business_impact: "Returns the full processed text, or a named section, of an indexed SEC filing or earnings transcript for focused qualitative review."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.daloopa.com/docs/daloopa-mcp
+  - id: daloopa.get_stock_prices
+    object: StockPrice
+    action: get_stock_prices
+    category: Data Access
+    risk: low
+    business_impact: "Returns daily OHLCV price history for one or more companies over a date range — public market data used to compute trading multiples and price performance."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.daloopa.com/docs/daloopa-mcp
+  - id: daloopa.search_documents
+    object: Document
+    action: search_documents
+    category: Data Access
+    risk: low
+    business_impact: "Runs keyword search across filings, transcripts, and presentations to surface management commentary, guidance, and risk-factor disclosures from public documents."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://docs.daloopa.com/docs/daloopa-mcp
+  - id: daloopa.list_skills
+    object: Skill
+    action: list_skills
+    category: Operations
+    risk: low
+    business_impact: "Enumerates the available investing-skill workflows with their slugs, titles, and required inputs — a read-only catalog of analytical templates."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.daloopa.com/docs/daloopa-mcp
+  - id: daloopa.get_skill
+    object: Skill
+    action: get_skill
+    category: Operations
+    risk: low
+    business_impact: "Returns a fully-populated investing-skill template with the caller's inputs substituted, ready to execute as a structured analytical workflow."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

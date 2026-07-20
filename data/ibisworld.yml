@@ -1,0 +1,113 @@
+schema_version: "1.0"
+platform: ibisworld
+display_name: IBISWorld
+source: langguard-editorial
+updated: "2026-07"
+reference: https://help.ibisworld.com/en/articles/14627556-ibisworld-mcp-server-documentation
+server_website: https://mcp.ibisworld.com
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://help.ibisworld.com/en/articles/14627556-ibisworld-mcp-server-documentation
+  - id: ibisworld.fetch_metadata
+    object: Metadata
+    action: fetch_metadata
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves the available sections and structure of an IBISWorld title before content is pulled; read-only metadata lookup over licensed research with no write path or personal-data exposure."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ibisworld.com/en/articles/14627556-ibisworld-mcp-server-documentation
+  - id: ibisworld.fetch_sections
+    object: ReportSection
+    action: fetch_sections
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves the full content of specified sections from an IBISWorld title; read-only access to licensed subscriber research content, pulling paywalled analyst text into the agent context."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ibisworld.com/en/articles/14627556-ibisworld-mcp-server-documentation
+  - id: ibisworld.search_industry
+    object: IndustryReport
+    action: search_industry
+    category: Data Access
+    risk: low
+    business_impact: "Returns market size, growth, drivers, competitive landscape and outlook for a named industry; read-only query over IBISWorld's published research with no customer-data access."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ibisworld.com/en/articles/14627556-ibisworld-mcp-server-documentation
+  - id: ibisworld.search_industry_region
+    object: IndustryReport
+    action: search_industry_region
+    category: Data Access
+    risk: low
+    business_impact: "Returns industry data scoped to a specific state or region such as local market size and geographic performance; read-only query over licensed research content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ibisworld.com/en/articles/14627556-ibisworld-mcp-server-documentation
+  - id: ibisworld.search_company
+    object: CompanyReport
+    action: search_company
+    category: Data Access
+    risk: low
+    business_impact: "Returns a named company's performance, operations, market position and financials from IBISWorld's analyst research; read-only access to published corporate profiles, not the subscriber's own records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ibisworld.com/en/articles/14627556-ibisworld-mcp-server-documentation
+  - id: ibisworld.search_business_environment
+    object: BusinessEnvironmentReport
+    action: search_business_environment
+    category: Data Access
+    risk: low
+    business_impact: "Returns macro-level external factors — economic conditions, demographics, regulation and technology trends — for a topic; read-only query over published research content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ibisworld.com/en/articles/14627556-ibisworld-mcp-server-documentation
+  - id: ibisworld.search_procurement
+    object: ProcurementReport
+    action: search_procurement
+    category: Data Access
+    risk: low
+    business_impact: "Returns procurement, sourcing and supply-chain intelligence — pricing, supplier landscape and buying strategies — for a product category; read-only query over licensed research."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.ibisworld.com/en/articles/14627556-ibisworld-mcp-server-documentation
+  - id: ibisworld.search_segment_benchmark
+    object: BenchmarkReport
+    action: search_segment_benchmark
+    category: Data Access
+    risk: low
+    business_impact: "Returns operator-size segment benchmarks comparing performance metrics across small, medium and large operators in an industry; read-only query over published research content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

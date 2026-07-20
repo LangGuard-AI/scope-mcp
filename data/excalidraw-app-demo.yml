@@ -1,0 +1,74 @@
+schema_version: "1.0"
+platform: excalidraw-app-demo
+display_name: Excalidraw App Demo
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://mcp.excalidraw.com
+  - id: excalidraw-app-demo.export_to_excalidraw
+    object: Diagram
+    action: export_to_excalidraw
+    category: Data Access
+    risk: medium
+    business_impact: "Publishes a diagram to excalidraw.com and returns a public shareable link, moving canvas content outside the workspace boundary."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.excalidraw.com
+  - id: excalidraw-app-demo.read_checkpoint
+    object: Checkpoint
+    action: read_checkpoint
+    category: Data Access
+    risk: low
+    business_impact: "Reads a saved diagram checkpoint by id to restore prior canvas state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.excalidraw.com
+  - id: excalidraw-app-demo.read_me
+    object: Reference
+    action: read_me
+    category: Data Access
+    risk: low
+    business_impact: "Returns the static Excalidraw element-format reference; no user or business data is touched."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://mcp.excalidraw.com
+  - id: excalidraw-app-demo.create_view
+    object: Diagram
+    action: create_view
+    category: Operations
+    risk: low
+    business_impact: "Renders a hand-drawn diagram from supplied elements in the viewer; reversible and non-persistent."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.excalidraw.com
+  - id: excalidraw-app-demo.save_checkpoint
+    object: Checkpoint
+    action: save_checkpoint
+    category: Operations
+    risk: low
+    business_impact: "Overwrites a diagram checkpoint with user-edited canvas state under a given id."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial

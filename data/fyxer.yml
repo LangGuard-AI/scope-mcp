@@ -1,0 +1,92 @@
+schema_version: "1.0"
+platform: fyxer
+display_name: Fyxer
+source: langguard-editorial
+updated: "2026-07"
+# Fyxer's MCP server (https://app.fyxer.com/mcp) is OAuth-gated; live
+# introspection returned 401 with no token available, so the tool surface below
+# is sourced verbatim from the vendor MCP docs and corroborated by the Claude
+# connectors page. Refresh via live tools/list when a token becomes available.
+reference: https://support.fyxer.com/article/fyxer-mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://support.fyxer.com/article/fyxer-mcp
+  - id: fyxer.search_context
+    object: Context
+    action: search_context
+    category: Data Access
+    risk: medium
+    business_impact: "Searches across the user's emails, meeting records, and documents, surfacing personal and business content spanning every connected communication channel."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://support.fyxer.com/article/fyxer-mcp
+  - id: fyxer.get_transcript
+    object: Meeting
+    action: get_transcript
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the full verbatim transcript of a meeting with speaker attribution, exposing everything said in a private conversation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://support.fyxer.com/article/fyxer-mcp
+  - id: fyxer.get_meeting
+    object: Meeting
+    action: get_meeting
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the full AI-generated summary for a specific meeting, which can contain sensitive discussion points and named participants."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://support.fyxer.com/article/fyxer-mcp
+  - id: fyxer.search_meetings
+    object: Meeting
+    action: search_meetings
+    category: Data Access
+    risk: low
+    business_impact: "Lists meetings and call recordings matching a topic or attendee, revealing who the user met with and when."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://support.fyxer.com/article/fyxer-mcp
+  - id: fyxer.resolve_person
+    object: Person
+    action: resolve_person
+    category: Data Access
+    risk: low
+    business_impact: "Looks up a contact's full name and email address, returning directly-identifying personal data for an individual."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Messaging ----------
+
+  # source: https://support.fyxer.com/article/fyxer-mcp
+  - id: fyxer.draft_email
+    object: Email
+    action: draft_email
+    category: Messaging
+    risk: low
+    business_impact: "Creates an unsent email draft in the user's inbox styled to their writing voice; requires manual review and send before it leaves the mailbox."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial

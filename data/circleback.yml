@@ -1,0 +1,155 @@
+schema_version: "1.0"
+platform: circleback
+display_name: Circleback
+source: langguard-editorial
+updated: "2026-07"
+reference: https://support.circleback.ai/en/articles/13249081-circleback-mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://support.circleback.ai/en/articles/13249081-circleback-mcp
+  - id: circleback.SearchEmails
+    object: Email
+    action: SearchEmails
+    category: Data Access
+    risk: high
+    business_impact: "Surfaces private email threads from connected accounts by sender, recipient, keyword, or date, exposing personal and business correspondence to the agent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.circleback.ai/en/articles/13249081-circleback-mcp
+  - id: circleback.GetTranscriptsForMeetings
+    object: Transcript
+    action: GetTranscriptsForMeetings
+    category: Data Access
+    risk: high
+    business_impact: "Retrieves full verbatim transcripts of one or more meetings with speaker labels, exposing everything said by named participants."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.circleback.ai/en/articles/13249081-circleback-mcp
+  - id: circleback.SearchTranscripts
+    object: Transcript
+    action: SearchTranscripts
+    category: Data Access
+    risk: medium
+    business_impact: "Locates where any topic was discussed across the entire transcript corpus, surfacing sensitive spoken content with timestamps."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.circleback.ai/en/articles/13249081-circleback-mcp
+  - id: circleback.ReadMeetings
+    object: Meeting
+    action: ReadMeetings
+    category: Data Access
+    risk: medium
+    business_impact: "Returns full meeting notes, attendees, action items, and insights for specific meetings, exposing detailed personal and business context."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.circleback.ai/en/articles/13249081-circleback-mcp
+  - id: circleback.SearchMeetings
+    object: Meeting
+    action: SearchMeetings
+    category: Data Access
+    risk: low
+    business_impact: "Lists meetings matching keyword, date range, tag, attendee, or domain filters, returning meeting metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.circleback.ai/en/articles/13249081-circleback-mcp
+  - id: circleback.SearchCalendarEvents
+    object: CalendarEvent
+    action: SearchCalendarEvents
+    category: Data Access
+    risk: low
+    business_impact: "Returns past and upcoming calendar events with attendees, meeting links, and join status."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://support.circleback.ai/en/articles/13249081-circleback-mcp
+  - id: circleback.FindProfiles
+    object: Profile
+    action: FindProfiles
+    category: Customer
+    risk: medium
+    business_impact: "Aggregates a person's profile and cross-meeting interaction history into a single view, building a behavioral picture of an individual."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.circleback.ai/en/articles/13249081-circleback-mcp
+  - id: circleback.FindCompanies
+    object: Company
+    action: FindCompanies
+    category: Customer
+    risk: low
+    business_impact: "Resolves company records by name or domain and links them to related meetings."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://support.circleback.ai/en/articles/13249081-circleback-mcp
+  - id: circleback.SearchActionItems
+    object: ActionItem
+    action: SearchActionItems
+    category: Operations
+    risk: low
+    business_impact: "Finds action items filtered by status, assignee, tag, or date range across the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.circleback.ai/en/articles/13249081-circleback-mcp
+  - id: circleback.ListTags
+    object: Tag
+    action: ListTags
+    category: Operations
+    risk: low
+    business_impact: "Enumerates all workspace tags used to organize meetings, transcripts, and action items."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.circleback.ai/en/articles/13249081-circleback-mcp
+  - id: circleback.SearchSupportArticles
+    object: SupportArticle
+    action: SearchSupportArticles
+    category: Operations
+    risk: low
+    business_impact: "Searches Circleback's public support documentation for help and how-to content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

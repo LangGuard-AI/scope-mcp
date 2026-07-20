@@ -1,0 +1,73 @@
+schema_version: "1.0"
+platform: google-maps
+display_name: Google Maps Platform (Maps Grounding Lite MCP)
+source: langguard-editorial
+updated: "2026-07"
+reference: https://developers.google.com/maps/ai/grounding-lite/reference/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://mapstools.googleapis.com/mcp
+  - id: google-maps.search_places
+    object: Place
+    action: search_places
+    category: Data Access
+    risk: low
+    business_impact: "Returns places, businesses, addresses, and points of interest matching a query against public Google Maps data; read-only with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mapstools.googleapis.com/mcp
+  - id: google-maps.lookup_weather
+    object: Weather
+    action: lookup_weather
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves current conditions and hourly and daily forecasts for a location; read-only reference data with no personal or business state touched."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mapstools.googleapis.com/mcp
+  - id: google-maps.compute_routes
+    object: Route
+    action: compute_routes
+    category: Data Access
+    risk: low
+    business_impact: "Computes a driving or walking route between an origin and destination; read-only geospatial calculation with no persisted side effects."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mapstools.googleapis.com/mcp
+  - id: google-maps.resolve_names
+    object: Place
+    action: resolve_names
+    category: Data Access
+    risk: low
+    business_impact: "Resolves a batch of landmark names or addresses into canonical Google Maps Place IDs; read-only lookup against public map data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mapstools.googleapis.com/mcp
+  - id: google-maps.resolve_maps_urls
+    object: Place
+    action: resolve_maps_urls
+    category: Data Access
+    risk: low
+    business_impact: "Resolves Google Maps sharing URLs into canonical Place IDs; read-only lookup that persists nothing and exposes only public map metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,274 @@
+schema_version: "1.0"
+platform: eraser
+display_name: Eraser
+source: langguard-editorial
+updated: "2026-07"
+reference: https://docs.eraser.io/docs/mcp
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://raw.githubusercontent.com/eraserlabs/eraser-io/main/packages/eraser-mcp/README.md
+  - id: eraser.whoami
+    object: User
+    action: whoami
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns the caller's profile, active team, and full team list, exposing the authenticated user's identity and org membership."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/eraserlabs/eraser-io/main/packages/eraser-mcp/README.md
+  - id: eraser.listTeams
+    object: Team
+    action: listTeams
+    category: Identity & Access
+    risk: low
+    business_impact: "Enumerates every team the user belongs to, revealing organizational structure and team membership."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/eraserlabs/eraser-io/main/packages/eraser-mcp/README.md
+  - id: eraser.selectTeam
+    object: Team
+    action: selectTeam
+    category: Identity & Access
+    risk: low
+    business_impact: "Switches the active team context for subsequent operations, scoping which workspace later reads and writes target."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/eraserlabs/eraser-io/main/packages/eraser-mcp/README.md
+  - id: eraser.createFile
+    object: File
+    action: createFile
+    category: Data Access
+    risk: low
+    business_impact: "Creates a new Eraser file with document and diagram content in the active team workspace."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/eraserlabs/eraser-io/main/packages/eraser-mcp/README.md
+  - id: eraser.listFiles
+    object: File
+    action: listFiles
+    category: Data Access
+    risk: low
+    business_impact: "Lists workspace files with pagination and filtering, exposing document titles and metadata across the team."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/eraserlabs/eraser-io/main/packages/eraser-mcp/README.md
+  - id: eraser.getFile
+    object: File
+    action: getFile
+    category: Data Access
+    risk: low
+    business_impact: "Returns a single file's full metadata, document content, and diagram elements, which may surface sensitive internal design details."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/eraserlabs/eraser-io/main/packages/eraser-mcp/README.md
+  - id: eraser.updateFile
+    object: File
+    action: updateFile
+    category: Data Access
+    risk: low
+    business_impact: "Overwrites an existing file's metadata or document content, replacing the prior content in place."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/eraserlabs/eraser-io/main/packages/eraser-mcp/README.md
+  - id: eraser.archiveFile
+    object: File
+    action: archiveFile
+    category: Data Access
+    risk: medium
+    business_impact: "Soft-deletes a file, removing it from active workspace views while retaining it for possible restore."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Content ----------
+
+  # source: https://raw.githubusercontent.com/eraserlabs/eraser-io/main/packages/eraser-mcp/README.md
+  - id: eraser.listDiagrams
+    object: Diagram
+    action: listDiagrams
+    category: Content
+    risk: low
+    business_impact: "Lists all diagrams within a file, exposing diagram titles and identifiers."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/eraserlabs/eraser-io/main/packages/eraser-mcp/README.md
+  - id: eraser.createDiagram
+    object: Diagram
+    action: createDiagram
+    category: Content
+    risk: low
+    business_impact: "Adds a new diagram to an existing file in the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/eraserlabs/eraser-io/main/packages/eraser-mcp/README.md
+  - id: eraser.getDiagram
+    object: Diagram
+    action: getDiagram
+    category: Content
+    risk: low
+    business_impact: "Returns a specific diagram's code and rendering from a file, which may expose internal architecture details."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/eraserlabs/eraser-io/main/packages/eraser-mcp/README.md
+  - id: eraser.updateDiagram
+    object: Diagram
+    action: updateDiagram
+    category: Content
+    risk: low
+    business_impact: "Replaces the code of an existing diagram in place, overwriting the prior definition."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/eraserlabs/eraser-io/main/packages/eraser-mcp/README.md
+  - id: eraser.deleteDiagram
+    object: Diagram
+    action: deleteDiagram
+    category: Content
+    risk: high
+    business_impact: "Permanently deletes a diagram from a file with no recovery path, destroying the design work it held."
+    compliance: []
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Diagram Rendering ----------
+
+  # source: https://raw.githubusercontent.com/eraserlabs/eraser-io/main/packages/eraser-mcp/README.md
+  - id: eraser.renderPrompt
+    object: Diagram
+    action: renderPrompt
+    category: Diagram Rendering
+    risk: low
+    business_impact: "Generates diagram code and imagery from a natural-language prompt using AI, producing content but persisting nothing on its own."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/eraserlabs/eraser-io/main/packages/eraser-mcp/README.md
+  - id: eraser.renderSequenceDiagram
+    object: Diagram
+    action: renderSequenceDiagram
+    category: Diagram Rendering
+    risk: low
+    business_impact: "Renders a sequence diagram from supplied diagram code into an image; stateless generation with no stored side effects."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/eraserlabs/eraser-io/main/packages/eraser-mcp/README.md
+  - id: eraser.renderEntityRelationshipDiagram
+    object: Diagram
+    action: renderEntityRelationshipDiagram
+    category: Diagram Rendering
+    risk: low
+    business_impact: "Renders an entity-relationship diagram from supplied diagram code into an image; stateless generation with no stored side effects."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/eraserlabs/eraser-io/main/packages/eraser-mcp/README.md
+  - id: eraser.renderCloudArchitectureDiagram
+    object: Diagram
+    action: renderCloudArchitectureDiagram
+    category: Diagram Rendering
+    risk: low
+    business_impact: "Renders a cloud-architecture diagram from supplied code into an image; the output may encode internal infrastructure topology."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/eraserlabs/eraser-io/main/packages/eraser-mcp/README.md
+  - id: eraser.renderFlowchart
+    object: Diagram
+    action: renderFlowchart
+    category: Diagram Rendering
+    risk: low
+    business_impact: "Renders a flowchart from supplied diagram code into an image; stateless generation with no stored side effects."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/eraserlabs/eraser-io/main/packages/eraser-mcp/README.md
+  - id: eraser.renderBpmnDiagram
+    object: Diagram
+    action: renderBpmnDiagram
+    category: Diagram Rendering
+    risk: low
+    business_impact: "Renders a BPMN process diagram from supplied code into an image; stateless generation with no stored side effects."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/eraserlabs/eraser-io/main/packages/eraser-mcp/README.md
+  - id: eraser.renderElements
+    object: Diagram
+    action: renderElements
+    category: Diagram Rendering
+    risk: low
+    business_impact: "Renders multiple diagram elements from supplied code into a composite image; stateless generation with no stored side effects."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

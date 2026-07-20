@@ -1,0 +1,361 @@
+schema_version: "1.2"
+platform: brightdata
+display_name: Bright Data
+source: langguard-editorial
+updated: "2026-07"
+reference: https://github.com/brightdata/brightdata-mcp
+server_website: https://docs.brightdata.com/ai/mcp-server/tools
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.web_data_linkedin_person_profile
+    object: Person
+    action: web_data_linkedin_person_profile
+    description: "Reads structured LinkedIn people profile data from a valid LinkedIn profile URL."
+    category: Data Access
+    risk: high
+    business_impact: "Exports a full structured LinkedIn profile for a named individual — employment history and contact signals — enabling PII harvesting outside the source platform's controls."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.web_data_linkedin_people_search
+    object: Person
+    action: web_data_linkedin_people_search
+    description: "Reads structured LinkedIn people search results from a LinkedIn people search URL."
+    category: Data Access
+    risk: high
+    business_impact: "Returns structured profile data for many people matching a LinkedIn search, harvesting personal data at scale beyond the source platform's rate and consent controls."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.web_data_linkedin_posts
+    object: Post
+    action: web_data_linkedin_posts
+    description: "Reads structured LinkedIn posts data from a valid LinkedIn post URL."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads a person's LinkedIn posts as structured data, capturing their public professional activity for downstream aggregation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.web_data_linkedin_company_profile
+    object: Company
+    action: web_data_linkedin_company_profile
+    description: "Reads structured LinkedIn company profile data from a valid LinkedIn company URL."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads structured LinkedIn company firmographics such as size, industry, and headquarters for competitive or sales intelligence."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.web_data_instagram_profiles
+    object: Person
+    action: web_data_instagram_profiles
+    description: "Reads structured Instagram profile data from a valid Instagram profile URL."
+    category: Data Access
+    risk: high
+    business_impact: "Exports a structured Instagram profile for an individual, capturing follower counts, bio, and activity as reusable personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.web_data_instagram_comments
+    object: Comment
+    action: web_data_instagram_comments
+    description: "Reads structured Instagram comments data from a valid Instagram URL."
+    category: Data Access
+    risk: medium
+    business_impact: "Collects structured Instagram comment data including commenter handles and text, exposing third parties' personal contributions at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.web_data_facebook_posts
+    object: Post
+    action: web_data_facebook_posts
+    description: "Reads structured Facebook post data from a valid Facebook post URL."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads structured Facebook post data including author and content, capturing individuals' public activity for aggregation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.web_data_tiktok_profiles
+    object: Person
+    action: web_data_tiktok_profiles
+    description: "Reads structured TikTok profile data from a valid TikTok profile URL."
+    category: Data Access
+    risk: high
+    business_impact: "Exports a structured TikTok profile for an individual, capturing handle, follower metrics, and bio as reusable personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.web_data_tiktok_comments
+    object: Comment
+    action: web_data_tiktok_comments
+    description: "Reads structured TikTok comments data from a valid TikTok video URL."
+    category: Data Access
+    risk: medium
+    business_impact: "Collects structured TikTok comment data including commenter handles, exposing third parties' personal contributions at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.web_data_x_posts
+    object: Post
+    action: web_data_x_posts
+    description: "Reads structured X (Twitter) post data from a valid X post URL."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads structured X (Twitter) post data including author and content, capturing individuals' public activity for aggregation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.web_data_youtube_profiles
+    object: Channel
+    action: web_data_youtube_profiles
+    description: "Reads structured YouTube channel profile data from a valid YouTube channel URL."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads structured YouTube channel profile data including owner identity and subscriber metrics for downstream aggregation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.web_data_reddit_posts
+    object: Post
+    action: web_data_reddit_posts
+    description: "Reads structured Reddit post data from a valid Reddit post URL."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads structured Reddit post data including pseudonymous author and content for research or monitoring; usernames may be linkable to real identities."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.web_data_zoominfo_company_profile
+    object: Company
+    action: web_data_zoominfo_company_profile
+    description: "Reads structured ZoomInfo company profile data from a valid ZoomInfo company URL."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads ZoomInfo company profiles that typically embed employee names, titles, and business contact details — B2B personal data harvested at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.web_data_google_maps_reviews
+    object: Review
+    action: web_data_google_maps_reviews
+    description: "Reads structured Google Maps reviews data from a valid Google Maps URL."
+    category: Data Access
+    risk: medium
+    business_impact: "Collects structured Google Maps reviews including reviewer names and text, exposing individuals' public feedback for aggregation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.search_engine
+    object: SearchResult
+    action: search_engine
+    description: "Scrapes search results from Google, Bing, or Yandex with pagination support."
+    category: Data Access
+    risk: low
+    business_impact: "Returns search-engine results for arbitrary queries across Google, Bing, or Yandex, feeding downstream research and monitoring."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.scrape_as_markdown
+    object: Webpage
+    action: scrape_as_markdown
+    description: "Scrapes a single webpage and returns Markdown, using the unlocker to handle bot protection and CAPTCHA."
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves the full content of an arbitrary webpage as Markdown, defeating bot protection and CAPTCHA to reach pages that block automated access."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.scrape_as_html
+    object: Webpage
+    action: scrape_as_html
+    description: "Scrapes a single webpage and returns the HTML response body, handling bot detection and CAPTCHA."
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves the raw HTML of an arbitrary webpage, bypassing bot detection and CAPTCHA to reach access-restricted pages."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.search_engine_batch
+    object: SearchResult
+    action: search_engine_batch
+    description: "Runs up to 10 search queries in parallel across supported engines."
+    category: Data Access
+    risk: medium
+    business_impact: "Runs up to ten search queries in parallel, amplifying automated web reconnaissance across multiple engines in one call."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.scrape_batch
+    object: Webpage
+    action: scrape_batch
+    description: "Scrapes up to 10 webpages in one request and returns URL/content pairs in Markdown."
+    category: Data Access
+    risk: high
+    business_impact: "Scrapes up to ten arbitrary webpages in one request while bypassing bot protection, enabling bulk content collection at scale."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.extract
+    object: Webpage
+    action: extract
+    description: "Scrapes a webpage as Markdown and converts it to structured JSON using AI sampling."
+    category: Data Access
+    risk: medium
+    business_impact: "Scrapes an arbitrary webpage and converts it to structured JSON via AI, turning unstructured pages into machine-usable records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.discover
+    object: SearchResult
+    action: discover
+    description: "Searches the web and ranks results by AI-driven relevance with scoring and geo-targeting."
+    category: Data Access
+    risk: low
+    business_impact: "Searches the web and ranks results by AI relevance, surfacing and scoring sources for automated research workflows."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.scraping_browser_navigate
+    object: BrowserSession
+    action: scraping_browser_navigate
+    description: "Opens or reuses a scraping-browser session and navigates to the provided URL."
+    category: Operations
+    risk: medium
+    business_impact: "Opens a remote scraping-browser session and drives it to an arbitrary URL, establishing an automated browsing session on third-party sites."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.scraping_browser_click_ref
+    object: BrowserSession
+    action: scraping_browser_click_ref
+    description: "Clicks an element using its ref from the latest ARIA snapshot in the scraping-browser session."
+    category: Operations
+    risk: medium
+    business_impact: "Clicks an element in the remote scraping-browser session, allowing automated interaction with controls on third-party websites."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.scraping_browser_type_ref
+    object: BrowserSession
+    action: scraping_browser_type_ref
+    description: "Fills an element identified by ref from the ARIA snapshot, optionally pressing Enter to submit."
+    category: Operations
+    risk: medium
+    business_impact: "Types into and optionally submits a form field in the remote scraping-browser session, letting the agent complete forms or logins on third-party sites."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/brightdata/brightdata-mcp/main/assets/Tools.md
+  - id: brightdata.scraping_browser_snapshot
+    object: BrowserSession
+    action: scraping_browser_snapshot
+    description: "Captures an ARIA snapshot of the current page listing interactive elements and their refs."
+    category: Operations
+    risk: low
+    business_impact: "Captures an accessibility snapshot of the current scraping-browser page, listing interactive elements for subsequent automated actions."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

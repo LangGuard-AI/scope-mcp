@@ -1,0 +1,100 @@
+schema_version: "1.0"
+platform: enterpret
+display_name: Enterpret
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://helpcenter.enterpret.com/en/articles/12665166-wisdom-mcp-server
+  - id: enterpret.run_graph_query
+    object: Feedback
+    action: run_graph_query
+    category: Data Access
+    risk: medium
+    business_impact: "Queries the feedback graph and returns matching customer feedback records with citations, surfacing personal data drawn from support tickets, calls, and reviews."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://helpcenter.enterpret.com/en/articles/12665166-wisdom-mcp-server
+  - id: enterpret.find_user_quote
+    object: Feedback
+    action: find_user_quote
+    category: Data Access
+    risk: medium
+    business_impact: "Surfaces verbatim quotes attributed to individual customers, exposing their personal words tied to identifiable source records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://helpcenter.enterpret.com/en/articles/12665166-wisdom-mcp-server
+  - id: enterpret.search_graph_values
+    object: Taxonomy
+    action: search_graph_values
+    category: Data Access
+    risk: low
+    business_impact: "Resolves the real themes, accounts, sources, and taxonomy labels present in the feedback data so queries filter on actual values."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://helpcenter.enterpret.com/en/articles/12665166-wisdom-mcp-server
+  - id: enterpret.search_graph_fields
+    object: Field
+    action: search_graph_fields
+    category: Data Access
+    risk: low
+    business_impact: "Lists integration-specific fields such as Zendesk tags, App Store ratings, and Gong call metadata that are available for querying."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://helpcenter.enterpret.com/en/articles/12665166-wisdom-mcp-server
+  - id: enterpret.get_graph_schema
+    object: Schema
+    action: get_graph_schema
+    category: Data Access
+    risk: low
+    business_impact: "Reveals the feedback taxonomy and how tracked feedback is structured for the assistant to reason over."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://helpcenter.enterpret.com/en/articles/12665166-wisdom-mcp-server
+  - id: enterpret.get_query_examples
+    object: Schema
+    action: get_query_examples
+    category: Data Access
+    risk: low
+    business_impact: "Returns reference query patterns that guide how the assistant phrases feedback questions before answering."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://helpcenter.enterpret.com/en/articles/12665166-wisdom-mcp-server
+  - id: enterpret.get_organization_details
+    object: Organization
+    action: get_organization_details
+    category: Operations
+    risk: low
+    business_impact: "Identifies the connected Enterpret organization so answers link back to the correct dashboard."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

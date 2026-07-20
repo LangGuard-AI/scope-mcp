@@ -1,0 +1,33 @@
+schema_version: "1.0"
+platform: fever-event-discovery
+display_name: Fever Event Discovery
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://developer.feverup.com/en/
+  - id: fever-event-discovery.search_events
+    object: Event
+    action: search_events
+    category: Data Access
+    risk: low
+    business_impact: "Returns Fever event listings filtered by city, date, keyword, price, or rating; read-only discovery with no write or personal-data access."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developer.feverup.com/en/
+  - id: fever-event-discovery.search_cities
+    object: City
+    action: search_cities
+    category: Data Access
+    risk: low
+    business_impact: "Returns the cities where Fever operates and their city codes; read-only market metadata lookup with no write access."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

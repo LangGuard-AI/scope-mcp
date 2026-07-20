@@ -1,0 +1,325 @@
+schema_version: "1.0"
+platform: freshdesk
+display_name: Freshdesk
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.createAgent
+    object: Agent
+    action: createAgent
+    category: Identity & Access
+    risk: high
+    business_impact: "Provisions a new Freshdesk agent with a login and access to customer tickets and contact PII, expanding the set of principals who can read helpdesk data."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.updateAgent
+    object: Agent
+    action: updateAgent
+    category: Identity & Access
+    risk: high
+    business_impact: "Modifies an existing agent's role or ticket scope; a role change here can widen one agent's access to customer data and helpdesk controls without a separate approver."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.fetchAgents
+    object: Agent
+    action: fetchAgents
+    category: Identity & Access
+    risk: medium
+    business_impact: "Retrieves the full roster of support agents with names, emails, and role assignments, exposing the internal staffing and access inventory of the helpdesk."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.createGroup
+    object: Group
+    action: createGroup
+    category: Identity & Access
+    risk: medium
+    business_impact: "Creates a support group that governs ticket routing and which agents can be assigned work, shaping how customer tickets are distributed and accessed."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.updateGroup
+    object: Group
+    action: updateGroup
+    category: Identity & Access
+    risk: medium
+    business_impact: "Changes a support group's membership or routing configuration, altering which agents receive and can access the tickets in that queue."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.createContact
+    object: Contact
+    action: createContact
+    category: Customer
+    risk: medium
+    business_impact: "Creates a customer contact record holding name, email, phone, and other requester PII in the helpdesk."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.fetchContact
+    object: Contact
+    action: fetchContact
+    category: Customer
+    risk: medium
+    business_impact: "Reads a single customer contact record, exposing that individual's name, email, phone, and support history."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.fetchContacts
+    object: Contact
+    action: fetchContacts
+    category: Customer
+    risk: high
+    business_impact: "Lists customer contact records in bulk, exposing names, emails, and phone numbers for many individuals at once as a mass-PII read."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.fetchContactAutocomplete
+    object: Contact
+    action: fetchContactAutocomplete
+    category: Customer
+    risk: medium
+    business_impact: "Returns partial-match customer contact suggestions by name or email, surfacing requester PII through type-ahead lookups."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.createCompany
+    object: Company
+    action: createCompany
+    category: Customer
+    risk: medium
+    business_impact: "Creates a company record representing a customer organization, including domain, industry, and account notes."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.updateCompany
+    object: Company
+    action: updateCompany
+    category: Customer
+    risk: medium
+    business_impact: "Updates a customer company's account fields such as domain, health, or renewal notes, changing business context used across its tickets."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.fetchSearchCompanies
+    object: Company
+    action: fetchSearchCompanies
+    category: Customer
+    risk: low
+    business_impact: "Searches company records by attributes, returning matching customer-organization accounts and their business details."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Service ----------
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.createTicket
+    object: Ticket
+    action: createTicket
+    category: Service
+    risk: medium
+    business_impact: "Creates a support ticket capturing a customer's request, contact details, and issue description in the helpdesk queue."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.updateTicket
+    object: Ticket
+    action: updateTicket
+    category: Service
+    risk: medium
+    business_impact: "Modifies a support ticket's status, priority, assignment, or fields, changing how a customer's case is handled and recorded."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.createTicketBulkUpdate
+    object: Ticket
+    action: createTicketBulkUpdate
+    category: Service
+    risk: high
+    business_impact: "Applies field or status changes to many tickets in a single operation, mutating large volumes of customer-case records at once."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.fetchTicket
+    object: Ticket
+    action: fetchTicket
+    category: Service
+    risk: medium
+    business_impact: "Reads a single support ticket including the customer's contact info, conversation, and issue details."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.fetchTickets
+    object: Ticket
+    action: fetchTickets
+    category: Service
+    risk: high
+    business_impact: "Lists support tickets in bulk, exposing many customers' contact details and issue contents in one read as mass-PII exposure."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.fetchSearchTickets
+    object: Ticket
+    action: fetchSearchTickets
+    category: Service
+    risk: medium
+    business_impact: "Searches tickets by query across the helpdesk, returning matching customer cases and their embedded contact and issue data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.fetchTicketConversations
+    object: Ticket
+    action: fetchTicketConversations
+    category: Service
+    risk: high
+    business_impact: "Retrieves the full conversation thread of a ticket, exposing private customer support communications and any personal data within them."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.replyTicket
+    object: Conversation
+    action: replyTicket
+    category: Service
+    risk: medium
+    business_impact: "Sends an outbound reply to the customer on a ticket, communicating externally on the company's behalf and processing the requester's contact data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.createTicketNote
+    object: Conversation
+    action: createTicketNote
+    category: Service
+    risk: low
+    business_impact: "Adds an internal private note to a ticket, visible to agents only, recording context or handling instructions on the case."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.updateConversation
+    object: Conversation
+    action: updateConversation
+    category: Service
+    risk: medium
+    business_impact: "Edits an existing ticket conversation entry, changing the recorded content of a customer support exchange."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Knowledge Base ----------
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.createSolutionFolderArticle
+    object: SolutionArticle
+    action: createSolutionFolderArticle
+    category: Knowledge Base
+    risk: low
+    business_impact: "Publishes a new knowledge-base article in a solution folder, adding self-service help content for customers."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.freshdesk.com/support/solutions/articles/50000012670-model-context-protocol-mcp-integration-in-freshdesk-eap-
+  - id: freshdesk.updateSolutionArticle
+    object: SolutionArticle
+    action: updateSolutionArticle
+    category: Knowledge Base
+    risk: low
+    business_impact: "Edits an existing knowledge-base article's content or publication status, changing published self-service documentation."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

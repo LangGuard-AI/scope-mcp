@@ -1,0 +1,338 @@
+schema_version: "1.0"
+platform: adobe-workfront
+display_name: Adobe Workfront
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.planning_modify_workspace_sharing
+    object: Workspace
+    action: planning_modify_workspace_sharing
+    category: Identity & Access
+    risk: high
+    business_impact: "Grants or revokes access to an entire workspace and every record type, field, and view inside it, potentially exposing all planning data to new principals."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.planning_modify_record_type_sharing
+    object: RecordType
+    action: planning_modify_record_type_sharing
+    category: Identity & Access
+    risk: high
+    business_impact: "Changes who can access a record type and all of its records, widening or removing visibility of the underlying data set."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.planning_modify_records_sharing
+    object: Record
+    action: planning_modify_records_sharing
+    category: Identity & Access
+    risk: high
+    business_impact: "Alters access permissions on one or more individual records, exposing or hiding their field data from selected users, groups, or teams."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.planning_modify_view_sharing
+    object: View
+    action: planning_modify_view_sharing
+    category: Identity & Access
+    risk: medium
+    business_impact: "Adjusts who can access a saved view, exposing the filtered record data it surfaces to additional users."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.planning_delete_workspace
+    object: Workspace
+    action: planning_delete_workspace
+    category: Operations
+    risk: critical
+    business_impact: "Permanently deletes a workspace and all of its record types, fields, views, and data with no recovery path."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.planning_delete_record_type
+    object: RecordType
+    action: planning_delete_record_type
+    category: Operations
+    risk: critical
+    business_impact: "Permanently deletes a record type along with every record, field, and view it contains, destroying that data irreversibly."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.planning_delete_field
+    object: Field
+    action: planning_delete_field
+    category: Operations
+    risk: high
+    business_impact: "Permanently removes a field and all values stored in it across a record type, causing irreversible loss of that column's data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.workflow_delete_any_object
+    object: "*"
+    action: workflow_delete_any_object
+    category: Operations
+    risk: high
+    business_impact: "Deletes an arbitrary Workfront object (project, task, issue, program) by ID, removing it and its dependent data from the instance."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.planning_delete_view
+    object: View
+    action: planning_delete_view
+    category: Operations
+    risk: medium
+    business_impact: "Deletes a saved view definition; the underlying records are untouched but the configured filters, sorting, and layout are lost."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.planning_bulk_record_actions
+    object: Record
+    action: planning_bulk_record_actions
+    category: Operations
+    risk: high
+    business_impact: "Creates, updates, deletes, or restores many records in one request, applying wide-reaching data changes across a record type in a single call."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.planning_convert_workspace_to_template
+    object: Workspace
+    action: planning_convert_workspace_to_template
+    category: Operations
+    risk: medium
+    business_impact: "Saves an existing workspace and its structure as a reusable admin template, exposing the source workspace's schema for reuse."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.planning_create_record_types
+    object: RecordType
+    action: planning_create_record_types
+    category: Operations
+    risk: medium
+    business_impact: "Adds one or more new record types to a workspace section, extending the data model available to users."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.planning_create_fields
+    object: Field
+    action: planning_create_fields
+    category: Operations
+    risk: medium
+    business_impact: "Adds one or more fields to a record type, changing the schema and the shape of data collected in that record type."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.planning_update_record_type
+    object: RecordType
+    action: planning_update_record_type
+    category: Operations
+    risk: low
+    business_impact: "Updates a record type's name, description, icon, or color, changing how it is labeled and presented to users."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Approvals ----------
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.approvals_create_or_update_approval_workflow
+    object: ApprovalWorkflow
+    action: approvals_create_or_update_approval_workflow
+    category: Approvals
+    risk: medium
+    business_impact: "Creates or replaces the approval workflow stages on a document version, reconfiguring who must sign off before it is approved."
+    compliance: [SOC2]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.approvals_create_approval_from_template
+    object: ApprovalWorkflow
+    action: approvals_create_approval_from_template
+    category: Approvals
+    risk: medium
+    business_impact: "Applies a predefined approval template to a document, establishing its review stages and required participants."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.approvals_update_approval_participants
+    object: ApprovalWorkflow
+    action: approvals_update_approval_participants
+    category: Approvals
+    risk: high
+    business_impact: "Adds, removes, or replaces approval participants across an entire portfolio, changing who is required to review work at scale."
+    compliance: [SOC2]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.approvals_delete_approval_stage
+    object: ApprovalStage
+    action: approvals_delete_approval_stage
+    category: Approvals
+    risk: medium
+    business_impact: "Removes a single stage from an approval workflow, eliminating a review gate that would otherwise be required."
+    compliance: [SOC2]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.approvals_create_template
+    object: ApprovalTemplate
+    action: approvals_create_template
+    category: Approvals
+    risk: medium
+    business_impact: "Creates a new reusable approval template with linear or graph-based stage dependencies for later use across the instance."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.approvals_update_template
+    object: ApprovalTemplate
+    action: approvals_update_template
+    category: Approvals
+    risk: medium
+    business_impact: "Updates an existing approval template's stages and dependencies, altering the standard review path applied wherever it is used."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.workflow_create_any_object
+    object: "*"
+    action: workflow_create_any_object
+    category: Data Access
+    risk: medium
+    business_impact: "Creates a new Workfront object such as a project, task, issue, or program, adding it to the instance's live work data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.workflow_update_any_object
+    object: "*"
+    action: workflow_update_any_object
+    category: Data Access
+    risk: medium
+    business_impact: "Updates fields on an existing Workfront object, changing live project, task, or issue data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.workflow_search_any_object
+    object: "*"
+    action: workflow_search_any_object
+    category: Data Access
+    risk: low
+    business_impact: "Runs a flexible filtered search across Workfront objects, returning matching project, task, and issue records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.planning_create_connection_record
+    object: Record
+    action: planning_create_connection_record
+    category: Data Access
+    risk: medium
+    business_impact: "Creates a record in a connected external system, writing data outward across an integration boundary."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://experienceleague.adobe.com/en/docs/workfront/using/basics/workfront-mcp-server/workfront-mcp-server-tools
+  - id: adobe-workfront.planning_get_record_change_log
+    object: Record
+    action: planning_get_record_change_log
+    category: Data Access
+    risk: low
+    business_impact: "Returns the field-level edit history for a record, exposing who changed which values and when."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

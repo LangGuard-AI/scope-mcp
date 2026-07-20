@@ -1,0 +1,313 @@
+schema_version: "1.1"
+platform: ticket-tailor
+display_name: Ticket Tailor
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Financial ----------
+
+  # source: https://developers.tickettailor.com/docs/mcp/available-tools/
+  - id: ticket-tailor.orders
+    object: Order
+    action: orders
+    id_form: capability
+    description: "Orders"
+    category: Financial
+    risk: high
+    business_impact: "Views and modifies customer orders including buyer contact details and payment transaction records, and can alter or refund completed purchases."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, PCI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.tickettailor.com/docs/mcp/available-tools/
+  - id: ticket-tailor.order_reports
+    object: Report
+    action: order_reports
+    id_form: capability
+    description: "Order Reports"
+    category: Financial
+    risk: medium
+    business_impact: "Pulls and analyses sales data across orders, surfacing buyer-level purchase and revenue records that may include personal data at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, PCI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.tickettailor.com/docs/mcp/available-tools/
+  - id: ticket-tailor.overview
+    object: Report
+    action: overview
+    id_form: capability
+    description: "Overview"
+    category: Financial
+    risk: low
+    business_impact: "Returns box-office summary statistics such as aggregate sales and revenue totals for the account."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://developers.tickettailor.com/docs/mcp/available-tools/
+  - id: ticket-tailor.issued_memberships
+    object: Membership
+    action: issued_memberships
+    id_form: capability
+    description: "Issued Memberships"
+    category: Customer
+    risk: high
+    business_impact: "Creates, updates, and voids individual member records and mints temporary signed URLs to member photos, exposing member names, emails, and images."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.tickettailor.com/docs/mcp/available-tools/
+  - id: ticket-tailor.membership_redemptions
+    object: Redemption
+    action: membership_redemptions
+    id_form: capability
+    description: "Membership Redemptions"
+    category: Customer
+    risk: medium
+    business_impact: "Records redemptions of issued memberships at events, linking a named member to attendance activity."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.tickettailor.com/docs/mcp/available-tools/
+  - id: ticket-tailor.check_ins
+    object: CheckIn
+    action: check_ins
+    id_form: capability
+    description: "Check-ins"
+    category: Customer
+    risk: medium
+    business_impact: "Records attendee check-ins and controls venue entry, writing attendance state tied to individual ticket holders."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.tickettailor.com/docs/mcp/available-tools/
+  - id: ticket-tailor.attendance_tracking
+    object: Attendance
+    action: attendance_tracking
+    id_form: capability
+    description: "Attendance Tracking"
+    category: Customer
+    risk: low
+    business_impact: "Reads check-in data to monitor who has attended, surfacing attendee-level attendance across an event."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.tickettailor.com/docs/mcp/available-tools/
+  - id: ticket-tailor.waitlists
+    object: Waitlist
+    action: waitlists
+    id_form: capability
+    description: "Waitlists"
+    category: Customer
+    risk: medium
+    business_impact: "Manages waitlist signups, storing prospective attendees' names and contact details for events."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Revenue & Pipeline ----------
+
+  # source: https://developers.tickettailor.com/docs/mcp/available-tools/
+  - id: ticket-tailor.issued_tickets
+    object: Ticket
+    action: issued_tickets
+    id_form: capability
+    description: "Issued Tickets"
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Generates individual attendee tickets and consumes one paid credit per ticket issued — even free tickets — directly incurring account cost."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.tickettailor.com/docs/mcp/available-tools/
+  - id: ticket-tailor.ticket_types
+    object: TicketType
+    action: ticket_types
+    id_form: capability
+    description: "Ticket Types"
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Creates and manages ticket categories and their pricing, shaping what buyers can purchase for an event."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.tickettailor.com/docs/mcp/available-tools/
+  - id: ticket-tailor.ticket_groups
+    object: TicketGroup
+    action: ticket_groups
+    id_form: capability
+    description: "Ticket Groups"
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Creates ticket groups and sets purchase limits and bundling rules across ticket types."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.tickettailor.com/docs/mcp/available-tools/
+  - id: ticket-tailor.bundles
+    object: Bundle
+    action: bundles
+    id_form: capability
+    description: "Bundles"
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Creates ticket bundles and packages that combine multiple ticket types into a single purchasable offer."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.tickettailor.com/docs/mcp/available-tools/
+  - id: ticket-tailor.discounts
+    object: Discount
+    action: discounts
+    id_form: capability
+    description: "Discounts"
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Creates and manages discount codes that reduce ticket prices and directly affect event revenue."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.tickettailor.com/docs/mcp/available-tools/
+  - id: ticket-tailor.vouchers
+    object: Voucher
+    action: vouchers
+    id_form: capability
+    description: "Vouchers"
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Sets up gift cards and promotional vouchers that carry monetary value redeemable against purchases."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.tickettailor.com/docs/mcp/available-tools/
+  - id: ticket-tailor.products
+    object: Product
+    action: products
+    id_form: capability
+    description: "Products"
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Manages merchandise and add-on products offered alongside event tickets."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.tickettailor.com/docs/mcp/available-tools/
+  - id: ticket-tailor.holds
+    object: Hold
+    action: holds
+    id_form: capability
+    description: "Holds"
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reserves tickets for manual sales, removing inventory from public availability without a purchase."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.tickettailor.com/docs/mcp/available-tools/
+  - id: ticket-tailor.membership_types
+    object: MembershipType
+    action: membership_types
+    id_form: capability
+    description: "Membership Types"
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Creates, updates, and deletes membership types along with validity settings, benefits, and photo requirements."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://developers.tickettailor.com/docs/mcp/available-tools/
+  - id: ticket-tailor.event_series
+    object: EventSeries
+    action: event_series
+    id_form: capability
+    description: "Event Series"
+    category: Operations
+    risk: medium
+    business_impact: "Creates, updates, and deletes event series, restructuring the catalogue of events an organiser runs."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.tickettailor.com/docs/mcp/available-tools/
+  - id: ticket-tailor.event_occurrences
+    object: EventOccurrence
+    action: event_occurrences
+    id_form: capability
+    description: "Event Occurrences"
+    category: Operations
+    risk: low
+    business_impact: "Adds individual event instances to an existing series, scheduling new dated occurrences."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.tickettailor.com/docs/mcp/available-tools/
+  - id: ticket-tailor.event_status
+    object: Event
+    action: event_status
+    id_form: capability
+    description: "Event Status"
+    category: Operations
+    risk: medium
+    business_impact: "Changes an event's publication status between draft, published, and closed, controlling public visibility and ticket sales."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

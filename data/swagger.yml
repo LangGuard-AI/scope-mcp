@@ -1,0 +1,339 @@
+schema_version: "1.0"
+platform: swagger
+display_name: Swagger (SmartBear)
+source: langguard-editorial
+updated: "2026-07"
+reference: https://github.com/SmartBear/smartbear-mcp
+actions:
+  # ---------- Developer Portal ----------
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-portal-integration.md
+  - id: swagger.create_portal
+    object: Portal
+    action: create_portal
+    category: Developer Portal
+    risk: medium
+    business_impact: "Provisions a new public-facing developer portal under the organization, creating a live surface that portal visitors can eventually reach."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-portal-integration.md
+  - id: swagger.update_portal
+    object: Portal
+    action: update_portal
+    category: Developer Portal
+    risk: medium
+    business_impact: "Changes an existing portal's configuration, altering how the developer portal presents and behaves for its visitors."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-portal-integration.md
+  - id: swagger.publish_portal_product
+    object: PortalProduct
+    action: publish_portal_product
+    category: Developer Portal
+    risk: medium
+    business_impact: "Makes a product's current content live to portal visitors, exposing documentation and API references to the portal's audience."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-portal-integration.md
+  - id: swagger.delete_portal_product
+    object: PortalProduct
+    action: delete_portal_product
+    category: Developer Portal
+    risk: medium
+    business_impact: "Removes a product from a portal, taking down its documentation and any sections nested under it."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-portal-integration.md
+  - id: swagger.create_portal_product
+    object: PortalProduct
+    action: create_portal_product
+    category: Developer Portal
+    risk: medium
+    business_impact: "Adds a new product to a portal, creating a documentation container that can later be published to visitors."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-portal-integration.md
+  - id: swagger.update_portal_product
+    object: PortalProduct
+    action: update_portal_product
+    category: Developer Portal
+    risk: medium
+    business_impact: "Edits an existing product within a portal, changing the metadata and settings that shape its published documentation."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-portal-integration.md
+  - id: swagger.list_portals
+    object: Portal
+    action: list_portals
+    category: Developer Portal
+    risk: low
+    business_impact: "Lists portals the caller owns or designs, enumerating the developer-portal surface available to the organization."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-portal-integration.md
+  - id: swagger.get_portal
+    object: Portal
+    action: get_portal
+    category: Developer Portal
+    risk: low
+    business_impact: "Returns the full metadata for a single portal, surfacing its configuration details to the caller."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-portal-integration.md
+  - id: swagger.resolve_organization_portal
+    object: Portal
+    action: resolve_organization_portal
+    category: Developer Portal
+    risk: low
+    business_impact: "Resolves the portal mapped to an organization and returns its details and product list in one read."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-portal-integration.md
+  - id: swagger.list_portal_products
+    object: PortalProduct
+    action: list_portal_products
+    category: Developer Portal
+    risk: low
+    business_impact: "Returns the paginated set of products configured within a given portal."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-portal-integration.md
+  - id: swagger.get_portal_product
+    object: PortalProduct
+    action: get_portal_product
+    category: Developer Portal
+    risk: low
+    business_impact: "Returns the full property set for a single portal product to the caller."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- API Design & Governance ----------
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-studio-integration.md
+  - id: swagger.create_or_update_api
+    object: ApiDefinition
+    action: create_or_update_api
+    category: API Design & Governance
+    risk: medium
+    business_impact: "Writes an API definition into the SwaggerHub Registry, creating or overwriting the canonical spec other teams and tools consume."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-studio-integration.md
+  - id: swagger.create_api_from_prompt
+    object: ApiDefinition
+    action: create_api_from_prompt
+    category: API Design & Governance
+    risk: medium
+    business_impact: "Generates and saves a new API definition from a natural-language prompt via SmartBear AI, persisting AI-authored specification content to the registry."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-studio-integration.md
+  - id: swagger.standardize_api
+    object: ApiDefinition
+    action: standardize_api
+    category: API Design & Governance
+    risk: medium
+    business_impact: "Auto-rewrites an API definition with SmartBear AI to fix standardization errors, mutating the specification content in place."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-studio-integration.md
+  - id: swagger.scan_api_standardization
+    object: ApiDefinition
+    action: scan_api_standardization
+    category: API Design & Governance
+    risk: low
+    business_impact: "Validates a supplied API definition against the organization's governance rules and returns findings without changing the spec."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-studio-integration.md
+  - id: swagger.scan_api_standardization_from_registry
+    object: ApiDefinition
+    action: scan_api_standardization_from_registry
+    category: API Design & Governance
+    risk: low
+    business_impact: "Fetches a registry API by name and version and scans it against governance rules, returning findings without modifying the spec."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-studio-integration.md
+  - id: swagger.search_apis_and_domains
+    object: ApiDefinition
+    action: search_apis_and_domains
+    category: API Design & Governance
+    risk: low
+    business_impact: "Searches Swagger Studio for APIs and domains and returns their metadata, enumerating the organization's specification catalog."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-studio-integration.md
+  - id: swagger.get_api_definition
+    object: ApiDefinition
+    action: get_api_definition
+    category: API Design & Governance
+    risk: low
+    business_impact: "Returns the resolved OpenAPI specification for a named API and version, exposing the full contract to the caller."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Documentation ----------
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-portal-integration.md
+  - id: swagger.delete_table_of_contents
+    object: TableOfContents
+    action: delete_table_of_contents
+    category: Documentation
+    risk: medium
+    business_impact: "Soft-deletes a table-of-contents entry and can recursively remove nested items, taking the affected documentation out of the navigation tree."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-portal-integration.md
+  - id: swagger.create_documentation_page
+    object: Document
+    action: create_documentation_page
+    category: Documentation
+    risk: low
+    business_impact: "Adds a Markdown or HTML documentation page to a portal product in a single call."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-portal-integration.md
+  - id: swagger.update_document
+    object: Document
+    action: update_document
+    category: Documentation
+    risk: low
+    business_impact: "Overwrites the content or source of an existing portal document with new HTML or Markdown."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-portal-integration.md
+  - id: swagger.create_table_of_contents
+    object: TableOfContents
+    action: create_table_of_contents
+    category: Documentation
+    risk: low
+    business_impact: "Adds a table-of-contents item to a portal product section, supporting API-reference, HTML, and Markdown entries."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-portal-integration.md
+  - id: swagger.list_table_of_contents
+    object: TableOfContents
+    action: list_table_of_contents
+    category: Documentation
+    risk: low
+    business_impact: "Returns the nested table-of-contents structure and content metadata for a product section."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-portal-integration.md
+  - id: swagger.get_document
+    object: Document
+    action: get_document
+    category: Documentation
+    risk: low
+    business_impact: "Returns the HTML or Markdown content and metadata of a document by its identifier."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Org & Access ----------
+
+  # source: https://github.com/SmartBear/smartbear-mcp/blob/main/docs/products/SmartBear%20MCP%20Server/swagger-studio-integration.md
+  - id: swagger.list_organizations
+    object: Organization
+    action: list_organizations
+    category: Org & Access
+    risk: low
+    business_impact: "Lists organizations the authenticated user belongs to, and for on-premise admins enumerates every organization in the system."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

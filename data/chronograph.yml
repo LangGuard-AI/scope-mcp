@@ -1,0 +1,100 @@
+schema_version: "1.1"
+platform: chronograph
+display_name: Chronograph
+source: langguard-editorial
+updated: "2026-07"
+reference: https://claude.com/resources/tutorials/using-chronograph-for-portfolio-monitoring
+actions:
+  # ---------- Financial ----------
+
+  # source: https://claude.com/resources/tutorials/using-chronograph-for-portfolio-monitoring
+  - id: chronograph.portfolio_exposure_tracking
+    object: PortfolioExposure
+    action: portfolio_exposure_tracking
+    id_form: capability
+    description: "Portfolio Exposure Tracking"
+    category: Financial
+    risk: low
+    business_impact: "Lists top company exposures by investment status, surfacing confidential portfolio positions and concentration data to the agent."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/resources/tutorials/using-chronograph-for-portfolio-monitoring
+  - id: chronograph.commitment_history_analysis
+    object: Commitment
+    action: commitment_history_analysis
+    id_form: capability
+    description: "Commitment History Analysis"
+    category: Financial
+    risk: low
+    business_impact: "Aggregates fund-level metrics such as NAV, Net IRR, and MOIC across commitment history, exposing confidential fund-performance figures."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/resources/tutorials/using-chronograph-for-portfolio-monitoring
+  - id: chronograph.investment_metrics_calculator
+    object: Investment
+    action: investment_metrics_calculator
+    id_form: capability
+    description: "Investment Metrics Calculator"
+    category: Financial
+    risk: low
+    business_impact: "Computes performance metrics across specific investments, exposing confidential deal-level financial figures to the agent."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/resources/tutorials/using-chronograph-for-portfolio-monitoring
+  - id: chronograph.entity_search_and_discovery
+    object: Entity
+    action: entity_search_and_discovery
+    id_form: capability
+    description: "Entity Search and Discovery"
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces companies, funds, groups, and general partners matching a substring query, revealing which investment entities exist in the firm's database."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/resources/tutorials/using-chronograph-for-portfolio-monitoring
+  - id: chronograph.core_entity_information
+    object: Entity
+    action: core_entity_information
+    id_form: capability
+    description: "Core Entity Information"
+    category: Data Access
+    risk: low
+    business_impact: "Returns detailed entity identifiers and core attributes, providing reference data an agent can use to profile specific investment entities."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/resources/tutorials/using-chronograph-for-portfolio-monitoring
+  - id: chronograph.help_center_integration
+    object: HelpArticle
+    action: help_center_integration
+    id_form: capability
+    description: "Help Center Integration"
+    category: Data Access
+    risk: low
+    business_impact: "Searches and retrieves Chronograph help-center articles, returning public product documentation with no access to portfolio data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

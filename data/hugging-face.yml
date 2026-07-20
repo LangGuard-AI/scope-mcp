@@ -1,0 +1,62 @@
+schema_version: "1.0"
+platform: hugging-face
+display_name: Hugging Face
+source: langguard-editorial
+updated: "2026-07"
+reference: https://huggingface.co/mcp
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://huggingface.co/mcp
+  - id: hugging-face.hf_whoami
+    object: User
+    action: hf_whoami
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns the authenticated caller's Hugging Face identity or an anonymous-usage notice; read-only and scoped to the token owner's own account."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://huggingface.co/mcp
+  - id: hugging-face.hub_repo_search
+    object: Repository
+    action: hub_repo_search
+    category: Data Access
+    risk: low
+    business_impact: "Searches accessible Hub repositories (models, datasets, spaces) by query; read-only discovery that changes no state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://huggingface.co/mcp
+  - id: hugging-face.hub_repo_details
+    object: Repository
+    action: hub_repo_details
+    category: Data Access
+    risk: low
+    business_impact: "Returns metadata and dataset previews for one or more Hub repos; read-only but can surface sample rows of accessible datasets."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://huggingface.co/mcp
+  - id: hugging-face.hf_fs
+    object: Repository
+    action: hf_fs
+    category: Data Access
+    risk: medium
+    business_impact: "Navigates and reads file contents across the Hub filesystem — including private buckets, datasets, and spaces the token can reach — enabling broad read of confidential resources."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

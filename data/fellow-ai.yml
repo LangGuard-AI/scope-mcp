@@ -1,0 +1,73 @@
+schema_version: "1.0"
+platform: fellow-ai
+display_name: Fellow.ai
+source: langguard-editorial
+updated: "2026-07"
+reference: https://help.fellow.ai/en/articles/12622641-fellow-s-mcp-server
+actions:
+  # ---------- Meetings ----------
+
+  # source: https://help.fellow.ai/en/articles/12622641-fellow-s-mcp-server
+  - id: fellow-ai.get_meeting_transcript
+    object: Meeting
+    action: get_meeting_transcript
+    category: Meetings
+    risk: medium
+    business_impact: "Returns the verbatim transcript of a meeting, exposing full attributed private discussion content that may include personal data and confidential business detail."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.fellow.ai/en/articles/12622641-fellow-s-mcp-server
+  - id: fellow-ai.get_meeting_summary
+    object: Meeting
+    action: get_meeting_summary
+    category: Meetings
+    risk: medium
+    business_impact: "Retrieves the AI-generated summary of a meeting, surfacing decisions and attributed discussion points that can contain personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.fellow.ai/en/articles/12622641-fellow-s-mcp-server
+  - id: fellow-ai.search_meetings
+    object: Meeting
+    action: search_meetings
+    category: Meetings
+    risk: medium
+    business_impact: "Queries across the user's meeting corpus, letting an agent surface content from any meeting the user can access via natural-language search."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.fellow.ai/en/articles/12622641-fellow-s-mcp-server
+  - id: fellow-ai.get_meeting_participants
+    object: Meeting
+    action: get_meeting_participants
+    category: Meetings
+    risk: low
+    business_impact: "Lists the identifiable attendees of a meeting, exposing participant names and identity details as personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.fellow.ai/en/articles/12622641-fellow-s-mcp-server
+  - id: fellow-ai.get_action_items
+    object: ActionItem
+    action: get_action_items
+    category: Meetings
+    risk: low
+    business_impact: "Retrieves action items assigned during meetings, exposing task assignments and follow-up commitments the user has access to."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

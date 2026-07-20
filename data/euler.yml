@@ -1,0 +1,343 @@
+schema_version: "1.0"
+platform: euler
+display_name: Euler
+source: langguard-editorial
+updated: "2026-07"
+reference: https://mcp.eulerapp.com/public/docs
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.manage_partner_users
+    object: Role
+    action: manage_partner_users
+    category: Identity & Access
+    risk: high
+    business_impact: "Creates permission roles and assigns them to partner-team members, expanding portal access and setting default roles for all future members — bypasses access-review controls."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.partner_users
+    object: PartnerUser
+    action: partner_users
+    category: Identity & Access
+    risk: medium
+    business_impact: "Exposes the partner portal's user roster, their activated logins, and assigned permission roles, revealing who holds elevated access."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.invite_partners_to_portal
+    object: PartnerContact
+    action: invite_partners_to_portal
+    category: Identity & Access
+    risk: medium
+    business_impact: "Grants existing partner contacts portal login access and triggers invitation emails, provisioning access to partner-facing data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.create_partner_contact
+    object: PartnerContact
+    action: create_partner_contact
+    category: Identity & Access
+    risk: low
+    business_impact: "Adds a named individual to a partner organization, recording their contact identity in the partner record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.list_partner_contacts
+    object: PartnerContact
+    action: list_partner_contacts
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns a partner's full team roster with contact identifiers, exposing personal contact details of named individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Financial ----------
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.company_invoices
+    object: Invoice
+    action: company_invoices
+    category: Financial
+    risk: medium
+    business_impact: "Surfaces company-wide invoices with status, dates, currency, and summary totals, exposing aggregate billing and financial position."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.commissions
+    object: Commission
+    action: commissions
+    category: Financial
+    risk: medium
+    business_impact: "Returns commission calculations and individual partner earnings across a date range, exposing partner compensation figures."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.charges_lookup
+    object: Charge
+    action: charges_lookup
+    category: Financial
+    risk: low
+    business_impact: "Reveals charges linked to deals and full charge details, exposing billing amounts tied to partner transactions."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.partner_artifacts
+    object: PartnerArtifact
+    action: partner_artifacts
+    category: Financial
+    risk: low
+    business_impact: "Aggregates a partner's agreements, tracking links, deals, charges, and invoices into a single view, exposing that partner's contractual and financial footprint."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Revenue & Pipeline ----------
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.manage_deals
+    object: Deal
+    action: manage_deals
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Creates, updates, or batch-processes deals attributed to partners, altering pipeline records that drive attribution and downstream commissions."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.referrals
+    object: Referral
+    action: referrals
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Searches referrals and deal-registrations and retrieves partner-submitted form answers and rejection reasons."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.submit_referral
+    object: Referral
+    action: submit_referral
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Files a new referral on behalf of a partner using collected form answers, registering a deal-registration record."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.resolve_referral
+    object: Referral
+    action: resolve_referral
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Approves or rejects a submitted referral with optional partner notification, deciding deal-registration eligibility in a single step."
+    compliance: []
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.influenced_sourced_deals
+    object: Deal
+    action: influenced_sourced_deals
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Returns sourced-versus-influenced deal attribution with per-partner breakdowns, exposing how revenue credit is allocated."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.performance
+    object: Partner
+    action: performance
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Ranks partners by revenue or deal count over a date range, exposing comparative partner performance metrics."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.get_partner_overall_stats
+    object: Partner
+    action: get_partner_overall_stats
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Delivers an executive snapshot of partner counts, deal metrics, revenue totals, and the top 100 revenue-ranked partners in one call."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Messaging ----------
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.communications_manage
+    object: Broadcast
+    action: communications_manage
+    category: Messaging
+    risk: medium
+    business_impact: "Creates audiences and templates and sends broadcast emails to partner contacts, dispatching mass communications to named individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.flows_manage
+    object: Flow
+    action: flows_manage
+    category: Operations
+    risk: medium
+    business_impact: "Creates, edits, publishes, and assigns onboarding, training, and certification flows to partners, changing what partners are required to complete."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.quizzes_manage
+    object: Quiz
+    action: quizzes_manage
+    category: Operations
+    risk: medium
+    business_impact: "Creates quizzes and adds, updates, or deletes questions, propagating changes into in-progress certification attempts."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.si_manage_service_project
+    object: ServiceProject
+    action: si_manage_service_project
+    category: Operations
+    risk: medium
+    business_impact: "Creates, updates, or deletes SI service projects and submits scope-form answers, altering partner service-delivery records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.si_customer_service_projects
+    object: ServiceProject
+    action: si_customer_service_projects
+    category: Operations
+    risk: medium
+    business_impact: "Reads SI service projects company-wide and bulk-exports them with embedded scope forms, enabling large-scale extraction of project data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.content_search
+    object: Document
+    action: content_search
+    category: Data Access
+    risk: medium
+    business_impact: "Semantically searches partner-shared private documents by meaning, surfacing confidential file contents beyond filename matching."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.content_list
+    object: Document
+    action: content_list
+    category: Data Access
+    risk: low
+    business_impact: "Lists files shared with a partner, newest-first, revealing the set of documents exchanged with that partner."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.list_accounts
+    object: Account
+    action: list_accounts
+    category: Data Access
+    risk: low
+    business_impact: "Returns authorized customer and partner accounts with IDs and dashboard URLs, revealing which accounts the principal can act on."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.eulerapp.com/public/docs
+  - id: euler.partners
+    object: Partner
+    action: partners
+    category: Data Access
+    risk: low
+    business_impact: "Queries company partners by status and tags and returns company-wide aggregate partner metrics and totals."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

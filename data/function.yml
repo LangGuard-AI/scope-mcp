@@ -1,0 +1,61 @@
+schema_version: "1.1"
+platform: function
+display_name: Function (Function Health)
+source: langguard-editorial
+updated: "2026-07"
+# The Function Health Claude connector is an OAuth-gated, token-less MCP
+# server: the vendor docs publish plain-language capability labels
+# ("Overall Lab Results Summary", "Health Category Summary", "Nutrition
+# Plan") rather than verbatim tools/list identifiers. Every entry below
+# therefore uses `id_form: capability` with a slugged id and the verbatim
+# label preserved in `description`. Refresh to `id_form: verbatim` if the
+# server ever exposes a real tools/list. All three tools are read-only
+# accessors of the authenticated member's own clinical lab data.
+reference: https://services.functionhealth.com/auth0/acul/claude_connector_docs.html
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://services.functionhealth.com/auth0/acul/claude_connector_docs.html
+  - id: function.overall_lab_results_summary
+    object: LabResult
+    action: overall_lab_results_summary
+    id_form: capability
+    description: "Overall Lab Results Summary"
+    category: Data Access
+    risk: medium
+    business_impact: "Surfaces the member's clinical lab biomarker results to the agent, exposing in-range and out-of-range counts that reveal individual health status."
+    compliance: [HIPAA, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://services.functionhealth.com/auth0/acul/claude_connector_docs.html
+  - id: function.health_category_summary
+    object: LabResult
+    action: health_category_summary
+    id_form: capability
+    description: "Health Category Summary"
+    category: Data Access
+    risk: medium
+    business_impact: "Exposes a category-level breakdown of the member's lab results across 24 health areas (heart, thyroid, liver, kidney), revealing which body systems show clinical concerns."
+    compliance: [HIPAA, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://services.functionhealth.com/auth0/acul/claude_connector_docs.html
+  - id: function.nutrition_plan
+    object: NutritionPlan
+    action: nutrition_plan
+    id_form: capability
+    description: "Nutrition Plan"
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves the member's personalized nutrition protocol including goals, daily targets, and meal ideas — personal wellness data inferred from their health profile."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

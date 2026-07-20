@@ -1,0 +1,115 @@
+schema_version: "1.0"
+platform: customer-io
+display_name: Customer.io
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.customer.io/ai/mcp/get-started/
+  - id: customer-io.cio_delete_api
+    object: "*"
+    action: cio_delete_api
+    category: Data Access
+    risk: critical
+    business_impact: "Issues authenticated DELETE requests against any Customer.io resource, irreversibly removing customer profiles, campaigns, or segments in a single call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.customer.io/ai/mcp/get-started/
+  - id: customer-io.cio_read_api
+    object: "*"
+    action: cio_read_api
+    category: Data Access
+    risk: high
+    business_impact: "Issues authenticated GET requests across the Customer.io API, able to list and page through customer profiles and behavioral data — a broad read path to PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.customer.io/ai/mcp/get-started/
+  - id: customer-io.cio_write_api
+    object: "*"
+    action: cio_write_api
+    category: Data Access
+    risk: high
+    business_impact: "Issues authenticated POST, PUT, and PATCH requests, creating or editing any Customer.io resource including customer profiles and campaign configuration."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Access ----------
+
+  # source: https://docs.customer.io/ai/mcp/get-started/
+  - id: customer-io.cio_auth_status
+    object: Session
+    action: cio_auth_status
+    category: Identity & Access
+    risk: low
+    business_impact: "Reports the current token's authentication state and which Customer.io workspaces it can reach; read-only access introspection."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://docs.customer.io/ai/mcp/get-started/
+  - id: customer-io.cio_prime
+    object: Reference
+    action: cio_prime
+    category: Operations
+    risk: low
+    business_impact: "Loads the Customer.io API reference into the agent context; read-only priming with no data mutation or exposure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.customer.io/ai/mcp/get-started/
+  - id: customer-io.cio_schema
+    object: Endpoint
+    action: cio_schema
+    category: Operations
+    risk: low
+    business_impact: "Enumerates available Customer.io API endpoints and their parameters; discovery metadata only, with no customer data touched."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.customer.io/ai/mcp/get-started/
+  - id: customer-io.cio_skills_list
+    object: Skill
+    action: cio_skills_list
+    category: Operations
+    risk: low
+    business_impact: "Lists the agent skills the Customer.io server exposes; read-only catalog lookup with no data impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.customer.io/ai/mcp/get-started/
+  - id: customer-io.cio_skills_read
+    object: Skill
+    action: cio_skills_read
+    category: Operations
+    risk: low
+    business_impact: "Returns the full instruction content of a named Customer.io skill; read-only workflow guidance with no data impact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

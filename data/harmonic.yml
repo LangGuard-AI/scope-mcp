@@ -1,0 +1,122 @@
+schema_version: "1.1"
+platform: harmonic
+display_name: Harmonic
+source: langguard-editorial
+updated: "2026-07"
+server_website: https://support.harmonic.ai/en/articles/12785899-harmonic-mcp-server-getting-started-guide
+reference: https://claude.com/connectors/harmonic
+# The Harmonic MCP server is OAuth-gated; its vendor docs publish the tool
+# surface only as plain-language capability groups ("Enrichment tools",
+# "Search tools", …) rather than verbatim `tools/list` identifiers. Every
+# entry below therefore uses `id_form: capability`. When a real `tools/list`
+# capture becomes available, refresh this file to `id_form: verbatim` with the
+# actual identifier strings.
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://support.harmonic.ai/en/articles/12785899-harmonic-mcp-server-getting-started-guide
+  - id: harmonic.enrichment_tools
+    object: Entity
+    action: enrichment_tools
+    id_form: capability
+    description: "Enrichment tools"
+    category: Data Access
+    risk: medium
+    business_impact: "Returns detailed enriched profiles on companies, people, and investors; person records are identifiable professional personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.harmonic.ai/en/articles/12785899-harmonic-mcp-server-getting-started-guide
+  - id: harmonic.search_tools
+    object: Entity
+    action: search_tools
+    id_form: capability
+    description: "Search tools"
+    category: Data Access
+    risk: low
+    business_impact: "Resolves companies and people from natural-language queries or direct lookups by name, domain, LinkedIn URL, or email — LinkedIn and email are personal identifiers."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.harmonic.ai/en/articles/12785899-harmonic-mcp-server-getting-started-guide
+  - id: harmonic.lookup_tools
+    object: Entity
+    action: lookup_tools
+    id_form: capability
+    description: "Lookup tools"
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves companies, people, and investors in bulk by ID or canonical URL, enabling large-scale extraction of professional personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.harmonic.ai/en/articles/12785899-harmonic-mcp-server-getting-started-guide
+  - id: harmonic.saved_search_tools
+    object: SavedSearch
+    action: saved_search_tools
+    id_form: capability
+    description: "Saved search tools"
+    category: Data Access
+    risk: low
+    business_impact: "Returns results and net-new matches from the caller's saved searches across companies, people, and investors for subscribed queries."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.harmonic.ai/en/articles/12785899-harmonic-mcp-server-getting-started-guide
+  - id: harmonic.network_mapping_tools
+    object: Connection
+    action: network_mapping_tools
+    id_form: capability
+    description: "Network mapping tools"
+    category: Data Access
+    risk: medium
+    business_impact: "Reveals how the caller's team is personally connected to target companies and people, exposing relationship-graph data about individuals."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://support.harmonic.ai/en/articles/12785899-harmonic-mcp-server-getting-started-guide
+  - id: harmonic.custom_data_tools
+    object: Record
+    action: custom_data_tools
+    id_form: capability
+    description: "Custom data tools"
+    category: Operations
+    risk: medium
+    business_impact: "Adds and manages custom data on company and person records, globally or within lists, writing attributes onto identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.harmonic.ai/en/articles/12785899-harmonic-mcp-server-getting-started-guide
+  - id: harmonic.list_management_tools
+    object: List
+    action: list_management_tools
+    id_form: capability
+    description: "List management tools"
+    category: Operations
+    risk: low
+    business_impact: "Creates and manages lists of companies and people within the workspace, organizing target accounts and contacts into shared collections."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

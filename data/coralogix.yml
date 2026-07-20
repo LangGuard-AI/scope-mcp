@@ -1,0 +1,287 @@
+schema_version: "1.0"
+platform: coralogix
+display_name: Coralogix
+source: langguard-editorial
+updated: "2026-07"
+reference: https://coralogix.com/docs/user-guides/mcp-server/tools/overview/
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://coralogix.com/docs/user-guides/mcp-server/tools/overview/
+  - id: coralogix.manage_custom_roles
+    object: CustomRole
+    action: manage_custom_roles
+    category: Identity & Access
+    risk: high
+    business_impact: "Creates, updates, or deletes custom roles, changing what permissions principals hold across the account — a single call can broaden privileges past access-review controls."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://coralogix.com/docs/user-guides/mcp-server/tools/overview/
+  - id: coralogix.manage_integrations
+    object: Integration
+    action: manage_integrations
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Adds, edits, or removes integrations that connect Coralogix to external systems and may store their credentials, altering the account's outbound data and trust surface."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://coralogix.com/docs/user-guides/mcp-server/tools/overview/
+  - id: coralogix.manage_connectors
+    object: Connector
+    action: manage_connectors
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Configures Notification Center connectors that deliver alerts to external destinations, controlling where account signals and their payloads are routed off-platform."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://coralogix.com/docs/user-guides/mcp-server/tools/overview/
+  - id: coralogix.manage_webhooks
+    object: Webhook
+    action: manage_webhooks
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Creates or edits outbound webhooks that push Coralogix data to arbitrary external URLs, opening an egress path for observability content."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://coralogix.com/docs/user-guides/mcp-server/tools/overview/
+  - id: coralogix.manage_tco_log_policies
+    object: TCOPolicy
+    action: manage_tco_log_policies
+    category: Operations
+    risk: high
+    business_impact: "Sets TCO Optimizer policies that determine which logs are retained, downgraded, or dropped at ingest — a block policy can create gaps in the auditable log record."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://coralogix.com/docs/user-guides/mcp-server/tools/overview/
+  - id: coralogix.manage_tco_trace_policies
+    object: TCOPolicy
+    action: manage_tco_trace_policies
+    category: Operations
+    risk: high
+    business_impact: "Sets TCO Optimizer policies for traces that decide which spans are retained or dropped, able to remove trace evidence from the account's record."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://coralogix.com/docs/user-guides/mcp-server/tools/overview/
+  - id: coralogix.manage_alerts
+    object: Alert
+    action: manage_alerts
+    category: Operations
+    risk: medium
+    business_impact: "Creates, updates, or deletes alert definitions; removing or muting an alert can silently weaken monitoring coverage for a service."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://coralogix.com/docs/user-guides/mcp-server/tools/overview/
+  - id: coralogix.manage_alerts_scheduler
+    object: AlertSchedule
+    action: manage_alerts_scheduler
+    category: Operations
+    risk: medium
+    business_impact: "Manages alert suppression schedules that mute alerting during defined windows, which can hide incidents or security events while active."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://coralogix.com/docs/user-guides/mcp-server/tools/overview/
+  - id: coralogix.manage_parsing_rules
+    object: ParsingRule
+    action: manage_parsing_rules
+    category: Operations
+    risk: medium
+    business_impact: "Changes log parsing rules that transform, extract, or redact fields at ingest, reshaping how raw log data is stored and searched."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://coralogix.com/docs/user-guides/mcp-server/tools/overview/
+  - id: coralogix.manage_data_enrichments
+    object: DataEnrichment
+    action: manage_data_enrichments
+    category: Operations
+    risk: medium
+    business_impact: "Configures data enrichment that joins external lookup data into incoming logs, changing the enriched fields available across the account."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://coralogix.com/docs/user-guides/mcp-server/tools/overview/
+  - id: coralogix.manage_recording_rules_groups_set
+    object: RecordingRuleGroup
+    action: manage_recording_rules_groups_set
+    category: Operations
+    risk: medium
+    business_impact: "Defines recording-rule groups that precompute metric series, affecting which derived metrics exist and consume storage."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://coralogix.com/docs/user-guides/mcp-server/tools/overview/
+  - id: coralogix.manage_events2metrics
+    object: Events2Metric
+    action: manage_events2metrics
+    category: Operations
+    risk: medium
+    business_impact: "Configures Events2Metrics rules that generate metrics from log and span events, altering derived telemetry and its retention footprint."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://coralogix.com/docs/user-guides/mcp-server/tools/overview/
+  - id: coralogix.manage_slo_v2s
+    object: SLO
+    action: manage_slo_v2s
+    category: Operations
+    risk: medium
+    business_impact: "Creates or updates service level objectives, changing the reliability targets and error-budget calculations teams are measured against."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://coralogix.com/docs/user-guides/mcp-server/tools/overview/
+  - id: coralogix.manage_global_routers
+    object: GlobalRouter
+    action: manage_global_routers
+    category: Operations
+    risk: medium
+    business_impact: "Edits Notification Center global routing that decides which teams and connectors receive which notifications across the account."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://coralogix.com/docs/user-guides/mcp-server/tools/overview/
+  - id: coralogix.manage_presets
+    object: Preset
+    action: manage_presets
+    category: Operations
+    risk: low
+    business_impact: "Manages Notification Center presets that template notification content and formatting for reuse across routes."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://coralogix.com/docs/user-guides/mcp-server/tools/overview/
+  - id: coralogix.query_dataprime
+    object: Log
+    action: query_dataprime
+    category: Data Access
+    risk: medium
+    business_impact: "Runs arbitrary DataPrime queries over logs and spans, which routinely contain IPs, user identifiers, and request payloads — able to surface personal data across the account."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://coralogix.com/docs/user-guides/mcp-server/tools/overview/
+  - id: coralogix.olly_get_artifact
+    object: OllyArtifact
+    action: olly_get_artifact
+    category: Data Access
+    risk: high
+    business_impact: "Returns an Olly artifact's metadata plus a pre-signed download URL, producing a directly downloadable export of query results that may contain personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://coralogix.com/docs/user-guides/mcp-server/tools/overview/
+  - id: coralogix.olly_ask
+    object: OllyChat
+    action: olly_ask
+    category: Data Access
+    risk: medium
+    business_impact: "Sends a natural-language question to the Olly assistant, which answers by querying account logs and metrics and can surface personal data contained in them."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://coralogix.com/docs/user-guides/mcp-server/tools/overview/
+  - id: coralogix.olly_get_chat
+    object: OllyChat
+    action: olly_get_chat
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves an Olly conversation's full history, which can include prior questions and returned log excerpts that hold personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://coralogix.com/docs/user-guides/mcp-server/tools/overview/
+  - id: coralogix.olly_list_chats
+    object: OllyChat
+    action: olly_list_chats
+    category: Data Access
+    risk: low
+    business_impact: "Lists prior Olly chat sessions for the user, exposing conversation titles and metadata but not full message contents."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://coralogix.com/docs/user-guides/mcp-server/tools/overview/
+  - id: coralogix.olly_list_artifacts
+    object: OllyArtifact
+    action: olly_list_artifacts
+    category: Data Access
+    risk: low
+    business_impact: "Lists artifacts such as query results and charts that Olly generated, exposing their metadata for later retrieval."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

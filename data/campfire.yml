@@ -1,0 +1,190 @@
+schema_version: "1.1"
+platform: campfire
+display_name: Campfire
+source: langguard-editorial
+updated: "2026-07"
+reference: https://docs.campfire.ai/guides/ai-integration
+actions:
+  # ---------- Financial ----------
+
+  # source: https://docs.campfire.ai/guides/ai-integration
+  - id: campfire.transactions
+    object: Transaction
+    action: transactions
+    id_form: capability
+    description: "Transactions"
+    category: Financial
+    risk: medium
+    business_impact: "Surfaces detailed general-ledger transaction history filtered by entity, account, vendor, department, and date, exposing granular confidential financial activity."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.campfire.ai/guides/ai-integration
+  - id: campfire.income_statement
+    object: IncomeStatement
+    action: income_statement
+    id_form: capability
+    description: "Income Statement"
+    category: Financial
+    risk: medium
+    business_impact: "Generates profit-and-loss statements for any period and cadence, exposing confidential revenue and expense performance."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.campfire.ai/guides/ai-integration
+  - id: campfire.balance_sheet
+    object: BalanceSheet
+    action: balance_sheet
+    id_form: capability
+    description: "Balance Sheet"
+    category: Financial
+    risk: medium
+    business_impact: "Produces the balance sheet of assets, liabilities, and equity, exposing the organization's confidential financial position."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.campfire.ai/guides/ai-integration
+  - id: campfire.cash_flow_statement
+    object: CashFlowStatement
+    action: cash_flow_statement
+    id_form: capability
+    description: "Cash Flow Statement"
+    category: Financial
+    risk: medium
+    business_impact: "Generates cash-flow statements across operating, investing, and financing activities, exposing confidential liquidity and funding detail."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.campfire.ai/guides/ai-integration
+  - id: campfire.contracts
+    object: Contract
+    action: contracts
+    id_form: capability
+    description: "Contracts"
+    category: Financial
+    risk: medium
+    business_impact: "Exposes revenue-recognition contracts and their performance obligations, revealing confidential commercial terms and rev-rec treatment."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.campfire.ai/guides/ai-integration
+  - id: campfire.aging_report
+    object: AgingReport
+    action: aging_report
+    id_form: capability
+    description: "Aging Report"
+    category: Financial
+    risk: medium
+    business_impact: "Generates AP/AR aging reports with age-bucket breakdowns, exposing outstanding payables and receivables balances by counterparty."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.campfire.ai/guides/ai-integration
+  - id: campfire.budgets
+    object: Budget
+    action: budgets
+    id_form: capability
+    description: "Budgets"
+    category: Financial
+    risk: low
+    business_impact: "Retrieves budget records with entity and time-period metadata, revealing forward-looking financial plans and targets."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.campfire.ai/guides/ai-integration
+  - id: campfire.chart_of_accounts
+    object: ChartOfAccounts
+    action: chart_of_accounts
+    id_form: capability
+    description: "Chart of Accounts"
+    category: Financial
+    risk: low
+    business_impact: "Reveals the full account structure of the general ledger, showing how the organization classifies and reports its finances."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://docs.campfire.ai/guides/ai-integration
+  - id: campfire.vendors
+    object: Vendor
+    action: vendors
+    id_form: capability
+    description: "Vendors"
+    category: Operations
+    risk: medium
+    business_impact: "Discloses the vendor and payee directory including contact details and status, exposing counterparty personal and business data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.campfire.ai/guides/ai-integration
+  - id: campfire.entities
+    object: Entity
+    action: entities
+    id_form: capability
+    description: "Entities"
+    category: Operations
+    risk: low
+    business_impact: "Reveals the corporate structure of parent companies, subsidiaries, and locations tracked in the ledger."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.campfire.ai/guides/ai-integration
+  - id: campfire.departments
+    object: Department
+    action: departments
+    id_form: capability
+    description: "Departments"
+    category: Operations
+    risk: low
+    business_impact: "Reveals the internal cost-center and business-unit hierarchy used to allocate spend."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.campfire.ai/guides/ai-integration
+  - id: campfire.tags
+    object: Tag
+    action: tags
+    id_form: capability
+    description: "Tags"
+    category: Operations
+    risk: low
+    business_impact: "Lists the custom analytics dimensions applied to transactions, revealing the internal reporting taxonomy."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,92 @@
+# NOTE: Databricks managed MCP servers publish capability labels (not tools/list
+# identifiers) via OAuth-gated endpoints, so every entry is id_form: capability.
+# Each label fans out to concrete per-asset tools at runtime (e.g. Genie exposes
+# genie_ask/genie_poll_response; AI Search and Unity Catalog functions expose one
+# tool per configured index/function).
+schema_version: "1.1"
+platform: databricks
+display_name: Databricks
+source: langguard-editorial
+updated: "2026-07"
+reference: https://docs.databricks.com/aws/en/generative-ai/mcp/managed-mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.databricks.com/aws/en/generative-ai/mcp/managed-mcp
+  - id: databricks.databricks_sql
+    object: Query
+    action: databricks_sql
+    id_form: capability
+    description: "Databricks SQL"
+    category: Data Access
+    risk: critical
+    business_impact: "Runs AI-generated SQL with read and write access, creating or altering data pipelines and tables anywhere the connected identity's warehouse privileges reach."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Genie & AI Search ----------
+
+  # source: https://docs.databricks.com/aws/en/generative-ai/mcp/managed-mcp
+  - id: databricks.genie_one
+    object: Genie
+    action: genie_one
+    id_form: capability
+    description: "Genie One"
+    category: Genie & AI Search
+    risk: high
+    business_impact: "Answers natural-language questions by searching across all Genie Spaces and Unity Catalog data, potentially surfacing PII or confidential business figures in the response."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.databricks.com/aws/en/generative-ai/mcp/managed-mcp
+  - id: databricks.ai_search
+    object: Index
+    action: ai_search
+    id_form: capability
+    description: "AI Search"
+    category: Genie & AI Search
+    risk: high
+    business_impact: "Queries AI Search (Vector Search) indexes to retrieve documents, which may include personal data or proprietary content embedded in the corpus."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.databricks.com/aws/en/generative-ai/mcp/managed-mcp
+  - id: databricks.genie_space
+    object: GenieSpace
+    action: genie_space
+    id_form: capability
+    description: "Genie Space"
+    category: Genie & AI Search
+    risk: medium
+    business_impact: "Runs natural-language queries against a single configured Genie Space, returning grounded answers that can include the space's underlying business data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Functions / User-Defined ----------
+
+  # source: https://docs.databricks.com/aws/en/generative-ai/mcp/managed-mcp
+  - id: databricks.unity_catalog_functions
+    object: Function
+    action: unity_catalog_functions
+    id_form: capability
+    description: "Unity Catalog functions"
+    category: Functions / User-Defined
+    risk: medium
+    business_impact: "Executes predefined Unity Catalog functions exposed as SQL tools; effect and data exposure depend entirely on each function's definition."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
