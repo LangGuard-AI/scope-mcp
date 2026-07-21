@@ -1,0 +1,182 @@
+schema_version: "1.0"
+platform: intercom-api
+display_name: Intercom
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://developers.intercom.com/docs/guides/mcp
+  - id: intercom-api.search
+    object: "*"
+    action: search
+    category: Data Access
+    risk: low
+    business_impact: "Runs a cross-workspace query over conversations and contacts, surfacing customer PII and support-conversation content that matches arbitrary DSL filters."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.intercom.com/docs/guides/mcp
+  - id: intercom-api.fetch
+    object: "*"
+    action: fetch
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves the full record for any conversation or contact by type-prefixed ID, exposing complete customer PII and message content in a single call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Service ----------
+
+  # source: https://developers.intercom.com/docs/guides/mcp
+  - id: intercom-api.search_conversations
+    object: Conversation
+    action: search_conversations
+    category: Service
+    risk: low
+    business_impact: "Filters support conversations by source, author, state, and assignment, surfacing private customer-support message threads."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.intercom.com/docs/guides/mcp
+  - id: intercom-api.get_conversation
+    object: Conversation
+    action: get_conversation
+    category: Service
+    risk: low
+    business_impact: "Returns a single support conversation with every message part and metadata, exposing the full private exchange between customer and agent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://developers.intercom.com/docs/guides/mcp
+  - id: intercom-api.search_contacts
+    object: Contact
+    action: search_contacts
+    category: Customer
+    risk: low
+    business_impact: "Finds contacts by ID, name, email, phone, or custom attributes, surfacing directly-identifying customer PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.intercom.com/docs/guides/mcp
+  - id: intercom-api.get_contact
+    object: Contact
+    action: get_contact
+    category: Customer
+    risk: low
+    business_impact: "Returns a contact's full profile including location data, custom attributes, and activity timestamps — directly-identifying customer PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.intercom.com/docs/guides/mcp
+  - id: intercom-api.list_companies
+    object: Company
+    action: list_companies
+    category: Customer
+    risk: low
+    business_impact: "Lists company records with name, tag, and segment filters, exposing account-level business data across the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.intercom.com/docs/guides/mcp
+  - id: intercom-api.get_company
+    object: Company
+    action: get_company
+    category: Customer
+    risk: low
+    business_impact: "Returns full company details including custom attributes, segments, and tags for a single account."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Knowledge Base ----------
+
+  # source: https://developers.intercom.com/docs/guides/mcp
+  - id: intercom-api.list_articles
+    object: Article
+    action: list_articles
+    category: Knowledge Base
+    risk: low
+    business_impact: "Lists all Help Center articles with pagination — public-facing knowledge content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.intercom.com/docs/guides/mcp
+  - id: intercom-api.search_articles
+    object: Article
+    action: search_articles
+    category: Knowledge Base
+    risk: low
+    business_impact: "Searches Help Center articles by phrase, state, or Help Center ID for matching knowledge content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.intercom.com/docs/guides/mcp
+  - id: intercom-api.get_article
+    object: Article
+    action: get_article
+    category: Knowledge Base
+    risk: low
+    business_impact: "Returns a single Help Center article including its full HTML body and parent collection metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.intercom.com/docs/guides/mcp
+  - id: intercom-api.create_article
+    object: Article
+    action: create_article
+    category: Knowledge Base
+    risk: medium
+    business_impact: "Publishes a new Help Center article that can become customer-visible knowledge content depending on its state."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.intercom.com/docs/guides/mcp
+  - id: intercom-api.update_article
+    object: Article
+    action: update_article
+    category: Knowledge Base
+    risk: medium
+    business_impact: "Modifies an existing Help Center article, changing customer-facing knowledge content that may already be published."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

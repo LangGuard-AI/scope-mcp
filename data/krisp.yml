@@ -1,0 +1,95 @@
+schema_version: "1.1"
+platform: krisp
+display_name: Krisp
+source: langguard-editorial
+updated: "2026-07"
+reference: https://help.krisp.ai/hc/en-us/articles/25396920405148-Krisp-MCP
+server_website: https://help.krisp.ai/hc/en-us/articles/25396920405148-Krisp-MCP
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://help.krisp.ai/hc/en-us/articles/25416265429660-Krisp-MCP-Supported-tools
+  - id: krisp.get_document
+    object: Document
+    action: get_document
+    description: "Fetch any document by its 32-character ID (meeting, agenda, transcript, etc.). Use after you have an ID from search results, action items, or upcoming meetings."
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves a full meeting document including verbatim transcript content, exposing an entire private conversation and any personal or confidential details spoken in it."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.krisp.ai/hc/en-us/articles/25416265429660-Krisp-MCP-Supported-tools
+  - id: krisp.search_meetings
+    object: Meeting
+    action: search_meetings
+    description: "Search meetings by text or retrieve by meeting ID(s). Returns metadata, summaries, key points, and action items. Use \"get_document\" when you need the full transcript."
+    category: Data Access
+    risk: medium
+    business_impact: "Searches across the meeting corpus and returns summaries, key points, and action items, surfacing personal and business-sensitive content from many meetings in one call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.krisp.ai/hc/en-us/articles/25416265429660-Krisp-MCP-Supported-tools
+  - id: krisp.list_upcoming_meetings
+    object: Meeting
+    action: list_upcoming_meetings
+    description: "List upcoming calendar meetings for the next 1–14 days. Use \"get_document\" with an id from the results to get full agenda content."
+    category: Data Access
+    risk: low
+    business_impact: "Lists upcoming calendar meetings with titles and timing for the next two weeks, revealing scheduling and attendee context but no meeting content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.krisp.ai/hc/en-us/articles/25416265429660-Krisp-MCP-Supported-tools
+  - id: krisp.list_action_items
+    object: ActionItem
+    action: list_action_items
+    description: "List action items (tasks and follow-ups) from meetings. Can filter by completion status and assignee."
+    category: Data Access
+    risk: low
+    business_impact: "Lists meeting-derived tasks and follow-ups with assignees and completion status; a reversible read of operational task data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.krisp.ai/hc/en-us/articles/25416265429660-Krisp-MCP-Supported-tools
+  - id: krisp.list_activities
+    object: Activity
+    action: list_activities
+    description: "List items from the Activity Center — notifications, action item assignments, meeting summaries, and other updates."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the Activity Center feed of notifications, assignments, and meeting summary snippets; a low-impact operational read."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://help.krisp.ai/hc/en-us/articles/25416265429660-Krisp-MCP-Supported-tools
+  - id: krisp.date_time
+    object: DateTime
+    action: date_time
+    description: "Get current date/time or enumerate dates in a range. Use whenever you need exact date/time information instead of guessing."
+    category: Operations
+    risk: low
+    business_impact: "Returns the current date/time or enumerates a date range; a stateless utility with no data-access side effects."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,209 @@
+schema_version: "1.2"
+platform: jira
+display_name: Jira
+source: langguard-editorial
+updated: "2026-07"
+reference: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+server_website: https://mcp.atlassian.com/v1/mcp
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: jira.lookupJiraAccountId
+    object: User
+    action: lookupJiraAccountId
+    description: "Find Jira user account IDs by name or email."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Resolves user names or email addresses to Jira account IDs, exposing directory-level personal data and enabling enumeration of individuals in the workspace."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: jira.searchJiraIssuesUsingJql
+    object: Issue
+    action: searchJiraIssuesUsingJql
+    description: "Search Jira issues using a JQL query"
+    category: Data Access
+    risk: medium
+    business_impact: "Runs an arbitrary JQL query across every issue the caller can see, potentially returning large result sets containing reporter, assignee, and comment personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Issues ----------
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: jira.createJiraIssue
+    object: Issue
+    action: createJiraIssue
+    description: "Create a link between two Jira issues."
+    category: Issues
+    risk: low
+    business_impact: "Creates a new Jira issue or issue link, adding a tracked work item visible to the project's members."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: jira.editJiraIssue
+    object: Issue
+    action: editJiraIssue
+    description: "Update fields on an existing Jira issue."
+    category: Issues
+    risk: medium
+    business_impact: "Updates fields on an existing issue, changing tracked work-item state that other users and automation rules depend on."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: jira.transitionJiraIssue
+    object: Issue
+    action: transitionJiraIssue
+    description: "Perform a workflow transition on a Jira issue."
+    category: Issues
+    risk: medium
+    business_impact: "Advances an issue through a workflow transition, changing its status and potentially triggering notifications, SLAs, or automation rules."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: jira.addCommentToJiraIssue
+    object: Comment
+    action: addCommentToJiraIssue
+    description: "Add a comment to an existing Jira issue, or update an existing comment when commentID is provided."
+    category: Issues
+    risk: low
+    business_impact: "Adds a new comment to an issue or overwrites an existing one when a comment ID is supplied; reversible and visible to all issue watchers."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: jira.addWorklogToJiraIssue
+    object: Worklog
+    action: addWorklogToJiraIssue
+    description: "Adds a time-tracking worklog to a Jira issue."
+    category: Issues
+    risk: low
+    business_impact: "Logs time against an issue, updating time-tracking totals that may feed downstream reporting or billing."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: jira.getJiraIssue
+    object: Issue
+    action: getJiraIssue
+    description: "Get a Jira issue by ID or key."
+    category: Issues
+    risk: low
+    business_impact: "Retrieves the full content of a single Jira issue, including its fields, status, and participants."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: jira.getJiraIssueRemoteIssueLinks
+    object: Issue
+    action: getJiraIssueRemoteIssueLinks
+    description: "List remote issue links (for example, Confluence links) on a Jira issue."
+    category: Issues
+    risk: low
+    business_impact: "Lists remote links attached to an issue, revealing connected Confluence pages and external resources."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: jira.getTransitionsForJiraIssue
+    object: Issue
+    action: getTransitionsForJiraIssue
+    description: "List available workflow transitions for an issue."
+    category: Issues
+    risk: low
+    business_impact: "Lists the workflow transitions currently available on an issue; read-only workflow metadata."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: jira.getVisibleJiraProjects
+    object: Project
+    action: getVisibleJiraProjects
+    description: "List Jira projects the user can access."
+    category: Issues
+    risk: low
+    business_impact: "Lists the Jira projects the caller can access, revealing project keys and names across the instance."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: jira.getJiraProjectIssueTypesMetadata
+    object: Project
+    action: getJiraProjectIssueTypesMetadata
+    description: "List issue types available in a Jira project."
+    category: Issues
+    risk: low
+    business_impact: "Lists the issue types configured in a project; read-only schema information."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: jira.getJiraIssueTypeMetaWithFields
+    object: IssueType
+    action: getJiraIssueTypeMetaWithFields
+    description: "Get create-field metadata for a project and issue type."
+    category: Issues
+    risk: low
+    business_impact: "Returns create-field metadata for a project and issue type; configuration data only, no record content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/supported-tools/
+  - id: jira.getIssueLinkTypes
+    object: IssueLinkType
+    action: getIssueLinkTypes
+    description: "List available issue link types"
+    category: Issues
+    risk: low
+    business_impact: "Lists the issue link types configured in the instance; read-only reference data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,298 @@
+schema_version: "1.0"
+platform: jam
+display_name: Jam
+source: langguard-editorial
+updated: "2026-07"
+reference: https://jam.dev/docs/debug-a-jam/mcp
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://jam.dev/docs/debug-a-jam/mcp
+  - id: jam.createRecordingLink
+    object: RecordingLink
+    action: createRecordingLink
+    category: Identity & Access
+    risk: medium
+    business_impact: "Creates a reusable link that silently collects browser-session recordings into the workspace, widening the session-capture surface."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://jam.dev/docs/debug-a-jam/mcp
+  - id: jam.updateRecordingLink
+    object: RecordingLink
+    action: updateRecordingLink
+    category: Identity & Access
+    risk: medium
+    business_impact: "Alters a recording link's folder, expiration, or metadata, changing where and how long captured sessions are collected."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://jam.dev/docs/debug-a-jam/mcp
+  - id: jam.revokeRecordingLink
+    object: RecordingLink
+    action: revokeRecordingLink
+    category: Identity & Access
+    risk: medium
+    business_impact: "Revokes a recording link, cutting off future capture through it while leaving already-collected Jams intact."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://jam.dev/docs/debug-a-jam/mcp
+  - id: jam.getRecordingUrlVerifyLink
+    object: RecordingDomain
+    action: getRecordingUrlVerifyLink
+    category: Identity & Access
+    risk: medium
+    business_impact: "Begins verifying a connected recording domain, authorizing it as a sanctioned source for capturing sessions."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://jam.dev/docs/debug-a-jam/mcp
+  - id: jam.listRecordingUrls
+    object: RecordingDomain
+    action: listRecordingUrls
+    category: Identity & Access
+    risk: low
+    business_impact: "Lists the team's connected recording domains, exposing which sites are wired for session capture."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://jam.dev/docs/debug-a-jam/mcp
+  - id: jam.listRecordingLinks
+    object: RecordingLink
+    action: listRecordingLinks
+    category: Identity & Access
+    risk: low
+    business_impact: "Enumerates every recording link including revoked ones, mapping the workspace's session-collection surface."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://jam.dev/docs/debug-a-jam/mcp
+  - id: jam.getRecordingLink
+    object: RecordingLink
+    action: getRecordingLink
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns a single recording link's configuration by its public ID."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://jam.dev/docs/debug-a-jam/mcp
+  - id: jam.listRecordingLinkJams
+    object: RecordingLink
+    action: listRecordingLinkJams
+    category: Identity & Access
+    risk: low
+    business_impact: "Lists the Jams collected through a given recording link, exposing which captured sessions are tied to that link."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://jam.dev/docs/debug-a-jam/mcp
+  - id: jam.listMembers
+    object: Member
+    action: listMembers
+    category: Identity & Access
+    risk: low
+    business_impact: "Reveals the full team-member roster, exposing colleagues' names and account identities to the agent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://jam.dev/docs/debug-a-jam/mcp
+  - id: jam.getDetails
+    object: Jam
+    action: getDetails
+    category: Data Access
+    risk: low
+    business_impact: "Returns a snapshot of a Jam's author and activity, orienting the agent before deeper reads."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://jam.dev/docs/debug-a-jam/mcp
+  - id: jam.getConsoleLogs
+    object: Jam
+    action: getConsoleLogs
+    category: Data Access
+    risk: medium
+    business_impact: "Pulls the captured browser console logs, which can surface tokens, identifiers, or error data emitted during the recorded session."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://jam.dev/docs/debug-a-jam/mcp
+  - id: jam.getNetworkRequests
+    object: Jam
+    action: getNetworkRequests
+    category: Data Access
+    risk: high
+    business_impact: "Dumps every captured web request as JSON, potentially exposing auth headers, cookies, and personal data carried in request payloads."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://jam.dev/docs/debug-a-jam/mcp
+  - id: jam.getScreenshot
+    object: Jam
+    action: getScreenshot
+    category: Data Access
+    risk: medium
+    business_impact: "Returns every screenshot from a Jam, potentially revealing whatever personal data was visible on the user's screen."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://jam.dev/docs/debug-a-jam/mcp
+  - id: jam.getUserEvents
+    object: Jam
+    action: getUserEvents
+    category: Data Access
+    risk: medium
+    business_impact: "Replays each captured click, input, and navigation, potentially exposing text the user typed into the page."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://jam.dev/docs/debug-a-jam/mcp
+  - id: jam.getMetadata
+    object: Jam
+    action: getMetadata
+    category: Data Access
+    risk: medium
+    business_impact: "Reads custom capture metadata such as user IDs, app versions, and feature flags attached to the recorded session."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://jam.dev/docs/debug-a-jam/mcp
+  - id: jam.getVideoTranscript
+    object: Jam
+    action: getVideoTranscript
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the spoken transcript of a recorded session, exposing anything said aloud while the microphone was live."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://jam.dev/docs/debug-a-jam/mcp
+  - id: jam.analyzeVideo
+    object: Jam
+    action: analyzeVideo
+    category: Data Access
+    risk: medium
+    business_impact: "Analyzes a recorded session video to extract insights, surfacing on-screen and spoken content in structured form."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://jam.dev/docs/debug-a-jam/mcp
+  - id: jam.getFrames
+    object: Jam
+    action: getFrames
+    category: Data Access
+    risk: medium
+    business_impact: "Extracts screen frames from a video Jam, revealing on-screen contents at chosen points across the recording."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://jam.dev/docs/debug-a-jam/mcp
+  - id: jam.listJams
+    object: Jam
+    action: listJams
+    category: Operations
+    risk: low
+    business_impact: "Searches and filters the workspace's Jams by text, author, URL, or date, mapping the available captured sessions."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://jam.dev/docs/debug-a-jam/mcp
+  - id: jam.listFolders
+    object: Folder
+    action: listFolders
+    category: Operations
+    risk: low
+    business_impact: "Lists the workspace's folders used to organize Jams."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://jam.dev/docs/debug-a-jam/mcp
+  - id: jam.createComment
+    object: Comment
+    action: createComment
+    category: Operations
+    risk: low
+    business_impact: "Adds a Markdown comment to a Jam, annotating a captured session."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://jam.dev/docs/debug-a-jam/mcp
+  - id: jam.updateJam
+    object: Jam
+    action: updateJam
+    category: Operations
+    risk: low
+    business_impact: "Moves a Jam between folders, reorganizing where a captured session lives in the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,81 @@
+schema_version: "1.1"
+platform: jotform
+display_name: Jotform
+source: langguard-editorial
+updated: "2026-07"
+reference: https://github.com/jotform/mcp-server
+server_website: https://www.jotform.com/mcp/
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://www.jotform.com/mcp/
+  - id: jotform.get_submissions
+    object: Submission
+    action: get_submissions
+    description: "Retrieve and filter form responses"
+    category: Data Access
+    risk: high
+    business_impact: "Retrieves and filters form responses in bulk, exposing respondent-supplied personal data such as names, emails, and addresses captured by a form."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.jotform.com/mcp/
+  - id: jotform.create_submission
+    object: Submission
+    action: create_submission
+    description: "Make a submission to an existing form"
+    category: Data Access
+    risk: medium
+    business_impact: "Writes a new submission into an existing form, inserting respondent-supplied personal data into the account's stored records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://www.jotform.com/mcp/
+  - id: jotform.edit_form
+    object: Form
+    action: edit_form
+    description: "Modify existing form structure and settings"
+    category: Operations
+    risk: medium
+    business_impact: "Alters an existing form's fields and settings, changing what data respondents submit and how the form processes and routes responses."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.jotform.com/mcp/
+  - id: jotform.create_form
+    object: Form
+    action: create_form
+    description: "Build new forms from scratch"
+    category: Operations
+    risk: low
+    business_impact: "Creates a new form from scratch that can immediately begin collecting submissions from respondents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.jotform.com/mcp/
+  - id: jotform.form_list
+    object: Form
+    action: form_list
+    description: "Get the list of your forms"
+    category: Operations
+    risk: low
+    business_impact: "Enumerates every form in the account with its title and id, revealing the form surface an agent can then target for reads or edits."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

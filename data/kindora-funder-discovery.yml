@@ -1,0 +1,179 @@
+schema_version: "1.2"
+platform: kindora-funder-discovery
+display_name: Kindora Funder Discovery
+source: langguard-editorial
+updated: "2026-07"
+reference: https://mcp.kindora.co/mcp
+server_website: https://mcp.kindora.co/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://mcp.kindora.co/mcp
+  - id: kindora-funder-discovery.search_funders
+    object: Funder
+    action: search_funders
+    description: "Look up grantmaking organizations by name, topic, or location."
+    category: Data Access
+    risk: low
+    business_impact: "Returns grantmaking organizations matching a name, topic, or location query against public foundation records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.kindora.co/mcp
+  - id: kindora-funder-discovery.get_funder_profile
+    object: Funder
+    action: get_funder_profile
+    description: "Get detailed profile information for a specific funder."
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves a single funder's profile assembled from public grantmaker records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.kindora.co/mcp
+  - id: kindora-funder-discovery.get_990_summary
+    object: Filing
+    action: get_990_summary
+    description: "Get IRS 990 filing summary and financial trends for a foundation."
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces a foundation's IRS Form 990 financials and trends, all sourced from public tax filings."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.kindora.co/mcp
+  - id: kindora-funder-discovery.get_foundation_grants
+    object: Grant
+    action: get_foundation_grants
+    description: "View grants made by a funder across IRS, web-extracted, and registry records."
+    category: Data Access
+    risk: low
+    business_impact: "Lists grants a funder has awarded, aggregated from IRS filings, web-extracted, and registry sources."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.kindora.co/mcp
+  - id: kindora-funder-discovery.get_ntee_codes
+    object: NteeCode
+    action: get_ntee_codes
+    description: "Browse NTEE (National Taxonomy of Exempt Entities) classification codes."
+    category: Data Access
+    risk: low
+    business_impact: "Browses the public NTEE taxonomy used to classify tax-exempt organizations."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.kindora.co/mcp
+  - id: kindora-funder-discovery.search_open_grants
+    object: GrantOpportunity
+    action: search_open_grants
+    description: "Search open grant opportunities from Kindora's active foundation-program corpus and federal government grants."
+    category: Data Access
+    risk: low
+    business_impact: "Searches currently open grant opportunities from foundation programs and federal government listings."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.kindora.co/mcp
+  - id: kindora-funder-discovery.search_funder_jobs
+    object: JobPosting
+    action: search_funder_jobs
+    description: "Search OPEN PHILANTHROPY JOBS at grantmaking foundations."
+    category: Data Access
+    risk: low
+    business_impact: "Returns open job postings at grantmaking foundations drawn from public listings."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.kindora.co/mcp
+  - id: kindora-funder-discovery.search_nonprofits
+    object: Nonprofit
+    action: search_nonprofits
+    description: "Search the ~2M-org universe of US nonprofits (IRS Business Master File)."
+    category: Data Access
+    risk: low
+    business_impact: "Searches the roughly two-million-organization IRS Business Master File of US nonprofits."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.kindora.co/mcp
+  - id: kindora-funder-discovery.find_funders_for_peers
+    object: Funder
+    action: find_funders_for_peers
+    description: "Find grantmakers that have ACTUALLY funded organizations LIKE the caller's."
+    category: Data Access
+    risk: low
+    business_impact: "Recommends grantmakers by matching the caller's organization to peers those funders have historically funded."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.kindora.co/mcp
+  - id: kindora-funder-discovery.get_funder_stats
+    object: Funder
+    action: get_funder_stats
+    description: "Get comprehensive giving statistics for a funder."
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves aggregate giving statistics for a funder computed from public grant records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://mcp.kindora.co/mcp
+  - id: kindora-funder-discovery.health_check
+    object: Server
+    action: health_check
+    description: "Check server health and connectivity."
+    category: Operations
+    risk: low
+    business_impact: "Reports server health and connectivity with no access to underlying data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.kindora.co/mcp
+  - id: kindora-funder-discovery.list_tools
+    object: Server
+    action: list_tools
+    description: "List available MCP tools and get detailed help."
+    category: Operations
+    risk: low
+    business_impact: "Enumerates the server's available tools and their help text; exposes no funder or nonprofit data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial

@@ -1,0 +1,137 @@
+schema_version: "1.1"
+platform: latchbio
+display_name: LatchBio
+source: langguard-editorial
+updated: "2026-07"
+reference: https://wiki.latch.bio/agent/latch-mcp
+server_website: https://wiki.latch.bio/agent/latch-mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://wiki.latch.bio/agent/latch-mcp
+  - id: latchbio.get_file
+    object: File
+    action: get_file
+    description: "Returns access information for a file stored in Latch Data, either as a Latch Console link or as a presigned download URL."
+    category: Data Access
+    risk: medium
+    business_impact: "Issues a presigned download URL for a stored Latch Data file, which in a bioinformatics context may contain personal genomic or patient-derived sequencing data exfiltratable outside the platform."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://wiki.latch.bio/agent/latch-mcp
+  - id: latchbio.list_files
+    object: File
+    action: list_files
+    description: "Lists the immediate contents of a directory in Latch Data. File contents are not returned."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates directory contents in Latch Data without returning file bodies, exposing only file and folder names for navigation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://wiki.latch.bio/agent/latch-mcp
+  - id: latchbio.list_workspaces
+    object: Workspace
+    action: list_workspaces
+    description: "Lists the workspaces the current user can access, including the default workspace."
+    category: Data Access
+    risk: low
+    business_impact: "Reveals which workspaces the authenticated principal can reach, giving the agent an inventory of accessible tenant scopes."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://wiki.latch.bio/agent/latch-mcp
+  - id: latchbio.launch_workflow
+    object: Workflow
+    action: launch_workflow
+    description: "Launches a workflow with parameter values matching the workflow schema."
+    category: Operations
+    risk: medium
+    business_impact: "Starts a bioinformatics pipeline run that consumes billable cloud compute and processes the referenced datasets, producing new execution artifacts."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://wiki.latch.bio/agent/latch-mcp
+  - id: latchbio.list_workflows
+    object: Workflow
+    action: list_workflows
+    description: "Discovers workspace workflows and public workflows that can be launched."
+    category: Operations
+    risk: low
+    business_impact: "Lists workspace and public workflows available to launch, surfacing the catalog of runnable pipelines."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://wiki.latch.bio/agent/latch-mcp
+  - id: latchbio.get_workflow_schema
+    object: Workflow
+    action: get_workflow_schema
+    description: "Fetches launch metadata and parameter schema for a workflow."
+    category: Operations
+    risk: low
+    business_impact: "Returns a workflow's launch metadata and parameter schema so a run can be configured; read-only inspection of pipeline definitions."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://wiki.latch.bio/agent/latch-mcp
+  - id: latchbio.list_executions
+    object: Execution
+    action: list_executions
+    description: "Lists workflow executions in a workspace, with optional filters for name, workflow, and status."
+    category: Operations
+    risk: low
+    business_impact: "Enumerates workflow executions and their statuses in a workspace, giving visibility into pipeline run history."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://wiki.latch.bio/agent/latch-mcp
+  - id: latchbio.get_execution
+    object: Execution
+    action: get_execution
+    description: "Fetches workflow execution status, task nodes, result files, and a Console URL."
+    category: Operations
+    risk: low
+    business_impact: "Returns an execution's status, task graph, and references to its result files, exposing pipeline outputs and progress for one run."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://wiki.latch.bio/agent/latch-mcp
+  - id: latchbio.get_task_logs
+    object: TaskLog
+    action: get_task_logs
+    description: "Fetches inline task logs or a presigned download URL for full task logs."
+    category: Operations
+    risk: low
+    business_impact: "Retrieves task execution logs inline or via a presigned URL, which may reveal command parameters, file paths, and processing details for a run."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
