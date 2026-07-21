@@ -1,0 +1,49 @@
+schema_version: "1.0"
+platform: jentic
+display_name: Jentic
+source: langguard-editorial
+updated: "2026-07"
+reference: https://raw.githubusercontent.com/jentic/jentic-sdks/main/mcp/README.md
+actions:
+  # ---------- Operations ----------
+
+  # source: https://raw.githubusercontent.com/jentic/jentic-sdks/main/mcp/README.md
+  - id: jentic.execute
+    object: "*"
+    action: execute
+    category: Operations
+    risk: critical
+    business_impact: "Runs an arbitrary external API or workflow operation with the agent's configured credentials, so a single call can create, modify, delete, or exfiltrate data on any connected third-party system."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/jentic/jentic-sdks/main/mcp/README.md
+  - id: jentic.load_execution_info
+    object: API
+    action: load_execution_info
+    category: Data Access
+    risk: low
+    business_impact: "Returns detailed API and operation specifications, including which authentication credentials must be configured to call the target API, without changing any state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/jentic/jentic-sdks/main/mcp/README.md
+  - id: jentic.search_apis
+    object: API
+    action: search_apis
+    category: Data Access
+    risk: low
+    business_impact: "Searches the Jentic directory for APIs matching a capability query, a read-only discovery step that exposes available integrations but changes no external state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

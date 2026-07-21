@@ -1,0 +1,266 @@
+schema_version: "1.2"
+platform: lattice
+display_name: Lattice
+source: langguard-editorial
+updated: "2026-07"
+reference: https://help.lattice.com/hc/en-us/articles/41580674227351-Lattice-MCP-Tools
+actions:
+  # ---------- Performance Reviews ----------
+
+  # source: https://help.lattice.com/hc/en-us/articles/41580674227351-Lattice-MCP-Tools
+  - id: lattice.get-draft-reviews
+    object: Review
+    action: get-draft-reviews
+    description: "Returns the open performance review drafts the user is currently authoring — including self-reviews and reviews of others — with cycle metadata, form questions, and saved answers."
+    category: Performance Reviews
+    risk: medium
+    business_impact: "Surfaces the caller's in-progress performance review drafts, including reviews of others with reviewee identity and saved evaluative answers."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lattice.com/hc/en-us/articles/41580674227351-Lattice-MCP-Tools
+  - id: lattice.find-reviews
+    object: Review
+    action: find-reviews
+    description: "Retrieves past reviews the user is permitted to see, filterable by reviewee, author, cycle, direction, status, and date range."
+    category: Performance Reviews
+    risk: medium
+    business_impact: "Retrieves past performance reviews the caller may see, exposing evaluative content, ratings, and reviewee/author identities across cycles."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lattice.com/hc/en-us/articles/41580674227351-Lattice-MCP-Tools
+  - id: lattice.get-review-cycles
+    object: ReviewCycle
+    action: get-review-cycles
+    description: "Returns the review cycles the user is currently participating in, with their role and how many drafts they owe per cycle."
+    category: Performance Reviews
+    risk: low
+    business_impact: "Lists the review cycles the caller participates in with role and outstanding draft counts — process metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lattice.com/hc/en-us/articles/41580674227351-Lattice-MCP-Tools
+  - id: lattice.validate-draft-review
+    object: Review
+    action: validate-draft-review
+    description: "Inspects an open draft and returns the required questions that still need answers before it can be submitted."
+    category: Performance Reviews
+    risk: low
+    business_impact: "Reports which required questions on a review draft remain unanswered before submission — form metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lattice.com/hc/en-us/articles/41580674227351-Lattice-MCP-Tools
+  - id: lattice.save-draft-review
+    object: Review
+    action: save-draft-review
+    description: "Saves or updates answers on an open review draft; the answers passed in replace any previously saved answers for the same questions."
+    category: Performance Reviews
+    risk: medium
+    business_impact: "Writes or overwrites ratings and free-text answers on a performance review draft about an individual, replacing prior saved answers."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lattice.com/hc/en-us/articles/41580674227351-Lattice-MCP-Tools
+  - id: lattice.submit-review
+    object: Review
+    action: submit-review
+    description: "Submits a drafted review, transitioning it from drafted to submitted."
+    category: Performance Reviews
+    risk: medium
+    business_impact: "Finalizes a drafted performance review into submitted state, producing an official HR evaluation record that is no longer editable as a draft."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Feedback & Growth ----------
+
+  # source: https://help.lattice.com/hc/en-us/articles/41580674227351-Lattice-MCP-Tools
+  - id: lattice.find-feedback
+    object: Feedback
+    action: find-feedback
+    description: "Retrieves feedback items the user can see — feedback about a specific person or authored by them — including text, visibility level, and author/target identities."
+    category: Feedback & Growth
+    risk: medium
+    business_impact: "Retrieves feedback items about or authored by a person, exposing feedback text, visibility level, and author/target identities."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lattice.com/hc/en-us/articles/41580674227351-Lattice-MCP-Tools
+  - id: lattice.find-one-on-ones
+    object: OneOnOne
+    action: find-one-on-ones
+    description: "Surfaces 1:1 meetings between the user and a specific employee — past, upcoming, and cancelled — with talking points, action items, shared notes, AI summary, and private notes."
+    category: Feedback & Growth
+    risk: medium
+    business_impact: "Exposes 1:1 meeting talking points, action items, shared notes, AI summaries, and the caller's private notes for a specific employee pairing."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lattice.com/hc/en-us/articles/41580674227351-Lattice-MCP-Tools
+  - id: lattice.list-goals-for-employee
+    object: Goal
+    action: list-goals-for-employee
+    description: "Surfaces the goals owned by a specific employee, with each goal's title, description, OKR type, progress status, amounts, and timeline dates."
+    category: Feedback & Growth
+    risk: low
+    business_impact: "Surfaces an employee's goals with titles, progress, amounts, and timelines for review or 1:1 context."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lattice.com/hc/en-us/articles/41580674227351-Lattice-MCP-Tools
+  - id: lattice.list-grow-competencies-for-employee
+    object: GrowCompetency
+    action: list-grow-competencies-for-employee
+    description: "Retrieves an employee's Grow Track assignment — the structured career path mapping competencies to job levels and the expectations describing good performance at each level."
+    category: Feedback & Growth
+    risk: low
+    business_impact: "Returns an employee's Grow Track career-path assignment mapping competencies to job levels and level expectations."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Check-ins ----------
+
+  # source: https://help.lattice.com/hc/en-us/articles/41580674227351-Lattice-MCP-Tools
+  - id: lattice.list-updates-for-employee
+    object: Update
+    action: list-updates-for-employee
+    description: "Surfaces the submitted weekly status updates / check-ins authored by a specific employee, each with its inline question/answer text, sentiment, and period metadata."
+    category: Check-ins
+    risk: medium
+    business_impact: "Surfaces another employee's submitted weekly check-in narratives and sentiment, exposing personal status-update content."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lattice.com/hc/en-us/articles/41580674227351-Lattice-MCP-Tools
+  - id: lattice.get-current-update-draft
+    object: Update
+    action: get-current-update-draft
+    description: "Returns the user's check-in (status update) draft for the current period, with the form questions, saved answers, and period metadata."
+    category: Check-ins
+    risk: low
+    business_impact: "Returns the caller's own current-period check-in draft with questions, saved answers, and sentiment."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lattice.com/hc/en-us/articles/41580674227351-Lattice-MCP-Tools
+  - id: lattice.save-draft-update
+    object: Update
+    action: save-draft-update
+    description: "Saves or updates answers, sentiment, and the public flag on the user's current-period check-in draft."
+    category: Check-ins
+    risk: low
+    business_impact: "Writes answers, sentiment, and the public flag on the caller's own current-period check-in draft without publishing it."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- People & Org ----------
+
+  # source: https://help.lattice.com/hc/en-us/articles/41580674227351-Lattice-MCP-Tools
+  - id: lattice.find-employees
+    object: Employee
+    action: find-employees
+    description: "Searches for employees in the company by name, work email, and/or department, returning employee profiles including the entity ID (UUID) required by other tools; omitting all filters lists every employee."
+    category: People & Org
+    risk: high
+    business_impact: "Enumerates employee profiles company-wide and can list every employee's name, work email, title, department, and UUID — a full directory export of workforce PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lattice.com/hc/en-us/articles/41580674227351-Lattice-MCP-Tools
+  - id: lattice.find-reports
+    object: Employee
+    action: find-reports
+    description: "Returns the team beneath an employee — direct reports, or the full subtree down to a given depth (1-5 levels) — with each report's profile."
+    category: People & Org
+    risk: medium
+    business_impact: "Surfaces an employee's direct reports or full org subtree down to five levels, exposing each report's name, title, and email."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lattice.com/hc/en-us/articles/41580674227351-Lattice-MCP-Tools
+  - id: lattice.find-ancestors
+    object: Employee
+    action: find-ancestors
+    description: "Returns the full chain of managers above an employee, ordered from their direct manager up to the org root, with each ancestor's profile."
+    category: People & Org
+    risk: low
+    business_impact: "Walks the management chain above an employee, exposing each manager's name, title, and email up to the org root."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lattice.com/hc/en-us/articles/41580674227351-Lattice-MCP-Tools
+  - id: lattice.whoami
+    object: Employee
+    action: whoami
+    description: "Returns the identity of the current user — their own employee profile (entity ID, name, title, email, department) plus their manager's profile."
+    category: People & Org
+    risk: low
+    business_impact: "Returns the caller's own employee profile and their manager's identity — read-only self-identity used to seed other tools."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lattice.com/hc/en-us/articles/41580674227351-Lattice-MCP-Tools
+  - id: lattice.list-departments
+    object: Department
+    action: list-departments
+    description: "Lists the active departments in the company, each with its entity ID (UUID) and name."
+    category: People & Org
+    risk: low
+    business_impact: "Lists active department names and IDs for browsing org structure; returns no employee-level personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

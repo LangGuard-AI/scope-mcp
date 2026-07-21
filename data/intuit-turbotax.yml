@@ -1,0 +1,89 @@
+schema_version: "1.1"
+platform: intuit-turbotax
+display_name: Intuit TurboTax
+source: langguard-editorial
+updated: "2026-07"
+reference: https://ttlc.intuit.com/turbotax-support/en-us/help-article/tax-return/access-turbotax-tools-claude
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://ttlc.intuit.com/turbotax-support/en-us/help-article/tax-return/access-turbotax-tools-claude
+  - id: intuit-turbotax.document_upload
+    object: TaxDocument
+    action: document_upload
+    id_form: capability
+    description: "Document upload"
+    category: Data Access
+    risk: high
+    business_impact: "Transfers the user's tax documents — which typically carry SSNs, income figures, and other sensitive financial PII — from Claude into Intuit's systems."
+    compliance: [CCPA, GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Financial ----------
+
+  # source: https://ttlc.intuit.com/turbotax-support/en-us/help-article/tax-return/access-turbotax-tools-claude
+  - id: intuit-turbotax.tax_estimate
+    object: TaxEstimate
+    action: tax_estimate
+    id_form: capability
+    description: "Tax estimate"
+    category: Financial
+    risk: medium
+    business_impact: "Gathers the user's wages, withholdings, and other financial details to compute an estimated federal refund or balance due, surfacing sensitive income data into the session."
+    compliance: [CCPA, GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://ttlc.intuit.com/turbotax-support/en-us/help-article/tax-return/access-turbotax-tools-claude
+  - id: intuit-turbotax.tax_filing_options
+    object: FilingOption
+    action: tax_filing_options
+    id_form: capability
+    description: "Tax filing options"
+    category: Financial
+    risk: low
+    business_impact: "Presents TurboTax product tiers and filing methods for the user to compare and select, with no persisted change to tax data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Service ----------
+
+  # source: https://ttlc.intuit.com/turbotax-support/en-us/help-article/tax-return/access-turbotax-tools-claude
+  - id: intuit-turbotax.expert_search
+    object: TaxExpert
+    action: expert_search
+    id_form: capability
+    description: "Expert search"
+    category: Service
+    risk: low
+    business_impact: "Surfaces available tax professionals and initiates a Connect Now session, potentially disclosing the user's tax situation to a human expert."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://ttlc.intuit.com/turbotax-support/en-us/help-article/tax-return/access-turbotax-tools-claude
+  - id: intuit-turbotax.tax_checklist
+    object: TaxChecklist
+    action: tax_checklist
+    id_form: capability
+    description: "Tax checklist"
+    category: Operations
+    risk: low
+    business_impact: "Produces a personalized list of tax documents to gather based on the user's stated circumstances, a read-only advisory output."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

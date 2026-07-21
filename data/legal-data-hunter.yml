@@ -1,0 +1,100 @@
+schema_version: "1.0"
+platform: legal-data-hunter
+display_name: Legal Data Hunter
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://legaldatahunter.com/connect
+  - id: legal-data-hunter.search
+    object: Document
+    action: search
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces legal documents from a 38M-record global corpus that may include personal data named in court judgments and filings."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://legaldatahunter.com/connect
+  - id: legal-data-hunter.get_document
+    object: Document
+    action: get_document
+    category: Data Access
+    risk: low
+    business_impact: "Returns the full text and metadata of a legal document, potentially exposing personal data of parties named in the record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://legaldatahunter.com/connect
+  - id: legal-data-hunter.resolve_reference
+    object: Citation
+    action: resolve_reference
+    category: Data Access
+    risk: low
+    business_impact: "Maps a loose legal citation to the exact matching document identifiers across 55+ countries; returns references, not personal content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://legaldatahunter.com/connect
+  - id: legal-data-hunter.discover_countries
+    object: Country
+    action: discover_countries
+    category: Data Access
+    risk: low
+    business_impact: "Lists the supported countries and their document counts — catalog metadata with no sensitive content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://legaldatahunter.com/connect
+  - id: legal-data-hunter.discover_sources
+    object: Source
+    action: discover_sources
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates a country's data sources, court names, and tiers — catalog metadata describing the corpus, not its contents."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://legaldatahunter.com/connect
+  - id: legal-data-hunter.get_filters
+    object: Source
+    action: get_filters
+    category: Data Access
+    risk: low
+    business_impact: "Returns the available filter values for a source, exposing only search-facet metadata such as courts, jurisdictions, and date ranges."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://legaldatahunter.com/connect
+  - id: legal-data-hunter.report_source_issue
+    object: SourceIssue
+    action: report_source_issue
+    category: Operations
+    risk: low
+    business_impact: "Files a data-quality complaint against a source, creating a reversible report record for broken URLs, missing data, or indexing errors."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

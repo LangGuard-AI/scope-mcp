@@ -1,0 +1,121 @@
+schema_version: "1.1"
+platform: listen-labs
+display_name: Listen Labs
+source: langguard-editorial
+updated: "2026-07"
+# The Listen Labs MCP server (https://listenlabs.ai/mcp) is OAuth-gated and does
+# not publish verbatim tool identifiers; the vendor MCP docs enumerate the tool
+# surface only as plain-language capability labels. Per the rubric's sanctioned
+# id_form: capability path, every entry below carries a slug action plus the
+# verbatim label in `description`. Refresh to id_form: verbatim when a real
+# tools/list capture becomes available.
+reference: https://docs.listenlabs.ai/mcp-docs
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.listenlabs.ai/mcp-docs
+  - id: listen-labs.read_transcripts
+    object: Transcript
+    action: read_transcripts
+    id_form: capability
+    description: "Read transcripts"
+    category: Data Access
+    risk: medium
+    business_impact: "Reads full respondent interview transcripts page by page, exposing participants' verbatim answers and any personal details disclosed during research sessions."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.listenlabs.ai/mcp-docs
+  - id: listen-labs.read_analysis
+    object: AnalysisReport
+    action: read_analysis
+    id_form: capability
+    description: "Read analysis"
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves AI-generated analysis reports containing sourced respondent quotes, surfacing personal opinions and identifiable statements drawn from interviews."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.listenlabs.ai/mcp-docs
+  - id: listen-labs.search_research
+    object: Research
+    action: search_research
+    id_form: capability
+    description: "Search research"
+    category: Data Access
+    risk: low
+    business_impact: "Finds studies and themes by keyword across titles, returning a filtered index of accessible research without exposing raw respondent content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Research Studies ----------
+
+  # source: https://docs.listenlabs.ai/mcp-docs
+  - id: listen-labs.launch_studies
+    object: Study
+    action: launch_studies
+    id_form: capability
+    description: "Launch studies"
+    category: Research Studies
+    risk: medium
+    business_impact: "Publishes the latest study edits and starts live recruitment, committing the study to real respondents and incurring recruitment spend."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.listenlabs.ai/mcp-docs
+  - id: listen-labs.edit_studies
+    object: Study
+    action: edit_studies
+    id_form: capability
+    description: "Edit studies"
+    category: Research Studies
+    risk: medium
+    business_impact: "Modifies a study's titles, questions, screeners, and parameters, altering who gets recruited and what data the instrument collects."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.listenlabs.ai/mcp-docs
+  - id: listen-labs.create_studies
+    object: Study
+    action: create_studies
+    id_form: capability
+    description: "Create studies"
+    category: Research Studies
+    risk: low
+    business_impact: "Creates a new research study from a described goal through guided setup, producing a draft that is not yet recruiting."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.listenlabs.ai/mcp-docs
+  - id: listen-labs.browse_studies
+    object: Study
+    action: browse_studies
+    id_form: capability
+    description: "Browse studies"
+    category: Research Studies
+    risk: low
+    business_impact: "Lists and filters research projects the user can access, returning study metadata without respondent-level content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

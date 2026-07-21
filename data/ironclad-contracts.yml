@@ -1,0 +1,88 @@
+schema_version: "1.0"
+platform: ironclad-contracts
+display_name: Ironclad Contracts
+source: langguard-editorial
+updated: "2026-07"
+reference: https://support.ironcladapp.com/hc/en-us/articles/39887091143319-Ironclad-MCP-Server
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://support.ironcladapp.com/hc/en-us/articles/39887632957463-Connect-an-MCP-Client-to-Ironclad-MCP-Server
+  - id: ironclad-contracts.conversational_search
+    object: Contract
+    action: conversational_search
+    category: Data Access
+    risk: medium
+    business_impact: "Runs AI semantic search across the contract repository, surfacing counterparty terms and personal data of signatories at query scale within the caller's permission boundary."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Contract Obligations ----------
+
+  # source: https://support.ironcladapp.com/hc/en-us/articles/39887632957463-Connect-an-MCP-Client-to-Ironclad-MCP-Server
+  - id: ironclad-contracts.create_obligation
+    object: Obligation
+    action: create_obligation
+    category: Contract Obligations
+    risk: medium
+    business_impact: "Creates a contractual obligation record tied to an Ironclad contract, establishing a tracked commitment with type, owner, and status."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.ironcladapp.com/hc/en-us/articles/39887632957463-Connect-an-MCP-Client-to-Ironclad-MCP-Server
+  - id: ironclad-contracts.update_obligation
+    object: Obligation
+    action: update_obligation
+    category: Contract Obligations
+    risk: medium
+    business_impact: "Modifies an existing obligation's type, status, or owner, which can mark a contractual commitment fulfilled or reassign accountability for it."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.ironcladapp.com/hc/en-us/articles/39887632957463-Connect-an-MCP-Client-to-Ironclad-MCP-Server
+  - id: ironclad-contracts.get_obligation
+    object: Obligation
+    action: get_obligation
+    category: Contract Obligations
+    risk: low
+    business_impact: "Reads a single contractual obligation's details within the caller's record-based permissions."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.ironcladapp.com/hc/en-us/articles/39887632957463-Connect-an-MCP-Client-to-Ironclad-MCP-Server
+  - id: ironclad-contracts.list_obligations
+    object: Obligation
+    action: list_obligations
+    category: Contract Obligations
+    risk: low
+    business_impact: "Lists contractual obligations tied to Ironclad records the caller is authorized to see."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.ironcladapp.com/hc/en-us/articles/39887632957463-Connect-an-MCP-Client-to-Ironclad-MCP-Server
+  - id: ironclad-contracts.list_obligation_types
+    object: ObligationType
+    action: list_obligation_types
+    category: Contract Obligations
+    risk: low
+    business_impact: "Returns the configured obligation-type definitions available in the workspace, a read-only metadata lookup."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

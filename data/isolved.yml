@@ -1,0 +1,101 @@
+schema_version: "1.1"
+platform: isolved
+display_name: isolved People Cloud
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Time Off & Leave ----------
+
+  # source: https://www.isolvedhcm.com/developer/isolved-mcp
+  - id: isolved.your_time_off_balances
+    object: TimeOffBalance
+    action: your_time_off_balances
+    id_form: capability
+    description: "Your time off balances"
+    category: Time Off & Leave
+    risk: low
+    business_impact: "Reads the signed-in employee's leave balances across every time-off type, exposing accrual and usage figures for that individual."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.isolvedhcm.com/developer/isolved-mcp
+  - id: isolved.your_existing_requests
+    object: TimeOffRequest
+    action: your_existing_requests
+    id_form: capability
+    description: "Your existing requests"
+    category: Time Off & Leave
+    risk: low
+    business_impact: "Returns the employee's pending and approved time-off requests with dates and status, which can reveal absence patterns and sick-leave activity."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.isolvedhcm.com/developer/isolved-mcp
+  - id: isolved.new_time_off_requests
+    object: TimeOffRequest
+    action: new_time_off_requests
+    id_form: capability
+    description: "New time off requests"
+    category: Time Off & Leave
+    risk: medium
+    business_impact: "Submits a new time-off request on the employee's behalf, writing leave dates and type into the HCM system for downstream approval."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.isolvedhcm.com/developer/isolved-mcp
+  - id: isolved.pending_time_off_requests
+    object: TimeOffRequest
+    action: pending_time_off_requests
+    id_form: capability
+    description: "Pending time off requests"
+    category: Time Off & Leave
+    risk: medium
+    business_impact: "Reads, creates, and per the access matrix cancels the employee's pending time-off requests, mutating leave records that reveal absence details."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Time Tracking ----------
+
+  # source: https://www.isolvedhcm.com/developer/isolved-mcp
+  - id: isolved.your_standard_schedule
+    object: Schedule
+    action: your_standard_schedule
+    id_form: capability
+    description: "Your standard schedule"
+    category: Time Tracking
+    risk: low
+    business_impact: "Reads the employee's standard daily and weekly working schedule, used to propose accurate hours when drafting time-off requests."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Company & Organization ----------
+
+  # source: https://www.isolvedhcm.com/developer/isolved-mcp
+  - id: isolved.company_holidays
+    object: Holiday
+    action: company_holidays
+    id_form: capability
+    description: "Company holidays"
+    category: Company & Organization
+    risk: low
+    business_impact: "Reads the employer's company-wide holiday schedule and policies applicable to the signed-in employee; non-personal reference data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

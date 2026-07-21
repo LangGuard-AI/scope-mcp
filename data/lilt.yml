@@ -1,0 +1,117 @@
+schema_version: "1.0"
+platform: lilt
+display_name: LILT
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://support.lilt.com/kb/LILT-mcp
+  - id: lilt.upload_file
+    object: File
+    action: upload_file
+    category: Data Access
+    risk: medium
+    business_impact: "Sends a source file to LILT for translation; uploaded documents may carry personal data or confidential business content into an external service."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.lilt.com/kb/LILT-mcp
+  - id: lilt.download_job
+    object: Job
+    action: download_job
+    category: Data Access
+    risk: medium
+    business_impact: "Exports a completed translation job and returns a download link exposing the translated documents, which may contain personal or confidential data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- AI & Models ----------
+
+  # source: https://support.lilt.com/kb/LILT-mcp
+  - id: lilt.create_trained_model
+    object: TrainedModel
+    action: create_trained_model
+    category: AI & Models
+    risk: medium
+    business_impact: "Trains and provisions a new translation model for a language pair, consuming compute entitlements and deploying an AI system into the workspace."
+    compliance: [ISO_42001, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://support.lilt.com/kb/LILT-mcp
+  - id: lilt.translate_files_with_verification
+    object: Job
+    action: translate_files_with_verification
+    category: Operations
+    risk: medium
+    business_impact: "Creates a formal human-verified translation job over uploaded files, committing verified-translation credits and routing document content through the LILT workflow."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.lilt.com/kb/LILT-mcp
+  - id: lilt.translate_text
+    object: Text
+    action: translate_text
+    category: Operations
+    risk: low
+    business_impact: "Returns an instant machine translation of a supplied text snippet, consuming instant-translation credits."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.lilt.com/kb/LILT-mcp
+  - id: lilt.check_job_status
+    object: Job
+    action: check_job_status
+    category: Operations
+    risk: low
+    business_impact: "Reads the current status of a verified translation job without modifying any state."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.lilt.com/kb/LILT-mcp
+  - id: lilt.list_resources
+    object: Resource
+    action: list_resources
+    category: Operations
+    risk: low
+    business_impact: "Lists and filters existing translation jobs or trained models in the account for inventory and lookup."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Financial ----------
+
+  # source: https://support.lilt.com/kb/LILT-mcp
+  - id: lilt.get_credit_balance_information
+    object: CreditBalance
+    action: get_credit_balance_information
+    category: Financial
+    risk: low
+    business_impact: "Reads the remaining instant and verified translation credit balances for the account."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

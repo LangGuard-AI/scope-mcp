@@ -1,0 +1,353 @@
+schema_version: "1.2"
+platform: legalzoom
+display_name: LegalZoom
+source: langguard-editorial
+updated: "2026-07"
+reference: https://www.legalzoom.com/tools/mcp-docs
+server_website: https://claude.com/connectors/legalzoom
+actions:
+  # ---------- Documents ----------
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.attach_document_to_attorney_review
+    object: Document
+    action: attach_document_to_attorney_review
+    description: "Attach an uploaded document to an attorney review work item."
+    category: Documents
+    risk: medium
+    business_impact: "Links a customer-supplied legal document into an attorney review item, exposing potentially sensitive personal and matter details to the reviewing workflow."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.upload_document
+    object: Document
+    action: upload_document
+    description: "Create a secure, one-time document upload session for an attorney workflow."
+    category: Documents
+    risk: medium
+    business_impact: "Opens an ingest channel for customer documents that commonly carry personal identifiers and sensitive legal content bound for an attorney workflow."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.analyze-document
+    object: Document
+    action: analyze-document
+    description: "Analyze a legal document with LegalZoom’s attorney-curated clause framework."
+    category: Documents
+    risk: medium
+    business_impact: "Processes the full text of a submitted legal document, which may contain personal data, to score it against a clause framework."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.render_template
+    object: Document
+    action: render_template
+    description: "Submit completed template answers and return a secure rendered document."
+    category: Documents
+    risk: medium
+    business_impact: "Generates a finished legal document from user-entered answers that routinely include names, addresses, and other personal details."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.craft_template
+    object: Template
+    action: craft_template
+    description: "Discover and load the schema for a LegalZoom legal document template."
+    category: Documents
+    risk: low
+    business_impact: "Loads a document template schema for downstream form completion; no customer data is read or written."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Legal Services ----------
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.request_attorney_review
+    object: AttorneyReview
+    action: request_attorney_review
+    description: "Request async attorney messaging or schedule a phone consultation."
+    category: Legal Services
+    risk: medium
+    business_impact: "Creates an attorney engagement tied to the customer and their legal topic, committing a service request and revealing the nature of the matter."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.get_upcoming_appointments
+    object: Appointment
+    action: get_upcoming_appointments
+    description: "Return a customer’s upcoming scheduled attorney consultations."
+    category: Legal Services
+    risk: low
+    business_impact: "Reads a customer’s scheduled consultations, which reveal the existence and timing of their legal matters."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.check_attorney_consultation_entitlements
+    object: Entitlement
+    action: check_attorney_consultation_entitlements
+    description: "Check whether the customer has access to attorney consultations."
+    category: Legal Services
+    risk: low
+    business_impact: "Reads a customer’s consultation entitlement flag to gate access to attorney services."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.get_attorney_availability
+    object: Availability
+    action: get_attorney_availability
+    description: "Find attorney consultation availability by topic, jurisdiction, and date."
+    category: Legal Services
+    risk: low
+    business_impact: "Returns open attorney consultation slots for a topic and jurisdiction; reference lookup with no customer write."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.get_attorney_info
+    object: Attorney
+    action: get_attorney_info
+    description: "Return verified profile details for a matched attorney."
+    category: Legal Services
+    risk: low
+    business_impact: "Returns a matched attorney’s professional profile details for the customer to review."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.get_consultation_topics
+    object: Topic
+    action: get_consultation_topics
+    description: "List attorney consultation and async-review topic classifications."
+    category: Legal Services
+    risk: low
+    business_impact: "Lists the static set of consultation and review topic classifications for routing a request."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.get_valid_locations
+    object: Location
+    action: get_valid_locations
+    description: "List valid US jurisdictions for attorney matching and review requests."
+    category: Legal Services
+    risk: low
+    business_impact: "Returns the reference list of supported US jurisdictions for attorney matching."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Commerce ----------
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.add_bap_to_cart
+    object: Cart
+    action: add_bap_to_cart
+    description: "Add the Business Attorney Plan to a customer cart and return checkout guidance."
+    category: Commerce
+    risk: low
+    business_impact: "Places the Business Attorney Plan into the customer cart and returns checkout guidance; a reversible pre-purchase step with no charge."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.show_llc_packages
+    object: Package
+    action: show_llc_packages
+    description: "Show LLC formation package options, state fees, and checkout actions."
+    category: Commerce
+    risk: low
+    business_impact: "Displays LLC formation package pricing, state fees, and checkout links; read-only merchandising with no charge."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.show_llc_packages_text
+    object: Package
+    action: show_llc_packages_text
+    description: "Return LLC formation package options in a portable text response."
+    category: Commerce
+    risk: low
+    business_impact: "Returns LLC formation package options as portable text; read-only merchandising with no charge."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Formation & Estate Planning ----------
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.will-creation-prepare
+    object: Will
+    action: will-creation-prepare
+    description: "Prepare the conversational inputs required to begin creating a will."
+    category: Formation & Estate Planning
+    risk: low
+    business_impact: "Collects the personal and estate details needed to start a will, handling identifiable information about the will-maker and beneficiaries."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.will-creation-preview-document
+    object: Will
+    action: will-creation-preview-document
+    description: "Show state-specific will package choices and document previews."
+    category: Formation & Estate Planning
+    risk: low
+    business_impact: "Displays state-specific will package choices and document previews; presentational step with no persisted customer data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.compare_business_structures
+    object: BusinessStructure
+    action: compare_business_structures
+    description: "Compare common business structures in an interactive visual response."
+    category: Formation & Estate Planning
+    risk: low
+    business_impact: "Renders an interactive comparison of common business structures for informational guidance only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.compare_business_structures_text
+    object: BusinessStructure
+    action: compare_business_structures_text
+    description: "Compare common business structures in a portable text response."
+    category: Formation & Estate Planning
+    risk: low
+    business_impact: "Returns a portable text comparison of common business structures for informational guidance only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.show_llc_formation_checklist
+    object: Checklist
+    action: show_llc_formation_checklist
+    description: "Collect and display the information needed to start an LLC."
+    category: Formation & Estate Planning
+    risk: low
+    business_impact: "Collects and displays the business details needed to start an LLC as a guided checklist."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.show_llc_formation_checklist_text
+    object: Checklist
+    action: show_llc_formation_checklist_text
+    description: "Collect the information needed to start an LLC in a portable text flow."
+    category: Formation & Estate Planning
+    risk: low
+    business_impact: "Collects the business details needed to start an LLC through a portable text flow."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Knowledge & Products ----------
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.legalzoom-all-product-descriptions
+    object: Product
+    action: legalzoom-all-product-descriptions
+    description: "Return detailed descriptions and common uses for LegalZoom products and services."
+    category: Knowledge & Products
+    risk: low
+    business_impact: "Returns the catalog of LegalZoom product descriptions and common uses; static reference content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.search-legalzoom-articles
+    object: Article
+    action: search-legalzoom-articles
+    description: "Search LegalZoom articles and approved legal education for a specific question."
+    category: Knowledge & Products
+    risk: low
+    business_impact: "Searches published LegalZoom articles and legal education content; read-only knowledge lookup."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.legalzoom.com/mcp/catalog.json
+  - id: legalzoom.search-legalzoom-product-urls
+    object: Product
+    action: search-legalzoom-product-urls
+    description: "Find the canonical LegalZoom product page for a product or service request."
+    category: Knowledge & Products
+    risk: low
+    business_impact: "Resolves the canonical LegalZoom product page URL for a requested product or service; read-only lookup."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

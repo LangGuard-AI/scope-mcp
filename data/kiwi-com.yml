@@ -1,0 +1,39 @@
+schema_version: "1.1"
+platform: kiwi-com
+display_name: Kiwi.com
+source: langguard-editorial
+updated: "2026-07"
+reference: https://mcp.kiwi.com
+server_website: https://mcp.kiwi.com
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://mcp.kiwi.com
+  - id: kiwi-com.search-flight
+    object: Flight
+    action: search-flight
+    description: "Search for flights with Kiwi.com between two locations for the given dates and passengers."
+    category: Data Access
+    risk: low
+    business_impact: "Queries Kiwi.com for available flights between two locations for given dates and passenger counts; read-only, returns fare options without storing personal records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://mcp.kiwi.com
+  - id: kiwi-com.feedback-to-devs
+    object: Feedback
+    action: feedback-to-devs
+    description: "Send feedback, bug reports, or feature requests to the Kiwi.com MCP server developers."
+    category: Operations
+    risk: low
+    business_impact: "Sends free-text feedback, bug reports, and context such as error messages or logs to Kiwi.com's MCP developers; user-supplied text could inadvertently carry personal details."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

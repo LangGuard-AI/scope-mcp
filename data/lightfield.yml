@@ -1,0 +1,76 @@
+schema_version: "1.0"
+platform: lightfield
+display_name: Lightfield
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.lightfield.app/getting-started/mcp-quickstart/
+  - id: lightfield.read_from_lightfield
+    object: "*"
+    action: read_from_lightfield
+    category: Data Access
+    risk: medium
+    business_impact: "Reads arbitrary records from the Lightfield CRM workspace, potentially surfacing contact, account, and opportunity PII to the agent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.lightfield.app/getting-started/mcp-quickstart/
+  - id: lightfield.write_to_lightfield
+    object: "*"
+    action: write_to_lightfield
+    category: Data Access
+    risk: medium
+    business_impact: "Creates or updates any record in the Lightfield CRM workspace, altering contact, account, and opportunity data including personal fields."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Access ----------
+
+  # source: https://docs.lightfield.app/getting-started/mcp-quickstart/
+  - id: lightfield.get_current_user
+    object: User
+    action: get_current_user
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns the connected user's own identity, including name, email, and workspace role."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://docs.lightfield.app/getting-started/mcp-quickstart/
+  - id: lightfield.search_lightfield_api_docs
+    object: ApiDoc
+    action: search_lightfield_api_docs
+    category: Operations
+    risk: low
+    business_impact: "Browses available Lightfield API endpoints and resources, exposing the workspace's API surface for agent discovery."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.lightfield.app/getting-started/mcp-quickstart/
+  - id: lightfield.get_lightfield_api_details
+    object: ApiDoc
+    action: get_lightfield_api_details
+    category: Operations
+    risk: low
+    business_impact: "Returns detailed documentation for a specific Lightfield API endpoint, describing its parameters and behavior."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

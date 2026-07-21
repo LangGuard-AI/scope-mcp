@@ -1,0 +1,52 @@
+schema_version: "1.1"
+platform: learning-commons-knowledge-graph
+display_name: Learning Commons Knowledge Graph
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.learningcommons.org/knowledge-graph/using-knowledge-graph/mcp-server.md
+  - id: learning-commons-knowledge-graph.find_academic_standard_statement
+    object: AcademicStandard
+    action: find_academic_standard_statement
+    id_form: capability
+    description: "Find Academic Standard statement"
+    category: Data Access
+    risk: low
+    business_impact: "Resolves a public K-12 standard code into its authoritative statement and metadata — a read-only lookup of curriculum reference data with no student or personal information involved."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.learningcommons.org/knowledge-graph/using-knowledge-graph/mcp-server.md
+  - id: learning-commons-knowledge-graph.find_learning_components_from_standard
+    object: LearningComponent
+    action: find_learning_components_from_standard
+    id_form: capability
+    description: "Find Learning Components from standard"
+    category: Data Access
+    risk: low
+    business_impact: "Decomposes a public academic standard into granular teachable skills, returning read-only curriculum reference data only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.learningcommons.org/knowledge-graph/using-knowledge-graph/mcp-server.md
+  - id: learning-commons-knowledge-graph.find_learning_progressions_from_standard
+    object: LearningProgression
+    action: find_learning_progressions_from_standard
+    id_form: capability
+    description: "Find Learning Progressions from standard"
+    category: Data Access
+    risk: low
+    business_impact: "Identifies prerequisite and follow-on standards for a given standard using SAP Coherence Maps, a read-only traversal of public curriculum data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
