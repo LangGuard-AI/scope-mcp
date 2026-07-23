@@ -11,22 +11,25 @@ For contribution rules (verbatim ids, closed regime allowlist, calibrated confid
 | `1.0` | Launch | Base schema. All fields below except `description`, `reference` (action-level), and `id_form`. |
 | `1.1` | May 2026 | Added optional `description`, `reference` (action-level and top-level), and `id_form`. |
 | `1.2` | May 2026 | Added optional `server_version`, `server_website`, and `maintainer`. |
+| `1.3` | Jul 2026 | Added optional `logo` and `mcp_server_url`. |
 
-Files using `1.0` or `1.1` are still valid. New files and updates should use `1.2`.
+Every version is a strict superset of the last — the additions are all optional, so a `1.0` file is still valid and the reader treats a missing field the same regardless of the version string. New files and updates should use `1.3`.
 
 ## Top-level fields
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `schema_version` | string | yes | `"1.0"`, `"1.1"`, or `"1.2"`. |
+| `schema_version` | string | yes | `"1.0"` through `"1.3"`. |
 | `platform` | string | yes | Lowercase slug used as the namespace prefix for all action ids (e.g. `salesforce`, `stripe`, `slack`). |
 | `display_name` | string | yes | Title-case human-readable platform name. |
+| `logo` | string | no | *(v1.3)* `https` URL of the icon for the company that **owns** the MCP server — normally its favicon. For a multi-product vendor use the **product** icon, not the parent company's mark (Gmail's envelope, not Google's "G"). A hosting platform is never the owner: a server published at `github.com/stripe/…` gets Stripe's icon, not the Octocat (GitHub's own MCP server is the sole exception). Never a third-party favicon service. Omit rather than guess. |
 | `source` | string | yes | `langguard-editorial` for LangGuard-maintained entries, or `community-<handle>` for community contributions. |
 | `updated` | string | yes | `"YYYY-MM"` — month the file was last substantively edited. |
 | `reference` | string | no | *(v1.1)* URL to the platform's canonical MCP documentation. Falls back as the default `reference` for actions that don't specify their own. |
 | `server_version` | string | no | *(v1.2)* Version of the MCP server software (e.g. `"2.1.0"`) or date last verified (e.g. `"2026-05"`). Prefer a version string when the server publishes one. |
 | `server_website` | string | no | *(v1.2)* URL of the MCP server project (GitHub repo, product page, etc.). Distinct from `reference`, which points to MCP tool documentation. |
 | `maintainer` | string | no | *(v1.2)* Contact for the MCP server maintainer — an email address or URL to a contact form. |
+| `mcp_server_url` | string | no | *(v1.3)* The **publicly reachable** MCP server endpoint that exposes these tools (e.g. `https://mcp.blockscout.com/mcp`). Must be `https`. Only ever a URL the public can reach — **never** `localhost`, a loopback/private-network address, or a `.local` host. Omit the field when the endpoint is not publicly known. Distinct from `server_website` (the project page) and `reference` (the docs). |
 | `actions` | list | yes | Array of action entries (see below). |
 
 ## Action fields
