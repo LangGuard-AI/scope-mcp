@@ -1,0 +1,156 @@
+schema_version: "1.3"
+platform: pylon-api
+display_name: Pylon
+logo: https://cdn.prod.website-files.com/6a2c6d7ab6674379553c0824/6a579b0543ca00b47b0262f3_Light%20Mode%20-%20Favicon%20(1).png
+source: langguard-editorial
+updated: "2026-08"
+mcp_server_url: https://mcp.usepylon.com/
+actions:
+  # ---------- Service ----------
+
+  # source: https://docs.usepylon.com/pylon-docs/integrations/pylon-mcp
+  - id: pylon-api.search_issues
+    object: Issue
+    action: search_issues
+    category: Service
+    risk: low
+    business_impact: "Locates support issues by title, state, account, assignee, tags, or custom fields; read-only discovery across the support queue."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.usepylon.com/pylon-docs/integrations/pylon-mcp
+  - id: pylon-api.get_issue
+    object: Issue
+    action: get_issue
+    category: Service
+    risk: low
+    business_impact: "Retrieves a single support issue by ID or number, exposing its fields and status to the caller."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.usepylon.com/pylon-docs/integrations/pylon-mcp
+  - id: pylon-api.get_issue_messages
+    object: Issue
+    action: get_issue_messages
+    category: Service
+    risk: medium
+    business_impact: "Reads the complete message history of a support issue, surfacing private customer correspondence that may contain personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.usepylon.com/pylon-docs/integrations/pylon-mcp
+  - id: pylon-api.create_issue
+    object: Issue
+    action: create_issue
+    category: Service
+    risk: low
+    business_impact: "Generates a new support issue in Pylon; reversible low-impact write that adds to the support queue."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.usepylon.com/pylon-docs/integrations/pylon-mcp
+  - id: pylon-api.update_issue
+    object: Issue
+    action: update_issue
+    category: Service
+    risk: medium
+    business_impact: "Modifies issue fields including status and assignee, changing how a customer request is triaged and routed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://docs.usepylon.com/pylon-docs/integrations/pylon-mcp
+  - id: pylon-api.search_accounts
+    object: Account
+    action: search_accounts
+    category: Customer
+    risk: low
+    business_impact: "Queries customer accounts by name, domain, tags, or custom fields; read-only lookup across the account book."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.usepylon.com/pylon-docs/integrations/pylon-mcp
+  - id: pylon-api.get_account
+    object: Account
+    action: get_account
+    category: Customer
+    risk: low
+    business_impact: "Retrieves a customer account's details and field values, exposing the company record to the caller."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.usepylon.com/pylon-docs/integrations/pylon-mcp
+  - id: pylon-api.update_account
+    object: Account
+    action: update_account
+    category: Customer
+    risk: medium
+    business_impact: "Modifies customer account information, altering the record that downstream billing and support workflows rely on."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.usepylon.com/pylon-docs/integrations/pylon-mcp
+  - id: pylon-api.get_contact
+    object: Contact
+    action: get_contact
+    category: Customer
+    risk: low
+    business_impact: "Fetches a customer contact by ID, exposing that individual's personal contact details."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Access ----------
+
+  # source: https://docs.usepylon.com/pylon-docs/integrations/pylon-mcp
+  - id: pylon-api.get_user
+    object: User
+    action: get_user
+    category: Identity & Access
+    risk: low
+    business_impact: "Retrieves team member information for a Pylon user, exposing that employee's identity and profile details."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.usepylon.com/pylon-docs/integrations/pylon-mcp
+  - id: pylon-api.get_me
+    object: User
+    action: get_me
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns the authenticated user's own account details, confirming the identity the token is acting as."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

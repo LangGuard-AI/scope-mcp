@@ -1,0 +1,23 @@
+schema_version: "1.3"
+platform: postgres
+display_name: PostgreSQL
+logo: https://www.postgresql.org/favicon.ico
+source: langguard-editorial
+updated: "2026-08"
+reference: https://github.com/modelcontextprotocol/servers-archived/tree/main/src/postgres
+server_website: https://github.com/modelcontextprotocol/servers-archived/tree/main/src/postgres
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/modelcontextprotocol/servers-archived/main/src/postgres/README.md
+  - id: postgres.query
+    object: "*"
+    action: query
+    category: Data Access
+    risk: critical
+    business_impact: "Executes arbitrary read-only SQL against the connected database, so a single SELECT can read every table the connection role can reach — a full-database exfiltration channel."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial

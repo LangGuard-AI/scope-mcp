@@ -1,0 +1,154 @@
+schema_version: "1.3"
+platform: microsoft-outlook-calendar
+display_name: Microsoft Outlook Calendar
+logo: https://outlook.office.com/favicon.ico
+source: langguard-editorial
+updated: "2026-07"
+reference: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/calendar
+actions:
+  # ---------- Events ----------
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/calendar
+  - id: microsoft-outlook-calendar.mcp_CalendarTools_graph_listEvents
+    object: Event
+    action: mcp_CalendarTools_graph_listEvents
+    category: Events
+    risk: medium
+    business_impact: "Reads a user's calendar events in bulk; event subjects, bodies, and attendee lists can expose confidential meetings and personal data at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/calendar
+  - id: microsoft-outlook-calendar.mcp_CalendarTools_graph_listCalendarView
+    object: Event
+    action: mcp_CalendarTools_graph_listCalendarView
+    category: Events
+    risk: medium
+    business_impact: "Retrieves all calendar occurrences over a time range for a user, exposing meeting subjects, attendees, and locations across the window."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/calendar
+  - id: microsoft-outlook-calendar.mcp_CalendarTools_graph_getEvent
+    object: Event
+    action: mcp_CalendarTools_graph_getEvent
+    category: Events
+    risk: low
+    business_impact: "Reads a single calendar event including its subject, body, and attendee list from a specified user's calendar."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/calendar
+  - id: microsoft-outlook-calendar.mcp_CalendarTools_graph_createEvent
+    object: Event
+    action: mcp_CalendarTools_graph_createEvent
+    category: Events
+    risk: low
+    business_impact: "Creates a calendar event that can invite attendees and provision an online meeting on a user's calendar."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/calendar
+  - id: microsoft-outlook-calendar.mcp_CalendarTools_graph_updateEvent
+    object: Event
+    action: mcp_CalendarTools_graph_updateEvent
+    category: Events
+    risk: low
+    business_impact: "Modifies an existing calendar event's details, potentially changing scheduled time, attendees, or meeting content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/calendar
+  - id: microsoft-outlook-calendar.mcp_CalendarTools_graph_deleteEvent
+    object: Event
+    action: mcp_CalendarTools_graph_deleteEvent
+    category: Events
+    risk: medium
+    business_impact: "Deletes an event from a user's calendar with no built-in recovery, removing the record and its scheduling for the owner."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/calendar
+  - id: microsoft-outlook-calendar.mcp_CalendarTools_graph_cancelEvent
+    object: Event
+    action: mcp_CalendarTools_graph_cancelEvent
+    category: Events
+    risk: medium
+    business_impact: "Cancels an event and sends cancellation notices to every attendee, removing the meeting from all participants' calendars."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/calendar
+  - id: microsoft-outlook-calendar.mcp_CalendarTools_graph_acceptEvent
+    object: Event
+    action: mcp_CalendarTools_graph_acceptEvent
+    category: Events
+    risk: low
+    business_impact: "Accepts an event invitation on a user's behalf and notifies the organizer of the response."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/calendar
+  - id: microsoft-outlook-calendar.mcp_CalendarTools_graph_declineEvent
+    object: Event
+    action: mcp_CalendarTools_graph_declineEvent
+    category: Events
+    risk: low
+    business_impact: "Declines an event invitation on a user's behalf and notifies the organizer of the response."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Scheduling ----------
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/calendar
+  - id: microsoft-outlook-calendar.mcp_CalendarTools_graph_getSchedule
+    object: Schedule
+    action: mcp_CalendarTools_graph_getSchedule
+    category: Scheduling
+    risk: low
+    business_impact: "Reads free/busy availability for a user, distribution list, or resource, revealing when individuals are booked."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/calendar
+  - id: microsoft-outlook-calendar.mcp_CalendarTools_graph_findMeetingTimes
+    object: MeetingTimeSuggestion
+    action: mcp_CalendarTools_graph_findMeetingTimes
+    category: Scheduling
+    risk: low
+    business_impact: "Suggests meeting times and locations by reading organizer and attendee availability across their calendars."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

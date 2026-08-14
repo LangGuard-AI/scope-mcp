@@ -1,0 +1,340 @@
+schema_version: "1.3"
+platform: mongodb
+display_name: MongoDB
+logo: https://www.mongodb.com/favicon.ico
+source: langguard-editorial
+updated: "2026-07"
+reference: https://www.mongodb.com/docs/mcp-server/tools/
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.atlas-create-db-user
+    object: DatabaseUser
+    action: atlas-create-db-user
+    category: Identity & Access
+    risk: high
+    business_impact: "Creates an Atlas database user, provisioning new credentials and access to cluster data without a second approver."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.atlas-create-access-list
+    object: AccessList
+    action: atlas-create-access-list
+    category: Identity & Access
+    risk: high
+    business_impact: "Opens an Atlas cluster to additional IP or CIDR ranges, widening the network attack surface that can reach the database."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.atlas-connect-cluster
+    object: Cluster
+    action: atlas-connect-cluster
+    category: Identity & Access
+    risk: high
+    business_impact: "Connects to an Atlas cluster and, when no connection string is set, mints a temporary database user with a random password."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.atlas-list-db-users
+    object: DatabaseUser
+    action: atlas-list-db-users
+    category: Identity & Access
+    risk: low
+    business_impact: "Enumerates all Atlas database users, exposing the roster of principals with credentialed access to the cluster."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Database Management ----------
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.drop-database
+    object: Database
+    action: drop-database
+    category: Database Management
+    risk: critical
+    business_impact: "Permanently deletes an entire database and every collection it holds, an irreversible loss of all stored records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.drop-collection
+    object: Collection
+    action: drop-collection
+    category: Database Management
+    risk: critical
+    business_impact: "Permanently deletes a collection and all of its documents, destroying customer data with no undo."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.delete-many
+    object: Document
+    action: delete-many
+    category: Database Management
+    risk: high
+    business_impact: "Removes every document matching a filter in one call, capable of wiping large swaths of a collection at once."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.update-many
+    object: Document
+    action: update-many
+    category: Database Management
+    risk: high
+    business_impact: "Modifies every document matching a filter in a single call, rewriting business data across a collection at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.update-one
+    object: Document
+    action: update-one
+    category: Database Management
+    risk: medium
+    business_impact: "Modifies a single document in a collection, changing stored business or customer data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.insert-many
+    object: Document
+    action: insert-many
+    category: Database Management
+    risk: medium
+    business_impact: "Adds documents to a collection in bulk, optionally generating vector embeddings from the supplied text."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.create-collection
+    object: Collection
+    action: create-collection
+    category: Database Management
+    risk: low
+    business_impact: "Creates a new empty collection in a database, establishing a new store for documents."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.rename-collection
+    object: Collection
+    action: rename-collection
+    category: Database Management
+    risk: medium
+    business_impact: "Renames a collection, which can silently break application code and queries that reference the old name."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.create-index
+    object: Index
+    action: create-index
+    category: Database Management
+    risk: medium
+    business_impact: "Builds an index on a collection, altering query performance and supporting vector-search workloads."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.drop-index
+    object: Index
+    action: drop-index
+    category: Database Management
+    risk: medium
+    business_impact: "Drops an index from a collection, degrading query performance until the index is rebuilt."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.find
+    object: Document
+    action: find
+    category: Data Access
+    risk: medium
+    business_impact: "Runs an arbitrary query against a collection, returning matching documents that may include personal or sensitive data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.aggregate
+    object: Document
+    action: aggregate
+    category: Data Access
+    risk: medium
+    business_impact: "Runs an arbitrary aggregation pipeline over a collection, capable of reading and transforming sensitive data at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.export
+    object: Document
+    action: export
+    category: Data Access
+    risk: high
+    business_impact: "Saves query or aggregation results as a JSON file on the MCP host, a channel for exfiltrating collection data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.mongodb-logs
+    object: Log
+    action: mongodb-logs
+    category: Data Access
+    risk: medium
+    business_impact: "Returns recent mongod server log events, which can surface query contents, connection details, and operational internals."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.atlas-streams-teardown
+    object: StreamProcessor
+    action: atlas-streams-teardown
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Deletes an Atlas Stream Processing workspace, processor, or connection, tearing down live data pipelines."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.atlas-create-cluster
+    object: Cluster
+    action: atlas-create-cluster
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Provisions a dedicated M10-M80 Atlas cluster with autoscaling enabled, incurring ongoing compute and storage costs."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.atlas-create-free-cluster
+    object: Cluster
+    action: atlas-create-free-cluster
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Creates a free-tier Atlas cluster for development, adding a new deployment to the project."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.atlas-upgrade-cluster
+    object: Cluster
+    action: atlas-upgrade-cluster
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Upgrades an Atlas cluster tier (Free to Flex, Flex to M10, and similar), changing capacity and billing."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.atlas-pause-resume-cluster
+    object: Cluster
+    action: atlas-pause-resume-cluster
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Pauses or resumes a dedicated Atlas cluster, making it unavailable for connections or restoring service."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.atlas-create-project
+    object: Project
+    action: atlas-create-project
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Creates a new Atlas project, a container that scopes clusters, users, and access rules."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.mongodb.com/docs/mcp-server/tools/
+  - id: mongodb.atlas-local-delete-deployment
+    object: Deployment
+    action: atlas-local-delete-deployment
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Deletes a local Atlas deployment, discarding its data and configuration."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

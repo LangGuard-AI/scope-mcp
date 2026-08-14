@@ -1,0 +1,70 @@
+schema_version: "1.3"
+platform: microsoft-power-bi
+display_name: Microsoft Power BI
+logo: https://upload.wikimedia.org/wikipedia/commons/c/cf/New_Power_BI_Logo.svg
+source: langguard-editorial
+updated: "2026-07"
+mcp_server_url: https://api.fabric.microsoft.com/v1/mcp/powerbi
+reference: https://learn.microsoft.com/en-us/power-bi/developer/mcp/remote-mcp-server-tools
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://learn.microsoft.com/en-us/power-bi/developer/mcp/remote-mcp-server-tools
+  - id: microsoft-power-bi.execute_query
+    object: SemanticModel
+    action: execute_query
+    id_form: capability
+    description: "Execute Query"
+    category: Data Access
+    risk: high
+    business_impact: "Runs an arbitrary DAX query against a semantic model and returns the results, surfacing row-level business and personal data held in the model to the agent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/power-bi/developer/mcp/remote-mcp-server-tools
+  - id: microsoft-power-bi.get_semantic_model_schema
+    object: SemanticModel
+    action: get_semantic_model_schema
+    id_form: capability
+    description: "Get Semantic Model Schema"
+    category: Data Access
+    risk: low
+    business_impact: "Returns a semantic model's tables, columns, measures, and relationships, exposing the data model's structure but no row-level data values."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/power-bi/developer/mcp/remote-mcp-server-tools
+  - id: microsoft-power-bi.get_report_metadata
+    object: Report
+    action: get_report_metadata
+    id_form: capability
+    description: "Get Report Metadata"
+    category: Data Access
+    risk: low
+    business_impact: "Returns a report's workspace, pages, visuals, and filter definitions, revealing report structure without exposing underlying data values."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/power-bi/developer/mcp/remote-mcp-server-tools
+  - id: microsoft-power-bi.generate_query
+    object: Query
+    action: generate_query
+    id_form: capability
+    description: "Generate Query"
+    category: Data Access
+    risk: low
+    business_impact: "Turns a natural-language prompt into an optimized DAX query using Copilot without executing it or touching any data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

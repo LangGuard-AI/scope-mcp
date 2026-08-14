@@ -1,0 +1,346 @@
+schema_version: "1.3"
+platform: posthog-api
+display_name: PostHog
+logo: https://posthog.com/icons/icon-192x192.png
+source: langguard-editorial
+updated: "2026-08"
+reference: https://posthog.com/docs/model-context-protocol/tools
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.organization-enforce-2fa-execute
+    object: Organization
+    action: organization-enforce-2fa-execute
+    category: Identity & Access
+    risk: high
+    business_impact: "Enforces two-factor authentication org-wide, changing the authentication policy for every member and locking out accounts that have not enrolled."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Secrets & Workflows ----------
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.data-warehouse-stored-credentials-list
+    object: Credential
+    action: data-warehouse-stored-credentials-list
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Enumerates stored data-source credentials awaiting setup, exposing which external systems the workspace can connect to and their pending secret material."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.external-data-sources-create
+    object: ExternalDataSource
+    action: external-data-sources-create
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Registers a new data-warehouse source with connection credentials, opening an ongoing sync path between an external database and the analytics workspace."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.external-data-sources-update-webhook-inputs-create
+    object: ExternalDataSource
+    action: external-data-sources-update-webhook-inputs-create
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Rewrites a source's webhook inputs including the signing secret, which can silently redirect or forge inbound data-ingestion traffic."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.external-data-sources-destroy
+    object: ExternalDataSource
+    action: external-data-sources-destroy
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Deletes a data-warehouse source connection, severing an integration and halting every sync that depends on it."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.external-data-schemas-delete-data
+    object: ExternalDataSchema
+    action: external-data-schemas-delete-data
+    category: Secrets & Workflows
+    risk: critical
+    business_impact: "Purges the synced data of a warehouse table irreversibly, destroying materialized records with no recovery path."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.integration-delete
+    object: Integration
+    action: integration-delete
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Removes a configured integration, breaking downstream automations and destinations that rely on the connected service."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.execute-sql
+    object: Query
+    action: execute-sql
+    category: Data Access
+    risk: high
+    business_impact: "Runs an arbitrary SQL query across the full analytics dataset, capable of reading person-level PII and event history in bulk."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.batch-export-create
+    object: BatchExport
+    action: batch-export-create
+    category: Data Access
+    risk: high
+    business_impact: "Configures a recurring batch export that streams event and person data to an external destination, an ongoing exfiltration channel for analytics PII."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.file-download-batch-exports-create
+    object: BatchExport
+    action: file-download-batch-exports-create
+    category: Data Access
+    risk: high
+    business_impact: "Starts a file-download export, producing a bulk downloadable extract of analytics data that can carry person-level PII off-platform."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.persons-bulk-delete
+    object: Person
+    action: persons-bulk-delete
+    category: Customer
+    risk: critical
+    business_impact: "Deletes person profiles in bulk irreversibly, wiping identifiable customer records and their associated event history at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.persons-property-delete
+    object: Person
+    action: persons-property-delete
+    category: Customer
+    risk: high
+    business_impact: "Removes a property from a person profile, altering identifiable customer data and any segmentation or targeting that depends on it."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.persons-property-set
+    object: Person
+    action: persons-property-set
+    category: Customer
+    risk: medium
+    business_impact: "Writes a property onto a person profile, modifying identifiable customer data used in cohorts, flags, and analytics."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.cohorts-create
+    object: Cohort
+    action: cohorts-create
+    category: Customer
+    risk: medium
+    business_impact: "Creates a cohort definition that segments identifiable users for targeting, reporting, and feature-flag rollout."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Service ----------
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.session-recording-bulk-delete
+    object: SessionRecording
+    action: session-recording-bulk-delete
+    category: Service
+    risk: critical
+    business_impact: "Deletes session recordings in bulk irreversibly, destroying screen-capture records of user activity at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.session-recording-delete
+    object: SessionRecording
+    action: session-recording-delete
+    category: Service
+    risk: high
+    business_impact: "Deletes a session recording, removing a screen-capture record of an individual user's activity."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.surveys-responses-list
+    object: SurveyResponse
+    action: surveys-responses-list
+    category: Service
+    risk: high
+    business_impact: "Lists individual survey responses with resolved question text, surfacing user-submitted free-form answers that can contain personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.survey-launch
+    object: Survey
+    action: survey-launch
+    category: Service
+    risk: medium
+    business_impact: "Launches a survey immediately, beginning collection of responses from live end users."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.feature-flags-bulk-delete-create
+    object: FeatureFlag
+    action: feature-flags-bulk-delete-create
+    category: Operations
+    risk: high
+    business_impact: "Deletes feature flags in bulk, potentially changing application behavior for many users at once and removing rollout gates."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.create-feature-flag
+    object: FeatureFlag
+    action: create-feature-flag
+    category: Operations
+    risk: medium
+    business_impact: "Creates a feature flag that can gate or expose functionality to end users in production."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.update-feature-flag
+    object: FeatureFlag
+    action: update-feature-flag
+    category: Operations
+    risk: medium
+    business_impact: "Updates a feature flag's targeting or rollout, changing which users receive a given behavior in production."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.delete-feature-flag
+    object: FeatureFlag
+    action: delete-feature-flag
+    category: Operations
+    risk: medium
+    business_impact: "Deletes a feature flag, removing its rollout gate and reverting the gated behavior for all users."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.dashboard-delete
+    object: Dashboard
+    action: dashboard-delete
+    category: Operations
+    risk: medium
+    business_impact: "Deletes a dashboard, removing shared reporting views that teams may depend on for monitoring."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.proxy-create
+    object: ReverseProxy
+    action: proxy-create
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Provisions a managed reverse proxy that routes production event-ingestion traffic through PostHog-controlled infrastructure."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://posthog.com/docs/model-context-protocol/tools
+  - id: posthog-api.project-settings-update
+    object: Project
+    action: project-settings-update
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Changes project-wide settings, altering ingestion, access, and data-handling configuration for the entire project."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

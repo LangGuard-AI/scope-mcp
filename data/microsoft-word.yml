@@ -1,0 +1,63 @@
+schema_version: "1.3"
+platform: microsoft-word
+display_name: Microsoft Word (Work IQ)
+logo: https://www.microsoft.com/favicon.ico
+source: langguard-editorial
+updated: "2026-07"
+reference: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-word-work-iq
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-word-work-iq
+  - id: microsoft-word.WordGetDocumentContent
+    object: Document
+    action: WordGetDocumentContent
+    category: Data Access
+    risk: medium
+    business_impact: "Downloads the full plain-text body and every comment of a Word document from OneDrive or SharePoint, exposing any personal or confidential data the document holds to the agent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Content & Files ----------
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-word-work-iq
+  - id: microsoft-word.WordCreateNewDocument
+    object: Document
+    action: WordCreateNewDocument
+    category: Content & Files
+    risk: low
+    business_impact: "Writes a new Word document populated with agent-authored HTML or text content into the root of the user's OneDrive."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-word-work-iq
+  - id: microsoft-word.WordCreateNewComment
+    object: Comment
+    action: WordCreateNewComment
+    category: Content & Files
+    risk: low
+    business_impact: "Adds a new comment to a Word document, injecting agent-authored annotations into a shared collaborative file."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-word-work-iq
+  - id: microsoft-word.WordReplyToComment
+    object: Comment
+    action: WordReplyToComment
+    category: Content & Files
+    risk: low
+    business_impact: "Posts a reply to an existing comment thread in a Word document, adding agent-authored text to an ongoing collaboration."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

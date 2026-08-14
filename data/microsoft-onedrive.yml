@@ -1,0 +1,234 @@
+schema_version: "1.3"
+platform: microsoft-onedrive
+display_name: Microsoft OneDrive (Work IQ)
+logo: https://www.microsoft.com/favicon.ico
+source: langguard-editorial
+updated: "2026-07"
+reference: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-onedrive-work-iq
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-onedrive-work-iq
+  - id: microsoft-onedrive.shareFileOrFolderInMyOnedrive
+    object: DriveItem
+    action: shareFileOrFolderInMyOnedrive
+    category: Identity & Access
+    risk: high
+    business_impact: "Grants read or write access on a file or folder via a sharing invitation, a direct path to expose OneDrive content and any personal data it holds beyond its original audience."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-onedrive-work-iq
+  - id: microsoft-onedrive.setSensitivityLabelOnFileInMyOnedrive
+    object: File
+    action: setSensitivityLabelOnFileInMyOnedrive
+    category: Identity & Access
+    risk: medium
+    business_impact: "Changes the Purview sensitivity label on a file, which can downgrade encryption and DLP enforcement and widen who is able to open confidential content."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Content & Files ----------
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-onedrive-work-iq
+  - id: microsoft-onedrive.deleteFileOrFolderInMyOnedrive
+    object: DriveItem
+    action: deleteFileOrFolderInMyOnedrive
+    category: Content & Files
+    risk: medium
+    business_impact: "Deletes a file or folder from the user's OneDrive; the item goes to the recycle bin and becomes unrecoverable once its retention window lapses."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-onedrive-work-iq
+  - id: microsoft-onedrive.createSmallTextFileInMyOnedrive
+    object: File
+    action: createSmallTextFileInMyOnedrive
+    category: Content & Files
+    risk: low
+    business_impact: "Writes a new text file under 5 MB into the user's OneDrive, adding agent-authored content to the user's stored documents."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-onedrive-work-iq
+  - id: microsoft-onedrive.createSmallBinaryFileInMyOnedrive
+    object: File
+    action: createSmallBinaryFileInMyOnedrive
+    category: Content & Files
+    risk: low
+    business_impact: "Uploads a new binary file under 5 MB into the user's OneDrive from base64-encoded content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-onedrive-work-iq
+  - id: microsoft-onedrive.createFolderInMyOnedrive
+    object: Folder
+    action: createFolderInMyOnedrive
+    category: Content & Files
+    risk: low
+    business_impact: "Creates a new folder in the user's OneDrive under a specified parent folder."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-onedrive-work-iq
+  - id: microsoft-onedrive.renameFileOrFolderInMyOnedrive
+    object: DriveItem
+    action: renameFileOrFolderInMyOnedrive
+    category: Content & Files
+    risk: low
+    business_impact: "Renames a file or folder in the user's OneDrive, which can break links or references that depend on the original name."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-onedrive-work-iq
+  - id: microsoft-onedrive.copyFileOrFolderInMyOnedrive
+    object: DriveItem
+    action: copyFileOrFolderInMyOnedrive
+    category: Content & Files
+    risk: low
+    business_impact: "Duplicates a file or folder into another location within the user's OneDrive, potentially proliferating copies of sensitive content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-onedrive-work-iq
+  - id: microsoft-onedrive.moveFileOrFolderInMyOnedrive
+    object: DriveItem
+    action: moveFileOrFolderInMyOnedrive
+    category: Content & Files
+    risk: low
+    business_impact: "Moves a file or folder to a different location within the user's OneDrive, which can alter inherited sharing and break existing links."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-onedrive-work-iq
+  - id: microsoft-onedrive.readSmallTextFileFromMyOnedrive
+    object: File
+    action: readSmallTextFileFromMyOnedrive
+    category: Data Access
+    risk: medium
+    business_impact: "Downloads the full contents of a text file from the user's OneDrive, exposing any personal or confidential data the document holds to the agent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-onedrive-work-iq
+  - id: microsoft-onedrive.readSmallBinaryFileFromMyOnedrive
+    object: File
+    action: readSmallBinaryFileFromMyOnedrive
+    category: Data Access
+    risk: medium
+    business_impact: "Downloads the full contents of a binary file from the user's OneDrive as base64, exposing any sensitive or personal data it contains."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-onedrive-work-iq
+  - id: microsoft-onedrive.getFileOrFolderMetadataByUrl
+    object: DriveItem
+    action: getFileOrFolderMetadataByUrl
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves metadata for a file or folder addressed by a sharing URL, limited to items the caller already has explicit permission to access."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-onedrive-work-iq
+  - id: microsoft-onedrive.getFileOrFolderMetadataInMyOnedrive
+    object: DriveItem
+    action: getFileOrFolderMetadataInMyOnedrive
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves metadata for a file or folder in the user's OneDrive, such as name, size, and timestamps."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-onedrive-work-iq
+  - id: microsoft-onedrive.findFileOrFolderInMyOnedrive
+    object: DriveItem
+    action: findFileOrFolderInMyOnedrive
+    category: Data Access
+    risk: low
+    business_impact: "Searches the user's OneDrive for a file or folder matching a query and returns the matching items."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-onedrive-work-iq
+  - id: microsoft-onedrive.getFolderChildrenInMyOnedrive
+    object: Folder
+    action: getFolderChildrenInMyOnedrive
+    category: Data Access
+    risk: low
+    business_impact: "Lists the top 20 files and folders contained within a specified folder in the user's OneDrive."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-onedrive-work-iq
+  - id: microsoft-onedrive.getOnedrive
+    object: Drive
+    action: getOnedrive
+    category: Data Access
+    risk: low
+    business_impact: "Returns metadata about the user's OneDrive, including storage quota and owner information."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-onedrive-work-iq
+  - id: microsoft-onedrive.checkOperationStatusInMyOnedrive
+    object: Operation
+    action: checkOperationStatusInMyOnedrive
+    category: Data Access
+    risk: low
+    business_impact: "Reports the progress or result of an asynchronous copy or move operation using its operation token."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

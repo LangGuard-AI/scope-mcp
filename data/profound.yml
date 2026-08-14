@@ -1,0 +1,364 @@
+schema_version: "1.3"
+platform: profound
+display_name: Profound
+logo: https://www.tryprofound.com/favicons/favicon-light.svg
+source: langguard-editorial
+updated: "2026-08"
+reference: https://docs.tryprofound.com/mcp/capabilities/analytics-capabilities.md
+mcp_server_url: https://mcp.tryprofound.com/mcp
+actions:
+  # ---------- Agents & Automation ----------
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/agents-capabilities.md
+  - id: profound.publish_agent_definition
+    object: AgentDefinition
+    action: publish_agent_definition
+    description: "Publish a draft Agent definition so it goes live"
+    category: Agents & Automation
+    risk: medium
+    business_impact: "Publishes a draft Agent definition to production so it runs live, deploying a configuration change that a single principal can push without a second reviewer."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/agents-capabilities.md
+  - id: profound.run_agent
+    object: Agent
+    action: run_agent
+    description: "Start an Agent run"
+    category: Agents & Automation
+    risk: medium
+    business_impact: "Starts an execution of a configured Agent, kicking off an automated workflow that produces output and consumes run entitlements."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/agents-capabilities.md
+  - id: profound.create_agent_definition
+    object: AgentDefinition
+    action: create_agent_definition
+    description: "Create a new draft Agent definition"
+    category: Agents & Automation
+    risk: low
+    business_impact: "Creates a new draft Agent definition that stays inactive until published, so its impact is confined to draft state."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/agents-capabilities.md
+  - id: profound.update_agent_definition
+    object: AgentDefinition
+    action: update_agent_definition
+    description: "Update an existing draft Agent definition"
+    category: Agents & Automation
+    risk: low
+    business_impact: "Modifies an existing draft Agent definition's workflow graph, changing how the Agent will behave once it is published."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/agents-capabilities.md
+  - id: profound.start_agent_build_session
+    object: BuildSession
+    action: start_agent_build_session
+    description: "Open a build session to build or revise an Agent"
+    category: Agents & Automation
+    risk: low
+    business_impact: "Opens an interactive build session to author or revise an Agent, a reversible working state with no live effect until published."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/agents-capabilities.md
+  - id: profound.validate_agent_definition
+    object: AgentDefinition
+    action: validate_agent_definition
+    description: "Check whether a draft Agent definition is valid and publishable"
+    category: Agents & Automation
+    risk: low
+    business_impact: "Checks whether a draft Agent definition is valid and publishable; a read-only verification with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/agents-capabilities.md
+  - id: profound.list_agents
+    object: Agent
+    action: list_agents
+    description: "List Agents available in an organization"
+    category: Agents & Automation
+    risk: low
+    business_impact: "Enumerates the Agents configured in an organization, exposing which automated workflows exist."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/agents-capabilities.md
+  - id: profound.get_agent
+    object: Agent
+    action: get_agent
+    description: "Get details of a specific Agent, including its input schema"
+    category: Agents & Automation
+    risk: low
+    business_impact: "Returns a specific Agent's details and input schema, revealing how the workflow is invoked."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/agents-capabilities.md
+  - id: profound.get_agent_run
+    object: AgentRun
+    action: get_agent_run
+    description: "Check the status and output of a previously started run"
+    category: Agents & Automation
+    risk: low
+    business_impact: "Retrieves the status and output of a previously started Agent run."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/agents-capabilities.md
+  - id: profound.get_agent_definition
+    object: AgentDefinition
+    action: get_agent_definition
+    description: "Read back an Agent's full workflow graph"
+    category: Agents & Automation
+    risk: low
+    business_impact: "Reads back an Agent's full workflow graph, exposing its complete automation logic and node configuration."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/agents-capabilities.md
+  - id: profound.get_agent_node_schema
+    object: AgentNodeType
+    action: get_agent_node_schema
+    description: "Get the configuration schema for a specific node type"
+    category: Agents & Automation
+    risk: low
+    business_impact: "Returns the configuration schema for a given Agent node type, reference metadata used when building graphs."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/agents-capabilities.md
+  - id: profound.list_agent_definition_templates
+    object: AgentTemplate
+    action: list_agent_definition_templates
+    description: "Browse pre-built Agent templates to use as starting points"
+    category: Agents & Automation
+    risk: low
+    business_impact: "Lists pre-built Agent templates available as starting points for new automations."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Access ----------
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/analytics-capabilities.md
+  - id: profound.whoami
+    object: Principal
+    action: whoami
+    description: "Confirm the authenticated principal, organizations, regions, and entitlements"
+    category: Identity & Access
+    risk: low
+    business_impact: "Confirms the authenticated principal along with its organizations, regions, and entitlements."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/analytics-capabilities.md
+  - id: profound.list_organizations
+    object: Organization
+    action: list_organizations
+    description: "List organizations the user can access"
+    category: Identity & Access
+    risk: low
+    business_impact: "Lists the organizations the authenticated user can access."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/analytics-capabilities.md
+  - id: profound.get_visibility_report
+    object: Report
+    action: get_visibility_report
+    description: "How visible a brand is in AI answers and how that varies by model, topic, region, prompt, tag, or persona"
+    category: Data Access
+    risk: low
+    business_impact: "Returns brand visibility metrics across AI answers, broken down by model, topic, region, prompt, tag, or persona."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/analytics-capabilities.md
+  - id: profound.get_sentiment_report
+    object: Report
+    action: get_sentiment_report
+    description: "What sentiment AI answers express about a brand or competitor and which themes are positive or negative"
+    category: Data Access
+    risk: low
+    business_impact: "Returns the sentiment AI answers express about a brand or competitor, including which themes read positive or negative."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/analytics-capabilities.md
+  - id: profound.get_citations_report
+    object: Report
+    action: get_citations_report
+    description: "Which domains, pages, or URLs are AI engines citing for this category"
+    category: Data Access
+    risk: low
+    business_impact: "Returns which domains, pages, or URLs AI engines cite for a category, a competitive-intelligence view of source coverage."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/analytics-capabilities.md
+  - id: profound.get_prompt_answers
+    object: Answer
+    action: get_prompt_answers
+    description: "What raw AI answers were observed behind the metrics"
+    category: Data Access
+    risk: low
+    business_impact: "Returns the raw AI answers observed behind the aggregate metrics for a category."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/analytics-capabilities.md
+  - id: profound.get_factcheck_report
+    object: Report
+    action: get_factcheck_report
+    description: "FactCheck scores for a category over a date range"
+    category: Data Access
+    risk: low
+    business_impact: "Returns FactCheck accuracy scores for a category over a chosen date range."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/analytics-capabilities.md
+  - id: profound.get_factcheck_claims
+    object: Claim
+    action: get_factcheck_claims
+    description: "Inaccurate claims identified in a category over a date range"
+    category: Data Access
+    risk: low
+    business_impact: "Returns the specific inaccurate claims AI engines made about a category over a date range."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/analytics-capabilities.md
+  - id: profound.get_referrals_report
+    object: Report
+    action: get_referrals_report
+    description: "How many visits did a domain receive from AI engines, and which referrers drove them"
+    category: Data Access
+    risk: low
+    business_impact: "Returns how many visits a domain received from AI engines and which referrers drove them."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/analytics-capabilities.md
+  - id: profound.get_bots_report
+    object: Report
+    action: get_bots_report
+    description: "Which AI crawlers are visiting a domain, and how often"
+    category: Data Access
+    risk: low
+    business_impact: "Returns which AI crawlers are visiting a domain and how frequently they hit it."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/analytics-capabilities.md
+  - id: profound.list_categories
+    object: Category
+    action: list_categories
+    description: "List tracked categories for an organization"
+    category: Data Access
+    risk: low
+    business_impact: "Lists the tracked categories configured for an organization."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/analytics-capabilities.md
+  - id: profound.list_domains
+    object: Domain
+    action: list_domains
+    description: "List tracked domains for an organization"
+    category: Data Access
+    risk: low
+    business_impact: "Lists the tracked domains configured for an organization."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.tryprofound.com/mcp/capabilities/analytics-capabilities.md
+  - id: profound.list_prompts
+    object: Prompt
+    action: list_prompts
+    description: "List configured prompts in a category, with optional status, tag, and topic filters"
+    category: Data Access
+    risk: low
+    business_impact: "Lists the configured monitoring prompts in a category, with optional status, tag, and topic filters."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

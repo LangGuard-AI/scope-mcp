@@ -1,0 +1,333 @@
+schema_version: "1.3"
+platform: microsoft-sharepoint
+display_name: Microsoft SharePoint (Work IQ)
+source: langguard-editorial
+updated: "2026-07"
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-sharepoint-work-iq
+  - id: microsoft-sharepoint.shareFileOrFolder
+    object: DriveItem
+    action: shareFileOrFolder
+    description: "Sends a sharing invitation to grant read or write permissions on a file or folder (DriveItem) within a specified document library (drive)."
+    category: Identity & Access
+    risk: high
+    business_impact: "Grants read or write access on a file or folder to additional principals, widening who can reach potentially confidential documents."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-sharepoint-work-iq
+  - id: microsoft-sharepoint.sendInviteForList
+    object: List
+    action: sendInviteForList
+    description: "Sends a sharing invitation to grant permissions on a SharePoint list."
+    category: Identity & Access
+    risk: high
+    business_impact: "Grants another principal permissions on a SharePoint list, exposing its records to a newly invited user."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-sharepoint-work-iq
+  - id: microsoft-sharepoint.setSensitivityLabelOnFile
+    object: DriveItem
+    action: setSensitivityLabelOnFile
+    description: "Sets the sensitivity label of a file from the specified document library (drive)."
+    category: Identity & Access
+    risk: high
+    business_impact: "Changes a file's sensitivity label, which can downgrade its data classification and relax the encryption and DLP controls that protect it."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-sharepoint-work-iq
+  - id: microsoft-sharepoint.deleteList
+    object: List
+    action: deleteList
+    description: "Deletes a SharePoint list from a site. Deletes the entire list container and all items within it. Cannot be undone."
+    category: Operations
+    risk: critical
+    business_impact: "Permanently deletes an entire SharePoint list and every record it contains with no undo, destroying potentially business-critical data in one call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-sharepoint-work-iq
+  - id: microsoft-sharepoint.deleteColumn
+    object: Column
+    action: deleteColumn
+    description: "Deletes a column from a SharePoint list. Warning: This action removes all data stored in that column for all items."
+    category: Operations
+    risk: high
+    business_impact: "Removes a list column and erases the stored value of that field for every item in the list, an irreversible bulk data loss."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-sharepoint-work-iq
+  - id: microsoft-sharepoint.deleteFileOrFolder
+    object: DriveItem
+    action: deleteFileOrFolder
+    description: "Deletes a file or folder (DriveItem) from a specified document library (drive)."
+    category: Operations
+    risk: high
+    business_impact: "Deletes a file or folder from a document library; for a folder this cascades to every item it contains."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-sharepoint-work-iq
+  - id: microsoft-sharepoint.moveFileOrFolder
+    object: DriveItem
+    action: moveFileOrFolder
+    description: "Moves a file or folder (DriveItem) to a destination folder. Supports moving across different document libraries (drives) within SharePoint."
+    category: Operations
+    risk: medium
+    business_impact: "Moves a file or folder to another folder, including across document libraries, changing its location and inherited permissions."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-sharepoint-work-iq
+  - id: microsoft-sharepoint.copyFileOrFolder
+    object: DriveItem
+    action: copyFileOrFolder
+    description: "Copies a file or folder (DriveItem) to a destination folder. Supports copying across different document libraries within SharePoint."
+    category: Operations
+    risk: medium
+    business_impact: "Copies a file or folder to another location, potentially duplicating sensitive content into a less-restricted library."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-sharepoint-work-iq
+  - id: microsoft-sharepoint.uploadFileFromUrl
+    object: DriveItem
+    action: uploadFileFromUrl
+    description: "Uploads a file from a SharePoint or OneDrive URL to a destination folder in a document library (drive)."
+    category: Operations
+    risk: medium
+    business_impact: "Imports a file from a SharePoint or OneDrive URL into a destination library, bringing external content into the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-sharepoint-work-iq
+  - id: microsoft-sharepoint.createSmallTextFile
+    object: DriveItem
+    action: createSmallTextFile
+    description: "Creates or upload a text file smaller than 5 MB to a specific document library (drive)."
+    category: Operations
+    risk: medium
+    business_impact: "Creates or uploads a text file into a document library, adding new content to a shared workspace."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-sharepoint-work-iq
+  - id: microsoft-sharepoint.createSmallBinaryFile
+    object: DriveItem
+    action: createSmallBinaryFile
+    description: "Creates a binary file smaller than 5 MB by base64-encoding its content to a specific document library (drive)."
+    category: Operations
+    risk: medium
+    business_impact: "Creates or uploads a binary file into a document library from base64-encoded content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-sharepoint-work-iq
+  - id: microsoft-sharepoint.createFolder
+    object: DriveItem
+    action: createFolder
+    description: "Creates a new folder (DriveItem) within a specified document library (drive)."
+    category: Operations
+    risk: low
+    business_impact: "Creates a new folder within a document library."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-sharepoint-work-iq
+  - id: microsoft-sharepoint.renameFileOrFolder
+    object: DriveItem
+    action: renameFileOrFolder
+    description: "Renames a file or folder (DriveItem) within a specified document library (drive)."
+    category: Operations
+    risk: low
+    business_impact: "Renames a file or folder within a document library."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-sharepoint-work-iq
+  - id: microsoft-sharepoint.createList
+    object: List
+    action: createList
+    description: "Creates a new SharePoint list within a site."
+    category: Operations
+    risk: medium
+    business_impact: "Creates a new SharePoint list container within a site."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-sharepoint-work-iq
+  - id: microsoft-sharepoint.createListItem
+    object: ListItem
+    action: createListItem
+    description: "Creates a new item (row or record) in a SharePoint list."
+    category: Operations
+    risk: low
+    business_impact: "Adds a new item (record) to a SharePoint list."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-sharepoint-work-iq
+  - id: microsoft-sharepoint.updateListItem
+    object: ListItem
+    action: updateListItem
+    description: "Updates an existing item (row or record) in a SharePoint list. Only specified fields are updated; omitted fields keep their values."
+    category: Operations
+    risk: medium
+    business_impact: "Updates fields on an existing SharePoint list item, changing stored record values that may include personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-sharepoint-work-iq
+  - id: microsoft-sharepoint.deleteListItem
+    object: ListItem
+    action: deleteListItem
+    description: "Deletes an item (row or record) from a SharePoint list."
+    category: Operations
+    risk: medium
+    business_impact: "Deletes a single item (record) from a SharePoint list, potentially removing personal data held in the row."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-sharepoint-work-iq
+  - id: microsoft-sharepoint.createColumn
+    object: Column
+    action: createColumn
+    description: "Creates a new column in a SharePoint list. Supports many column types including text, number, choice, dateTime, boolean, user, lookup, calculated, and more."
+    category: Operations
+    risk: low
+    business_impact: "Adds a new column to a SharePoint list schema."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-sharepoint-work-iq
+  - id: microsoft-sharepoint.updateColumn
+    object: Column
+    action: updateColumn
+    description: "Updates an existing column in a SharePoint list."
+    category: Operations
+    risk: medium
+    business_impact: "Modifies an existing list column definition, which can alter validation or type for every item's value in that field."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-sharepoint-work-iq
+  - id: microsoft-sharepoint.findFileOrFolder
+    object: DriveItem
+    action: findFileOrFolder
+    description: "Finds a file or folder (DriveItem) accessible to the user by search query. Searches across all sites and document libraries the user has access to."
+    category: Data Access
+    risk: medium
+    business_impact: "Searches for files and folders across every site and document library the user can access, enabling broad content discovery."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-sharepoint-work-iq
+  - id: microsoft-sharepoint.readSmallTextFile
+    object: DriveItem
+    action: readSmallTextFile
+    description: "Reads (download) a text file smaller than 5 MB from a specific document library (drive)."
+    category: Data Access
+    risk: medium
+    business_impact: "Downloads the full contents of a text file, which may contain personal or confidential information."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-sharepoint-work-iq
+  - id: microsoft-sharepoint.readSmallBinaryFile
+    object: DriveItem
+    action: readSmallBinaryFile
+    description: "Reads a binary file smaller than 5 MB from a specific document library (drive). The file content is returned as a base64-encoded string."
+    category: Data Access
+    risk: medium
+    business_impact: "Downloads the full contents of a binary file as base64, potentially exposing confidential document data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-sharepoint-work-iq
+  - id: microsoft-sharepoint.listListItems
+    object: ListItem
+    action: listListItems
+    description: "Gets items (rows/records) from a specific SharePoint list."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads items (records) from a SharePoint list, which may include personal data held in list fields."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

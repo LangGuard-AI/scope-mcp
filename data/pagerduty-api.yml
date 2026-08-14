@@ -1,0 +1,368 @@
+schema_version: "1.3"
+platform: pagerduty-api
+display_name: PagerDuty
+logo: https://www.pagerduty.com/favicon.ico
+source: langguard-editorial
+updated: "2026-08"
+reference: https://support.pagerduty.com/main/docs/pagerduty-mcp-server
+server_website: https://github.com/PagerDuty/pagerduty-mcp-server
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/users.py
+  - id: pagerduty-api.create_user
+    object: User
+    action: create_user
+    description: "Create a new PagerDuty user account. No invitation email is sent."
+    category: Identity & Access
+    risk: high
+    business_impact: "Provisions a new PagerDuty account with on-call and incident-response access, silently and with no invitation email — an unreviewed identity in the paging system."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/teams.py
+  - id: pagerduty-api.add_team_member
+    object: Team
+    action: add_team_member
+    description: "Add a user to a team."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Adds a user to a team, granting them the team's visibility and on-call scope; reversible but expands who can act on the team's services."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/teams.py
+  - id: pagerduty-api.remove_team_member
+    object: Team
+    action: remove_team_member
+    description: "Remove a user from a team."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Removes a user from a team, potentially stripping their on-call coverage and leaving gaps in incident response for the team's services."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/teams.py
+  - id: pagerduty-api.create_team
+    object: Team
+    action: create_team
+    description: "Create a team."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Creates a new team that acts as an access and ownership boundary for services, schedules, and escalation policies."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/teams.py
+  - id: pagerduty-api.delete_team
+    object: Team
+    action: delete_team
+    description: "Delete a team."
+    category: Identity & Access
+    risk: high
+    business_impact: "Destroys a team and its access boundary, severing associations to services, schedules, and escalation policies and disrupting who is responsible for incidents."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/users.py
+  - id: pagerduty-api.list_users
+    object: User
+    action: list_users
+    description: "List users, optionally filtering by name (query) and team IDs."
+    category: Data Access
+    risk: high
+    business_impact: "Bulk-reads the account's user directory — names, email addresses, and contact methods — exposing personal data of every responder at once."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/analytics.py
+  - id: pagerduty-api.get_responder_load_metrics
+    object: ResponderMetrics
+    action: get_responder_load_metrics
+    description: "Get aggregated load metrics per responder from PagerDuty Analytics."
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces per-responder on-call workload metrics tied to identifiable employees, personal data that can drive performance judgments about individuals."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Secrets & Workflows ----------
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/webhooks.py
+  - id: pagerduty-api.create_webhook_subscription
+    object: WebhookSubscription
+    action: create_webhook_subscription
+    description: "Create a new webhook subscription."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Opens a persistent channel that streams incident and event payloads — including responder identities — to an arbitrary external URL, a standing data-exfiltration path."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/webhooks.py
+  - id: pagerduty-api.update_webhook_subscription
+    object: WebhookSubscription
+    action: update_webhook_subscription
+    description: "Update an existing webhook subscription."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Redirects or reconfigures where incident and event data is delivered, letting an attacker point the stream at an external endpoint they control."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/webhooks.py
+  - id: pagerduty-api.delete_webhook_subscription
+    object: WebhookSubscription
+    action: delete_webhook_subscription
+    description: "Delete a webhook subscription."
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Removes an event-delivery subscription, silently breaking downstream integrations and automation that depend on incident notifications."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/event_orchestrations.py
+  - id: pagerduty-api.update_event_orchestration_router
+    object: EventOrchestration
+    action: update_event_orchestration_router
+    description: "Update the router configuration for a specific event orchestration."
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Rewrites how incoming events are routed to services; misconfiguration can silently drop or misdirect alerts so incidents go unpaged."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/event_orchestrations.py
+  - id: pagerduty-api.append_event_orchestration_router_rule
+    object: EventOrchestration
+    action: append_event_orchestration_router_rule
+    description: "Append a new routing rule to the end of an event orchestration's router."
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Adds a routing rule that changes which service catches matching events, altering alert delivery for the orchestration."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/incident_workflows.py
+  - id: pagerduty-api.start_incident_workflow
+    object: IncidentWorkflow
+    action: start_incident_workflow
+    description: "Start an incident workflow instance."
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Triggers an automated incident-response workflow that can run notifications and downstream actions without further human review."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Service ----------
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/incidents.py
+  - id: pagerduty-api.create_incident
+    object: Incident
+    action: create_incident
+    description: "Create an incident."
+    category: Service
+    risk: medium
+    business_impact: "Opens a new incident that pages on-call responders and starts escalation timers for the target service."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/incidents.py
+  - id: pagerduty-api.manage_incidents
+    object: Incident
+    action: manage_incidents
+    description: "Manage one or more incidents by changing its status, urgency, assignment, escalation level, or resolution."
+    category: Service
+    risk: medium
+    business_impact: "Bulk-changes incident status, urgency, assignment, or resolution, and can resolve active incidents or reassign responders across many records at once."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/incidents.py
+  - id: pagerduty-api.add_responders
+    object: Incident
+    action: add_responders
+    description: "Add responders to an incident."
+    category: Service
+    risk: medium
+    business_impact: "Pages additional users into an active incident, notifying them and pulling them into the response."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/escalation_policies.py
+  - id: pagerduty-api.create_escalation_policy
+    object: EscalationPolicy
+    action: create_escalation_policy
+    description: "Create a new escalation policy."
+    category: Service
+    risk: medium
+    business_impact: "Defines a new chain of who gets paged and when; a flawed policy leaves incidents without a responder."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/escalation_policies.py
+  - id: pagerduty-api.update_escalation_policy
+    object: EscalationPolicy
+    action: update_escalation_policy
+    description: "Update an existing escalation policy."
+    category: Service
+    risk: medium
+    business_impact: "Changes who is notified during an incident and in what order; a bad edit can silently route alerts away from the right responders."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/schedules.py
+  - id: pagerduty-api.create_schedule
+    object: Schedule
+    action: create_schedule
+    description: "Create a new schedule. All new schedules use PagerDuty's next-gen shift-based system."
+    category: Operations
+    risk: medium
+    business_impact: "Establishes a new on-call schedule that determines which responders are reachable during incidents."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/schedules.py
+  - id: pagerduty-api.update_schedule
+    object: Schedule
+    action: update_schedule
+    description: "Update an existing shift-based (v3) schedule."
+    category: Operations
+    risk: medium
+    business_impact: "Alters on-call rotations; a mistaken change can leave hours with no responder assigned and incidents unattended."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/schedules.py
+  - id: pagerduty-api.create_schedule_override
+    object: Schedule
+    action: create_schedule_override
+    description: "Create an override for a schedule."
+    category: Operations
+    risk: medium
+    business_impact: "Temporarily replaces who is on call for a window, redirecting pages to a different responder."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/schedules_v3.py
+  - id: pagerduty-api.delete_schedule_v3
+    object: Schedule
+    action: delete_schedule_v3
+    description: "Delete a v3 schedule."
+    category: Operations
+    risk: high
+    business_impact: "Destroys an on-call schedule, removing coverage so incidents on dependent escalation policies may reach no responder at all."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/services.py
+  - id: pagerduty-api.create_service
+    object: Service
+    action: create_service
+    description: "Create a new service."
+    category: Operations
+    risk: medium
+    business_impact: "Registers a new service that events route to and incidents open against, defining a unit of monitored infrastructure."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/services.py
+  - id: pagerduty-api.update_service
+    object: Service
+    action: update_service
+    description: "Update an existing service."
+    category: Operations
+    risk: medium
+    business_impact: "Changes service configuration such as its escalation policy or alert grouping, affecting how incidents are triaged and routed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/PagerDuty/pagerduty-mcp-server/main/pagerduty_mcp/tools/status_pages.py
+  - id: pagerduty-api.create_status_page_post
+    object: StatusPagePost
+    action: create_status_page_post
+    description: "Create a Post for a Status Page by Status Page ID."
+    category: Operations
+    risk: medium
+    business_impact: "Publishes a customer-facing status page post, a public statement about service health with direct reputational impact."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
