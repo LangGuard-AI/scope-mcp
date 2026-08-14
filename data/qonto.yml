@@ -1,0 +1,343 @@
+schema_version: "1.3"
+platform: qonto
+display_name: Qonto
+logo: https://qonto.com/favicon.ico
+source: langguard-editorial
+updated: "2026-08"
+mcp_server_url: https://mcp.qonto.com/mcp
+reference: https://docs.qonto.com/mcp/overview.md
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://docs.qonto.com/mcp/tools/accounts-and-organizations.md
+  - id: qonto.create_membership
+    object: Membership
+    action: create_membership
+    category: Identity & Access
+    risk: high
+    business_impact: "Invites a new member into the banking organization and sends an activation email, expanding who can access company financial data and act within the org."
+    compliance: [SOX, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.qonto.com/mcp/tools/accounts-and-organizations.md
+  - id: qonto.list_memberships
+    object: Membership
+    action: list_memberships
+    category: Identity & Access
+    risk: high
+    business_impact: "Exposes the full member roster including role, birthdate, and nationality, a bulk read of employee personal data across the organization."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Financial ----------
+
+  # source: https://docs.qonto.com/mcp/tools/requests.md
+  - id: qonto.create_multi_transfer_request
+    object: TransferRequest
+    action: create_multi_transfer_request
+    category: Financial
+    risk: high
+    business_impact: "Bundles up to 400 SEPA transfers into a single approval batch, staging outbound payments that an approver later signs with strong customer authentication."
+    compliance: [PSD2, GLBA, SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.qonto.com/mcp/tools/requests.md
+  - id: qonto.approve_request
+    object: Request
+    action: approve_request
+    category: Financial
+    risk: low
+    business_impact: "Returns a link to the web approval page for a pending expense or transfer request without executing the approval itself."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.qonto.com/mcp/tools/requests.md
+  - id: qonto.decline_request
+    object: Request
+    action: decline_request
+    category: Financial
+    risk: medium
+    business_impact: "Declines a pending expense or transfer request, moving it to declined so the underlying financial action never runs."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.qonto.com/mcp/tools/invoices.md
+  - id: qonto.create_client_invoice
+    object: ClientInvoice
+    action: create_client_invoice
+    category: Financial
+    risk: medium
+    business_impact: "Creates a draft client invoice tied to an existing client, seeding accounts-receivable and revenue records."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.qonto.com/mcp/tools/invoices.md
+  - id: qonto.change_client_invoice_status
+    object: ClientInvoice
+    action: change_client_invoice_status
+    category: Financial
+    risk: high
+    business_impact: "Finalizes or cancels a client invoice; finalizing locks it against edits and recognizes it as issued revenue with audit-trail impact."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.qonto.com/mcp/tools/invoices.md
+  - id: qonto.mark_client_invoice_as_paid
+    object: ClientInvoice
+    action: mark_client_invoice_as_paid
+    category: Financial
+    risk: high
+    business_impact: "Records a client invoice as paid and stamps the payment date, directly affecting accounts-receivable and revenue reconciliation."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.qonto.com/mcp/tools/invoices.md
+  - id: qonto.delete_client_invoice
+    object: ClientInvoice
+    action: delete_client_invoice
+    category: Financial
+    risk: medium
+    business_impact: "Deletes a draft client invoice; only drafts are accepted, but removes a nascent financial record before it is issued."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.qonto.com/mcp/tools/invoices.md
+  - id: qonto.create_credit_note
+    object: CreditNote
+    action: create_credit_note
+    category: Financial
+    risk: high
+    business_impact: "Issues a credit note against an existing invoice, recording a partial or full refund that reduces recognized revenue."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.qonto.com/mcp/tools/invoices.md
+  - id: qonto.change_supplier_invoice_status
+    object: SupplierInvoice
+    action: change_supplier_invoice_status
+    category: Financial
+    risk: high
+    business_impact: "Marks a supplier invoice paid or rejects it, an accounts-payable control action a single actor can take without a second approver."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.qonto.com/mcp/tools/payment-links.md
+  - id: qonto.create_payment_link
+    object: PaymentLink
+    action: create_payment_link
+    category: Financial
+    risk: medium
+    business_impact: "Creates a customer-facing payment link that collects card or bank payments into a Qonto account."
+    compliance: [PCI, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.qonto.com/mcp/tools/accounts-and-organizations.md
+  - id: qonto.get_organization
+    object: Organization
+    action: get_organization
+    category: Financial
+    risk: medium
+    business_impact: "Returns the organization's bank accounts including IBAN, BIC, and current balance, exposing sensitive banking identifiers."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Cards ----------
+
+  # source: https://docs.qonto.com/mcp/tools/cards.md
+  - id: qonto.create_card
+    object: Card
+    action: create_card
+    category: Cards
+    risk: high
+    business_impact: "Issues a new payment card of the selected level, creating a live spending instrument tied to the organization's funds."
+    compliance: [PCI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.qonto.com/mcp/tools/cards.md
+  - id: qonto.change_card_status
+    object: Card
+    action: change_card_status
+    category: Cards
+    risk: high
+    business_impact: "Locks, unlocks, or permanently terminates a card as lost, stolen, or closed, altering an active payment instrument's usability."
+    compliance: [PCI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.qonto.com/mcp/tools/cards.md
+  - id: qonto.get_card_iframe_url
+    object: Card
+    action: get_card_iframe_url
+    category: Cards
+    risk: high
+    business_impact: "Returns a short-lived URL that renders the card's full PAN, expiry, and CVV, exposing sensitive cardholder data as a credential."
+    compliance: [PCI, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.qonto.com/mcp/tools/cards.md
+  - id: qonto.update_card
+    object: Card
+    action: update_card
+    category: Cards
+    risk: medium
+    business_impact: "Changes a card's nickname or its ATM, NFC, online, and foreign-payment option flags, adjusting spending controls on a live card."
+    compliance: [PCI]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.qonto.com/mcp/tools/requests.md
+  - id: qonto.create_card_request
+    object: CardRequest
+    action: create_card_request
+    category: Cards
+    risk: medium
+    business_impact: "Creates a flash or virtual card request for the authenticated member, pending approval before a card is issued."
+    compliance: [PCI]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://docs.qonto.com/mcp/tools/clients.md
+  - id: qonto.create_client
+    object: Client
+    action: create_client
+    category: Customer
+    risk: medium
+    business_impact: "Creates a client record holding personal data such as name, email, phone, and tax identification number."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.qonto.com/mcp/tools/clients.md
+  - id: qonto.update_client
+    object: Client
+    action: update_client
+    category: Customer
+    risk: high
+    business_impact: "Patches a client's stored personal data, a single-record write to name, contact, and tax-identifier fields."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.qonto.com/mcp/tools/clients.md
+  - id: qonto.delete_client
+    object: Client
+    action: delete_client
+    category: Customer
+    risk: high
+    business_impact: "Permanently deletes a client and auto-cancels its recurring invoices, an irreversible single-actor erasure of personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://docs.qonto.com/mcp/tools/transactions-and-statements.md
+  - id: qonto.list_transactions
+    object: Transaction
+    action: list_transactions
+    category: Data Access
+    risk: high
+    business_impact: "Reads a paginated feed of a bank account's transactions, a bulk pull of sensitive banking activity."
+    compliance: [GLBA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.qonto.com/mcp/tools/transactions-and-statements.md
+  - id: qonto.list_statements
+    object: Statement
+    action: list_statements
+    category: Data Access
+    risk: high
+    business_impact: "Lists monthly account statements, each carrying a short-lived presigned URL to the downloadable bank statement file."
+    compliance: [GLBA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.qonto.com/mcp/tools/transactions-and-statements.md
+  - id: qonto.get_statement
+    object: Statement
+    action: get_statement
+    category: Data Access
+    risk: high
+    business_impact: "Fetches a bank statement whose presigned file URL is a credential granting direct download of the statement document."
+    compliance: [GLBA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.qonto.com/mcp/tools/transactions-and-statements.md
+  - id: qonto.get_attachment
+    object: Attachment
+    action: get_attachment
+    category: Data Access
+    risk: medium
+    business_impact: "Fetches a transaction attachment via a short-lived presigned URL, exposing receipts and invoices that may contain financial detail."
+    compliance: [GLBA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

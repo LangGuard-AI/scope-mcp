@@ -1,0 +1,108 @@
+schema_version: "1.3"
+platform: pophive
+display_name: PopHIVE
+logo: https://www.pophive.org/img/meta/favicon-96x96.png
+source: langguard-editorial
+updated: "2026-08"
+reference: https://www.pophive.org/docs/mcp
+mcp_server_url: https://mcp.pophive.org/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://mcp.pophive.org/mcp
+  - id: pophive.get_overview
+    object: Overview
+    action: get_overview
+    description: "Cross-disease situation report for one US state or the nation, summarizing what is elevated, rising, declining, or stale across every PopHIVE topic."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a precomputed cross-disease public-health situation report for one US place; read-only aggregate surveillance data with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.pophive.org/mcp
+  - id: pophive.get_current_status
+    object: Status
+    action: get_current_status
+    description: "Current-status verdict for one disease in one US place — level, direction, and risk right now."
+    category: Data Access
+    risk: low
+    business_impact: "Reports the current level, direction, and risk for one disease in one US place; read-only lookup against precomputed public surveillance data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.pophive.org/mcp
+  - id: pophive.get_trend
+    object: Trend
+    action: get_trend
+    description: "Trend over time for one disease in one US place — direction, peak, and change, optionally stratified or pinned to one source."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a disease trend time series — direction, peak, and change — for one US place; read-only analysis over public aggregate surveillance data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.pophive.org/mcp
+  - id: pophive.get_map
+    object: Map
+    action: get_map
+    description: "Geographic ranking of which US states or counties are highest or lowest on one disease, by current level or recent change."
+    category: Data Access
+    risk: low
+    business_impact: "Ranks US states or counties by level or recent change for one disease; read-only geographic query over public health data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.pophive.org/mcp
+  - id: pophive.compare
+    object: Comparison
+    action: compare
+    description: "Side-by-side comparison of one disease across two to five US places, or agreement between surveillance sources in one place."
+    category: Data Access
+    risk: low
+    business_impact: "Compares one disease across two to five US places or across surveillance sources; read-only side-by-side analysis of aggregate public data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.pophive.org/mcp
+  - id: pophive.get_coverage
+    object: Coverage
+    action: get_coverage
+    description: "US childhood vaccination coverage — the rate for one vaccine in one place and whether it meets targets."
+    category: Data Access
+    risk: low
+    business_impact: "Returns US childhood vaccination coverage rates for one vaccine in one place against public-health targets; read-only lookup of aggregate statistics."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.pophive.org/mcp
+  - id: pophive.get_data
+    object: Dataset
+    action: get_data
+    description: "Data catalog and raw-data gateway for multi-stratum gaps, full history, complete lists, cross-dataset joins, and custom math beyond the specialized tools."
+    category: Data Access
+    risk: medium
+    business_impact: "Opens the raw-data catalog gateway for custom queries, cross-dataset joins, and full history beyond the served window; broad read access over public aggregate surveillance data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

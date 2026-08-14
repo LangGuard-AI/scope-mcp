@@ -1,0 +1,139 @@
+schema_version: "1.3"
+platform: outlook-mail
+display_name: Outlook Mail
+logo: https://outlook.office.com/favicon.ico
+source: langguard-editorial
+updated: "2026-08"
+reference: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-mail-work-iq
+actions:
+  # ---------- Messaging ----------
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-mail-work-iq
+  - id: outlook-mail.mcp_MailTools_graph_mail_searchMessages
+    object: Message
+    action: mcp_MailTools_graph_mail_searchMessages
+    category: Messaging
+    risk: high
+    business_impact: "Runs KQL-style search across the mailbox, surfacing PII, credentials, contracts, and material non-public information from any correspondence into agent context."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-mail-work-iq
+  - id: outlook-mail.mcp_MailTools_graph_mail_getMessage
+    object: Message
+    action: mcp_MailTools_graph_mail_getMessage
+    category: Messaging
+    risk: high
+    business_impact: "Reads a full message by ID, pulling the complete body and its personal data into agent context."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-mail-work-iq
+  - id: outlook-mail.mcp_MailTools_graph_mail_sendMail
+    object: Message
+    action: mcp_MailTools_graph_mail_sendMail
+    category: Messaging
+    risk: high
+    business_impact: "Sends an email as the signed-in user to arbitrary recipients, disclosing mailbox data externally and impersonating the account owner."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-mail-work-iq
+  - id: outlook-mail.mcp_MailTools_graph_mail_reply
+    object: Message
+    action: mcp_MailTools_graph_mail_reply
+    category: Messaging
+    risk: high
+    business_impact: "Sends a reply to an existing thread as the signed-in user, disclosing content to the original recipients under the owner's identity."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-mail-work-iq
+  - id: outlook-mail.mcp_MailTools_graph_mail_replyAll
+    object: Message
+    action: mcp_MailTools_graph_mail_replyAll
+    category: Messaging
+    risk: high
+    business_impact: "Sends a reply-all as the signed-in user, broadcasting content to every recipient on the thread and widening the blast radius of any disclosure."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-mail-work-iq
+  - id: outlook-mail.mcp_MailTools_graph_mail_sendDraft
+    object: Message
+    action: mcp_MailTools_graph_mail_sendDraft
+    category: Messaging
+    risk: high
+    business_impact: "Dispatches an existing draft by ID as the signed-in user, transmitting its contents externally with no further review gate."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-mail-work-iq
+  - id: outlook-mail.mcp_MailTools_graph_mail_createMessage
+    object: Message
+    action: mcp_MailTools_graph_mail_createMessage
+    category: Messaging
+    risk: medium
+    business_impact: "Composes a draft email in the user's mailbox; not auto-sent but stored as the owner's outgoing communication."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-mail-work-iq
+  - id: outlook-mail.mcp_MailTools_graph_mail_updateMessage
+    object: Message
+    action: mcp_MailTools_graph_mail_updateMessage
+    category: Messaging
+    risk: medium
+    business_impact: "Alters a message's subject, body, or categories, changing stored correspondence and its integrity in the mailbox."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-mail-work-iq
+  - id: outlook-mail.mcp_MailTools_graph_mail_deleteMessage
+    object: Message
+    action: mcp_MailTools_graph_mail_deleteMessage
+    category: Messaging
+    risk: medium
+    business_impact: "Removes a message from the mailbox; recoverable from Deleted Items but erases correspondence from the primary view on a single action."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-mail-work-iq
+  - id: outlook-mail.mcp_MailTools_graph_mail_listSent
+    object: Message
+    action: mcp_MailTools_graph_mail_listSent
+    category: Messaging
+    risk: medium
+    business_impact: "Enumerates sent items, exposing recipients, subjects, and the user's outbound communication patterns."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

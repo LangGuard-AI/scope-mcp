@@ -1,0 +1,322 @@
+schema_version: "1.3"
+platform: paytm-for-business
+display_name: Paytm for Business
+logo: https://www.paytmpayments.com/favicon.ico
+source: langguard-editorial
+updated: "2026-08"
+actions:
+  # ---------- Financial ----------
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.process_transaction
+    object: Transaction
+    action: process_transaction
+    category: Financial
+    risk: critical
+    business_impact: "Executes a customer payment through the selected payment mode, moving money and creating a revenue event on the ledger."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.initiate_transaction
+    object: Transaction
+    action: initiate_transaction
+    category: Financial
+    risk: high
+    business_impact: "Starts a payment by issuing a transaction token that authorizes subsequent charge operations for an order."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.initiate_refund
+    object: Refund
+    action: initiate_refund
+    category: Financial
+    risk: critical
+    business_impact: "Sends money back to the customer for a transaction, directly reducing recognized revenue and exposing chargeback risk."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.create_payment_link
+    object: PaymentLink
+    action: create_payment_link
+    category: Financial
+    risk: high
+    business_impact: "Generates a shareable link that collects a payment into the merchant account, often carrying customer name and contact details."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.update_payment_link
+    object: PaymentLink
+    action: update_payment_link
+    category: Financial
+    risk: high
+    business_impact: "Modifies an existing payment link's amount or expiry, changing what a customer will be charged."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.create_qr_code
+    object: QRCode
+    action: create_qr_code
+    category: Financial
+    risk: medium
+    business_impact: "Generates a QR code that collects a payment for a specified order amount into the merchant account."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.export_orders_xlsx
+    object: Order
+    action: export_orders_xlsx
+    category: Financial
+    risk: high
+    business_impact: "Exports order records over a date range into a downloadable spreadsheet, enabling bulk extraction of transaction and customer data."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.fetch_all_orders
+    object: Order
+    action: fetch_all_orders
+    category: Financial
+    risk: medium
+    business_impact: "Lists all orders within a date range, exposing transaction amounts, statuses, and customer references in bulk."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.fetch_settlement_orders
+    object: Settlement
+    action: fetch_settlement_orders
+    category: Financial
+    risk: medium
+    business_impact: "Returns the settlement bill list for a settled date range, exposing merchant payout reconciliation data."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.fetch_settlements_by_date
+    object: Settlement
+    action: fetch_settlements_by_date
+    category: Financial
+    risk: medium
+    business_impact: "Returns summary settlement lines for a settled date range, reflecting merchant payout totals."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.fetch_refund_list
+    object: Refund
+    action: fetch_refund_list
+    category: Financial
+    risk: medium
+    business_impact: "Lists refunds processed within a date range, exposing refund amounts and associated transactions."
+    compliance: [PCI]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.fetch_refund_status
+    object: Refund
+    action: fetch_refund_status
+    category: Financial
+    risk: low
+    business_impact: "Reads the current status of a previously initiated refund."
+    compliance: [PCI]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.fetch_transactions_by_link_id
+    object: Transaction
+    action: fetch_transactions_by_link_id
+    category: Financial
+    risk: low
+    business_impact: "Reads the transactions recorded against a specific payment link, including amounts and payer references."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.fetch_order_status
+    object: Order
+    action: fetch_order_status
+    category: Financial
+    risk: low
+    business_impact: "Reads the payment status for a specific order id."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.fetch_order_by_transaction_id
+    object: Order
+    action: fetch_order_by_transaction_id
+    category: Financial
+    risk: low
+    business_impact: "Retrieves the order details associated with a given transaction id."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.fetch_payment_links
+    object: PaymentLink
+    action: fetch_payment_links
+    category: Financial
+    risk: low
+    business_impact: "Reads details of recently created payment links, including amount and purpose."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.fetch_payment_options
+    object: PaymentOption
+    action: fetch_payment_options
+    category: Financial
+    risk: low
+    business_impact: "Reads the payment methods available for a given transaction; configuration metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.fetch_card_bin_details
+    object: Card
+    action: fetch_card_bin_details
+    category: Financial
+    risk: low
+    business_impact: "Validates a card BIN and returns issuer and card-type details."
+    compliance: [PCI]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.validate_vpa
+    object: VPA
+    action: validate_vpa
+    category: Financial
+    risk: low
+    business_impact: "Checks whether a UPI VPA is valid and eligible for subscription payments."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.fetch_payment_convenience_fee
+    object: Fee
+    action: fetch_payment_convenience_fee
+    category: Financial
+    risk: low
+    business_impact: "Reads the convenience fee that would apply to a given transaction amount; pricing metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Revenue & Pipeline ----------
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.initiate_subscription
+    object: Subscription
+    action: initiate_subscription
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Creates a recurring subscription with an upfront charge, establishing an ongoing revenue stream from the customer."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.update_subscription_status
+    object: Subscription
+    action: update_subscription_status
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Pauses or resumes an active subscription, changing whether recurring charges continue."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.cancel_subscription
+    object: Subscription
+    action: cancel_subscription
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Cancels an existing subscription, ending a recurring revenue stream from the customer."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.paytmpayments.com/docs/mcp-server-overview.md
+  - id: paytm-for-business.fetch_subscription_status
+    object: Subscription
+    action: fetch_subscription_status
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Reads the status and details of a specific subscription."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,338 @@
+schema_version: "1.3"
+platform: microsoft-teams
+display_name: Microsoft Teams
+logo: https://www.microsoft.com/favicon.ico
+source: langguard-editorial
+updated: "2026-07"
+reference: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_teams_updateChannelMember
+    object: ChannelMember
+    action: mcp_graph_teams_updateChannelMember
+    category: Identity & Access
+    risk: high
+    business_impact: "Changes a member's role in a private or shared channel, including promotion to owner, granting elevated control over the channel outside any access-review process."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_chat_addChatMember
+    object: ChatMember
+    action: mcp_graph_chat_addChatMember
+    category: Identity & Access
+    risk: medium
+    business_impact: "Adds a user to a chat with member or owner role, granting them access to the conversation and its history without a membership-approval control."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_teams_addChannelMember
+    object: ChannelMember
+    action: mcp_graph_teams_addChannelMember
+    category: Identity & Access
+    risk: medium
+    business_impact: "Adds a user to a private or shared channel, granting access to a restricted collaboration space and its contents."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Channels ----------
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_teams_createChannel
+    object: Channel
+    action: mcp_graph_teams_createChannel
+    category: Channels
+    risk: medium
+    business_impact: "Creates a standard, private, or shared channel in a team, reshaping the collaboration structure and, for private channels, establishing a new access boundary."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_teams_createPrivateChannel
+    object: Channel
+    action: mcp_graph_teams_createPrivateChannel
+    category: Channels
+    risk: medium
+    business_impact: "Creates a private channel with an explicit member list, provisioning a restricted collaboration space visible only to its members."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_teams_updateChannel
+    object: Channel
+    action: mcp_graph_teams_updateChannel
+    category: Channels
+    risk: medium
+    business_impact: "Renames a channel or changes its description, altering how members identify and navigate the collaboration space."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_teams_getChannel
+    object: Channel
+    action: mcp_graph_teams_getChannel
+    category: Channels
+    risk: low
+    business_impact: "Reads a single channel's properties; exposes configuration metadata but no message content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_teams_getTeam
+    object: Team
+    action: mcp_graph_teams_getTeam
+    category: Channels
+    risk: low
+    business_impact: "Reads a team's properties; exposes team-level configuration metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_teams_listChannels
+    object: Channel
+    action: mcp_graph_teams_listChannels
+    category: Channels
+    risk: low
+    business_impact: "Lists the channels in a team, including private and shared channels the caller belongs to; reveals collaboration structure but not contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_teams_listTeams
+    object: Team
+    action: mcp_graph_teams_listTeams
+    category: Channels
+    risk: low
+    business_impact: "Lists the teams a specified user has joined; reveals that user's team memberships across the tenant."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_teams_listChannelMembers
+    object: ChannelMember
+    action: mcp_graph_teams_listChannelMembers
+    category: Channels
+    risk: medium
+    business_impact: "Lists the members of a channel with their identities and roles, exposing personal data about who participates in a restricted collaboration space."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Messaging ----------
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_chat_listChatMessages
+    object: ChatMessage
+    action: mcp_graph_chat_listChatMessages
+    category: Messaging
+    risk: high
+    business_impact: "Pages through the full message history of a chat, enabling bulk read of private conversation content that routinely contains personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_teams_listChannelMessages
+    object: ChannelMessage
+    action: mcp_graph_teams_listChannelMessages
+    category: Messaging
+    risk: high
+    business_impact: "Pages through a channel's messages and replies, enabling bulk read of conversation content that routinely contains personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_chat_getChatMessage
+    object: ChatMessage
+    action: mcp_graph_chat_getChatMessage
+    category: Messaging
+    risk: high
+    business_impact: "Reads a single chat message's content, exposing private conversation data about identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_chat_listChatMembers
+    object: ChatMember
+    action: mcp_graph_chat_listChatMembers
+    category: Messaging
+    risk: medium
+    business_impact: "Lists the participants of a chat with their identities and roles, exposing personal data about who is party to a private conversation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_chat_createChat
+    object: Chat
+    action: mcp_graph_chat_createChat
+    category: Messaging
+    risk: medium
+    business_impact: "Creates a new one-on-one or group chat with the specified members, opening a conversation thread among named participants."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_chat_deleteChat
+    object: Chat
+    action: mcp_graph_chat_deleteChat
+    category: Messaging
+    risk: medium
+    business_impact: "Soft-deletes an entire chat for its participants; recoverable under tenant retention policy but removes the conversation from normal view."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_chat_updateChat
+    object: Chat
+    action: mcp_graph_chat_updateChat
+    category: Messaging
+    risk: low
+    business_impact: "Updates a group chat's topic; a cosmetic change to how the conversation is labelled."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_chat_getChat
+    object: Chat
+    action: mcp_graph_chat_getChat
+    category: Messaging
+    risk: low
+    business_impact: "Reads a chat's metadata such as type and topic; reveals the conversation exists but not its message content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_chat_listChats
+    object: Chat
+    action: mcp_graph_chat_listChats
+    category: Messaging
+    risk: low
+    business_impact: "Lists the caller's visible chats with metadata; reveals which conversations the principal is party to but not their contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_chat_postMessage
+    object: ChatMessage
+    action: mcp_graph_chat_postMessage
+    category: Messaging
+    risk: low
+    business_impact: "Posts a plain-text message into a chat as the caller; a reversible write that participants can see immediately."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_chat_updateChatMessage
+    object: ChatMessage
+    action: mcp_graph_chat_updateChatMessage
+    category: Messaging
+    risk: medium
+    business_impact: "Rewrites the content of an existing chat message, altering the recorded conversation history participants rely on."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_chat_deleteChatMessage
+    object: ChatMessage
+    action: mcp_graph_chat_deleteChatMessage
+    category: Messaging
+    risk: medium
+    business_impact: "Soft-deletes a chat message, removing it from participants' view though it may be retained for compliance holds."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_teams_postChannelMessage
+    object: ChannelMessage
+    action: mcp_graph_teams_postChannelMessage
+    category: Messaging
+    risk: low
+    business_impact: "Posts a plain-text message to a channel as the caller; a reversible write visible to all channel members."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-agent-365/mcp-server-reference/teams
+  - id: microsoft-teams.mcp_graph_teams_replyToChannelMessage
+    object: ChannelMessage
+    action: mcp_graph_teams_replyToChannelMessage
+    category: Messaging
+    risk: low
+    business_impact: "Adds a plain-text reply to an existing channel message; a reversible write visible to all channel members."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
