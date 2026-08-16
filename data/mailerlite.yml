@@ -1,0 +1,370 @@
+schema_version: "1.3"
+platform: mailerlite
+display_name: MailerLite
+logo: https://www.mailerlite.com/site/themes/new/img/favicons/apple-touch-icon.png
+source: langguard-editorial
+updated: "2026-08"
+mcp_server_url: https://mcp.mailerlite.com/mcp
+reference: https://developers.mailerlite.com/mcp
+actions:
+  # ---------- Customer ----------
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.list_subscribers
+    object: Subscriber
+    action: list_subscribers
+    description: "List subscribers with filtering by status (active, unsubscribed, unconfirmed, bounced, junk)."
+    category: Customer
+    risk: high
+    business_impact: "Enumerates the account's subscriber base with email addresses, names, and status, giving an agent a direct path to pull the whole marketing list."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.get_subscriber
+    object: Subscriber
+    action: get_subscriber
+    description: "Get subscriber info by ID or email."
+    category: Customer
+    risk: medium
+    business_impact: "Reads one subscriber's contact details, custom fields, and subscription status."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.add_subscriber
+    object: Subscriber
+    action: add_subscriber
+    description: "Add a new subscriber or update an existing one (supports email, name, fields, groups)."
+    category: Customer
+    risk: medium
+    business_impact: "Upserts a subscriber record, which can add contacts who never gave marketing consent and put them in scope for future sends."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.update_subscriber
+    object: Subscriber
+    action: update_subscriber
+    description: "Update subscriber information (non-destructive)."
+    category: Customer
+    risk: medium
+    business_impact: "Modifies stored personal data on a subscriber record, including email, name, and custom field values used for targeting."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.delete_subscriber
+    object: Subscriber
+    action: delete_subscriber
+    description: "Delete a subscriber (keeps info for re-subscription)."
+    category: Customer
+    risk: medium
+    business_impact: "Removes a person from the audience so they stop receiving mail; the vendor retains their record for re-subscription, so it is not a full erasure."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.get_subscriber_activity
+    object: Subscriber
+    action: get_subscriber_activity
+    description: "Get activity history for a subscriber."
+    category: Customer
+    risk: medium
+    business_impact: "Exposes one person's open, click, and send history — behavioural profiling data tied to an identifiable individual."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.import_subscribers_to_group
+    object: Subscriber
+    action: import_subscribers_to_group
+    description: "Bulk import subscribers into a group."
+    category: Customer
+    risk: high
+    business_impact: "Loads a batch of personal records into the audience in one call, making an unvetted or purchased list immediately mailable."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.get_segment_subscribers
+    object: Segment
+    action: get_segment_subscribers
+    description: "Get subscribers in a segment, with status filtering."
+    category: Customer
+    risk: high
+    business_impact: "Returns every contact matching a segment's criteria, exposing a targeted slice of the audience along with its inferred attributes."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.delete_field
+    object: Field
+    action: delete_field
+    description: "Delete a custom field."
+    category: Customer
+    risk: critical
+    business_impact: "Destroys a custom field and the values stored under it for every subscriber in the account, with no recovery path and no second approver."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.create_webhook
+    object: Webhook
+    action: create_webhook
+    description: "Create a new webhook with a name, URL, and events."
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Opens a standing egress channel that streams subscriber and campaign events to any external URL the caller names."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.update_webhook
+    object: Webhook
+    action: update_webhook
+    description: "Update a webhook, including enabling/disabling it."
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Repoints or re-enables an existing webhook, which can silently redirect subscriber event data to a different destination."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.delete_webhook
+    object: Webhook
+    action: delete_webhook
+    description: "Delete a webhook."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Removes an event subscription, breaking downstream CRM or analytics sync without any visible failure in MailerLite itself."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.batch_requests
+    object: Request
+    action: batch_requests
+    description: "Run multiple API operations in a single batched request."
+    category: Data Access
+    risk: high
+    business_impact: "Executes an arbitrary set of API operations in one call, amplifying any write or delete and collapsing per-operation review into a single approval."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.search
+    object: Resource
+    action: search
+    description: "Search across MailerLite resources."
+    category: Data Access
+    risk: medium
+    business_impact: "Queries across account resources and can surface subscriber records the caller did not know to ask for by ID."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Messaging ----------
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.schedule_campaign
+    object: Campaign
+    action: schedule_campaign
+    description: "Schedule a campaign to be sent."
+    category: Messaging
+    risk: high
+    business_impact: "Commits an email blast to the selected audience; once delivery starts the message cannot be recalled from recipients' inboxes, and any consent defect is already realised."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.create_campaign
+    object: Campaign
+    action: create_campaign
+    description: "Create a new email campaign (regular, ab, resend types)."
+    category: Messaging
+    risk: medium
+    business_impact: "Drafts a campaign with its audience, sender identity, and content, staging outbound messaging that carries the company's brand."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.update_campaign
+    object: Campaign
+    action: update_campaign
+    description: "Update campaign details (name, subject, from, content)."
+    category: Messaging
+    risk: medium
+    business_impact: "Rewrites subject line, sender address, or body of a campaign, altering what recipients see and who it appears to come from."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.delete_campaign
+    object: Campaign
+    action: delete_campaign
+    description: "Delete a campaign."
+    category: Messaging
+    risk: medium
+    business_impact: "Removes a campaign along with the performance history marketers rely on for reporting and consent evidence."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.get_campaign_subscribers
+    object: Campaign
+    action: get_campaign_subscribers
+    description: "Get subscribers who received a campaign, with filters."
+    category: Messaging
+    risk: high
+    business_impact: "Returns the full recipient list for a send, exposing who was contacted along with their delivery status."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.get_campaign_link_recipients
+    object: Campaign
+    action: get_campaign_link_recipients
+    description: "Get the subscribers who clicked a specific link."
+    category: Messaging
+    risk: high
+    business_impact: "Links click-tracking data back to named individuals, revealing interest signals that count as behavioural profiling under privacy law."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Revenue & Pipeline ----------
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.manage_ecommerce_customers
+    object: EcommerceCustomer
+    action: manage_ecommerce_customers
+    description: "List, fetch, create, update, or delete customers in a shop."
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Covers read, write, and delete on synced shop customer records, so one call can dump or destroy purchaser identity data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.manage_ecommerce_orders
+    object: Order
+    action: manage_ecommerce_orders
+    description: "List, fetch, create, update, delete, or bulk-import orders in a shop."
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Reads and rewrites purchase records tied to named customers, including bulk import and deletion of order history used for revenue segmentation."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.update_automation_email
+    object: Automation
+    action: update_automation_email
+    description: "Update the content of an automation email step."
+    category: Operations
+    risk: medium
+    business_impact: "Changes the body of an email that fires automatically to every subscriber entering the workflow, with no per-send review."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.delete_automation
+    object: Automation
+    action: delete_automation
+    description: "Delete an automation."
+    category: Operations
+    risk: medium
+    business_impact: "Tears down a live workflow, halting onboarding or nurture sequences for subscribers currently mid-journey."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.mailerlite.com/mcp
+  - id: mailerlite.create_automation
+    object: Automation
+    action: create_automation
+    description: "Create a draft automation."
+    category: Operations
+    risk: low
+    business_impact: "Adds a draft workflow that sends nothing until it is enabled, so the immediate effect is limited to account clutter."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

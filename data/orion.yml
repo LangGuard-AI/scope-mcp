@@ -1,0 +1,277 @@
+schema_version: "1.3"
+platform: orion
+display_name: Orion by Gravity
+logo: https://www.bygravity.com/favicon.ico
+source: langguard-editorial
+updated: "2026-08"
+reference: https://docs.runorion.com/mcp/tools.md
+server_website: https://runorion.com
+mcp_server_url: https://g.runorion.com/mcp
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://docs.runorion.com/mcp/tools.md
+  - id: orion.list_users
+    object: User
+    action: list_users
+    category: Identity & Access
+    risk: medium
+    business_impact: "Enumerates every member of the Orion organization together with their assigned roles, exposing the workforce roster and the platform's access-control layout in a single call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://docs.runorion.com/mcp/tools.md
+  - id: orion.delete_artifact
+    object: Artifact
+    action: delete_artifact
+    category: Operations
+    risk: high
+    business_impact: "Permanently removes a dashboard, report, or slide deck that stakeholders may depend on, with no documented recovery path once the agent issues the call."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.runorion.com/mcp/tools.md
+  - id: orion.execute_metric
+    object: Metric
+    action: execute_metric
+    category: Operations
+    risk: medium
+    business_impact: "Recomputes a KPI against the connected warehouse, overwriting the value that dashboards and downstream readers treat as current business truth."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.runorion.com/mcp/tools.md
+  - id: orion.run_workflow
+    object: Workflow
+    action: run_workflow
+    category: Operations
+    risk: medium
+    business_impact: "Fires an insight-maker workflow, consuming warehouse compute and publishing a fresh set of analysis outputs that colleagues will read as authoritative."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Messaging ----------
+
+  # source: https://docs.runorion.com/mcp/tools.md
+  - id: orion.list_conversations
+    object: Conversation
+    action: list_conversations
+    category: Messaging
+    risk: medium
+    business_impact: "Retrieves the chat histories tied to a user, surfacing the analytical questions people asked in private and the business context behind them."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.runorion.com/mcp/tools.md
+  - id: orion.get_conversation_history
+    object: Conversation
+    action: get_conversation_history
+    category: Messaging
+    risk: medium
+    business_impact: "Pulls the full message thread of an Orion conversation, including the analysis results and any warehouse data the assistant quoted back to the user."
+    compliance: [GDPR, CCPA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.runorion.com/mcp/tools.md
+  - id: orion.create_conversation
+    object: Conversation
+    action: create_conversation
+    category: Messaging
+    risk: low
+    business_impact: "Opens a new Orion discussion thread under a user and project, adding a reversible record to that workspace's conversation list."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://docs.runorion.com/mcp/tools.md
+  - id: orion.ask_orion
+    object: Analysis
+    action: ask_orion
+    category: Data Access
+    risk: high
+    business_impact: "Runs an open-ended natural-language analysis across the connected warehouse, Looker, and dbt models, so any row the account can reach — including customer records — can land in the answer."
+    compliance: [GDPR, UK_GDPR, CCPA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.runorion.com/mcp/tools.md
+  - id: orion.get_artifact
+    object: Artifact
+    action: get_artifact
+    category: Data Access
+    risk: medium
+    business_impact: "Exports the full content of a dashboard, report, or slide deck as markdown, moving internal business figures out of Orion and into the agent's context."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.runorion.com/mcp/tools.md
+  - id: orion.list_artifacts
+    object: Artifact
+    action: list_artifacts
+    category: Data Access
+    risk: low
+    business_impact: "Lists the dashboards and reports available in a project, revealing what analysis the organization maintains without returning their contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.runorion.com/mcp/tools.md
+  - id: orion.list_metrics
+    object: Metric
+    action: list_metrics
+    category: Data Access
+    risk: low
+    business_impact: "Browses the KPIs defined for a project, showing which business measures the company tracks."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.runorion.com/mcp/tools.md
+  - id: orion.get_metric
+    object: Metric
+    action: get_metric
+    category: Data Access
+    risk: low
+    business_impact: "Returns a KPI's full definition alongside its current result, exposing both the business logic behind the number and the number itself."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.runorion.com/mcp/tools.md
+  - id: orion.get_metric_results
+    object: MetricResult
+    action: get_metric_results
+    category: Data Access
+    risk: low
+    business_impact: "Reads the historical execution values of a KPI, revealing how a business measure has moved over time."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.runorion.com/mcp/tools.md
+  - id: orion.get_metric_insights
+    object: Metric
+    action: get_metric_insights
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces detected anomalies and significant swings in a KPI, handing the agent an early read on business performance problems."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.runorion.com/mcp/tools.md
+  - id: orion.list_workflows
+    object: Workflow
+    action: list_workflows
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the insight-maker workflows configured in a project, mapping the organization's automated analysis surface."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.runorion.com/mcp/tools.md
+  - id: orion.get_workflow
+    object: Workflow
+    action: get_workflow
+    category: Data Access
+    risk: low
+    business_impact: "Reveals a notebook workflow's configuration and the data sources it draws from, showing which systems Orion is wired into."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.runorion.com/mcp/tools.md
+  - id: orion.get_workflow_results
+    object: WorkflowResult
+    action: get_workflow_results
+    category: Data Access
+    risk: low
+    business_impact: "Reads the outcome of a prior insight-maker run, returning the analysis output the workflow produced."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.runorion.com/mcp/tools.md
+  - id: orion.list_projects
+    object: Project
+    action: list_projects
+    category: Data Access
+    risk: low
+    business_impact: "Discovers which Orion projects the authenticated account can reach, outlining the analytics workspaces available to the agent."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.runorion.com/mcp/tools.md
+  - id: orion.search_wiki
+    object: WikiPage
+    action: search_wiki
+    category: Data Access
+    risk: low
+    business_impact: "Searches the organization's knowledge base, returning internal documentation that explains how the business and its data are structured."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.runorion.com/mcp/tools.md
+  - id: orion.list_recommendations
+    object: Recommendation
+    action: list_recommendations
+    category: Data Access
+    risk: low
+    business_impact: "Fetches Orion's suggested analysis prompts for a project, a read-only hint list with no effect on stored data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial

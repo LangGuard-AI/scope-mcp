@@ -1,0 +1,253 @@
+schema_version: "1.3"
+platform: mintlify
+display_name: Mintlify
+logo: https://mintlify.com/favicon.ico
+source: langguard-editorial
+updated: "2026-08"
+mcp_server_url: https://mcp.mintlify.com
+reference: https://www.mintlify.com/docs/ai/mintlify-mcp
+server_website: https://www.mintlify.com/docs/ai/mintlify-mcp
+actions:
+  # ---------- Code & Release ----------
+
+  # source: https://www.mintlify.com/docs/ai/mintlify-mcp
+  - id: mintlify.save
+    object: Session
+    action: save
+    description: "Opens a pull request or commits to the session branch; auto-merges the PR when the deployment permits agent pushes to main and no branch protection rules exist."
+    category: Code & Release
+    risk: high
+    business_impact: "Commits session changes and, on deployments without branch protection, auto-merges straight to main — publishing agent-authored documentation with no human review."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.mintlify.com/docs/ai/mintlify-mcp
+  - id: mintlify.discard_session
+    object: Session
+    action: discard_session
+    description: "Drops the session and its in-flight changes."
+    category: Code & Release
+    risk: medium
+    business_impact: "Throws away every unsaved edit in the session with no recovery path, losing documentation work that was never committed to a branch."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.mintlify.com/docs/ai/mintlify-mcp
+  - id: mintlify.checkout
+    object: Session
+    action: checkout
+    description: "Binds a session to a branch for a given deployment subdomain, or switches which deployment's session is active."
+    category: Code & Release
+    risk: low
+    business_impact: "Points the working session at a specific deployment and branch, determining which documentation site subsequent writes land on."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.mintlify.com/docs/ai/mintlify-mcp
+  - id: mintlify.diff
+    object: Session
+    action: diff
+    description: "Lists all changes between the session and main."
+    category: Code & Release
+    risk: low
+    business_impact: "Reports the pending delta between the session branch and main so changes can be reviewed before they are saved."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.mintlify.com/docs/ai/mintlify-mcp
+  - id: mintlify.get_session_state
+    object: Session
+    action: get_session_state
+    description: "Inspects the current branch, edited files, and pending navigation diff."
+    category: Code & Release
+    risk: low
+    business_impact: "Returns the active branch, the set of edited files, and the pending navigation diff for the current session."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.mintlify.com/docs/ai/mintlify-mcp
+  - id: mintlify.list_branches
+    object: Branch
+    action: list_branches
+    description: "Lists Git branches available for a deployment's project, with optional query filtering."
+    category: Code & Release
+    risk: low
+    business_impact: "Enumerates the project's Git branch names, total count, and deploy branch, exposing in-progress documentation work streams."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://www.mintlify.com/docs/ai/mintlify-mcp
+  - id: mintlify.update_config
+    object: Config
+    action: update_config
+    description: "Modifies docs.json, covering theme, navigation roots, integrations, and SEO settings."
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Rewrites site-wide docs.json settings, so a single call can restructure navigation roots, change SEO indexing, or wire in third-party integrations across the whole deployment."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.mintlify.com/docs/ai/mintlify-mcp
+  - id: mintlify.list_deployments
+    object: Deployment
+    action: list_deployments
+    description: "Lists the deployments the connection can access, returning each subdomain and name."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Enumerates every documentation deployment the connected credential reaches, revealing the organisation's full set of docs sites including unreleased ones."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Content & Documentation ----------
+
+  # source: https://www.mintlify.com/docs/ai/mintlify-mcp
+  - id: mintlify.write_page
+    object: Page
+    action: write_page
+    description: "Overwrites a page's full MDX content."
+    category: Content & Documentation
+    risk: medium
+    business_impact: "Replaces an entire documentation page's MDX in one call, discarding the prior content of that page on the session branch."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.mintlify.com/docs/ai/mintlify-mcp
+  - id: mintlify.edit_page
+    object: Page
+    action: edit_page
+    description: "Applies a targeted edit to a page."
+    category: Content & Documentation
+    risk: medium
+    business_impact: "Rewrites part of a published documentation page, altering guidance customers rely on once the session is saved."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.mintlify.com/docs/ai/mintlify-mcp
+  - id: mintlify.delete_node
+    object: Node
+    action: delete_node
+    description: "Removes a node from the navigation."
+    category: Content & Documentation
+    risk: medium
+    business_impact: "Removes a page, group, or version from the navigation tree, pulling that documentation out of the published site once saved."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.mintlify.com/docs/ai/mintlify-mcp
+  - id: mintlify.move_node
+    object: Node
+    action: move_node
+    description: "Moves a node, including renaming a page's path."
+    category: Content & Documentation
+    risk: medium
+    business_impact: "Relocates a node or renames a page path, breaking existing inbound links and bookmarks to that documentation URL."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.mintlify.com/docs/ai/mintlify-mcp
+  - id: mintlify.update_node
+    object: Node
+    action: update_node
+    description: "Updates a node's properties in place, such as renaming a group, changing an icon, or setting a default version."
+    category: Content & Documentation
+    risk: medium
+    business_impact: "Changes navigation node properties including the default version, which shifts what every reader sees when they land on the docs site."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.mintlify.com/docs/ai/mintlify-mcp
+  - id: mintlify.create_node
+    object: Node
+    action: create_node
+    description: "Adds a new page, group, tab, anchor, version, language, product, or dropdown."
+    category: Content & Documentation
+    risk: medium
+    business_impact: "Adds a page, tab, version, or product to the navigation tree, expanding what the documentation site publishes."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.mintlify.com/docs/ai/mintlify-mcp
+  - id: mintlify.search
+    object: Page
+    action: search
+    description: "Finds lines matching a substring or regular expression across every page."
+    category: Content & Documentation
+    risk: low
+    business_impact: "Runs a regular expression across every page in the project, which can surface unpublished drafts or credentials accidentally committed into documentation source."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.mintlify.com/docs/ai/mintlify-mcp
+  - id: mintlify.read
+    object: Page
+    action: read
+    description: "Fetches the full MDX of any page on the session branch."
+    category: Content & Documentation
+    risk: low
+    business_impact: "Returns the complete MDX source of a page on the session branch, including draft content not yet published to the live site."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.mintlify.com/docs/ai/mintlify-mcp
+  - id: mintlify.list_nodes
+    object: Node
+    action: list_nodes
+    description: "Walks the navigation tree with optional filters by parentId, node types, or division scope."
+    category: Content & Documentation
+    risk: low
+    business_impact: "Walks the full navigation tree with filters and pagination, mapping the structure of every product, version, and language in the docs."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

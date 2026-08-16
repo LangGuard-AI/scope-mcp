@@ -1,0 +1,312 @@
+schema_version: "1.3"
+platform: motherduck
+display_name: MotherDuck
+logo: https://motherduck.com/favicon.ico
+source: langguard-editorial
+updated: "2026-08"
+reference: https://motherduck.com/docs/sql-reference/mcp/
+mcp_server_url: https://api.motherduck.com/mcp
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://motherduck.com/docs/category/dives
+  - id: motherduck.share_dive_data
+    object: Dive
+    action: share_dive_data
+    description: "Share the data for a Dive with your organization."
+    category: Identity & Access
+    risk: high
+    business_impact: "Exposes a Dive's underlying result data to everyone in the organization, widening the audience for warehouse rows that may contain customer or employee personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://motherduck.com/docs/category/guides
+  - id: motherduck.set_guide_access
+    object: Guide
+    action: set_guide_access
+    description: "Change a Guide's visibility between private and org-wide."
+    category: Identity & Access
+    risk: high
+    business_impact: "Flips a Guide between private and org-wide, either publishing internal data guidance to the whole organization or silently removing guidance other teams' agents depend on."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://motherduck.com/docs/category/core-tools
+  - id: motherduck.query_rw
+    object: Database
+    action: query_rw
+    description: "Execute SQL queries that can modify data or schema in MotherDuck."
+    category: Data Access
+    risk: critical
+    business_impact: "Runs arbitrary read-write SQL, so a single call can drop tables, truncate warehouse data, or rewrite records across every database the credential reaches, with no recovery path."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://motherduck.com/docs/category/core-tools
+  - id: motherduck.query
+    object: Database
+    action: query
+    description: "Execute SQL queries against MotherDuck databases."
+    category: Data Access
+    risk: critical
+    business_impact: "Runs arbitrary SELECT statements across the account's warehouses, enabling bulk extraction of customer, employee, and transaction records in a single call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://motherduck.com/docs/category/core-tools
+  - id: motherduck.search_catalog
+    object: Catalog
+    action: search_catalog
+    description: "Fuzzy search across databases, schemas, tables, columns, and shares."
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces database, table, and column names across the whole account, mapping where sensitive data lives without returning the rows themselves."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Secrets & Workflows ----------
+
+  # source: https://motherduck.com/docs/category/flights
+  - id: motherduck.update_flight
+    object: Flight
+    action: update_flight
+    description: "Update a Flight's source, requirements, config, token, secrets, name, or schedule."
+    category: Secrets & Workflows
+    risk: critical
+    business_impact: "Rewrites a scheduled job's code, token, and secrets in one call, letting a single principal repoint production automation at attacker-controlled credentials without review."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://motherduck.com/docs/category/flights
+  - id: motherduck.delete_flight
+    object: Flight
+    action: delete_flight
+    description: "Permanently delete a Flight, its versions, schedule, and run history."
+    category: Secrets & Workflows
+    risk: critical
+    business_impact: "Destroys a scheduled job together with its version history and run records, erasing the execution audit trail for production data pipelines."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://motherduck.com/docs/category/flights
+  - id: motherduck.create_flight
+    object: Flight
+    action: create_flight
+    description: "Create a new Flight from Python source code, requirements, and an optional schedule."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Deploys new Python code on a recurring schedule inside the account, standing up production automation with no separate review or approval step."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://motherduck.com/docs/category/flights
+  - id: motherduck.edit_flight_source
+    object: Flight
+    action: edit_flight_source
+    description: "Edit a Flight's source code with one or more find-and-replace operations, producing a new version."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Rewrites the code of an existing scheduled job through find-and-replace, changing what production automation does on its next run without a review gate."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://motherduck.com/docs/category/flights
+  - id: motherduck.run_flight
+    object: Flight
+    action: run_flight
+    description: "Trigger an on-demand execution of a Flight using its current version."
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Executes a Flight's Python code immediately, which may write to warehouse tables or call external systems outside its normal schedule."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://motherduck.com/docs/category/flights
+  - id: motherduck.cancel_flight_run
+    object: FlightRun
+    action: cancel_flight_run
+    description: "Cancel an in-progress Flight run."
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Halts a running pipeline mid-execution, which can leave partially written tables and skip a scheduled data refresh downstream consumers rely on."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://motherduck.com/docs/category/flights
+  - id: motherduck.get_flight_run_logs
+    object: FlightRun
+    action: get_flight_run_logs
+    description: "Fetch the logs and run record for a single Flight run."
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Returns raw pipeline logs, which routinely echo sampled row values, connection details, and error payloads from the data the job processed."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://motherduck.com/docs/category/dives
+  - id: motherduck.delete_dive
+    object: Dive
+    action: delete_dive
+    description: "Permanently delete a Dive by ID."
+    category: Operations
+    risk: high
+    business_impact: "Permanently removes a saved analysis app and its component code, with no recovery path for the queries and logic other teams may depend on."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://motherduck.com/docs/category/dives
+  - id: motherduck.update_dive
+    object: Dive
+    action: update_dive
+    description: "Update an existing Dive's title, description, or content."
+    category: Operations
+    risk: medium
+    business_impact: "Rewrites an existing Dive's content, silently changing the queries and figures colleagues read from a shared analysis."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://motherduck.com/docs/category/dives
+  - id: motherduck.save_dive
+    object: Dive
+    action: save_dive
+    description: "Save a new Dive to your MotherDuck workspace."
+    category: Operations
+    risk: low
+    business_impact: "Adds a new saved analysis app to the workspace; contents are reversible and visible only until explicitly shared."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://motherduck.com/docs/category/dives
+  - id: motherduck.view_dive
+    object: Dive
+    action: view_dive
+    description: "Render a MotherDuck Dive as a live, interactive MCP app inside the host client."
+    category: Operations
+    risk: medium
+    business_impact: "Renders a Dive as a live app in the client, executing its embedded queries and pulling warehouse results into the conversation surface."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Knowledge & Guides ----------
+
+  # source: https://motherduck.com/docs/category/guides
+  - id: motherduck.create_guide
+    object: Guide
+    action: create_guide
+    description: "Create a new Guide — a markdown document that AI agents use to answer your organization's data questions correctly."
+    category: Knowledge & Guides
+    risk: medium
+    business_impact: "Adds instructions that steer how AI agents interpret and answer the organization's data questions, shaping analytical output for every downstream user."
+    compliance: [ISO_42001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://motherduck.com/docs/category/guides
+  - id: motherduck.edit_guide_content
+    object: Guide
+    action: edit_guide_content
+    description: "Apply targeted string replacements to a Guide and save the result as a versioned update."
+    category: Knowledge & Guides
+    risk: medium
+    business_impact: "Rewrites portions of the guidance agents follow when querying company data, a direct path to skewing reported numbers or injecting instructions into agent context."
+    compliance: [ISO_42001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://motherduck.com/docs/category/guides
+  - id: motherduck.update_guide
+    object: Guide
+    action: update_guide
+    description: "Append a version to an existing Guide with updated content or references."
+    category: Knowledge & Guides
+    risk: medium
+    business_impact: "Publishes a new version of agent-facing data guidance; the change takes effect for every agent query without a separate approval step."
+    compliance: [ISO_42001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://motherduck.com/docs/category/guides
+  - id: motherduck.delete_guide
+    object: Guide
+    action: delete_guide
+    description: "Soft-delete a Guide while preserving its version history."
+    category: Knowledge & Guides
+    risk: medium
+    business_impact: "Withdraws org-wide query guidance so agents fall back to unguided SQL; version history is preserved, so the removal can be reversed."
+    compliance: [ISO_42001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://motherduck.com/docs/category/guides
+  - id: motherduck.update_guide_metadata
+    object: Guide
+    action: update_guide_metadata
+    description: "Change a Guide's title, description, or topic without creating a content version."
+    category: Knowledge & Guides
+    risk: low
+    business_impact: "Retitles or re-topics a Guide, affecting how agents and people find it but leaving its actual guidance untouched."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

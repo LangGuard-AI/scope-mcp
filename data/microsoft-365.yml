@@ -1,0 +1,315 @@
+schema_version: "1.3"
+platform: microsoft-365
+display_name: Microsoft 365
+logo: https://www.microsoft.com/favicon.ico
+source: langguard-editorial
+updated: "2026-08"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+  - id: microsoft-365.read_resource
+    object: "*"
+    action: read_resource
+    category: Data Access
+    risk: medium
+    business_impact: "Resolves any SharePoint file, Outlook message, or Teams chat by URI and pulls its full body and attachments into agent context."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+  - id: microsoft-365.outlook_email_search
+    object: Message
+    action: outlook_email_search
+    category: Data Access
+    risk: high
+    business_impact: "Queries the whole mailbox by sender and date, surfacing contracts, credentials, and confidential correspondence in bulk."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+  - id: microsoft-365.chat_message_search
+    object: ChatMessage
+    action: chat_message_search
+    category: Data Access
+    risk: high
+    business_impact: "Reads private Teams conversations, exposing informal discussions that routinely carry personal data and unreleased business decisions."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+  - id: microsoft-365.sharepoint_search
+    object: Document
+    action: sharepoint_search
+    category: Data Access
+    risk: high
+    business_impact: "Searches documents and pages across every SharePoint site the user can reach, a tenant-wide path to HR, legal, and customer records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+  - id: microsoft-365.outlook_calendar_search
+    object: Event
+    action: outlook_calendar_search
+    category: Data Access
+    risk: medium
+    business_impact: "Reads calendar entries including attendee identities, meeting subjects, and locations that reveal who the user works with."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Messaging ----------
+
+  # source: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+  - id: microsoft-365.outlook_send_mail
+    object: Message
+    action: outlook_send_mail
+    category: Messaging
+    risk: high
+    business_impact: "Transmits mail as the account owner to arbitrary recipients, allowing mailbox contents to leave the tenant under the user's identity."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+  - id: microsoft-365.outlook_forward_mail
+    object: Message
+    action: outlook_forward_mail
+    category: Messaging
+    risk: high
+    business_impact: "Relays existing internal correspondence to new recipients, a direct exfiltration route for threads the sender never authored."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+  - id: microsoft-365.outlook_batch_delete_messages
+    object: Message
+    action: outlook_batch_delete_messages
+    category: Messaging
+    risk: high
+    business_impact: "Clears many messages from the active mailbox in one call, which can defeat retention expectations and hide correspondence from reviewers."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+  - id: microsoft-365.outlook_send_draft
+    object: Draft
+    action: outlook_send_draft
+    category: Messaging
+    risk: medium
+    business_impact: "Releases a previously composed draft to its recipients; once transmitted the message cannot be recalled."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+  - id: microsoft-365.outlook_create_draft
+    object: Draft
+    action: outlook_create_draft
+    category: Messaging
+    risk: medium
+    business_impact: "Stages outgoing correspondence in the user's mailbox, ready to be sent under their name by a later action or a distracted human."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+  - id: microsoft-365.outlook_trash_thread
+    object: Thread
+    action: outlook_trash_thread
+    category: Messaging
+    risk: medium
+    business_impact: "Moves an entire conversation to Deleted Items, pulling the thread out of the active mailbox until someone restores it."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+  - id: microsoft-365.outlook_create_filter
+    object: InboxRule
+    action: outlook_create_filter
+    category: Operations
+    risk: high
+    business_impact: "Installs an inbox rule that can silently auto-forward, move, or delete incoming mail, a long-standing account-takeover and evasion technique."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+  - id: microsoft-365.outlook_delete_filter
+    object: InboxRule
+    action: outlook_delete_filter
+    category: Operations
+    risk: medium
+    business_impact: "Removes an inbox rule, which can undo mail routing that compliance or security teams put in place."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+  - id: microsoft-365.outlook_set_vacation
+    object: MailboxSettings
+    action: outlook_set_vacation
+    category: Operations
+    risk: medium
+    business_impact: "Publishes an automatic reply to every inbound sender, including external parties, disclosing absence dates and alternate contacts."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Content & Files ----------
+
+  # source: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+  - id: microsoft-365.sharepoint_delete_item
+    object: DriveItem
+    action: sharepoint_delete_item
+    category: Content & Files
+    risk: high
+    business_impact: "Removes a file or an entire folder tree from a shared library into the recycle bin, cutting off everyone who depends on that content."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+  - id: microsoft-365.sharepoint_update_file
+    object: DriveItem
+    action: sharepoint_update_file
+    category: Content & Files
+    risk: medium
+    business_impact: "Overwrites the contents of an existing library file, changing what every downstream reader sees until a prior version is restored."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+  - id: microsoft-365.sharepoint_upload_file
+    object: DriveItem
+    action: sharepoint_upload_file
+    category: Content & Files
+    risk: medium
+    business_impact: "Adds a new file to a shared document library, publishing agent-generated content to everyone with access to that site."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+  - id: microsoft-365.sharepoint_copy_item
+    object: DriveItem
+    action: sharepoint_copy_item
+    category: Content & Files
+    risk: medium
+    business_impact: "Duplicates a file or folder into another location, which can land confidential content in a library with looser permissions."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+  - id: microsoft-365.sharepoint_move_item
+    object: DriveItem
+    action: sharepoint_move_item
+    category: Content & Files
+    risk: medium
+    business_impact: "Relocates a file or folder to a different library or site, breaking existing links and shifting the content under a new permission set."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+  - id: microsoft-365.sharepoint_rename_item
+    object: DriveItem
+    action: sharepoint_rename_item
+    category: Content & Files
+    risk: low
+    business_impact: "Renames a file or folder in place; cosmetic but can break saved references that colleagues rely on."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Events ----------
+
+  # source: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+  - id: microsoft-365.outlook_create_event
+    object: Event
+    action: outlook_create_event
+    category: Events
+    risk: medium
+    business_impact: "Books a meeting and mails invitations to the named attendees, committing their time and exposing the subject line to every recipient."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+  - id: microsoft-365.outlook_update_event
+    object: Event
+    action: outlook_update_event
+    category: Events
+    risk: medium
+    business_impact: "Changes the time, location, or attendee list of an existing meeting and notifies everyone already invited."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide
+  - id: microsoft-365.outlook_delete_event
+    object: Event
+    action: outlook_delete_event
+    category: Events
+    risk: medium
+    business_impact: "Cancels a meeting off the organizer's calendar and every attendee's, with no automatic way to reinstate the original booking."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

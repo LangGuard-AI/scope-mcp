@@ -1,0 +1,194 @@
+schema_version: "1.3"
+platform: metabase
+display_name: Metabase
+logo: https://www.metabase.com/images/favicon.svg
+source: langguard-editorial
+updated: "2026-08"
+reference: https://www.metabase.com/docs/latest/ai/mcp
+server_website: https://www.metabase.com/docs/latest/ai/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://www.metabase.com/docs/latest/ai/mcp
+  - id: metabase.execute_sql
+    object: Database
+    action: execute_sql
+    description: "Execute a raw SQL query against a database. Requires native-query permission on the target database."
+    category: Data Access
+    risk: critical
+    business_impact: "Runs arbitrary SQL against a connected production database, able to pull entire tables of customer data or mutate rows wherever the connection's native-query permission allows."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.metabase.com/docs/latest/ai/mcp
+  - id: metabase.query
+    object: Table
+    action: query
+    description: "Run a query and return results, paging through large result sets with a continuation token."
+    category: Data Access
+    risk: high
+    business_impact: "Returns up to 2,000 rows of live warehouse data per invocation, exposing customer records and business metrics to the AI client in bulk."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.metabase.com/docs/latest/ai/mcp
+  - id: metabase.execute_query
+    object: Query
+    action: execute_query
+    description: "Execute a previously constructed query and return the results with column metadata, row count, and execution time."
+    category: Data Access
+    risk: high
+    business_impact: "Runs a previously built query handle and returns its result rows, surfacing whatever underlying records the question targets."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.metabase.com/docs/latest/ai/mcp
+  - id: metabase.construct_query
+    object: Query
+    action: construct_query
+    description: "Construct a query against a table or metric. Returns an opaque query handle that can be passed to execute_query."
+    category: Data Access
+    risk: low
+    business_impact: "Builds a query definition and returns an opaque handle; no rows leave Metabase until that handle is executed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.metabase.com/docs/latest/ai/mcp
+  - id: metabase.read_resource
+    object: Entity
+    action: read_resource
+    description: "Read up to five Metabase entities (or lists) per call by metabase:// URI."
+    category: Data Access
+    risk: low
+    business_impact: "Reads Metabase entity metadata such as collection contents and table field lists, revealing the shape of the underlying data model."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.metabase.com/docs/latest/ai/mcp
+  - id: metabase.search
+    object: Entity
+    action: search
+    description: "Find tables and metrics using keyword or natural language search."
+    category: Data Access
+    risk: low
+    business_impact: "Locates tables and metrics by keyword, disclosing which data assets exist in the instance."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.metabase.com/docs/latest/ai/mcp
+  - id: metabase.visualize_query
+    object: Query
+    action: visualize_query
+    description: "Render a query's results as an inline chart in your AI client."
+    category: Data Access
+    risk: low
+    business_impact: "Renders query results as an inline chart, moving result data into the AI client's sandboxed browser origin for display."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.metabase.com/docs/latest/ai/mcp
+  - id: metabase.render_drill_through
+    object: Query
+    action: render_drill_through
+    description: "Render the chart a person drilled into from an inline visualization."
+    category: Data Access
+    risk: low
+    business_impact: "Re-renders the drilled-into segment of a chart, returning the narrower slice of data sitting behind a single data point."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Content ----------
+
+  # source: https://www.metabase.com/docs/latest/ai/mcp
+  - id: metabase.update_question
+    object: Question
+    action: update_question
+    description: "Update a saved question. Setting collection_id moves the question to another collection."
+    category: Content
+    risk: high
+    business_impact: "Rewrites a saved question or moves it into another collection, changing the numbers business users see and the audience permitted to view them."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.metabase.com/docs/latest/ai/mcp
+  - id: metabase.update_dashboard
+    object: Dashboard
+    action: update_dashboard
+    description: "Update a dashboard's metadata (name, description, collection, archived)."
+    category: Content
+    risk: high
+    business_impact: "Renames, archives, or relocates a dashboard, pulling a report away from its audience or shifting it into a collection with different viewer permissions."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.metabase.com/docs/latest/ai/mcp
+  - id: metabase.create_dashboard
+    object: Dashboard
+    action: create_dashboard
+    description: "Create a new dashboard, optionally populated with saved questions."
+    category: Content
+    risk: low
+    business_impact: "Adds a dashboard, optionally pre-populated with saved questions, into a collection other users can browse."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.metabase.com/docs/latest/ai/mcp
+  - id: metabase.create_question
+    object: Question
+    action: create_question
+    description: "Save a query as a named question."
+    category: Content
+    risk: low
+    business_impact: "Saves a query as a named, reusable question that other Metabase users can run on demand."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.metabase.com/docs/latest/ai/mcp
+  - id: metabase.create_collection
+    object: Collection
+    action: create_collection
+    description: "Create a new collection, optionally nested under a parent collection."
+    category: Content
+    risk: low
+    business_impact: "Adds a collection for organizing content, inheriting view permissions from the parent it is nested under."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

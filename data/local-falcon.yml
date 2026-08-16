@@ -1,0 +1,365 @@
+schema_version: "1.3"
+platform: local-falcon
+display_name: Local Falcon
+logo: https://www.localfalcon.com/uploads/identity/logos/742656_falcon-ai-logo.svg
+source: langguard-editorial
+updated: "2026-08"
+mcp_server_url: https://mcp.localfalcon.com/mcp
+reference: https://github.com/local-falcon/mcp
+server_website: https://www.localfalcon.com/
+actions:
+  # ---------- Operations ----------
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.removeFalconGuardProtection
+    object: GuardLocation
+    action: removeFalconGuardProtection
+    description: "Removes locations from Falcon Guard entirely."
+    category: Operations
+    risk: high
+    business_impact: "Strips listing-change monitoring from one or more business locations and discards their Guard configuration, leaving unauthorized Google Business Profile edits undetected with no undo."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.pauseFalconGuardProtection
+    object: GuardLocation
+    action: pauseFalconGuardProtection
+    description: "Pauses protection for specified locations."
+    category: Operations
+    risk: medium
+    business_impact: "Suspends Falcon Guard monitoring on selected locations, creating a detection gap during which listing hijacks or profile edits go unreported."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.addLocationsToFalconGuard
+    object: GuardLocation
+    action: addLocationsToFalconGuard
+    description: "Adds locations to Falcon Guard protection."
+    category: Operations
+    risk: medium
+    business_impact: "Enrolls business locations into Falcon Guard monitoring, consuming plan entitlements and starting recurring billable checks on each location added."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.resumeFalconGuardProtection
+    object: GuardLocation
+    action: resumeFalconGuardProtection
+    description: "Resumes protection for paused locations."
+    category: Operations
+    risk: low
+    business_impact: "Restarts Falcon Guard monitoring on paused locations, restoring detection coverage and resuming the associated recurring checks."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.createLocalFalconCampaign
+    object: Campaign
+    action: createLocalFalconCampaign
+    description: "Creates a new campaign with scheduled recurring scans."
+    category: Operations
+    risk: medium
+    business_impact: "Sets up a recurring scan schedule that draws down account credits on every run, committing ongoing spend without a separate budget approval step."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.runLocalFalconCampaign
+    object: Campaign
+    action: runLocalFalconCampaign
+    description: "Manually triggers a campaign to run immediately."
+    category: Operations
+    risk: medium
+    business_impact: "Fires an entire campaign of grid scans on demand, consuming credits proportional to the campaign's location and keyword count."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.reactivateLocalFalconCampaign
+    object: Campaign
+    action: reactivateLocalFalconCampaign
+    description: "Reactivates a campaign deactivated due to insufficient credits."
+    category: Operations
+    risk: medium
+    business_impact: "Restarts a campaign that the platform shut off for running out of credits, re-opening the spend the credit guardrail had stopped."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.pauseLocalFalconCampaign
+    object: Campaign
+    action: pauseLocalFalconCampaign
+    description: "Pauses a campaign's scheduled runs."
+    category: Operations
+    risk: medium
+    business_impact: "Halts scheduled ranking scans, leaving gaps in the location's trend history that cannot be backfilled once the time window passes."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.resumeLocalFalconCampaign
+    object: Campaign
+    action: resumeLocalFalconCampaign
+    description: "Resumes a paused campaign."
+    category: Operations
+    risk: low
+    business_impact: "Restores a paused campaign's scan schedule and the credit draw that goes with it."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.runLocalFalconScan
+    object: Scan
+    action: runLocalFalconScan
+    description: "Runs a new scan at the specified coordinates to get ranking data for a business."
+    category: Operations
+    risk: medium
+    business_impact: "Executes a billable geo-grid rank scan at the given coordinates, spending account credits per grid point queried."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.saveLocalFalconBusinessLocationToAccount
+    object: Location
+    action: saveLocalFalconBusinessLocationToAccount
+    description: "Saves a business location to your account."
+    category: Operations
+    risk: low
+    business_impact: "Adds a business location to the account's saved list, making it available as a scan target for future reports."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Admin ----------
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.viewLocalFalconAccountInformation
+    object: Account
+    action: viewLocalFalconAccountInformation
+    description: "Retrieves account info including user, credits, and subscription details."
+    category: Identity & Admin
+    risk: medium
+    business_impact: "Surfaces the account holder's identity, remaining credit balance, and subscription tier into the agent transcript."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.getLocalFalconReviewsAnalysisReport
+    object: ReviewsAnalysisReport
+    action: getLocalFalconReviewsAnalysisReport
+    description: "Retrieves a specific Reviews Analysis report."
+    category: Data Access
+    risk: medium
+    business_impact: "Pulls an AI-generated analysis of customer reviews, exposing reviewer names and verbatim review text for a location into the agent context."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.listLocalFalconReviewsAnalysisReports
+    object: ReviewsAnalysisReport
+    action: listLocalFalconReviewsAnalysisReports
+    description: "Lists all Reviews Analysis reports with AI-powered review insights."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates every Reviews Analysis report on the account along with its summarized review insights."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.getLocalFalconReport
+    object: ScanReport
+    action: getLocalFalconReport
+    description: "Retrieves a specific scan report by report key."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the full geo-grid ranking results for one scan, including per-point competitor placement for the searched keyword."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.listLocalFalconScanReports
+    object: ScanReport
+    action: listLocalFalconScanReports
+    description: "Lists all existing scan reports."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates every scan report on the account, revealing which locations and keywords the business tracks."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.getLocalFalconGuardReport
+    object: GuardReport
+    action: getLocalFalconGuardReport
+    description: "Retrieves a specific Falcon Guard report by place_id."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the monitoring history for one protected location, including detected changes to its business listing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.listLocalFalconGuardReports
+    object: GuardReport
+    action: listLocalFalconGuardReports
+    description: "Lists Falcon Guard reports for monitored locations."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates Falcon Guard reports across monitored locations, showing which sites are under listing protection."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.listAllLocalFalconLocations
+    object: Location
+    action: listAllLocalFalconLocations
+    description: "Lists all business locations saved in your account."
+    category: Data Access
+    risk: low
+    business_impact: "Returns every business location saved on the account, giving a full picture of the client's physical footprint."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.getLocalFalconGoogleBusinessLocations
+    object: Location
+    action: getLocalFalconGoogleBusinessLocations
+    description: "Searches Google for business listings to find Place IDs."
+    category: Data Access
+    risk: low
+    business_impact: "Queries Google for public business listings and returns their Place IDs for use as scan targets."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.searchForLocalFalconBusinessLocation
+    object: Location
+    action: searchForLocalFalconBusinessLocation
+    description: "Searches for business locations on Google or Apple platforms."
+    category: Data Access
+    risk: low
+    business_impact: "Looks up public business listings on Google or Apple Maps to resolve a location before scanning it."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.getLocalFalconCompetitorReport
+    object: CompetitorReport
+    action: getLocalFalconCompetitorReport
+    description: "Retrieves a specific competitor report."
+    category: Data Access
+    risk: low
+    business_impact: "Returns competitive ranking analysis for a location, exposing which rival businesses outrank the client and where."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.getLocalFalconCampaignReport
+    object: CampaignReport
+    action: getLocalFalconCampaignReport
+    description: "Retrieves a specific campaign report."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregated ranking results for a campaign across all its scheduled scans and tracked locations."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.getLocalFalconTrendReport
+    object: TrendReport
+    action: getLocalFalconTrendReport
+    description: "Retrieves a specific trend report."
+    category: Data Access
+    risk: low
+    business_impact: "Returns ranking movement over time for a tracked location and keyword set, used to judge SEO campaign performance."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/local-falcon/mcp
+  - id: local-falcon.getLocalFalconRankingAtCoordinate
+    object: Ranking
+    action: getLocalFalconRankingAtCoordinate
+    description: "Single-point ranking check at one coordinate."
+    category: Data Access
+    risk: low
+    business_impact: "Checks a business's map-pack rank at a single coordinate, drawing a small credit charge per lookup."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

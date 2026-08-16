@@ -1,0 +1,71 @@
+schema_version: "1.3"
+platform: msci
+display_name: MSCI
+logo: https://www.msci.com/favicon.ico
+source: langguard-editorial
+updated: "2026-08"
+reference: https://www.msci.com/downloads/web/msci-com/data-and-analytics/private-asset-solutions/ai-for-private-markets/msci-mcp-msci-connector-user-guide.pdf
+actions:
+  # ---------- Financial ----------
+
+  # source: https://www.msci.com/downloads/web/msci-com/data-and-analytics/private-asset-solutions/ai-for-private-markets/msci-mcp-msci-connector-user-guide.pdf
+  - id: msci.total_plan_manager_tpm
+    object: Portfolio
+    action: total_plan_manager_tpm
+    id_form: capability
+    description: "Total Plan Manager (TPM)"
+    category: Financial
+    risk: medium
+    business_impact: "Surfaces plan-wide portfolio holdings, exposures, liquidity, and cash flow across public and private markets, exposing the institution's confidential positions to the agent."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://www.msci.com/downloads/web/msci-com/data-and-analytics/private-asset-solutions/ai-for-private-markets/msci-mcp-msci-connector-user-guide.pdf
+  - id: msci.private_capital_intelligence_pci
+    object: Fund
+    action: private_capital_intelligence_pci
+    id_form: capability
+    description: "Private Capital Intelligence (PCI)"
+    category: Financial
+    risk: low
+    business_impact: "Benchmarks private capital funds on IRR, TVPI, and DPI across vintages and asset classes, returning licensed fund-universe analytics that carry redistribution restrictions."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://www.msci.com/downloads/web/msci-com/data-and-analytics/private-asset-solutions/ai-for-private-markets/msci-mcp-msci-connector-user-guide.pdf
+  - id: msci.msci_indexai_insights
+    object: Index
+    action: msci_indexai_insights
+    id_form: capability
+    description: "MSCI IndexAI Insights™"
+    category: Data Access
+    risk: low
+    business_impact: "Returns MSCI index performance, constituents, and factor analytics under the client's entitlements, pulling licensed proprietary index data into the conversation."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://www.msci.com/downloads/web/msci-com/data-and-analytics/private-asset-solutions/ai-for-private-markets/msci-mcp-msci-connector-user-guide.pdf
+  - id: msci.msci_real_assets_index
+    object: Index
+    action: msci_real_assets_index
+    id_form: capability
+    description: "MSCI Real Assets Index"
+    category: Data Access
+    risk: low
+    business_impact: "Queries property, infrastructure, and debt fund index performance and fundamentals, returning licensed real-asset benchmarks whose infrastructure and debt datasets require separate entitlements."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

@@ -1,0 +1,323 @@
+schema_version: "1.3"
+platform: lusha
+display_name: Lusha
+logo: https://www.lusha.com/favicon.ico
+source: langguard-editorial
+updated: "2026-08"
+mcp_server_url: https://mcp.lusha.com/mcp
+reference: https://docs.lusha.com/mcp-docs
+server_website: https://www.lusha.com/
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.lusha.com/mcp-docs
+  - id: lusha.prospecting_contact_enrich
+    object: Contact
+    action: prospecting_contact_enrich
+    description: "Enrich contacts by ID to reveal emails and phones (credits consumed)"
+    category: Data Access
+    risk: critical
+    business_impact: "Reveals direct email addresses and mobile numbers for a batch of individuals in one call, pulling third-party personal data into the agent's context and burning purchased credits per record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.lusha.com/mcp-docs
+  - id: lusha.contacts_search
+    object: Contact
+    action: contacts_search
+    description: "Enrich contact data using email, LinkedIn URL, or name + company"
+    category: Data Access
+    risk: high
+    business_impact: "Resolves a named person or LinkedIn profile into verified contact details, disclosing personal data the individual never supplied to the caller."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.lusha.com/mcp-docs
+  - id: lusha.prospecting_contact_search
+    object: Contact
+    action: prospecting_contact_search
+    description: "Search contacts by job title, seniority, location, department, and more"
+    category: Data Access
+    risk: high
+    business_impact: "Builds arbitrarily large lists of identifiable people filtered by role, seniority and location, assembling a targeting set out of third-party personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.lusha.com/mcp-docs
+  - id: lusha.lookalike_contacts
+    object: Contact
+    action: lookalike_contacts
+    description: "Find contacts similar to a seed contact"
+    category: Data Access
+    risk: high
+    business_impact: "Expands one known individual into a list of similar people, generating personal-data profiles of individuals the caller had no prior relationship with."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.lusha.com/mcp-docs
+  - id: lusha.signals_contacts_search
+    object: ContactSignal
+    action: signals_contacts_search
+    description: "Resolve contacts and return recent activity signals"
+    category: Data Access
+    risk: high
+    business_impact: "Identifies individuals from partial input and returns their recent behavioural activity, combining identity resolution with tracking data about named people."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.lusha.com/mcp-docs
+  - id: lusha.signals_contacts_get
+    object: ContactSignal
+    action: signals_contacts_get
+    description: "Get signals for known contacts by ID"
+    category: Data Access
+    risk: high
+    business_impact: "Returns recent behavioural signals for named individuals, exposing tracking data about identifiable people to whoever holds the contact ids."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.lusha.com/mcp-docs
+  - id: lusha.recommendations_contacts_get
+    object: ContactRecommendation
+    action: recommendations_contacts_get
+    description: "Get paginated, scored contact recommendations with signals and Target Profile attribution"
+    category: Data Access
+    risk: high
+    business_impact: "Pages through scored profiles of individuals with attached activity signals, letting a single agent harvest a ranked personal-data set across unlimited pages."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Revenue & Pipeline ----------
+
+  # source: https://docs.lusha.com/mcp-docs
+  - id: lusha.companies_search
+    object: Company
+    action: companies_search
+    description: "Retrieve company data using domain or company name"
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Returns firmographic details for a company by domain or name; read-only and limited to organisation-level business data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.lusha.com/mcp-docs
+  - id: lusha.prospecting_company_search
+    object: Company
+    action: prospecting_company_search
+    description: "Search companies by firmographic and technographic filters"
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Compiles target-account lists from firmographic and technographic filters; no personal data, though results shape downstream outreach."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.lusha.com/mcp-docs
+  - id: lusha.prospecting_company_enrich
+    object: Company
+    action: prospecting_company_enrich
+    description: "Enrich companies by ID for detailed firmographic data"
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Pulls detailed firmographics for specified company ids and draws down the account's purchased credit balance."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.lusha.com/mcp-docs
+  - id: lusha.lookalike_companies
+    object: Company
+    action: lookalike_companies
+    description: "Find companies similar to a seed company"
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Expands a seed account into similar organisations, widening the target list without touching personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.lusha.com/mcp-docs
+  - id: lusha.signals_companies_search
+    object: CompanySignal
+    action: signals_companies_search
+    description: "Resolve companies and return recent activity signals"
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Matches organisations and returns recent buying-intent signals about them; organisation-level intelligence with no individual identified."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.lusha.com/mcp-docs
+  - id: lusha.signals_companies_get
+    object: CompanySignal
+    action: signals_companies_get
+    description: "Get signals for known companies by ID"
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Fetches recent activity signals for specified company ids, a read-only lookup on organisation-level data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.lusha.com/mcp-docs
+  - id: lusha.recommendations_companies_get
+    object: CompanyRecommendation
+    action: recommendations_companies_get
+    description: "Get paginated, scored company recommendations with signals and Target Profile attribution"
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Pages through scored account recommendations with intent signals; steers pipeline priorities but exposes only organisation-level data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://docs.lusha.com/mcp-docs
+  - id: lusha.account_usage
+    object: Account
+    action: account_usage
+    description: "Check credit balance, rate-limit status, and plan info"
+    category: Operations
+    risk: low
+    business_impact: "Reports remaining credits, rate-limit headroom and plan tier, exposing subscription and consumption metadata for the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.lusha.com/mcp-docs
+  - id: lusha.recommendations_status_get
+    object: RecommendationJob
+    action: recommendations_status_get
+    description: "Check whether a user's recommendations are `none`, `computing`, or `done`"
+    category: Operations
+    risk: low
+    business_impact: "Reports whether a user's recommendation set is still computing; status metadata only, with no record content returned."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.lusha.com/mcp-docs
+  - id: lusha.prospecting_contact_filters
+    object: FilterSet
+    action: prospecting_contact_filters
+    description: "Get available filter values for contact prospecting (no credits charged)"
+    category: Operations
+    risk: low
+    business_impact: "Lists the valid filter values for contact prospecting; metadata lookup that charges no credits and returns no personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.lusha.com/mcp-docs
+  - id: lusha.prospecting_company_filters
+    object: FilterSet
+    action: prospecting_company_filters
+    description: "Get available filter values for company prospecting (no credits charged)"
+    category: Operations
+    risk: low
+    business_impact: "Lists the valid filter values for company prospecting; metadata lookup that charges no credits."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.lusha.com/mcp-docs
+  - id: lusha.signals_contact_filters
+    object: FilterSet
+    action: signals_contact_filters
+    description: "Get available filter values for contact signals (no credits charged)"
+    category: Operations
+    risk: low
+    business_impact: "Enumerates the signal filters available for contacts; a schema lookup that returns no individual's data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.lusha.com/mcp-docs
+  - id: lusha.signals_company_filters
+    object: FilterSet
+    action: signals_company_filters
+    description: "Get available filter values for company signals (no credits charged)"
+    category: Operations
+    risk: low
+    business_impact: "Enumerates the signal filters available for companies; a schema lookup with no credit cost."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.lusha.com/mcp-docs
+  - id: lusha.recommendations_contacts_filters
+    object: FilterSet
+    action: recommendations_contacts_filters
+    description: "Get valid signal types and Target Profiles for filtering contact recommendations"
+    category: Operations
+    risk: low
+    business_impact: "Returns the signal types and Target Profiles usable when filtering contact recommendations; configuration metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.lusha.com/mcp-docs
+  - id: lusha.recommendations_companies_filters
+    object: FilterSet
+    action: recommendations_companies_filters
+    description: "Get valid signal types and Target Profiles for filtering company recommendations"
+    category: Operations
+    risk: low
+    business_impact: "Returns the signal types and Target Profiles usable when filtering company recommendations; configuration metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

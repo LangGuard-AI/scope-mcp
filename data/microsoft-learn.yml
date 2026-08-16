@@ -1,0 +1,53 @@
+schema_version: "1.3"
+platform: microsoft-learn
+display_name: Microsoft Learn
+logo: https://learn.microsoft.com/favicon.ico
+source: langguard-editorial
+updated: "2026-08"
+reference: https://learn.microsoft.com/api/mcp
+server_website: https://learn.microsoft.com
+mcp_server_url: https://learn.microsoft.com/api/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://learn.microsoft.com/api/mcp
+  - id: microsoft-learn.microsoft_docs_search
+    object: Document
+    action: microsoft_docs_search
+    description: "Searches official Microsoft and Azure documentation and returns up to 10 ranked content excerpts."
+    category: Data Access
+    risk: low
+    business_impact: "Returns excerpts from publicly published Microsoft documentation; no tenant data is read and nothing is written, so the worst case is retrieval of stale or off-target guidance."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/api/mcp
+  - id: microsoft-learn.microsoft_code_sample_search
+    object: CodeSample
+    action: microsoft_code_sample_search
+    description: "Searches Microsoft Learn documentation for code snippets and implementation examples."
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces public code samples that an agent may paste into a codebase, so unreviewed output can carry outdated patterns into production source."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/api/mcp
+  - id: microsoft-learn.microsoft_docs_fetch
+    object: Document
+    action: microsoft_docs_fetch
+    description: "Fetches a Microsoft Learn documentation page and converts the full content to markdown."
+    category: Data Access
+    risk: low
+    business_impact: "Pulls the complete text of a documentation page into the agent context, making page content an untrusted input that can steer subsequent reasoning."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial

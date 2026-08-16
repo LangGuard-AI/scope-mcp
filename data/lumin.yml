@@ -1,0 +1,113 @@
+schema_version: "1.3"
+platform: lumin
+display_name: Lumin PDF
+logo: https://www.luminpdf.com/favicon/favicon-32x32.png?v=0.1
+source: langguard-editorial
+updated: "2026-08"
+mcp_server_url: https://mcp.luminpdf.com/mcp
+reference: https://github.com/luminpdf/lumin-mcp-server
+server_website: https://github.com/luminpdf/lumin-mcp-server
+actions:
+  # ---------- Agreements & Signatures ----------
+
+  # source: https://raw.githubusercontent.com/luminpdf/lumin-mcp-server/main/README.md
+  - id: lumin.send_signature_request_on_lumin
+    object: SignatureRequest
+    action: send_signature_request_on_lumin
+    description: "Create and send a signature request with attached documents."
+    category: Agreements & Signatures
+    risk: high
+    business_impact: "Transmits attached documents and signer names and email addresses to external recipients and starts execution of a binding agreement outside the organization's review path."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/luminpdf/lumin-mcp-server/main/README.md
+  - id: lumin.cancel_signature_request_on_lumin_by_id
+    object: SignatureRequest
+    action: cancel_signature_request_on_lumin_by_id
+    description: "Cancel a pending signature request."
+    category: Agreements & Signatures
+    risk: high
+    business_impact: "Voids an in-flight signature request, invalidating any signatures already collected and forcing the agreement to be re-issued from scratch."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/luminpdf/lumin-mcp-server/main/README.md
+  - id: lumin.get_signature_request_on_lumin_by_id
+    object: SignatureRequest
+    action: get_signature_request_on_lumin_by_id
+    description: "Fetch details of a signature request using its ID."
+    category: Agreements & Signatures
+    risk: medium
+    business_impact: "Returns signer identities, contact details and agreement status for a single signature request, exposing counterparty personal data to the agent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/luminpdf/lumin-mcp-server/main/README.md
+  - id: lumin.upload_file_to_lumin
+    object: File
+    action: upload_file_to_lumin
+    description: "Upload files to Lumin."
+    category: Data Access
+    risk: medium
+    business_impact: "Pushes arbitrary local or remote files into the Lumin document store, where contract or customer content becomes retrievable by anyone with workspace access."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/luminpdf/lumin-mcp-server/main/README.md
+  - id: lumin.get_workspace_list_of_user_on_lumin
+    object: Workspace
+    action: get_workspace_list_of_user_on_lumin
+    description: "Retrieve all workspaces associated with the user."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates every workspace the authenticated user belongs to, mapping the document estate the agent can subsequently reach."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/luminpdf/lumin-mcp-server/main/README.md
+  - id: lumin.lumin_markdown2pdf
+    object: Document
+    action: lumin_markdown2pdf
+    description: "Convert Markdown content into a PDF via Lumin."
+    category: Data Access
+    risk: low
+    business_impact: "Renders supplied Markdown into a PDF hosted by Lumin; content passed to the converter leaves the local environment but no existing record is changed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Access ----------
+
+  # source: https://raw.githubusercontent.com/luminpdf/lumin-mcp-server/main/README.md
+  - id: lumin.get_lumin_user_information
+    object: User
+    action: get_lumin_user_information
+    description: "Retrieve information about the current Lumin user."
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads the authenticated account's profile, including name and email address, confirming which identity the agent is operating as."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

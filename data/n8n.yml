@@ -1,0 +1,366 @@
+schema_version: "1.3"
+platform: n8n
+display_name: n8n
+logo: https://n8n.io/favicon.ico
+source: langguard-editorial
+updated: "2026-08"
+reference: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+server_website: https://docs.n8n.io/connect/connect-to-n8n-mcp-server
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.list_credentials
+    object: Credential
+    action: list_credentials
+    description: "Lists credentials the current user can access, without returning credential secret data."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Enumerates every credential the caller can reference from a workflow — names and IDs only, no secret material, but it maps which third-party systems the instance can reach."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.explore_node_resources
+    object: NodeResource
+    action: explore_node_resources
+    description: "Resolves the real values behind a node's resource locator or load-options dropdown using a configured credential."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Uses a stored credential to query a connected service live and return its real resources — Slack channels, Google Sheets tabs, available models — exposing the connected account's inventory."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Secrets & Workflows ----------
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.publish_workflow
+    object: Workflow
+    action: publish_workflow
+    description: "Publishes (activates) a workflow, creating an active production version from the current draft."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Promotes a draft to the live production version, putting automation that holds production credentials into service with no second reviewer in the loop."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.unpublish_workflow
+    object: Workflow
+    action: unpublish_workflow
+    description: "Unpublishes (deactivates) a workflow so it is no longer available for production execution."
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Takes a live automation out of production; downstream business processes stop running silently until someone republishes it."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.create_workflow_from_code
+    object: Workflow
+    action: create_workflow_from_code
+    description: "Creates a workflow in n8n from validated Workflow SDK code."
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Materializes a new workflow from supplied SDK code, including Code nodes and nodes bound to stored credentials; it stays a draft until published."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.update_workflow
+    object: Workflow
+    action: update_workflow
+    description: "Updates an existing workflow by applying an ordered, atomic batch of targeted partial updates."
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Rewrites the node graph, parameters, and credential bindings of an existing workflow; the batch is atomic but the prior definition is replaced."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server
+  - id: n8n.execute_workflow
+    object: Workflow
+    action: execute_workflow
+    description: "Executes a workflow by ID in production mode, returning the execution ID immediately."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Runs the published version of a workflow against production credentials, so every external side effect it encodes — emails sent, records written, files moved — happens for real and cannot be undone."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.test_workflow
+    object: Workflow
+    action: test_workflow
+    description: "Tests a workflow using pin data to bypass external services; trigger, credentialed, and HTTP Request nodes are pinned while other nodes execute normally."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Pins credentialed nodes but still executes credential-free I/O nodes for real, so Execute Command and file read/write nodes run against the n8n host during a nominal test."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.archive_workflow
+    object: Workflow
+    action: archive_workflow
+    description: "Archives a workflow in n8n by its ID."
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Removes a workflow from the active set so it no longer appears in normal use; recoverable, but any process depending on it stops."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.get_workflow_execution
+    object: Execution
+    action: get_workflow_execution
+    description: "Gets execution details by execution ID and workflow ID; returns metadata only by default."
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Retrieves a single execution record whose payload can contain whatever data the workflow processed, including customer records pulled from connected systems."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.search_workflow_executions
+    object: Execution
+    action: search_workflow_executions
+    description: "Searches workflow executions with optional filters, returning execution metadata including status, timing, and workflow ID."
+    category: Secrets & Workflows
+    risk: low
+    business_impact: "Returns execution metadata — status, timing, workflow ID — useful for run-history reconnaissance but carrying no payload data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Agents & Automation ----------
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.create_agent
+    object: Agent
+    action: create_agent
+    description: "Creates an agent draft, optionally with its initial model, credential, instructions, and tool configuration."
+    category: Agents & Automation
+    risk: medium
+    business_impact: "Stands up a new AI agent draft with a model, a credential, and system instructions — the governed configuration surface for an autonomous actor inside the tenant."
+    compliance: [ISO_42001, NIST_AI_RMF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.mutate_agent
+    object: Agent
+    action: mutate_agent
+    description: "Applies one config, skill, task, or custom-tool mutation to an agent draft and returns the next configHash."
+    category: Agents & Automation
+    risk: high
+    business_impact: "Changes what an AI agent is allowed to do — its instructions, skills, scheduled tasks, and attached custom tools — widening the blast radius of everything the agent later executes."
+    compliance: [ISO_42001, NIST_AI_RMF, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.publish_agent
+    object: Agent
+    action: publish_agent
+    description: "Publishes a valid agent draft and activates its tasks and integrations."
+    category: Agents & Automation
+    risk: high
+    business_impact: "Turns a draft into a live agent and activates its scheduled tasks and chat integrations, putting an autonomous actor into production without a separate approver."
+    compliance: [ISO_42001, NIST_AI_RMF, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.unpublish_agent
+    object: Agent
+    action: unpublish_agent
+    description: "Unpublishes an agent and stops its live tasks and integrations."
+    category: Agents & Automation
+    risk: medium
+    business_impact: "Stops a live agent's tasks and chat integrations; work routed through that agent quietly stops being handled until it is republished."
+    compliance: [ISO_42001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.revert_agent
+    object: Agent
+    action: revert_agent
+    description: "Restores an agent draft from a published version, overwriting the draft's config, skills, tasks, and custom tools."
+    category: Agents & Automation
+    risk: medium
+    business_impact: "Overwrites the working draft with an older published version, discarding unpublished config, skill, task, and custom-tool changes."
+    compliance: [ISO_42001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.delete_agent
+    object: Agent
+    action: delete_agent
+    description: "Permanently deletes an agent and its associated resources."
+    category: Agents & Automation
+    risk: critical
+    business_impact: "Permanently destroys an agent along with its skills, tasks, custom tools, and version history; a single caller can wipe the whole configuration with no recovery path."
+    compliance: [ISO_42001, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.update_agent_integration
+    object: AgentIntegration
+    action: update_agent_integration
+    description: "Configures or disconnects a Slack, Telegram, or Linear conversation integration for an agent."
+    category: Agents & Automation
+    risk: high
+    business_impact: "Wires an AI agent into a Slack, Telegram, or Linear workspace — or severs that link — changing which conversations the agent can read and post into."
+    compliance: [ISO_42001, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.verify_agent_mcp_server
+    object: McpServer
+    action: verify_agent_mcp_server
+    description: "Tests an MCP server with a user-accessible credential and returns its available tools."
+    category: Agents & Automation
+    risk: medium
+    business_impact: "Opens a live connection to an external MCP server using a stored credential and enumerates its tools, vetting a third-party tool surface before it is attached to an agent."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.add_data_table_rows
+    object: DataTableRow
+    action: add_data_table_rows
+    description: "Inserts rows into an existing data table, each row mapping column names to values."
+    category: Data Access
+    risk: medium
+    business_impact: "Bulk-inserts rows into a shared data table that production workflows read from, and the values written may include personal data supplied by the agent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: low
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.delete_data_table_column
+    object: DataTableColumn
+    action: delete_data_table_column
+    description: "Deletes a column from a data table, permanently removing the column and all its data."
+    category: Data Access
+    risk: high
+    business_impact: "Permanently drops a column and every value stored in it; one caller can destroy a field of records, including personal data, with no undo."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: low
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.rename_data_table_column
+    object: DataTableColumn
+    action: rename_data_table_column
+    description: "Renames a column in a data table."
+    category: Data Access
+    risk: medium
+    business_impact: "Renames a column that live workflows reference by name, so automations reading that field can start failing or writing to the wrong place."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.rename_data_table
+    object: DataTable
+    action: rename_data_table
+    description: "Renames an existing data table."
+    category: Data Access
+    risk: low
+    business_impact: "Changes a data table's display name; the table ID and its contents are untouched, so workflow bindings keep working."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.add_data_table_column
+    object: DataTableColumn
+    action: add_data_table_column
+    description: "Adds a new column to an existing data table."
+    category: Data Access
+    risk: low
+    business_impact: "Extends a data table's schema with an additional column; existing rows and workflow bindings are unaffected."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference
+  - id: n8n.create_data_table
+    object: DataTable
+    action: create_data_table
+    description: "Creates a new data table with the specified columns."
+    category: Data Access
+    risk: low
+    business_impact: "Provisions a new data table in a project; empty on creation, so the immediate impact is storage footprint rather than data exposure."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

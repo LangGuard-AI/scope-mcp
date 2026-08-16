@@ -1,0 +1,320 @@
+schema_version: "1.3"
+platform: london-stock-exchange-group
+display_name: LSEG (London Stock Exchange Group)
+logo: https://www.lseg.com/favicon.ico
+source: langguard-editorial
+updated: "2026-08"
+reference: https://github.com/LSEG-API-Samples/lseg-claude-plugin
+server_website: https://github.com/LSEG-API-Samples/lseg-claude-plugin
+actions:
+  # ---------- Financial ----------
+
+  # source: https://raw.githubusercontent.com/LSEG-API-Samples/lseg-claude-plugin/main/CONNECTORS.md
+  - id: london-stock-exchange-group.bond_price
+    object: Bond
+    action: bond_price
+    description: "Calculate bond pricing, valuation, and analytics from ISIN, RIC, CUSIP, or AssetId; returns yield, duration, convexity, DV01, accrued interest."
+    category: Financial
+    risk: low
+    business_impact: "Returns an instrument-level bond valuation that can be relied on as a fair-value mark; a stale or mis-parameterised what-if override lands wrong numbers in valuation workpapers."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/LSEG-API-Samples/lseg-claude-plugin/main/CONNECTORS.md
+  - id: london-stock-exchange-group.bond_future_price
+    object: BondFuture
+    action: bond_future_price
+    description: "Calculate bond future pricing and analytics; returns fair value, cheapest-to-deliver, delivery basket, conversion factors, contract DV01."
+    category: Financial
+    risk: low
+    business_impact: "Produces futures fair value and cheapest-to-deliver identification used to mark derivative positions and size hedges."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/LSEG-API-Samples/lseg-claude-plugin/main/CONNECTORS.md
+  - id: london-stock-exchange-group.fx_spot_price
+    object: FxRate
+    action: fx_spot_price
+    description: "FX spot rate pricing for ISO currency pairs; returns mid/bid/ask rates."
+    category: Financial
+    risk: low
+    business_impact: "Supplies the spot rate used for currency translation and settlement figures, so an incorrect pair or timestamp propagates directly into booked amounts."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/LSEG-API-Samples/lseg-claude-plugin/main/CONNECTORS.md
+  - id: london-stock-exchange-group.fx_forward_price
+    object: FxForward
+    action: fx_forward_price
+    description: "FX forward rate pricing at specific tenors or dates; returns forward points, outright rates, and carry."
+    category: Financial
+    risk: low
+    business_impact: "Returns outright forward rates and carry used to value FX forward contracts and hedge positions carried on the balance sheet."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/LSEG-API-Samples/lseg-claude-plugin/main/CONNECTORS.md
+  - id: london-stock-exchange-group.ir_swap
+    object: InterestRateSwap
+    action: ir_swap
+    description: "Interest rate swap pricing; lists templates by currency/index then prices swaps at specified tenors, returning par rates, DV01, NPV."
+    category: Financial
+    risk: low
+    business_impact: "Prices interest rate swaps and returns NPV and DV01 figures that feed derivative valuation and hedge-effectiveness assessments."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/LSEG-API-Samples/lseg-claude-plugin/main/CONNECTORS.md
+  - id: london-stock-exchange-group.option_value
+    object: Option
+    action: option_value
+    description: "Option valuation for vanilla, barrier, binary, and Asian structures; returns premium, full Greeks, and risk metrics."
+    category: Financial
+    risk: low
+    business_impact: "Values exotic and vanilla options and returns the Greeks used to mark option books and set risk limits; model or input errors surface as mispriced positions."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/LSEG-API-Samples/lseg-claude-plugin/main/CONNECTORS.md
+  - id: london-stock-exchange-group.fixed_income_risk_analytics
+    object: Bond
+    action: fixed_income_risk_analytics
+    description: "Bond risk analytics: OAS, effective duration, key rate durations, convexity."
+    category: Financial
+    risk: low
+    business_impact: "Generates the OAS and duration figures that underpin portfolio risk disclosures and limit monitoring for fixed income books."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/LSEG-API-Samples/lseg-claude-plugin/main/CONNECTORS.md
+  - id: london-stock-exchange-group.yieldbook_scenario
+    object: Bond
+    action: yieldbook_scenario
+    description: "Bond scenario analysis: price and yield under parallel rate shifts."
+    category: Financial
+    risk: low
+    business_impact: "Runs rate-shock scenarios whose outputs support interest-rate sensitivity disclosures and internal stress reporting."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/LSEG-API-Samples/lseg-claude-plugin/main/CONNECTORS.md
+  - id: london-stock-exchange-group.yieldbook_cashflow
+    object: Bond
+    action: yieldbook_cashflow
+    description: "Bond cashflow projections: future coupon and principal payment schedules."
+    category: Financial
+    risk: low
+    business_impact: "Projects coupon and principal schedules used for liquidity planning and accrual forecasting; read-only and reversible if the projection is discarded."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/LSEG-API-Samples/lseg-claude-plugin/main/CONNECTORS.md
+  - id: london-stock-exchange-group.interest_rate_curve
+    object: YieldCurve
+    action: interest_rate_curve
+    description: "Government yield curves; lists available curves then calculates curve points, returning par/zero rates, discount factors, forward rates."
+    category: Financial
+    risk: low
+    business_impact: "Retrieves discount factors and zero rates used as model inputs for discounting; consumed downstream rather than booked directly."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/LSEG-API-Samples/lseg-claude-plugin/main/CONNECTORS.md
+  - id: london-stock-exchange-group.credit_curve
+    object: CreditCurve
+    action: credit_curve
+    description: "Credit spread curves searchable by country and issuer type, then calculates the spread term structure."
+    category: Financial
+    risk: low
+    business_impact: "Returns issuer and sovereign credit spread term structures used to gauge credit risk and price spread-sensitive instruments."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/LSEG-API-Samples/lseg-claude-plugin/main/CONNECTORS.md
+  - id: london-stock-exchange-group.inflation_curve
+    object: InflationCurve
+    action: inflation_curve
+    description: "Inflation breakeven curves searchable by country/currency, returning breakeven rates and real yields."
+    category: Financial
+    risk: low
+    business_impact: "Returns breakeven inflation and real yield curves used in linker analysis and macro positioning; read-only market data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/LSEG-API-Samples/lseg-claude-plugin/main/CONNECTORS.md
+  - id: london-stock-exchange-group.fx_forward_curve
+    object: FxCurve
+    action: fx_forward_curve
+    description: "FX forward point curves; lists curves then calculates forward points across standard tenors."
+    category: Financial
+    risk: low
+    business_impact: "Returns forward point term structures across tenors as a pricing input for FX hedging analysis; no position or booking side effects."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/LSEG-API-Samples/lseg-claude-plugin/main/CONNECTORS.md
+  - id: london-stock-exchange-group.fx_vol_surface
+    object: VolatilitySurface
+    action: fx_vol_surface
+    description: "FX volatility surface generation using the SABR model; returns vol across tenors and delta strikes."
+    category: Financial
+    risk: low
+    business_impact: "Builds an FX volatility surface used as a model input for option pricing; a calibration error misprices downstream valuations."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/LSEG-API-Samples/lseg-claude-plugin/main/CONNECTORS.md
+  - id: london-stock-exchange-group.equity_vol_surface
+    object: VolatilitySurface
+    action: equity_vol_surface
+    description: "Equity implied volatility surface for equities and indices via RIC and futures via RICROOT."
+    category: Financial
+    risk: low
+    business_impact: "Returns implied volatility surfaces for equities, indices, and futures used in option strategy and risk analysis."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/LSEG-API-Samples/lseg-claude-plugin/main/CONNECTORS.md
+  - id: london-stock-exchange-group.option_template_list
+    object: OptionTemplate
+    action: option_template_list
+    description: "List available option templates for pricing."
+    category: Financial
+    risk: low
+    business_impact: "Enumerates the option templates available for pricing; metadata only, with no valuation or market data returned."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/LSEG-API-Samples/lseg-claude-plugin/main/CONNECTORS.md
+  - id: london-stock-exchange-group.tscc_historical_pricing_summaries
+    object: PriceHistory
+    action: tscc_historical_pricing_summaries
+    description: "Historical pricing summaries for any RIC across interday (daily, weekly, monthly) and intraday (1min to 1hr) intervals."
+    category: Data Access
+    risk: medium
+    business_impact: "Pulls intraday and interday price history for any instrument LSEG covers, making bulk extraction of licensed market content possible in a single agent session."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/LSEG-API-Samples/lseg-claude-plugin/main/CONNECTORS.md
+  - id: london-stock-exchange-group.qa_historical_equity_price
+    object: PriceHistory
+    action: qa_historical_equity_price
+    description: "Historical equity prices with OHLCV, total returns, and beta."
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves OHLCV history, total returns, and beta for equities; licensed content whose redistribution is governed by the LSEG data agreement."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/LSEG-API-Samples/lseg-claude-plugin/main/CONNECTORS.md
+  - id: london-stock-exchange-group.qa_ibes_consensus
+    object: AnalystEstimate
+    action: qa_ibes_consensus
+    description: "IBES analyst consensus estimates (EPS, revenue, EBITDA, DPS) with analyst count, dispersion, and high/low ranges."
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces forward-looking analyst consensus estimates that inform investment views; entitlement-restricted content that should not be republished externally."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/LSEG-API-Samples/lseg-claude-plugin/main/CONNECTORS.md
+  - id: london-stock-exchange-group.qa_company_fundamentals
+    object: CompanyFinancials
+    action: qa_company_fundamentals
+    description: "Reported company financials including income statement and balance sheet metrics for historical fiscal years."
+    category: Data Access
+    risk: low
+    business_impact: "Reads reported historical company financials used in valuation and comparables work; public reported data, read-only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/LSEG-API-Samples/lseg-claude-plugin/main/CONNECTORS.md
+  - id: london-stock-exchange-group.qa_macroeconomic
+    object: EconomicIndicator
+    action: qa_macroeconomic
+    description: "Macroeconomic indicators database searchable by mnemonic or description, returning latest values or time series."
+    category: Data Access
+    risk: low
+    business_impact: "Returns macroeconomic indicator levels and time series used for economic analysis; no client or position data involved."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/LSEG-API-Samples/lseg-claude-plugin/main/CONNECTORS.md
+  - id: london-stock-exchange-group.yieldbook_bond_reference
+    object: Bond
+    action: yieldbook_bond_reference
+    description: "Bond reference data: security type, sector, ratings, coupon, maturity, issuer."
+    category: Data Access
+    risk: low
+    business_impact: "Looks up bond reference attributes such as ratings, coupon, and issuer that anchor instrument identification and eligibility checks."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

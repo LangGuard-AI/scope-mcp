@@ -1,0 +1,46 @@
+schema_version: "1.3"
+platform: medidata
+display_name: Medidata
+logo: https://www.medidata.com/wp-content/uploads/2020/12/3DS_BRAND_ICONS_CMYK_MEDIDATA-1-150x150.png
+source: langguard-editorial
+updated: "2026-08"
+# The Medidata connector is OAuth-gated, so the only published tool surface is
+# the pair of capability labels on the Claude connector directory page. Every
+# entry below uses `id_form: capability` with the vendor's label verbatim in
+# `description`. Refresh to `id_form: verbatim` if Medidata ever publishes a
+# real `tools/list`.
+reference: https://claude.com/connectors/medidata
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/connectors/medidata
+  - id: medidata.predictive_site_ranking
+    object: Site
+    action: predictive_site_ranking
+    id_form: capability
+    description: "Predictive Site Ranking"
+    category: Data Access
+    risk: medium
+    business_impact: "Ranks candidate clinical trial sites from indication fit and historical performance, steering study feasibility and site selection decisions on regulated trial data."
+    compliance: [FDA_PART_11, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://claude.com/connectors/medidata
+  - id: medidata.platform_help
+    object: Documentation
+    action: platform_help
+    id_form: capability
+    description: "Platform Help"
+    category: Operations
+    risk: low
+    business_impact: "Answers questions from Medidata product documentation about platform features, configuration, and releases; returns no study or subject data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

@@ -1,0 +1,95 @@
+schema_version: "1.3"
+platform: icd-10-codes
+display_name: ICD-10 Codes
+logo: https://claude.com/favicon.ico
+source: langguard-editorial
+updated: "2026-08"
+mcp_server_url: https://hcls.mcp.claude.com/icd10_codes/mcp
+reference: https://claude.com/resources/tutorials/using-the-icd-10-connector-in-claude
+server_website: https://claude.com/connectors/icd-10-codes
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://hcls.mcp.claude.com/icd10_codes/mcp
+  - id: icd-10-codes.validate_code
+    object: Code
+    action: validate_code
+    description: "Validates an ICD-10 code and reports whether it is valid for HIPAA-covered transactions as of a given date of service."
+    category: Data Access
+    risk: low
+    business_impact: "Determines whether a diagnosis or procedure code is billable for a HIPAA-covered transaction on a given service date; a wrong answer propagates into claim denials or miscoded encounters."
+    compliance: [HIPAA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://hcls.mcp.claude.com/icd10_codes/mcp
+  - id: icd-10-codes.lookup_code
+    object: Code
+    action: lookup_code
+    description: "Looks up a single ICD-10 code and returns its descriptions, HIPAA transaction validity, and fiscal-year history."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the full definition and HIPAA billing validity of one ICD-10 code, which downstream coding and claim-submission steps rely on for accuracy."
+    compliance: [HIPAA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://hcls.mcp.claude.com/icd10_codes/mcp
+  - id: icd-10-codes.search_codes
+    object: Code
+    action: search_codes
+    description: "Searches ICD-10-CM diagnosis and ICD-10-PCS procedure codes by code or free-text description."
+    category: Data Access
+    risk: low
+    business_impact: "Queries the published ICD-10 code set by keyword or code; search terms may carry clinical context supplied by the operator, though no patient record is read or written."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://hcls.mcp.claude.com/icd10_codes/mcp
+  - id: icd-10-codes.get_hierarchy
+    object: Category
+    action: get_hierarchy
+    description: "Returns the category header and child codes beneath an ICD-10 category, up to a configurable limit."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates up to 2000 child codes under a category header so related codes in a disease family can be reviewed; reads reference data only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://hcls.mcp.claude.com/icd10_codes/mcp
+  - id: icd-10-codes.get_by_category
+    object: Category
+    action: get_by_category
+    description: "Returns ICD-10-CM diagnosis codes for a given chapter or three-character category."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the diagnosis codes belonging to an ICD-10-CM chapter or category, supporting clinical-area exploration against public reference data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://hcls.mcp.claude.com/icd10_codes/mcp
+  - id: icd-10-codes.get_by_body_system
+    object: Procedure
+    action: get_by_body_system
+    description: "Returns ICD-10-PCS procedure codes for a body system, optionally narrowed to a section."
+    category: Data Access
+    risk: low
+    business_impact: "Lists procedure codes for a body system so surgical and interventional coding options can be compared; reads reference data only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial

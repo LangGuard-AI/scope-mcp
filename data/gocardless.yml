@@ -1,0 +1,151 @@
+schema_version: "1.3"
+platform: gocardless
+display_name: GoCardless
+logo: https://framerusercontent.com/images/DttpiSG0Zmnl5Ae6JgVz0wbnkqQ.png
+source: langguard-editorial
+updated: "2026-08"
+mcp_server_url: https://mcp.gocardless.com
+reference: https://developer.gocardless.com/developer-tools/mcp/
+actions:
+  # ---------- Financial ----------
+
+  # source: https://support.gocardless.com/hc/en-gb/articles/26830050176028-Ask-AI-about-your-account
+  - id: gocardless.payments
+    object: Payment
+    action: payments
+    id_form: capability
+    description: "Payments"
+    category: Financial
+    risk: critical
+    business_impact: "Creates, retries, and cancels bank debits against live customer mandates — money moves out of a payer's account and the collection lands in the merchant's revenue ledger."
+    compliance: [SOX, COSO, PSD2, GLBA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://support.gocardless.com/hc/en-gb/articles/26830050176028-Ask-AI-about-your-account
+  - id: gocardless.refunds
+    object: Refund
+    action: refunds
+    id_form: capability
+    description: "Refunds"
+    category: Financial
+    risk: critical
+    business_impact: "Issues refunds that return collected funds to a payer, reversing recognised revenue and disbursing money with a single actor and no second approver."
+    compliance: [SOX, COSO, PSD2, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://support.gocardless.com/hc/en-gb/articles/26830050176028-Ask-AI-about-your-account
+  - id: gocardless.mandates
+    object: Mandate
+    action: mandates
+    id_form: capability
+    description: "Mandates"
+    category: Financial
+    risk: high
+    business_impact: "Cancels a customer's Direct Debit authorisation, permanently ending the merchant's right to collect from that payer until a new mandate is signed."
+    compliance: [SOX, COSO, PSD2, GDPR, UK_GDPR]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://support.gocardless.com/hc/en-gb/articles/26830050176028-Ask-AI-about-your-account
+  - id: gocardless.subscriptions
+    object: Subscription
+    action: subscriptions
+    id_form: capability
+    description: "Subscriptions"
+    category: Financial
+    risk: high
+    business_impact: "Creates recurring billing schedules that draw funds from a payer on every interval, committing future revenue without further review."
+    compliance: [SOX, COSO, PSD2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://support.gocardless.com/hc/en-gb/articles/26830050176028-Ask-AI-about-your-account
+  - id: gocardless.payment_links
+    object: BillingRequestFlow
+    action: payment_links
+    id_form: capability
+    description: "Payment links"
+    category: Financial
+    risk: medium
+    business_impact: "Generates shareable billing request flows that solicit payment authorisation from customers under the merchant's brand."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://support.gocardless.com/hc/en-gb/articles/26830050176028-Ask-AI-about-your-account
+  - id: gocardless.payouts
+    object: Payout
+    action: payouts
+    id_form: capability
+    description: "Payouts"
+    category: Financial
+    risk: low
+    business_impact: "Reads settlement amounts and dates paid into the merchant's bank account, exposing revenue volumes to whoever holds the connection."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://support.gocardless.com/hc/en-gb/articles/26830050176028-Ask-AI-about-your-account
+  - id: gocardless.customers
+    object: Customer
+    action: customers
+    id_form: capability
+    description: "Customers"
+    category: Customer
+    risk: high
+    business_impact: "Browses the full payer list and individual customer records, surfacing personal and banking-relationship data at list scale even with sensitive fields masked."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, GLBA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://support.gocardless.com/hc/en-gb/articles/26830050176028-Ask-AI-about-your-account
+  - id: gocardless.events
+    object: Event
+    action: events
+    id_form: capability
+    description: "Events"
+    category: Data Access
+    risk: low
+    business_impact: "Reads the lifecycle history of payments and mandates, revealing when each was submitted, confirmed, or failed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://developer.gocardless.com/developer-tools/mcp/
+  - id: gocardless.integration_guidance
+    object: Documentation
+    action: integration_guidance
+    id_form: capability
+    description: "Integration guidance"
+    category: Operations
+    risk: low
+    business_impact: "Returns GoCardless API reference material, integration patterns, and code samples; no account data is touched."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
