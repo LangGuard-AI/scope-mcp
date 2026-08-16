@@ -1,0 +1,343 @@
+schema_version: "1.3"
+platform: netlify
+display_name: Netlify
+logo: https://www.netlify.com/favicon/favicon.ico
+source: langguard-editorial
+updated: "2026-08"
+mcp_server_url: https://netlify-mcp.netlify.app/mcp
+reference: https://docs.netlify.com/build/build-with-ai/netlify-mcp-server/
+server_website: https://github.com/netlify/netlify-mcp
+actions:
+  # ---------- Secrets & Workflows ----------
+
+  # source: https://raw.githubusercontent.com/netlify/netlify-mcp/main/src/tools/project-tools/manage-project-env-vars.ts
+  - id: netlify.manage-env-vars
+    object: EnvironmentVariable
+    action: manage-env-vars
+    description: "Get, create/update, or delete environment variables for a site."
+    category: Secrets & Workflows
+    risk: critical
+    business_impact: "Reads out and rewrites a site's environment variables, which routinely hold API keys, database URLs and third-party credentials for the running production build."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    source: langguard-editorial
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Identity & Access ----------
+
+  # source: https://raw.githubusercontent.com/netlify/netlify-mcp/main/src/tools/project-tools/update-visitor-access-controls.ts
+  - id: netlify.update-visitor-access-controls
+    object: Project
+    action: update-visitor-access-controls
+    description: "Update a site's visitor access controls (password protection or SSO team login requirement)."
+    category: Identity & Access
+    risk: high
+    business_impact: "Changes who can view a deployed site; removing password protection or the SSO team-login requirement exposes a previously gated site to the open internet."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    source: langguard-editorial
+    access_methods: [REST, MCP]
+
+  # source: https://raw.githubusercontent.com/netlify/netlify-mcp/main/src/tools/user-tools/get-user.ts
+  - id: netlify.get-user
+    object: User
+    action: get-user
+    description: "Fetch the authenticated Netlify user's account details."
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns the calling user's own Netlify account profile, including name, email and account identifiers."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    source: langguard-editorial
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/netlify/netlify-mcp/main/src/tools/project-tools/manage-form-submissions.ts
+  - id: netlify.manage-form-submissions
+    object: FormSubmission
+    action: manage-form-submissions
+    description: "Get or delete form submissions for a site or form."
+    category: Data Access
+    risk: critical
+    business_impact: "Reads every visitor-submitted form record for a site — names, emails, free-text messages — and can permanently delete those submissions with no undo path."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    source: langguard-editorial
+    access_methods: [REST, MCP]
+
+  # source: https://raw.githubusercontent.com/netlify/netlify-mcp/main/src/tools/project-tools/update-project-forms.ts
+  - id: netlify.update-forms
+    object: Project
+    action: update-forms
+    description: "Enable or disable HTML form processing for a project."
+    category: Data Access
+    risk: medium
+    business_impact: "Turns form capture on or off for a site; disabling it silently drops incoming lead and contact submissions, enabling it starts collecting visitor-supplied personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    source: langguard-editorial
+    access_methods: [REST, MCP]
+
+  # source: https://raw.githubusercontent.com/netlify/netlify-mcp/main/src/tools/project-tools/get-forms-for-project.ts
+  - id: netlify.get-forms-for-project
+    object: Form
+    action: get-forms-for-project
+    description: "List the forms configured for a project."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the form definitions configured on a site along with their submission counts."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    source: langguard-editorial
+    access_methods: [REST, MCP]
+
+  # ---------- Code & Release ----------
+
+  # source: https://raw.githubusercontent.com/netlify/netlify-mcp/main/src/tools/deploy-tools/deploy-site.ts
+  - id: netlify.deploy-site
+    object: Deploy
+    action: deploy-site
+    description: "Build and deploy a project to Netlify (remote build-and-deploy operation, upload path)."
+    category: Code & Release
+    risk: high
+    business_impact: "Builds and publishes code to a live Netlify site in one call, putting unreviewed changes in front of real traffic without passing through any human release gate."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    source: langguard-editorial
+    access_methods: [REST, MCP, CLI]
+
+  # source: https://raw.githubusercontent.com/netlify/netlify-mcp/main/src/tools/design-import/import-claude-design.ts
+  - id: netlify.import-claude-design-from-url
+    object: Deploy
+    action: import-claude-design-from-url
+    description: "Deploys a self-contained HTML design bundle from a signed URL to a new or existing Netlify site."
+    category: Code & Release
+    risk: high
+    business_impact: "Publishes an externally fetched HTML bundle to a Netlify site; when an existing site is targeted the imported content replaces what visitors currently see."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    source: langguard-editorial
+    access_methods: [MCP]
+
+  # source: https://raw.githubusercontent.com/netlify/netlify-mcp/main/src/tools/design-import/import-claude-design.ts
+  - id: netlify.get-design-import-job-status
+    object: Deploy
+    action: get-design-import-job-status
+    description: "Checks the status of a Claude Design import started by import-claude-design-from-url."
+    category: Code & Release
+    risk: low
+    business_impact: "Reports progress and outcome of an in-flight design import job."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    source: langguard-editorial
+    access_methods: [MCP]
+
+  # source: https://raw.githubusercontent.com/netlify/netlify-mcp/main/src/tools/deploy-tools/get-deploy.ts
+  - id: netlify.get-deploy
+    object: Deploy
+    action: get-deploy
+    description: "Fetch a single Netlify deploy by deploy id."
+    category: Code & Release
+    risk: low
+    business_impact: "Returns metadata and status for one deploy, including its build state and commit reference."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    source: langguard-editorial
+    access_methods: [REST, MCP, CLI]
+
+  # source: https://raw.githubusercontent.com/netlify/netlify-mcp/main/src/tools/deploy-tools/get-deploy-for-site.ts
+  - id: netlify.get-deploy-for-site
+    object: Deploy
+    action: get-deploy-for-site
+    description: "Fetch a specific deploy for a given site id."
+    category: Code & Release
+    risk: low
+    business_impact: "Returns deploy details scoped to one site, used to inspect what is currently published."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    source: langguard-editorial
+    access_methods: [REST, MCP, CLI]
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://raw.githubusercontent.com/netlify/netlify-mcp/main/src/tools/extension-tools/change-extension-installation.ts
+  - id: netlify.change-extension-installation
+    object: Extension
+    action: change-extension-installation
+    description: "Install or uninstall a Netlify extension for a team/site."
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Installs or removes a third-party extension across a team or site, granting or revoking that vendor's access to build pipelines and project data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    source: langguard-editorial
+    access_methods: [REST, MCP]
+
+  # source: https://raw.githubusercontent.com/netlify/netlify-mcp/main/src/tools/extension-tools/initialize-database.ts
+  - id: netlify.initialize-database
+    object: Extension
+    action: initialize-database
+    description: "Instructions to initialize the @netlify/database extension in a project."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Sets up the Netlify database extension for a project, provisioning a new data store and its connection configuration."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    source: langguard-editorial
+    access_methods: [MCP]
+
+  # source: https://raw.githubusercontent.com/netlify/netlify-mcp/main/src/tools/project-tools/create-new-project.ts
+  - id: netlify.create-new-project
+    object: Project
+    action: create-new-project
+    description: "Create a new Netlify project (site), optionally under a specific team."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Provisions a new publicly addressable site under a team, consuming plan entitlements and adding an internet-facing property to the org's footprint."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    source: langguard-editorial
+    access_methods: [REST, MCP, CLI]
+
+  # source: https://raw.githubusercontent.com/netlify/netlify-mcp/main/src/tools/project-tools/update-project-name.ts
+  - id: netlify.update-project-name
+    object: Project
+    action: update-project-name
+    description: "Rename a Netlify project (site)."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Renames a site, which also changes its default netlify.app subdomain and breaks any inbound links or integrations bound to the old name."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    source: langguard-editorial
+    access_methods: [REST, MCP]
+
+  # source: https://raw.githubusercontent.com/netlify/netlify-mcp/main/src/tools/project-tools/get-project.ts
+  - id: netlify.get-project
+    object: Project
+    action: get-project
+    description: "Fetch details for a single Netlify project (site) by site id."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns configuration and status for one site, including its domains and build settings."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    source: langguard-editorial
+    access_methods: [REST, MCP, CLI]
+
+  # source: https://raw.githubusercontent.com/netlify/netlify-mcp/main/src/tools/project-tools/get-projects.ts
+  - id: netlify.get-projects
+    object: Project
+    action: get-projects
+    description: "List Netlify projects (sites)."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Enumerates the sites visible to the authenticated account, exposing the org's full web-property inventory."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    source: langguard-editorial
+    access_methods: [REST, MCP, CLI]
+
+  # source: https://raw.githubusercontent.com/netlify/netlify-mcp/main/src/tools/extension-tools/get-extensions.ts
+  - id: netlify.get-extensions
+    object: Extension
+    action: get-extensions
+    description: "List extensions available to any Netlify team."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Lists the extensions available to a team and which are installed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    source: langguard-editorial
+    access_methods: [REST, MCP]
+
+  # source: https://raw.githubusercontent.com/netlify/netlify-mcp/main/src/tools/extension-tools/get-full-extension-details.ts
+  - id: netlify.get-full-extension-details
+    object: Extension
+    action: get-full-extension-details
+    description: "Fetch full configuration/details for a specific extension on a team."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns the full configuration of one installed extension, revealing how a third-party integration is wired into the team."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    source: langguard-editorial
+    access_methods: [REST, MCP]
+
+  # source: https://raw.githubusercontent.com/netlify/netlify-mcp/main/netlify/functions/mcp.ts
+  - id: netlify.get-netlify-coding-context
+    object: Documentation
+    action: get-netlify-coding-context
+    description: "Returns Netlify coding guidance/context for a given creation type; required step before writing Netlify serverless/functions code."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns Netlify's own coding guidance for a creation type; no customer data is read or changed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    source: langguard-editorial
+    access_methods: [MCP]
+
+  # source: https://raw.githubusercontent.com/netlify/netlify-mcp/main/netlify-mcp.ts
+  - id: netlify.netlify-coding-rules
+    object: Documentation
+    action: netlify-coding-rules
+    description: "Returns Netlify coding guidance for a given creation type; the stdio-transport equivalent of get-netlify-coding-context."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns Netlify's documented coding rules over the local stdio transport; no customer data is read or changed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    source: langguard-editorial
+    access_methods: [MCP]
+
+  # ---------- Org & Access ----------
+
+  # source: https://raw.githubusercontent.com/netlify/netlify-mcp/main/src/tools/team-tools/get-teams.ts
+  - id: netlify.get-teams
+    object: Team
+    action: get-teams
+    description: "List the Netlify teams (accounts) the authenticated user belongs to."
+    category: Org & Access
+    risk: low
+    business_impact: "Enumerates the teams the caller belongs to, exposing the org's account structure."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    source: langguard-editorial
+    access_methods: [REST, MCP, CLI]
+
+  # source: https://raw.githubusercontent.com/netlify/netlify-mcp/main/src/tools/team-tools/get-team.ts
+  - id: netlify.get-team
+    object: Team
+    action: get-team
+    description: "Fetch details for a single Netlify team."
+    category: Org & Access
+    risk: low
+    business_impact: "Returns one team's details, including its slug, plan and account identifiers."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    source: langguard-editorial
+    access_methods: [REST, MCP, CLI]

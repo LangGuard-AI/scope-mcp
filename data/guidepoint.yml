@@ -1,0 +1,83 @@
+schema_version: "1.3"
+platform: guidepoint
+display_name: Guidepoint
+logo: https://www.guidepoint.com/wp-content/uploads/2025/11/cropped-Guidepoint_favicon-1-192x192.png
+source: langguard-editorial
+updated: "2026-08"
+reference: https://clapi-developer.guidepoint.io/config/mcp/mcp-content-api/api-config.json
+server_website: https://clapi-developer.guidepoint.io
+mcp_server_url: https://clapi.guidepoint.io/mcp-server/v1/mcp
+actions:
+  # ---------- Operations ----------
+
+  # source: https://clapi-developer.guidepoint.io/config/mcp/mcp-content-api/api-config.json
+  - id: guidepoint.register_event
+    object: EventRegistration
+    action: register_event
+    description: "Registers the authenticated user for one specific upcoming Guidepoint expert event, behind a two-step preview-and-confirm pattern."
+    category: Operations
+    risk: medium
+    business_impact: "Books the authenticated client into an upcoming expert event against their subscription entitlement, creating an attendance record that names an identifiable individual."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://clapi-developer.guidepoint.io/config/mcp/mcp-content-api/api-config.json
+  - id: guidepoint.cancel_registration
+    object: EventRegistration
+    action: cancel_registration
+    description: "Cancels the authenticated user's registration for one specific upcoming Guidepoint event, behind a two-step preview-and-confirm pattern."
+    category: Operations
+    risk: medium
+    business_impact: "Drops the client from a booked expert event and releases the seat; a call that is already scheduled may not be rebookable if capacity is taken."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://clapi-developer.guidepoint.io/config/mcp/mcp-content-api/api-config.json
+  - id: guidepoint.get_user_registrations
+    object: EventRegistration
+    action: get_user_registrations
+    description: "Retrieves every past and upcoming event the authenticated subscription client is registered for."
+    category: Data Access
+    risk: low
+    business_impact: "Exposes the authenticated client's full past and upcoming expert-call schedule, which ties a named individual to the research topics they are actively pursuing."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://clapi-developer.guidepoint.io/config/mcp/mcp-content-api/api-config.json
+  - id: guidepoint.search_library
+    object: Transcript
+    action: search_library
+    description: "Performs semantic search over expert question-and-answer content derived from transcripts of teleconferences, client calls, and analyst discussions."
+    category: Data Access
+    risk: low
+    business_impact: "Pulls verbatim excerpts from licensed expert-interview transcripts into the agent context, moving paid third-party research content outside the seat it was licensed to."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://clapi-developer.guidepoint.io/config/mcp/mcp-content-api/api-config.json
+  - id: guidepoint.search_events
+    object: Event
+    action: search_events
+    description: "Searches Guidepoint's curated catalogue of expert events including teleconferences, roundtables, group meetings, and focus polls."
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces the catalogue of available expert events for discovery; read-only and changes no booking, entitlement, or client record."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

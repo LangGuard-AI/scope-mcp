@@ -1,0 +1,266 @@
+schema_version: "1.3"
+platform: melon
+display_name: Melon
+logo: https://www.melon.com/favicon.ico
+source: langguard-editorial
+updated: "2026-08"
+mcp_server_url: https://mcp.melon.com/mcp
+reference: https://tech.kakaoent.com/ai/using-melon-mcp-server-en/
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://mcp.melon.com/mcp
+  - id: melon.get_recently_played_music_contents
+    object: ListeningHistory
+    action: get_recently_played_music_contents
+    description: "Retrieves users' recently played songs or recently viewed playlists on Melon."
+    category: Data Access
+    risk: medium
+    business_impact: "Exposes up to 100 items of the account holder's recent listening and browsing history, revealing personal habits and activity timing to the calling agent."
+    compliance: [GDPR, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.melon.com/mcp
+  - id: melon.get_my_most_listened_songs
+    object: ListeningHistory
+    action: get_my_most_listened_songs
+    description: "Retrieves the ranking of the user's most played songs over a specified period on Melon."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns a ranked play-count profile spanning weeks or months, a durable behavioural fingerprint of one identified subscriber."
+    compliance: [GDPR, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.melon.com/mcp
+  - id: melon.get_my_liked_music_contents
+    object: LikedContent
+    action: get_my_liked_music_contents
+    description: "Retrieves a list of all types of content the user has 'liked' on Melon."
+    category: Data Access
+    risk: medium
+    business_impact: "Surfaces every song, album, artist, video and playlist the account holder has favourited, which can reveal taste, affiliation and personal preference."
+    compliance: [GDPR, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.melon.com/mcp
+  - id: melon.get_my_created_playlists
+    object: Playlist
+    action: get_my_created_playlists
+    description: "Retrieves a list of playlists 'created by me' on Melon."
+    category: Data Access
+    risk: medium
+    business_impact: "Lists the playlists the account owner created, including unlisted ones, exposing personally curated collections and their titles."
+    compliance: [GDPR, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.melon.com/mcp
+  - id: melon.get_song_streaming_report
+    object: StreamingReport
+    action: get_song_streaming_report
+    description: "Provides streaming statistics or personal listening history for a specific song on Melon."
+    category: Data Access
+    risk: medium
+    business_impact: "Reports a track's public streaming totals or, in 'my' mode, the caller's own play count and the date they first listened to it."
+    compliance: [GDPR, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.melon.com/mcp
+  - id: melon.recommend_personalized_songs_by_dj_mallang
+    object: Recommendation
+    action: recommend_personalized_songs_by_dj_mallang
+    description: "Provides personalized song recommendations based on the user's music preference on Melon."
+    category: Data Access
+    risk: medium
+    business_impact: "Runs Melon's recommendation engine across the user's listening history, likes and playlists, profiling one identified subscriber to generate suggestions."
+    compliance: [GDPR, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Content Discovery ----------
+
+  # source: https://mcp.melon.com/mcp
+  - id: melon.search_melon_music_contents
+    object: Content
+    action: search_melon_music_contents
+    description: "Searches for all types of content on Melon—songs, albums, artists, videos, playlists—using keywords."
+    category: Content Discovery
+    risk: low
+    business_impact: "Runs a keyword search across Melon's public catalogue and returns content IDs that feed every other tool in the server."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.melon.com/mcp
+  - id: melon.get_music_chart
+    object: Chart
+    action: get_music_chart
+    description: "Retrieves various official music ranking charts from Melon."
+    category: Content Discovery
+    risk: low
+    business_impact: "Reads Melon's official TOP 100, daily, weekly and hot-track rankings, all published catalogue data with no personal content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.melon.com/mcp
+  - id: melon.get_music_content_details
+    object: Content
+    action: get_music_content_details
+    description: "Retrieves detailed information about songs, albums, and artists on Melon using their IDs."
+    category: Content Discovery
+    risk: low
+    business_impact: "Pulls release dates, genres and descriptions for songs, albums or artists, in batch when multiple IDs are supplied."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.melon.com/mcp
+  - id: melon.get_artist_contents
+    object: Artist
+    action: get_artist_contents
+    description: "Retrieves a list of tracks or albums for a specific artist from Melon."
+    category: Content Discovery
+    risk: low
+    business_impact: "Lists an artist's tracks or albums filtered by participation type, drawing only on published discography data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.melon.com/mcp
+  - id: melon.get_playlist_tracks
+    object: Playlist
+    action: get_playlist_tracks
+    description: "Retrieves tracks in a specific playlist on Melon using its ID."
+    category: Content Discovery
+    risk: low
+    business_impact: "Reads the full track listing of any playlist whose ID is supplied, including user-curated playlists that are addressable by ID."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.melon.com/mcp
+  - id: melon.get_music_contents_by_genre
+    object: Genre
+    action: get_music_contents_by_genre
+    description: "Retrieves a list of songs, playlists, or classic albums belonging to a specific music genre on Melon."
+    category: Content Discovery
+    risk: low
+    business_impact: "Lists songs, playlists or classic albums within a genre, including Melon's curated hot-track popularity rankings."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.melon.com/mcp
+  - id: melon.get_genres
+    object: Genre
+    action: get_genres
+    description: "Retrieves main genres and all their sub-genres on Melon in a nested structure."
+    category: Content Discovery
+    risk: low
+    business_impact: "Returns Melon's genre taxonomy and sub-genre codes, reference metadata used to drive catalogue queries."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.melon.com/mcp
+  - id: melon.get_latest_music_contents
+    object: Content
+    action: get_latest_music_contents
+    description: "Retrieves a list of newly released songs, albums, and videos on Melon, sorted by release date."
+    category: Content Discovery
+    risk: low
+    business_impact: "Returns newly released songs, albums and videos ordered by release date, with domestic or international region filtering."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.melon.com/mcp
+  - id: melon.get_melon_curated_playlists
+    object: Playlist
+    action: get_melon_curated_playlists
+    description: "Retrieves a list of official playlists curated and recommended by Melon."
+    category: Content Discovery
+    risk: low
+    business_impact: "Retrieves Melon's editorial recommendation playlists such as Daily Pick and Today's Playlist, all publicly published collections."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.melon.com/mcp
+  - id: melon.recommend_similar_songs_by_dj_mallang
+    object: Recommendation
+    action: recommend_similar_songs_by_dj_mallang
+    description: "Recommends other songs with a similar mood or genre to the specific song on Melon."
+    category: Content Discovery
+    risk: low
+    business_impact: "Returns up to 30 songs musically similar to a reference track, computed from catalogue attributes rather than the caller's history."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://mcp.melon.com/mcp
+  - id: melon.create_playback_url
+    object: PlaybackUrl
+    action: create_playback_url
+    description: "Generates a playback URL for given content (song, album, playlist, music video) on Melon."
+    category: Operations
+    risk: low
+    business_impact: "Builds a link that opens the specified songs, album, playlist or music video for playback in Melon; the tool hands back a URL and does not stream directly."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.melon.com/mcp
+  - id: melon.get_music_content_url
+    object: ContentUrl
+    action: get_music_content_url
+    description: "Returns detail page URLs for content on Melon, such as songs, albums, or playlists."
+    category: Operations
+    risk: low
+    business_impact: "Builds a detail-page URL for a song, album or playlist so the agent can hand the user a link into the Melon website."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial

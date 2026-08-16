@@ -1,0 +1,75 @@
+schema_version: "1.3"
+platform: moodys-analytics
+display_name: Moody's Analytics
+logo: https://www.moodys.com/favicon.ico
+source: langguard-editorial
+updated: "2026-08"
+reference: https://www.moodys.com/web/en/us/genai/model-context-protocol.html
+mcp_server_url: https://api.moodys.com/genai-ready-data/m1/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://www.moodys.com/web/en/us/genai/model-context-protocol.html
+  - id: moodys-analytics.findEntity
+    object: Entity
+    action: findEntity
+    category: Data Access
+    risk: low
+    business_impact: "Resolves companies, sovereigns, and other rated issuers to Moody's entity IDs from identifiers, names, or metadata; returns reference data on organizations, not individuals."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.moodys.com/web/en/us/genai/model-context-protocol.html
+  - id: moodys-analytics.searchEntityDocuments
+    object: Document
+    action: searchEntityDocuments
+    category: Data Access
+    risk: low
+    business_impact: "Queries Moody's licensed proprietary research library for an entity or topic, surfacing subscription-gated analyst content that carries redistribution restrictions under the seat licence."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.moodys.com/web/en/us/genai/model-context-protocol.html
+  - id: moodys-analytics.getEntityRatings
+    object: Rating
+    action: getEntityRatings
+    category: Data Access
+    risk: low
+    business_impact: "Returns an issuer's current credit rating, outlook, and rating date — published market reference data that may be relied on in credit and counterparty decisions."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.moodys.com/web/en/us/genai/model-context-protocol.html
+  - id: moodys-analytics.getEntityRatingDrivers
+    object: RatingDriver
+    action: getEntityRatingDrivers
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves the analyst-identified factors behind an issuer's upgrade or downgrade, read-only credit commentary with no write-back to any rating."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.moodys.com/web/en/us/genai/model-context-protocol.html
+  - id: moodys-analytics.getEntityScorecard
+    object: Scorecard
+    action: getEntityScorecard
+    category: Data Access
+    risk: low
+    business_impact: "Exposes the rating scorecard for an entity including factor weights, scoring components, and rating rationale — proprietary methodology output licensed for internal analysis only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,335 @@
+schema_version: "1.3"
+platform: mem
+display_name: Mem
+logo: https://mem.ai/favicons/favicon-96x96.png
+source: langguard-editorial
+updated: "2026-08"
+reference: https://docs.mem.ai/mcp/supported-tools
+server_website: https://mem.ai
+mcp_server_url: https://mcp.mem.ai/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.mem.ai/mcp/supported-tools
+  - id: mem.list_notes
+    object: Note
+    action: list_notes
+    description: "List notes visible to the authenticated caller with cursor pagination."
+    category: Data Access
+    risk: high
+    business_impact: "Paginates through every note the caller can see, enabling wholesale enumeration of a personal or team knowledge base that routinely holds contact details, meeting content, and confidential plans."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.mem.ai/mcp/supported-tools
+  - id: mem.extended_search_notes
+    object: Note
+    action: extended_search_notes
+    description: "Search notes and note-linked attachments together."
+    category: Data Access
+    risk: high
+    business_impact: "Searches note bodies alongside linked PDFs, images, audio recordings, calendar events, and emails, surfacing private correspondence and meeting material in a single query."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.mem.ai/mcp/supported-tools
+  - id: mem.search_notes
+    object: Note
+    action: search_notes
+    description: "Search notes using a required free-text query and structured filters."
+    category: Data Access
+    risk: high
+    business_impact: "Relevance-ranked retrieval across the caller's whole note corpus; a targeted query can pull out personal or commercially sensitive passages without opening individual notes."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.mem.ai/mcp/supported-tools
+  - id: mem.get_note_attachment_download_url
+    object: Attachment
+    action: get_note_attachment_download_url
+    description: "Generate a temporary signed download URL for a note attachment."
+    category: Data Access
+    risk: medium
+    business_impact: "Mints a signed URL that grants file access to anyone holding the link, moving an attachment outside the platform's own authentication boundary for the life of the token."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.mem.ai/mcp/supported-tools
+  - id: mem.get_audio_recording
+    object: AudioRecording
+    action: get_audio_recording
+    description: "Fetch the current public transcript and metadata for a single audio recording by ID."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the full transcript of a recorded conversation or meeting, exposing participants' spoken words and any personal details discussed."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.mem.ai/mcp/supported-tools
+  - id: mem.read_attachment
+    object: Attachment
+    action: read_attachment
+    description: "Read structured content for a single attachment by kind and ID."
+    category: Data Access
+    risk: medium
+    business_impact: "Extracts the parsed contents of an attached email, calendar event, document, or recording, exposing private correspondence held alongside a note."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.mem.ai/mcp/supported-tools
+  - id: mem.get_note
+    object: Note
+    action: get_note
+    description: "Fetch the full current state of a single note by ID."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns a note's complete body, including notes already moved to trash, so deleted-but-retained content remains readable to the agent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.mem.ai/mcp/supported-tools
+  - id: mem.find_related_notes
+    object: Note
+    action: find_related_notes
+    description: "Find notes semantically related to the current persisted content of a note."
+    category: Data Access
+    risk: medium
+    business_impact: "Surfaces semantically adjacent notes the caller may not have known existed, widening exposure from one note to a cluster of related personal or confidential material."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.mem.ai/mcp/supported-tools
+  - id: mem.answer_question_about_attachment
+    object: Attachment
+    action: answer_question_about_attachment
+    description: "Ask one focused question about a single attachment by kind and ID."
+    category: Data Access
+    risk: medium
+    business_impact: "Interrogates the contents of an attached file or recording, returning extracted details from material the caller never has to open directly."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.mem.ai/mcp/supported-tools
+  - id: mem.list_collections
+    object: Collection
+    action: list_collections
+    description: "List collections visible to the authenticated caller with cursor pagination."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates collection metadata visible to the caller; reveals how the workspace is organized without returning note contents."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.mem.ai/mcp/supported-tools
+  - id: mem.search_collections
+    object: Collection
+    action: search_collections
+    description: "Search collections using free-text relevance matching."
+    category: Data Access
+    risk: low
+    business_impact: "Relevance-ranked lookup over collection names and descriptions; returns organizational metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.mem.ai/mcp/supported-tools
+  - id: mem.get_collection
+    object: Collection
+    action: get_collection
+    description: "Fetch metadata for a single collection by ID."
+    category: Data Access
+    risk: low
+    business_impact: "Reads title, description, and timestamps for one collection; no note contents are returned."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://docs.mem.ai/mcp/supported-tools
+  - id: mem.set_note_created_at
+    object: Note
+    action: set_note_created_at
+    description: "Set a note's visible creation timestamp without changing its content."
+    category: Operations
+    risk: high
+    business_impact: "Backdates a note's visible creation time, letting a single principal misrepresent when knowledge was recorded and undermining the record's evidentiary value."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.mem.ai/mcp/supported-tools
+  - id: mem.delete_collection
+    object: Collection
+    action: delete_collection
+    description: "Permanently delete a collection."
+    category: Operations
+    risk: high
+    business_impact: "Hard-deletes a collection resource with no trash or restore path, permanently losing its organizing structure even though member notes survive."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.mem.ai/mcp/supported-tools
+  - id: mem.update_note
+    object: Note
+    action: update_note
+    description: "Submit a complete markdown body for a note and the exact `version` being updated."
+    category: Operations
+    risk: medium
+    business_impact: "Replaces a note's entire body rather than patching it, so an incomplete submission silently discards prior content including any personal details it held."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.mem.ai/mcp/supported-tools
+  - id: mem.trash_note
+    object: Note
+    action: trash_note
+    description: "Soft-delete a note by moving it to trash."
+    category: Operations
+    risk: medium
+    business_impact: "Removes a note from the active set, hiding it from search and daily use; recoverable only if someone notices and calls restore_note."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.mem.ai/mcp/supported-tools
+  - id: mem.restore_note
+    object: Note
+    action: restore_note
+    description: "Restore a previously trashed note to the active note set."
+    category: Operations
+    risk: low
+    business_impact: "Returns a trashed note to the active set, making content someone had discarded searchable and visible again."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.mem.ai/mcp/supported-tools
+  - id: mem.create_note
+    object: Note
+    action: create_note
+    description: "Create a note with an optional note ID and collection links."
+    category: Operations
+    risk: low
+    business_impact: "Adds a new note to the workspace, optionally at a caller-chosen ID and pre-linked to collections; reversible via trash."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.mem.ai/mcp/supported-tools
+  - id: mem.create_collection
+    object: Collection
+    action: create_collection
+    description: "Create a collection with optional caller-provided ID and timestamps."
+    category: Operations
+    risk: low
+    business_impact: "Adds a new collection to the workspace; organizational change with no effect on note contents."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.mem.ai/mcp/supported-tools
+  - id: mem.update_collection
+    object: Collection
+    action: update_collection
+    description: "Update metadata for a collection by ID."
+    category: Operations
+    risk: low
+    business_impact: "Renames a collection or rewrites its description; other users lose the label they navigate by, but no note content changes."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.mem.ai/mcp/supported-tools
+  - id: mem.move_note
+    object: Note
+    action: move_note
+    description: "Move a note from one collection to another collection."
+    category: Operations
+    risk: low
+    business_impact: "Shifts a note's collection membership, which can change who encounters it during normal browsing of the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.mem.ai/mcp/supported-tools
+  - id: mem.add_note_to_collection
+    object: Note
+    action: add_note_to_collection
+    description: "Add an existing note to an existing collection."
+    category: Operations
+    risk: low
+    business_impact: "Creates a membership link between an existing note and collection; contents of both are untouched."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.mem.ai/mcp/supported-tools
+  - id: mem.remove_note_from_collection
+    object: Note
+    action: remove_note_from_collection
+    description: "Remove a note from a collection while keeping both resources."
+    category: Operations
+    risk: low
+    business_impact: "Drops the membership link between a note and a collection; the note stays active but disappears from that collection's view."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

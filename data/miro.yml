@@ -1,0 +1,343 @@
+schema_version: "1.3"
+platform: miro
+display_name: Miro
+logo: https://miro.com/favicon.ico
+source: langguard-editorial
+updated: "2026-08"
+mcp_server_url: https://mcp.miro.com/
+reference: https://developers.miro.com/docs/miro-mcp-tools
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.context_get
+    object: Board
+    action: context_get
+    category: Data Access
+    risk: medium
+    business_impact: "Pulls the full text content of a board into the agent context, where meeting notes, customer names, and internal planning detail can leave the workspace."
+    compliance: [GDPR, UK_GDPR, CCPA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.layout_read
+    object: Board
+    action: layout_read
+    category: Data Access
+    risk: medium
+    business_impact: "Serializes every item on a board into DSL text, producing a complete machine-readable copy of the board's contents."
+    compliance: [GDPR, UK_GDPR, CCPA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.canvas_read_as_svg
+    object: Board
+    action: canvas_read_as_svg
+    category: Data Access
+    risk: medium
+    business_impact: "Extracts board items as SVG, giving a full visual and textual copy of the canvas including anything sensitive drawn on it."
+    compliance: [GDPR, UK_GDPR, CCPA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.doc_get
+    object: Document
+    action: doc_get
+    category: Data Access
+    risk: medium
+    business_impact: "Reads the body of a document item, which commonly holds specs, retro notes, or customer detail written directly on the board."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.table_list_rows
+    object: Table
+    action: table_list_rows
+    category: Data Access
+    risk: medium
+    business_impact: "Returns structured table rows with column metadata, which on planning boards frequently means people rosters, account lists, or tracked contacts."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.image_get_data
+    object: Image
+    action: image_get_data
+    category: Data Access
+    risk: medium
+    business_impact: "Returns raw base64 image bytes from a board, so pasted screenshots of dashboards, tickets, or credentials flow out to the agent."
+    compliance: [GDPR, UK_GDPR, CCPA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.image_get_url
+    object: Image
+    action: image_get_url
+    category: Data Access
+    risk: medium
+    business_impact: "Produces a download URL for a board image that can be passed to anyone outside the board's membership."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.board_search_boards
+    object: Board
+    action: board_search_boards
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates every board the connected user can reach, mapping the workspace surface an agent could then read or edit."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Code & Release ----------
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.code_widget_get
+    object: CodeWidget
+    action: code_widget_get
+    category: Code & Release
+    risk: medium
+    business_impact: "Reads the source code stored in a code widget, which teams routinely paste with config values, endpoints, or keys still in it."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.code_widget_create
+    object: CodeWidget
+    action: code_widget_create
+    category: Code & Release
+    risk: low
+    business_impact: "Adds a code snippet widget to a board; content is visible to every board collaborator."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.code_widget_update
+    object: CodeWidget
+    action: code_widget_update
+    category: Code & Release
+    risk: medium
+    business_impact: "Overwrites the code in an existing widget, silently changing a snippet other collaborators may be copying into real systems."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.code_widget_delete
+    object: CodeWidget
+    action: code_widget_delete
+    category: Code & Release
+    risk: medium
+    business_impact: "Removes a code widget and the snippet it held, recoverable only through board version history."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Content ----------
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.layout_update
+    object: BoardItem
+    action: layout_update
+    category: Content
+    risk: medium
+    business_impact: "Rewrites existing board items through find-and-replace on their DSL, so a broad match can alter large parts of a live board at once."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.canvas_update_from_svg
+    object: BoardItem
+    action: canvas_update_from_svg
+    category: Content
+    risk: medium
+    business_impact: "Edits existing board items via find-and-replace on their serialized form, overwriting collaborative work in place."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.doc_update
+    object: Document
+    action: doc_update
+    category: Content
+    risk: medium
+    business_impact: "Replaces text inside an existing document item, changing shared written material without an explicit review step."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.table_sync_rows
+    object: Table
+    action: table_sync_rows
+    category: Content
+    risk: medium
+    business_impact: "Upserts rows into a board table by key, which can overwrite tracked records that a team is actively working from."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.prototype_create
+    object: Prototype
+    action: prototype_create
+    category: Content
+    risk: medium
+    business_impact: "Publishes a clickable prototype from supplied HTML, rendering agent-generated markup to anyone who opens the board."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.board_create
+    object: Board
+    action: board_create
+    category: Content
+    risk: low
+    business_impact: "Creates a new board in the workspace, consuming a board slot and adding to what admins must govern."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.layout_create
+    object: BoardItem
+    action: layout_create
+    category: Content
+    risk: low
+    business_impact: "Bulk-creates board items from DSL text, adding content that collaborators see immediately."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.canvas_create_from_svg
+    object: BoardItem
+    action: canvas_create_from_svg
+    category: Content
+    risk: low
+    business_impact: "Renders supplied SVG into multiple new board items in one call."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.diagram_create
+    object: Diagram
+    action: diagram_create
+    category: Content
+    risk: low
+    business_impact: "Draws a new diagram on a board from DSL text; reversible board content change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Comments ----------
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.comment_list_comments
+    object: Comment
+    action: comment_list_comments
+    category: Comments
+    risk: medium
+    business_impact: "Reads comment threads along with who wrote them, exposing named feedback and internal discussion tied to identifiable people."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.comment_reply
+    object: Comment
+    action: comment_reply
+    category: Comments
+    risk: low
+    business_impact: "Posts a reply into an existing comment thread under the connected user's identity."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.comment_resolve
+    object: Comment
+    action: comment_resolve
+    category: Comments
+    risk: low
+    business_impact: "Marks a feedback thread resolved or reopens it, changing what reviewers still see as outstanding."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://developers.miro.com/docs/miro-mcp-tools
+  - id: miro.image_get_upload_url
+    object: UploadUrl
+    action: image_get_upload_url
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Mints a presigned POST URL that lets whoever holds it write an image into Miro storage without further authentication."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

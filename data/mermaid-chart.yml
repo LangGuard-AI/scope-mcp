@@ -1,0 +1,370 @@
+schema_version: "1.3"
+platform: mermaid-chart
+display_name: Mermaid Chart
+logo: https://mermaid.ai/favicon.ico
+source: langguard-editorial
+updated: "2026-08"
+reference: https://mermaid.ai/docs/ai/mcp-server
+mcp_server_url: https://mcp.mermaid.ai/mcp
+actions:
+  # ---------- Code & Release ----------
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.push_file
+    object: File
+    action: push_file
+    description: "Create or update a single file on a given branch in a GitHub repository."
+    category: Code & Release
+    risk: high
+    business_impact: "Writes arbitrary file content straight onto a named branch — including the default branch — so a single agent call lands code in the repository with no pull request or reviewer in the loop."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.create_pr
+    object: PullRequest
+    action: create_pr
+    description: "Create a new branch and commit, then open a pull request in the same repository."
+    category: Code & Release
+    risk: medium
+    business_impact: "Creates a branch, commits file changes, and opens a pull request; the change stays gated behind review but consumes reviewer attention and can be used to smuggle edits into a busy repo."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.get_pull_comments
+    object: PullRequestComment
+    action: get_pull_comments
+    description: "Get all pull request comments: issue/PR thread comments and inline review comments."
+    category: Code & Release
+    risk: low
+    business_impact: "Returns every thread and inline review comment on a pull request, exposing internal review discussion from private repositories to the agent context."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.list_pulls
+    object: PullRequest
+    action: list_pulls
+    description: "List pull requests for a GitHub repository."
+    category: Code & Release
+    risk: low
+    business_impact: "Enumerates open and closed pull requests for a repository, revealing in-flight work and branch naming across private projects."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Repository ----------
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.read_mermaid_file
+    object: File
+    action: read_mermaid_file
+    description: "Read a single .mmd file from a GitHub repository. Only paths ending in .mmd are allowed."
+    category: Repository
+    risk: low
+    business_impact: "Pulls the contents of a diagram file out of a private repository; the .mmd restriction keeps source code out of reach but architecture diagrams still leave the repo."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.list_repos
+    object: Repository
+    action: list_repos
+    description: "List GitHub repositories for the authenticated user, or for an organization when org is set."
+    category: Repository
+    risk: low
+    business_impact: "Enumerates every repository the supplied GitHub token can see, including private ones, giving a complete inventory of the org's codebases."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.list_mermaid_files
+    object: File
+    action: list_mermaid_files
+    description: "List .mmd Mermaid files in a GitHub repository via code search with tree fallback."
+    category: Repository
+    risk: low
+    business_impact: "Searches a repository's tree for diagram files, exposing directory structure and file naming of private repositories."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.list_branches
+    object: Branch
+    action: list_branches
+    description: "List or resolve branch names in a GitHub repository."
+    category: Repository
+    risk: low
+    business_impact: "Returns branch names for a repository, exposing release and feature-branch naming conventions that hint at unreleased work."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Issues ----------
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.create_issue
+    object: Issue
+    action: create_issue
+    description: "Create an issue in a GitHub repository."
+    category: Issues
+    risk: low
+    business_impact: "Files a new issue in the repository, notifying watchers and adding tracker noise; fully reversible by closing or deleting the issue."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.list_issues
+    object: Issue
+    action: list_issues
+    description: "List issues for a repository, excluding pull requests."
+    category: Issues
+    risk: low
+    business_impact: "Reads the issue backlog of a repository, surfacing unresolved defects and roadmap detail from private projects."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.get_issue_comments
+    object: IssueComment
+    action: get_issue_comments
+    description: "List comments on an issue by issue number."
+    category: Issues
+    risk: low
+    business_impact: "Returns the full comment thread on an issue, including internal triage discussion on private repositories."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.generate_ticket_timeline
+    object: JiraIssue
+    action: generate_ticket_timeline
+    description: "Generate a Mermaid diagram of a Jira ticket's history from its changelog."
+    category: Issues
+    risk: low
+    business_impact: "Reconstructs a ticket's full changelog including who changed status, assignee, and priority and when — an activity trail attributable to named employees."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.generate_ticket_diagram
+    object: JiraIssue
+    action: generate_ticket_diagram
+    description: "Generate a Mermaid flowchart centred on a single Jira ticket, including subtasks, links, and recent comments."
+    category: Issues
+    risk: low
+    business_impact: "Fetches a ticket's subtasks, parent, links, and recent comments in one call, pulling named commenters and their free-text remarks into the diagram output."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.generate_jira_kanban_board
+    object: JiraIssue
+    action: generate_jira_kanban_board
+    description: "Generate a Mermaid kanban board from Jira issues grouped by status."
+    category: Issues
+    risk: low
+    business_impact: "Renders a project's issues as a kanban board with optional assignee badges, exposing per-person workload across the whole project."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.generate_ticket_dependency_tree
+    object: JiraIssue
+    action: generate_ticket_dependency_tree
+    description: "Generate a Mermaid flowchart visualising Jira issue dependency links for a project."
+    category: Issues
+    risk: low
+    business_impact: "Reads a project's issue graph and renders ticket keys, summaries, and statuses, exposing roadmap sequencing and blockers outside Jira's permission model."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Content ----------
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.update_notion_mermaid_diagram
+    object: NotionBlock
+    action: update_notion_mermaid_diagram
+    description: "Update the Mermaid source code and optional caption of an existing Notion code block by block ID."
+    category: Content
+    risk: medium
+    business_impact: "Overwrites the source of an existing diagram block on a Notion page, replacing published documentation content that colleagues rely on; recoverable only through Notion page history."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.insert_notion_mermaid_diagram
+    object: NotionBlock
+    action: insert_notion_mermaid_diagram
+    description: "Append a Mermaid diagram as a code block to a Notion page."
+    category: Content
+    risk: low
+    business_impact: "Appends a new diagram block to the end of a Notion page; additive and easily removed, but edits shared workspace documentation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.get_notion_page_mermaid_diagrams
+    object: NotionPage
+    action: get_notion_page_mermaid_diagrams
+    description: "Extract all Mermaid code blocks from a Notion page, returning block ID, code, and caption."
+    category: Content
+    risk: low
+    business_impact: "Extracts every diagram block from a Notion page, moving internal architecture and process documentation into the agent context."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.get_notion_mermaid_diagram_by_block_id
+    object: NotionBlock
+    action: get_notion_mermaid_diagram_by_block_id
+    description: "Retrieve a single Mermaid diagram block by its block ID."
+    category: Content
+    risk: low
+    business_impact: "Reads one diagram block's source and caption from a Notion workspace; scope is limited to the referenced block."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Diagrams ----------
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.validate_and_render_mermaid_diagram
+    object: Diagram
+    action: validate_and_render_mermaid_diagram
+    description: "Render a Mermaid diagram, validating it during rendering and returning the image or error details."
+    category: Diagrams
+    risk: low
+    business_impact: "Sends diagram source to the hosted Mermaid renderer and returns an image, so any system or data-flow detail in the diagram transits a third-party service."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.get_diagram_summary
+    object: Diagram
+    action: get_diagram_summary
+    description: "Generate a concise summary of a Mermaid diagram based on its content."
+    category: Diagrams
+    risk: low
+    business_impact: "Summarises a supplied diagram in a few sentences; the diagram body is transmitted to the vendor service but nothing is written back."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.get_diagram_title
+    object: Diagram
+    action: get_diagram_title
+    description: "Generate a descriptive title for a Mermaid diagram based on its content."
+    category: Diagrams
+    risk: low
+    business_impact: "Suggests a title for a supplied diagram; read-only analysis with no persistence on either side."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.search_mermaid_icons
+    object: Icon
+    action: search_mermaid_icons
+    description: "Search available Mermaid icons by provider or name across AWS, Azure, GCP, and FontAwesome sets."
+    category: Diagrams
+    risk: low
+    business_impact: "Looks up icon identifiers from public icon sets; no customer data is involved."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.get_mermaid_syntax_document
+    object: Documentation
+    action: get_mermaid_syntax_document
+    description: "Get syntax documentation and examples for a specific Mermaid diagram type."
+    category: Diagrams
+    risk: low
+    business_impact: "Returns public Mermaid.js syntax reference material; no tenant data is read or written."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://mcp.mermaid.ai/mcp
+  - id: mermaid-chart.list_tools
+    object: Tool
+    action: list_tools
+    description: "Lists all available MCP servers and their tools in the workspace."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Enumerates every MCP server and tool wired into the workspace, handing a caller a map of the connected systems it could reach next."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,96 @@
+schema_version: "1.3"
+platform: omni-analytics
+display_name: Omni Analytics
+logo: https://omni.co/favicon.png
+source: langguard-editorial
+updated: "2026-08"
+reference: https://docs.omni.co/ai/mcp/tools
+server_website: https://docs.omni.co/ai/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.omni.co/ai/mcp/tools
+  - id: omni-analytics.askOmni
+    object: AnalysisJob
+    action: askOmni
+    description: "Submits an agentic analysis job to Omni and returns immediately without waiting for completion."
+    category: Data Access
+    risk: high
+    business_impact: "Hands an open-ended question to Omni's full agent, which explores warehouse data across multiple steps and can stand up a recurring routine that emails or Slacks results out on a schedule under the caller's permissions."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001, ISO_42001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.omni.co/ai/mcp/tools
+  - id: omni-analytics.getData
+    object: Query
+    action: getData
+    description: "Executes the generated query against the selected model and topic or view and returns the result rows."
+    category: Data Access
+    risk: high
+    business_impact: "Runs an agent-generated query against the semantic model and returns raw result rows, which can surface customer, employee, or revenue records from the underlying warehouse."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.omni.co/ai/mcp/tools
+  - id: omni-analytics.pickTopic
+    object: Topic
+    action: pickTopic
+    description: "Returns available topics in the selected model and selects the most relevant topic for the query."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the topics defined in a model, exposing the analytics vocabulary and subject areas the data team has published."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.omni.co/ai/mcp/tools
+  - id: omni-analytics.pickModel
+    object: Model
+    action: pickModel
+    description: "Returns a list of available models and their IDs so the MCP client can select which model to query."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the semantic models and IDs available to the connected account, revealing the shape of the organization's modelled data but no row-level values."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://docs.omni.co/ai/mcp/tools
+  - id: omni-analytics.checkStatus
+    object: AnalysisJob
+    action: checkStatus
+    description: "Polls the status of a previously submitted job using its jobId."
+    category: Operations
+    risk: low
+    business_impact: "Polls a submitted agent job by ID and reports its progress, letting a caller track long-running analyses they initiated."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.omni.co/ai/mcp/tools
+  - id: omni-analytics.searchOmniDocs
+    object: Documentation
+    action: searchOmniDocs
+    description: "Provides AI-powered search of Omni's documentation, synthesizing answers with citations to source pages."
+    category: Operations
+    risk: low
+    business_impact: "Searches Omni's public product documentation and returns synthesized answers with citations; touches no customer data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

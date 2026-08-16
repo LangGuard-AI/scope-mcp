@@ -1,0 +1,341 @@
+schema_version: "1.3"
+platform: magic-patterns
+display_name: Magic Patterns
+logo: https://www.magicpatterns.com/favicon.ico
+source: langguard-editorial
+updated: "2026-08"
+mcp_server_url: https://mcp.magicpatterns.com/mcp
+reference: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+server_website: https://www.magicpatterns.com/docs/documentation/features/mcp-server/overview
+actions:
+  # ---------- Design Systems ----------
+
+  # source: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+  - id: magic-patterns.write_design_system_files
+    object: DesignSystem
+    action: write_design_system_files
+    description: "Creates or overwrites files in a design system; incoming files are merged onto the existing artifact, then compiled and activated immediately."
+    category: Design Systems
+    risk: high
+    business_impact: "Overwrites shared design-system source files and activates them immediately, pushing unreviewed component changes to every collaborator and design that consumes the system."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+  - id: magic-patterns.publish_design_system
+    object: DesignSystem
+    action: publish_design_system
+    description: "Publishes the design system's active artifact as a new immutable version."
+    category: Design Systems
+    risk: medium
+    business_impact: "Cuts an immutable design-system version that downstream designs pin to, making whatever is currently staged the released baseline for the whole team."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+  - id: magic-patterns.create_design_system
+    object: DesignSystem
+    action: create_design_system
+    description: "Creates a new, blank design system owned by you and returns its ID and editor URL."
+    category: Design Systems
+    risk: low
+    business_impact: "Adds a new empty design system to the workspace along with its editor URL; no existing assets are touched."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Code & Release ----------
+
+  # source: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+  - id: magic-patterns.write_artifact_files
+    object: Artifact
+    action: write_artifact_files
+    description: "Creates or overwrites one or more files in an artifact; existing files are replaced."
+    category: Code & Release
+    risk: medium
+    business_impact: "Replaces source files inside a design's artifact, silently discarding the previous contents of any file it writes over."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+  - id: magic-patterns.publish_artifact
+    object: Artifact
+    action: publish_artifact
+    description: "Compiles an artifact's source files and sets it as the active artifact for the design."
+    category: Code & Release
+    risk: medium
+    business_impact: "Compiles staged files and swaps the design's live artifact, so whoever opens or shares that design sees the newly promoted build."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+  - id: magic-patterns.create_new_artifact
+    object: Artifact
+    action: create_new_artifact
+    description: "Creates a new artifact by cloning an existing one; the new artifact becomes the active artifact."
+    category: Code & Release
+    risk: medium
+    business_impact: "Clones an artifact and promotes the copy to active, redirecting subsequent edits and views away from the previously active build."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+  - id: magic-patterns.send_prompt
+    object: Design
+    action: send_prompt
+    description: "Sends a natural language prompt to the Magic Patterns AI for an existing design; returns a request ID while generation runs in the background."
+    category: Operations
+    risk: medium
+    business_impact: "Kicks off a background AI generation run that rewrites an existing design, consuming plan credits and changing work other collaborators may be editing."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+  - id: magic-patterns.create_design
+    object: Design
+    action: create_design
+    description: "Creates a new Magic Patterns design."
+    category: Operations
+    risk: low
+    business_impact: "Adds a new design to the workspace; reversible and isolated from existing designs."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+  - id: magic-patterns.create_slide_deck
+    object: SlideDeck
+    action: create_slide_deck
+    description: "Creates a new Magic Patterns slide deck and kicks off AI generation."
+    category: Operations
+    risk: low
+    business_impact: "Creates a slide deck and starts an AI generation run against it; consumes generation credits but touches no existing assets."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Content Sharing ----------
+
+  # source: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+  - id: magic-patterns.create_inspiration_document
+    object: InspirationDocument
+    action: create_inspiration_document
+    description: "Creates an inspiration document and returns a shareable URL."
+    category: Content Sharing
+    risk: medium
+    business_impact: "Publishes an inspiration document reachable by shareable URL, moving whatever concept content it carries outside the authenticated workspace."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+  - id: magic-patterns.inspiration_clear_variants
+    object: InspirationDocument
+    action: inspiration_clear_variants
+    description: "Resets every concept back to an empty placeholder, dropping each concept's content and its pre-created Iterate room."
+    category: Content Sharing
+    risk: high
+    business_impact: "Wipes every concept in an inspiration document at once, destroying all concept content and its Iterate rooms with no restore path."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+  - id: magic-patterns.inspiration_add_variant
+    object: InspirationDocument
+    action: inspiration_add_variant
+    description: "Fills in one placeholder concept with its content; the concept renders live on the shared page as soon as its content arrives."
+    category: Content Sharing
+    risk: low
+    business_impact: "Fills one placeholder concept, rendering that content live on the document's already-shared page."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+  - id: magic-patterns.inspiration_update_variant
+    object: InspirationDocument
+    action: inspiration_update_variant
+    description: "Revises a single already-filled concept in place, replacing its content and optionally its name and description."
+    category: Content Sharing
+    risk: low
+    business_impact: "Replaces the content of one existing concept in place on a shared inspiration page, overwriting what reviewers saw before."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+  - id: magic-patterns.read_recent_message_history
+    object: ChatHistory
+    action: read_recent_message_history
+    description: "Reads the recent chat item history for a design, returning the last 10 items (user prompts, AI responses, artifact versions, edits)."
+    category: Data Access
+    risk: medium
+    business_impact: "Surfaces the last ten chat items on a design, including collaborators' own prompt text and edit trail, which can carry personal or confidential product detail."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+  - id: magic-patterns.read_artifact_files
+    object: Artifact
+    action: read_artifact_files
+    description: "Reads the contents of one or more files from an artifact."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the full source of an artifact's files, which can include hardcoded endpoints, keys or business logic pasted into the design."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+  - id: magic-patterns.read_design_system_files
+    object: DesignSystem
+    action: read_design_system_files
+    description: "Reads the contents of one or more files from a design system's active artifact."
+    category: Data Access
+    risk: low
+    business_impact: "Returns component and token source from a design system's active artifact; read-only and scoped to systems the caller can already access."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+  - id: magic-patterns.get_design_system
+    object: DesignSystem
+    action: get_design_system
+    description: "Resolves a design system's active artifact and lists its files."
+    category: Data Access
+    risk: low
+    business_impact: "Resolves which artifact a design system currently points at and lists its files; no state changes."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+  - id: magic-patterns.list_design_systems
+    object: DesignSystem
+    action: list_design_systems
+    description: "Lists the design systems available to the authenticated user, including built-in presets and custom design systems."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the design systems the caller can reach, exposing the names of custom internal systems alongside built-in presets."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+  - id: magic-patterns.get_artifact
+    object: Artifact
+    action: get_artifact
+    description: "Gets the active artifact for a design, including its ID and list of files."
+    category: Data Access
+    risk: low
+    business_impact: "Reports the design's active artifact ID and file listing; metadata only, no file contents returned."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+  - id: magic-patterns.list_version_history
+    object: Artifact
+    action: list_version_history
+    description: "Lists the artifact version history for a design, returning the most recent 20 versions."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the 20 most recent artifact versions for a design, revealing when and how often the design changed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+  - id: magic-patterns.get_design_status
+    object: Design
+    action: get_design_status
+    description: "Gets the current status of a design: whether AI generation is active, the active artifact ID, and available files."
+    category: Data Access
+    risk: low
+    business_impact: "Reports whether AI generation is running on a design plus its active artifact and file list; status metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+  - id: magic-patterns.get_inspiration_document
+    object: InspirationDocument
+    action: get_inspiration_document
+    description: "Loads an inspiration document by its ID so its concepts can be read back."
+    category: Data Access
+    risk: low
+    business_impact: "Loads an inspiration document's concepts by ID, exposing shared concept content to the caller."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.magicpatterns.com/docs/documentation/features/mcp-server/available_tools
+  - id: magic-patterns.get_editor_id_from_url
+    object: Design
+    action: get_editor_id_from_url
+    description: "Resolves a Magic Patterns URL to an editor ID."
+    category: Data Access
+    risk: low
+    business_impact: "Translates a Magic Patterns URL into the editor ID other tools need; a pure lookup with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

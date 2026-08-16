@@ -1,0 +1,288 @@
+schema_version: "1.3"
+platform: lucid
+display_name: Lucid
+logo: https://lucid.co/favicon.ico
+source: langguard-editorial
+updated: "2026-08"
+mcp_server_url: https://mcp.lucid.app/mcp
+reference: https://help.lucid.co/hc/en-us/articles/42578801807508-Integrate-Lucid-with-AI-tools-using-the-Lucid-MCP-server
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://help.lucid.co/hc/en-us/articles/42578801807508-Integrate-Lucid-with-AI-tools-using-the-Lucid-MCP-server
+  - id: lucid.create_a_shareable_link_for_a_lucid_document
+    object: Document
+    action: create_a_shareable_link_for_a_lucid_document
+    id_form: capability
+    description: "Create a shareable link for a Lucid document"
+    category: Identity & Access
+    risk: high
+    business_impact: "Mints a share link that grants access to a document outside its existing permission set, widening exposure of whatever the diagram contains."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lucid.co/hc/en-us/articles/42578801807508-Integrate-Lucid-with-AI-tools-using-the-Lucid-MCP-server
+  - id: lucid.share_a_document_with_specific_collaborators_using_their_email_address
+    object: DocumentPermission
+    action: share_a_document_with_specific_collaborators_using_their_email_address
+    id_form: capability
+    description: "Share a document with specific collaborators using their email address"
+    category: Identity & Access
+    risk: high
+    business_impact: "Grants a named person view or edit rights on a document, provisioning access to internal material without a reviewer in the loop."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://help.lucid.co/hc/en-us/articles/42578801807508-Integrate-Lucid-with-AI-tools-using-the-Lucid-MCP-server
+  - id: lucid.fetch_and_summarize_document_details_and_content
+    object: Document
+    action: fetch_and_summarize_document_details_and_content
+    id_form: capability
+    description: "Fetch and summarize document details and content"
+    category: Data Access
+    risk: medium
+    business_impact: "Pulls the full contents of a Lucid document into the agent context, which can include architecture, roadmap, or personnel detail meant to stay inside the workspace."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lucid.co/hc/en-us/articles/42578801807508-Integrate-Lucid-with-AI-tools-using-the-Lucid-MCP-server
+  - id: lucid.export_a_document_as_a_png
+    object: Document
+    action: export_a_document_as_a_png
+    id_form: capability
+    description: "Export a document as a PNG"
+    category: Data Access
+    risk: medium
+    business_impact: "Renders a document to an image file that leaves the platform's access controls behind once it is downloaded or forwarded."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lucid.co/hc/en-us/articles/42578801807508-Integrate-Lucid-with-AI-tools-using-the-Lucid-MCP-server
+  - id: lucid.search_lucid_documents_for_specific_content
+    object: Document
+    action: search_lucid_documents_for_specific_content
+    id_form: capability
+    description: "Search Lucid documents for specific content"
+    category: Data Access
+    risk: low
+    business_impact: "Searches across the workspace for documents matching a phrase, revealing which projects exist and where their diagrams live."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lucid.co/hc/en-us/articles/42578801807508-Integrate-Lucid-with-AI-tools-using-the-Lucid-MCP-server
+  - id: lucid.fetch_an_image
+    object: Image
+    action: fetch_an_image
+    id_form: capability
+    description: "Fetch an image"
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves the original source image attached to a shape, such as a product mockup or screenshot embedded in a board."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lucid.co/hc/en-us/articles/42578801807508-Integrate-Lucid-with-AI-tools-using-the-Lucid-MCP-server
+  - id: lucid.retrieve_document_metadata
+    object: Document
+    action: retrieve_document_metadata
+    id_form: capability
+    description: "Retrieve document metadata"
+    category: Data Access
+    risk: low
+    business_impact: "Returns ownership, timestamps, and other document attributes used to trace who authored or last touched a diagram."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Content ----------
+
+  # source: https://help.lucid.co/hc/en-us/articles/42578801807508-Integrate-Lucid-with-AI-tools-using-the-Lucid-MCP-server
+  - id: lucid.create_an_org_chart_with_a_csv_file_or_text_prompt_that_includes_employee_information
+    object: OrgChart
+    action: create_an_org_chart_with_a_csv_file_or_text_prompt_that_includes_employee_information
+    id_form: capability
+    description: "Create an org chart with a CSV file or text prompt that includes employee information"
+    category: Content
+    risk: medium
+    business_impact: "Loads an employee roster into a shareable Lucid document, putting names, titles, and reporting lines for the whole workforce in one artifact."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lucid.co/hc/en-us/articles/42578801807508-Integrate-Lucid-with-AI-tools-using-the-Lucid-MCP-server
+  - id: lucid.generate_a_data_backed_entity_relationship_diagram
+    object: Diagram
+    action: generate_a_data_backed_entity_relationship_diagram
+    id_form: capability
+    description: "Generate a data-backed entity relationship diagram"
+    category: Content
+    risk: medium
+    business_impact: "Copies a live database schema, including tables and key relationships, into a collaboration document that can then be shared onward."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lucid.co/hc/en-us/articles/42578801807508-Integrate-Lucid-with-AI-tools-using-the-Lucid-MCP-server
+  - id: lucid.edit_add_or_delete_shapes_in_a_document
+    object: Shape
+    action: edit_add_or_delete_shapes_in_a_document
+    id_form: capability
+    description: "Edit, add, or delete shapes in a document"
+    category: Content
+    risk: medium
+    business_impact: "Rewrites or removes elements of an existing diagram, so a documented process or architecture can silently stop matching reality."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lucid.co/hc/en-us/articles/42578801807508-Integrate-Lucid-with-AI-tools-using-the-Lucid-MCP-server
+  - id: lucid.add_synced_jira_cards_to_a_document
+    object: JiraCard
+    action: add_synced_jira_cards_to_a_document
+    id_form: capability
+    description: "Add synced Jira Cards to a document"
+    category: Content
+    risk: medium
+    business_impact: "Creates live-synced Jira cards on a board, pulling tracker issues into Lucid and coupling two systems of record together."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lucid.co/hc/en-us/articles/42578801807508-Integrate-Lucid-with-AI-tools-using-the-Lucid-MCP-server
+  - id: lucid.create_a_diagram_with_prompting
+    object: Diagram
+    action: create_a_diagram_with_prompting
+    id_form: capability
+    description: "Create a diagram with prompting"
+    category: Content
+    risk: low
+    business_impact: "Generates a new diagram from a natural-language prompt, adding content to the workspace that colleagues may treat as authoritative."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lucid.co/hc/en-us/articles/42578801807508-Integrate-Lucid-with-AI-tools-using-the-Lucid-MCP-server
+  - id: lucid.generate_a_uml_sequence_diagram_from_plantuml_markup
+    object: Diagram
+    action: generate_a_uml_sequence_diagram_from_plantuml_markup
+    id_form: capability
+    description: "Generate a UML sequence diagram from PlantUML markup"
+    category: Content
+    risk: low
+    business_impact: "Renders supplied PlantUML markup into a new Lucid sequence diagram, a reversible additive write to the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lucid.co/hc/en-us/articles/42578801807508-Integrate-Lucid-with-AI-tools-using-the-Lucid-MCP-server
+  - id: lucid.generate_add_items_to_and_edit_dynamic_tables
+    object: DynamicTable
+    action: generate_add_items_to_and_edit_dynamic_tables
+    id_form: capability
+    description: "Generate, add items to, and edit Dynamic Tables"
+    category: Content
+    risk: low
+    business_impact: "Builds and edits Dynamic Tables inside a document, changing how linked work items are grouped and presented to the team."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Messaging ----------
+
+  # source: https://help.lucid.co/hc/en-us/articles/42578801807508-Integrate-Lucid-with-AI-tools-using-the-Lucid-MCP-server
+  - id: lucid.pull_and_respond_to_comments
+    object: Comment
+    action: pull_and_respond_to_comments
+    id_form: capability
+    description: "Pull and respond to comments"
+    category: Messaging
+    risk: medium
+    business_impact: "Reads collaborator discussion threads on a document and posts replies under the connected user's identity, so agent output reads as that person's word."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://help.lucid.co/hc/en-us/articles/42578801807508-Integrate-Lucid-with-AI-tools-using-the-Lucid-MCP-server
+  - id: lucid.move_create_rename_folders
+    object: Folder
+    action: move_create_rename_folders
+    id_form: capability
+    description: "Move, create, rename folders"
+    category: Operations
+    risk: medium
+    business_impact: "Restructures the folder tree, which can relocate documents into containers that carry different inherited sharing settings."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lucid.co/hc/en-us/articles/42578801807508-Integrate-Lucid-with-AI-tools-using-the-Lucid-MCP-server
+  - id: lucid.move_and_rename_documents
+    object: Document
+    action: move_and_rename_documents
+    id_form: capability
+    description: "Move and rename documents"
+    category: Operations
+    risk: low
+    business_impact: "Relocates or renames a document, breaking existing references and making the file harder for its owners to find."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.lucid.co/hc/en-us/articles/42578801807508-Integrate-Lucid-with-AI-tools-using-the-Lucid-MCP-server
+  - id: lucid.send_feedback_about_the_mcp_to_lucid_s_team
+    object: Feedback
+    action: send_feedback_about_the_mcp_to_lucid_s_team
+    id_form: capability
+    description: "Send feedback about the MCP to Lucid’s team"
+    category: Operations
+    risk: low
+    business_impact: "Transmits agent-authored feedback text to Lucid's product team, sending workspace context outward with no review step."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

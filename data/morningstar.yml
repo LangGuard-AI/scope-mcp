@@ -1,0 +1,38 @@
+schema_version: "1.3"
+platform: morningstar
+display_name: Morningstar
+logo: https://www.morningstar.com/favicon.ico
+source: langguard-editorial
+updated: "2026-08"
+reference: https://github.com/Morningstar/morningstar-mcp-server
+server_website: https://github.com/Morningstar/morningstar-mcp-server
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/Morningstar/morningstar-mcp-server/main/src/server.py
+  - id: morningstar.morningstar-datapoint-tool
+    object: Security
+    action: morningstar-datapoint-tool
+    description: "Fetches current Morningstar datapoints for a security, including ratings, fair value estimate, closing price, total return, NAV and fund size."
+    category: Data Access
+    risk: low
+    business_impact: "Returns licensed Morningstar valuation, rating and pricing datapoints for a named stock or fund; read-only, but the content is entitlement-gated and not redistributable."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/Morningstar/morningstar-mcp-server/main/src/server.py
+  - id: morningstar.morningstar-articles-tool
+    object: Article
+    action: morningstar-articles-tool
+    description: "Answers investing, portfolio and retirement questions from Morningstar editorial content, methodologies and thematic research."
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces Morningstar's proprietary analyst commentary and methodology write-ups, which an agent may relay as investment guidance without any suitability check."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

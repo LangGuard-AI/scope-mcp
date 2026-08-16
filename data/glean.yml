@@ -1,0 +1,169 @@
+schema_version: "1.3"
+platform: glean
+display_name: Glean
+logo: https://cdn.prod.website-files.com/6127a84dfe068e153ef20572/67189bfac8da27b3a70ddd93_256%20x%20256%20Glean%20Favicon.png
+source: langguard-editorial
+updated: "2026-08"
+reference: https://docs.glean.com/administration/platform/mcp/create-mcp-servers
+server_website: https://docs.glean.com/administration/platform/mcp/create-mcp-servers
+maintainer: https://docs.glean.com/administration/platform/mcp/security
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.glean.com/administration/platform/mcp/create-mcp-servers
+  - id: glean.search
+    object: "*"
+    action: search
+    description: "Search across your entire knowledge base with permission-aware results."
+    category: Data Access
+    risk: high
+    business_impact: "Queries every connected enterprise source at once — documents, tickets, email indexes, HR content — so a single query can surface personal and confidential material from systems the agent was never pointed at directly."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.glean.com/administration/platform/mcp/create-mcp-servers
+  - id: glean.read_document
+    object: Document
+    action: read_document
+    description: "Retrieve specific documents by ID or URL."
+    category: Data Access
+    risk: medium
+    business_impact: "Pulls the full body of a named internal document into the agent context, where confidential contract, roadmap, or HR content can be reproduced downstream."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.glean.com/administration/platform/mcp/create-mcp-servers
+  - id: glean.chat
+    object: Assistant
+    action: chat
+    description: "Interactive conversations with Glean's AI assistant."
+    category: Data Access
+    risk: medium
+    business_impact: "Routes a free-form prompt through Glean's assistant, which synthesizes answers from indexed corporate content and can restate confidential material outside its original access context."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.glean.com/administration/platform/mcp/create-mcp-servers
+  - id: glean.code_search
+    object: Code
+    action: code_search
+    description: "Search your codebase and repositories."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns proprietary source code and repository contents, exposing implementation details and any credentials or keys that were committed into the codebase."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.glean.com/administration/platform/mcp/create-mcp-servers
+  - id: glean.employee_search
+    object: Employee
+    action: employee_search
+    description: "Find people and expertise in your organization."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads employee directory profiles — names, roles, reporting lines, and expertise signals — producing staff personal data that feeds org-chart reconstruction and targeting."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Messaging ----------
+
+  # source: https://docs.glean.com/administration/platform/mcp/create-mcp-servers
+  - id: glean.gmail_search
+    object: Email
+    action: gmail_search
+    description: "Search Gmail messages and threads."
+    category: Messaging
+    risk: high
+    business_impact: "Reads private mailbox threads, exposing correspondent identities, message bodies, and attachments that routinely carry personal data and privileged business discussion."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.glean.com/administration/platform/mcp/create-mcp-servers
+  - id: glean.outlook_search
+    object: Email
+    action: outlook_search
+    description: "Search Outlook emails and calendar."
+    category: Messaging
+    risk: high
+    business_impact: "Reads Outlook mail and calendar entries, revealing private correspondence plus meeting attendees, times, and subjects that map an individual's relationships and movements."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.glean.com/administration/platform/mcp/create-mcp-servers
+  - id: glean.meeting_lookup
+    object: Meeting
+    action: meeting_lookup
+    description: "Find meeting recordings and notes."
+    category: Messaging
+    risk: medium
+    business_impact: "Surfaces meeting recordings and notes containing recorded speech and named participants, a category of personal data that often carries consent obligations of its own."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://docs.glean.com/administration/platform/mcp/create-mcp-servers
+  - id: glean.memory
+    object: Memory
+    action: memory
+    description: "Read, add, update, and delete user memories and personalization."
+    category: Operations
+    risk: medium
+    business_impact: "Reads and rewrites the persisted memory store for a user, so personal preferences and retained facts can be disclosed, altered, or erased without the user's involvement."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.glean.com/administration/platform/mcp/create-mcp-servers
+  - id: glean.user_activity
+    object: Activity
+    action: user_activity
+    description: "Retrieve the user's recent Glean activity to help summarize work, prepare status updates, or recover recently used documents."
+    category: Operations
+    risk: medium
+    business_impact: "Returns a behavioral trail of what the user recently searched, opened, and worked on, which doubles as a productivity-monitoring record if repurposed."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.glean.com/administration/platform/mcp/create-mcp-servers
+  - id: glean.memory_schema
+    object: Memory
+    action: memory_schema
+    description: "Discover available memory categories, payload schemas, storage limits, and filterable fields."
+    category: Operations
+    risk: low
+    business_impact: "Returns memory category and schema metadata only; no personal content is read, though it maps what personalization data the tenant stores."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

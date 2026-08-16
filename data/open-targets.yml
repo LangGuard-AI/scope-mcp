@@ -1,0 +1,81 @@
+schema_version: "1.3"
+platform: open-targets
+display_name: Open Targets
+logo: https://platform.opentargets.org/favicon.png
+source: langguard-editorial
+updated: "2026-08"
+mcp_server_url: https://mcp.platform.opentargets.org/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://mcp.platform.opentargets.org/mcp
+  - id: open-targets.batch_query_open_targets_graphql
+    object: GraphQLQuery
+    action: batch_query_open_targets_graphql
+    description: "Executes the same GraphQL query repeatedly against the Open Targets Platform API with different variable sets."
+    category: Data Access
+    risk: medium
+    business_impact: "Fans a single agent step out into many Open Targets API calls, pulling large volumes of target-disease-drug evidence at once and consuming shared public-service quota."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.platform.opentargets.org/mcp
+  - id: open-targets.query_open_targets_graphql
+    object: GraphQLQuery
+    action: query_open_targets_graphql
+    description: "Executes an arbitrary GraphQL query against the Open Targets Platform API."
+    category: Data Access
+    risk: low
+    business_impact: "Runs agent-authored GraphQL against the public Open Targets knowledge base, returning target, disease, drug and genetic-association records that inform research conclusions."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.platform.opentargets.org/mcp
+  - id: open-targets.search_entities
+    object: Entity
+    action: search_entities
+    description: "Searches targets, diseases, drugs, variants and studies and returns matching entity ids and types."
+    category: Data Access
+    risk: low
+    business_impact: "Resolves gene, disease and drug names to Open Targets identifiers; read-only lookup against public reference data with no write path."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://mcp.platform.opentargets.org/mcp
+  - id: open-targets.get_open_targets_graphql_schema
+    object: Schema
+    action: get_open_targets_graphql_schema
+    description: "Retrieves the Open Targets Platform GraphQL schema filtered by category."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns published API schema definitions so the agent can construct valid queries; exposes no records and changes no state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.platform.opentargets.org/mcp
+  - id: open-targets.get_type_dependencies
+    object: Schema
+    action: get_type_dependencies
+    description: "Returns SDL schema subsets for named GraphQL types, split into type-specific and shared dependencies."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Surfaces type-level schema fragments for query building; read-only metadata with no access to platform records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

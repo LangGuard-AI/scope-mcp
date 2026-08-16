@@ -1,0 +1,108 @@
+schema_version: "1.3"
+platform: midpage
+display_name: Midpage Legal Research
+logo: https://www.midpage.ai/favicon.png
+source: langguard-editorial
+updated: "2026-08"
+mcp_server_url: https://app.midpage.ai/mcp/v3
+reference: https://midpage-docs.apidocumentation.com/documentation/integration/mcp-tools
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://midpage-docs.apidocumentation.com/documentation/integration/mcp-tools
+  - id: midpage.search
+    object: Opinion
+    action: search
+    description: "Search US case law across federal and state courts, returning metadata, highlights, and citator treatment data."
+    category: Data Access
+    risk: low
+    business_impact: "Queries published US federal and state case law with jurisdiction, date, court, and publication filters, returning citator treatment and public opinion metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://midpage-docs.apidocumentation.com/documentation/integration/mcp-tools
+  - id: midpage.findInOpinion
+    object: Opinion
+    action: findInOpinion
+    description: "Locates quotable passages within a single opinion using keyword search, by opinion ID, citation, or docket reference."
+    category: Data Access
+    risk: low
+    business_impact: "Pulls verbatim passages out of one published court opinion for citation, touching public judicial records and no customer or employee data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://midpage-docs.apidocumentation.com/documentation/integration/mcp-tools
+  - id: midpage.analyzeOpinion
+    object: Opinion
+    action: analyzeOpinion
+    description: "Reads the full document, then answers your question and returns the answer alongside text excerpts organized by centrality level."
+    category: Data Access
+    risk: low
+    business_impact: "Reads a full court opinion and returns a generated answer with supporting excerpts; an inaccurate summary could be relied on in legal work product without independent verification."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://midpage-docs.apidocumentation.com/documentation/integration/mcp-tools
+  - id: midpage.analyzeDocketReport
+    object: Docket
+    action: analyzeDocketReport
+    description: "Preview. Answers docket-level questions on case status, procedural posture, and filings needing review across federal court dockets."
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces case status, procedural posture, and pending filings from public federal dockets, which name identifiable litigants but remain court-published records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://midpage-docs.apidocumentation.com/documentation/integration/mcp-tools
+  - id: midpage.analyzeDocketFiling
+    object: DocketFiling
+    action: analyzeDocketFiling
+    description: "Preview. Analyzes specific filings identified through docket reports, supporting focused questions about complaint claims or motion contents."
+    category: Data Access
+    risk: low
+    business_impact: "Reads an individual court filing such as a complaint or motion and answers questions about its contents, exposing only material already on the public docket."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://midpage-docs.apidocumentation.com/documentation/integration/mcp-tools
+  - id: midpage.searchLaws
+    object: Statute
+    action: searchLaws
+    description: "Preview. Full-text search across statutes, regulations, and guidance, federal plus all 50 states, returning current law by default."
+    category: Data Access
+    risk: low
+    business_impact: "Runs keyword search over federal and state statutes, regulations, and agency guidance, returning public primary law with no access to firm or client data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://midpage-docs.apidocumentation.com/documentation/integration/mcp-tools
+  - id: midpage.analyzeLaw
+    object: Statute
+    action: analyzeLaw
+    description: "Preview. Answers questions about specific provisions using verified verbatim passages, supporting canonical citations, register cites, or paths."
+    category: Data Access
+    risk: low
+    business_impact: "Interprets a specific statutory or regulatory provision and returns verbatim supporting text; a misread provision could propagate into compliance advice downstream."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

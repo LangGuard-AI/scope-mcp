@@ -1,0 +1,38 @@
+schema_version: "1.3"
+platform: lloyd
+display_name: Lloyd by The L Suite
+logo: https://www.lsuite.co/assets/favicons/lsuite/favicon.png
+source: langguard-editorial
+updated: "2026-08"
+reference: https://www.lsuite.co/lloyd/mcp-documentation
+server_website: https://www.lsuite.co/lloyd
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://www.lsuite.co/lloyd/mcp-documentation
+  - id: lloyd.get_peer_insights
+    object: Insight
+    action: get_peer_insights
+    description: "Searches peer-generated insights, guidance, benchmarks, and shared documents across The L Suite community, filterable by practice area, company profile, stage, and matter type."
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves cited legal guidance, benchmarks, and member-shared documents from a members-only community; read-only, but pulls other organizations' confidential legal material into the agent's context."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://www.lsuite.co/lloyd/mcp-documentation
+  - id: lloyd.find_vendors
+    object: Vendor
+    action: find_vendors
+    description: "Returns peer-recommended legal-tech vendors tailored to a company's profile, regulatory context, and team size."
+    category: Data Access
+    risk: low
+    business_impact: "Returns peer vendor recommendations, and in doing so discloses the requesting company's profile, size, and regulatory context to the community service."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
