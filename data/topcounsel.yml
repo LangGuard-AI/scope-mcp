@@ -1,0 +1,24 @@
+schema_version: "1.3"
+platform: topcounsel
+display_name: TopCounsel by The L Suite
+logo: https://www.lsuite.co/assets/favicons/lsuite/favicon.png
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://api.techgc.co/api/mcp/topcounsel
+reference: https://www.lsuite.co/topcounsel-documentation
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://www.lsuite.co/topcounsel-documentation
+  - id: topcounsel.find_outside_counsel
+    object: Counsel
+    action: find_outside_counsel
+    description: "Returns a ranked list of firms/attorneys matching a matter description, filterable by practice area, company stage, geography, and more."
+    category: Data Access
+    risk: low
+    business_impact: "Returns peer-ranked outside counsel for a matter, and in doing so sends the matter description — often privileged or deal-sensitive — to The L Suite, where tool calls are logged."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

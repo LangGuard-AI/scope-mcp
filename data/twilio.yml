@@ -1,0 +1,37 @@
+schema_version: "1.3"
+platform: twilio
+display_name: Twilio
+logo: https://www.twilio.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://mcp.twilio.com/docs
+reference: https://www.twilio.com/docs/ai/mcp
+server_website: https://mcp.twilio.com/docs
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://mcp.twilio.com/docs
+  - id: twilio.twilio__search
+    object: Documentation
+    action: twilio__search
+    category: Data Access
+    risk: low
+    business_impact: "Returns ranked Twilio documentation snippets and API operation summaries for a natural-language query; read-only discovery that touches no account, message, or call data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.twilio.com/docs
+  - id: twilio.twilio__retrieve
+    object: ApiOperation
+    action: twilio__retrieve
+    category: Data Access
+    risk: low
+    business_impact: "Returns full request and response schemas for named Twilio API operations, handing an agent the exact parameters it would need to later call messaging, voice, or account endpoints itself."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

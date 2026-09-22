@@ -1,0 +1,325 @@
+schema_version: "1.3"
+platform: tray-ai
+display_name: Tray.ai
+logo: https://tray.ai/icons/icon-192.png
+source: langguard-editorial
+updated: "2026-09"
+reference: https://tray.ai/documentation/platform/tray-headless/tray-headless-mcp
+server_website: https://tray.ai/documentation/platform/tray-headless/overview
+mcp_server_url: https://api.tray.io/mcp
+actions:
+  # ---------- Platform & DevOps ----------
+
+  # source: https://raw.githubusercontent.com/trayio/tray-plugins/main/plugins/tray-workflows/skills/build-workflow/SKILL.md
+  - id: tray-ai.trigger_workflow
+    object: Workflow
+    action: trigger_workflow
+    description: "Fire a workflow against the live Tray workspace — real side effects, not a dry run."
+    category: Platform & DevOps
+    risk: critical
+    business_impact: "Fires a production workflow that executes every connector step against live systems — Slack posts, CRM writes and third-party webhooks all land, with no dry-run and no undo."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/trayio/tray-plugins/main/plugins/tray-workflows/skills/build-workflow/SKILL.md
+  - id: tray-ai.create_workflow
+    object: Workflow
+    action: create_workflow
+    description: "Create a new Tray workflow with its trigger."
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Creates a workflow and, for agent-tool triggers, auto-registers a callable API operation under API Management — new automation reaches production without a manual review step."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/trayio/tray-plugins/main/plugins/tray-workflows/skills/build-workflow/SKILL.md
+  - id: tray-ai.import_workflow
+    object: Workflow
+    action: import_workflow
+    description: "Mutating workflow tool that triggers server-side structural validation, part of the create/add/update/remove/structure/metadata/import tool family."
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Loads a whole workflow definition into the workspace in one call, introducing integration logic and connector wiring that never passed through the normal build-and-review path."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/trayio/tray-plugins/main/plugins/tray-workflows/skills/build-workflow/SKILL.md
+  - id: tray-ai.update_workflow_steps
+    object: WorkflowStep
+    action: update_workflow_steps
+    description: "Replace the full properties object on one or more existing workflow steps; can also swap a step's operation."
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Overwrites step properties wholesale and can swap the operation or the auth_id a step runs under, silently repointing production automation at a different system or credential."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/trayio/tray-plugins/main/plugins/tray-workflows/skills/build-workflow/SKILL.md
+  - id: tray-ai.add_workflow_steps
+    object: WorkflowStep
+    action: add_workflow_steps
+    description: "Add one or more steps to a Tray workflow in a single batched, atomically-validated call."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Adds steps to an existing workflow in a batch, changing what the automation does on its next run; reversible but live once the workflow fires."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/trayio/tray-plugins/main/plugins/tray-workflows/skills/tray-gotchas/SKILL.md
+  - id: tray-ai.remove_workflow_step
+    object: WorkflowStep
+    action: remove_workflow_step
+    description: "Remove a step from an existing workflow."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Deletes a step from a live workflow, which can quietly drop a validation, notification or logging stage from an integration that downstream teams depend on."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/trayio/tray-plugins/main/plugins/tray-workflows/skills/build-workflow/SKILL.md
+  - id: tray-ai.update_workflow_metadata
+    object: Workflow
+    action: update_workflow_metadata
+    description: "Update a workflow's description, name, enabled state, or tags without bumping the version_id."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Flips a workflow's enabled state, name or tags without creating a new version, so an automation can be switched on or off with no version-history trace."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/trayio/tray-plugins/main/plugins/tray-workflows/skills/build-workflow/SKILL.md
+  - id: tray-ai.update_workflow_structure
+    object: Workflow
+    action: update_workflow_structure
+    description: "Move steps into branch paths, reorder steps, or restructure a workflow's layout."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Reorders steps or moves them between error and success branches, changing execution order and failure handling for an integration already running in production."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/trayio/tray-plugins/main/plugins/tray-workflows/skills/build-workflow/SKILL.md
+  - id: tray-ai.validate_workflow
+    object: Workflow
+    action: validate_workflow
+    description: "Run an on-demand structural audit of a workflow (jsonpath resolution, output shapes, structural conventions)."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Runs a read-only structural audit of a workflow and returns findings; no state changes and no data leaves the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/trayio/tray-plugins/main/plugins/tray-workflows/skills/build-workflow/SKILL.md
+  - id: tray-ai.get_workflow
+    object: Workflow
+    action: get_workflow
+    description: "Fetch a workflow's current structure or step details; defaults to a cheap structure-tree view."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Reads a workflow's structure and step configuration, exposing how an integration is wired but not the records flowing through it."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/trayio/tray-plugins/main/plugins/tray-workflows/skills/build-workflow/SKILL.md
+  - id: tray-ai.create_project
+    object: Project
+    action: create_project
+    description: "Create a new Tray project; returns a project_id."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Creates an empty project container for workflows; no data or automation runs until workflows are added to it."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/trayio/tray-plugins/main/plugins/tray-workflows/skills/build-workflow/SKILL.md
+  - id: tray-ai.list_projects
+    object: Project
+    action: list_projects
+    description: "List existing projects/workspace contents, used to check for related workflows before building."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Enumerates projects in the workspace, revealing the names and scope of the automation estate to whoever holds the token."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Secrets & Workflows ----------
+
+  # source: https://raw.githubusercontent.com/trayio/tray-plugins/main/plugins/tray-workflows/agents/tray-researcher.md
+  - id: tray-ai.create_auth_collection
+    object: Authentication
+    action: create_auth_collection
+    description: "Create a new authentication request for a service; requires the service UUID and service_environment_id (not connector_name/connector_version)."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Starts a new credential grant for a third-party service, expanding which external systems workspace automation can reach once the user completes sign-in."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/trayio/tray-plugins/main/plugins/tray-workflows/agents/tray-researcher.md
+  - id: tray-ai.list_authentications
+    object: Authentication
+    action: list_authentications
+    description: "List existing authentications in the workspace, filterable by service_name."
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Enumerates every stored authentication in the workspace, mapping which external systems are connected and which auth ids a workflow step can be pointed at."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/trayio/tray-plugins/main/plugins/tray-workflows/skills/research-connector/SKILL.md
+  - id: tray-ai.check_auth_completion
+    object: Authentication
+    action: check_auth_completion
+    description: "Check whether a new-auth request has been completed by the user after they visited the auth URL."
+    category: Secrets & Workflows
+    risk: low
+    business_impact: "Polls whether a pending authentication has been completed; returns status only, with no credential material exposed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/trayio/tray-plugins/main/plugins/tray-workflows/agents/tray-researcher.md
+  - id: tray-ai.list_service_environments
+    object: ServiceEnvironment
+    action: list_service_environments
+    description: "Get auth environments for a service, keyed by service_name (string) and service_version (integer)."
+    category: Secrets & Workflows
+    risk: low
+    business_impact: "Lists the auth environments available for a service; configuration metadata used to set up a credential, not the credential itself."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/trayio/tray-plugins/main/plugins/tray-workflows/agents/tray-researcher.md
+  - id: tray-ai.call_connector
+    object: Connector
+    action: call_connector
+    description: "Execute a connector operation, gated by default to DDL / schema-discovery calls to avoid production side effects."
+    category: Data Access
+    risk: high
+    business_impact: "Executes an operation directly against a connected third-party system using stored workspace credentials, reaching real records outside Tray even though the default gate favours schema-discovery calls."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/trayio/tray-plugins/main/plugins/tray-workflows/agents/tray-researcher.md
+  - id: tray-ai.list_connectors
+    object: Connector
+    action: list_connectors
+    description: "Search Tray's 700+ connectors by name; supports exact-match connector_names and is_trigger filtering."
+    category: Data Access
+    risk: low
+    business_impact: "Searches the catalogue of available connectors; returns product metadata only, with no workspace or customer data involved."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/trayio/tray-plugins/main/plugins/tray-workflows/agents/tray-researcher.md
+  - id: tray-ai.list_connector_operations
+    object: Connector
+    action: list_connector_operations
+    description: "Get a connector's operations with compacted input/output schemas."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a connector's operations and their input/output schemas; catalogue metadata that carries no tenant data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://raw.githubusercontent.com/trayio/tray-plugins/main/plugins/tray-workflows/skills/build-workflow/SKILL.md
+  - id: tray-ai.get_workflow_step_detail
+    object: WorkflowExecution
+    action: get_workflow_step_detail
+    description: "Drill into a single failed step's input/output for debugging."
+    category: Operations
+    risk: medium
+    business_impact: "Exposes the literal input and output payload of a workflow step, which routinely contains customer records pulled from the connected CRM, support or HR system."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/trayio/tray-plugins/main/plugins/tray-workflows/skills/build-workflow/SKILL.md
+  - id: tray-ai.get_workflow_execution
+    object: WorkflowExecution
+    action: get_workflow_execution
+    description: "Inspect a fired workflow's execution run, including failed step names."
+    category: Operations
+    risk: medium
+    business_impact: "Opens a specific execution run and its step-level results, giving visibility into what the automation processed and where it failed."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/trayio/tray-plugins/main/plugins/tray-workflows/skills/tray-gotchas/SKILL.md
+  - id: tray-ai.list_workflow_executions
+    object: WorkflowExecution
+    action: list_workflow_executions
+    description: "Return a lightweight summary of a workflow's most recent execution runs."
+    category: Operations
+    risk: low
+    business_impact: "Lists recent execution summaries for a workflow — run status and timing only, without the payloads those runs carried."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

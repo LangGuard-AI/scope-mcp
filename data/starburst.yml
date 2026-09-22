@@ -1,0 +1,89 @@
+schema_version: "1.3"
+platform: starburst
+display_name: Starburst
+logo: https://www.starburst.io/favicon-l.png
+source: langguard-editorial
+updated: "2026-09"
+reference: https://docs.starburst.io/latest/starburst-ai/mcp-server.html
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/connectors/starburst
+  - id: starburst.readOnlyQuery
+    object: Query
+    action: readOnlyQuery
+    category: Data Access
+    risk: high
+    business_impact: "Runs ad-hoc SQL across every Starburst catalog the connected principal can reach, returning whatever customer, employee, or financial rows those tables hold."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.starburst.io/latest/starburst-ai/mcp-server.html
+  - id: starburst.queryReadOnly
+    object: Query
+    action: queryReadOnly
+    category: Data Access
+    risk: high
+    business_impact: "Executes read-only SQL against the Starburst cluster and returns structured results, exposing any federated source the query engine is configured to reach."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.starburst.io/latest/starburst-ai/mcp-server.html
+  - id: starburst.parametrizedQuery
+    object: Query
+    action: parametrizedQuery
+    category: Data Access
+    risk: medium
+    business_impact: "Runs an administrator-defined SQL template with agent-supplied parameters, returning governed result sets that can still contain personal or regulated records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://docs.starburst.io/latest/starburst-ai/mcp-server.html
+  - id: starburst.getDataProductDetails
+    object: DataProduct
+    action: getDataProductDetails
+    category: Operations
+    risk: low
+    business_impact: "Returns a data product's views, schemas, and column metadata, revealing how sensitive domains are modelled before any rows are read."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.starburst.io/latest/starburst-ai/mcp-server.html
+  - id: starburst.searchDataProducts
+    object: DataProduct
+    action: searchDataProducts
+    category: Operations
+    risk: low
+    business_impact: "Keyword-searches the data product catalog, listing which curated datasets exist and what they cover without returning underlying rows."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.starburst.io/latest/starburst-ai/mcp-server.html
+  - id: starburst.listParametrizedQueryTools
+    object: QueryTemplate
+    action: listParametrizedQueryTools
+    category: Operations
+    risk: low
+    business_impact: "Lists the pre-approved parameterized query templates an agent may invoke, mapping the sanctioned query surface of the cluster."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

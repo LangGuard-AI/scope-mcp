@@ -1,0 +1,254 @@
+schema_version: "1.3"
+platform: sprouts
+display_name: Sprouts
+logo: https://sprouts.ai/icon.svg?e43d6ad7535f166d
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://sprouts-mcp-server.kartikay-dhar.workers.dev/
+server_website: https://sprouts.ai/
+actions:
+  # ---------- Messaging ----------
+
+  # source: https://sprouts-mcp-server.kartikay-dhar.workers.dev/
+  - id: sprouts.sprouts_sequence_run
+    object: Sequence
+    action: sprouts_sequence_run
+    description: "Launches a staged outreach sequence, sending real email to every enrolled recipient."
+    category: Messaging
+    risk: critical
+    business_impact: "Sends live outbound email to every recipient enrolled in a sequence in one call and cannot be unsent; a misdirected or unapproved sequence reaches real inboxes and exposes the sender to unsolicited-email complaints."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://sprouts-mcp-server.kartikay-dhar.workers.dev/
+  - id: sprouts.sprouts_send_reply
+    object: Message
+    action: sprouts_send_reply
+    description: "Sends a reply inside an existing conversation thread with a contact."
+    category: Messaging
+    risk: high
+    business_impact: "Delivers a real message to a named individual and returns the prior thread context, putting one person's private correspondence into the agent's hands and into the record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://sprouts-mcp-server.kartikay-dhar.workers.dev/
+  - id: sprouts.sprouts_generate_messages
+    object: Message
+    action: sprouts_generate_messages
+    description: "Generates personalized cold-outreach email and LinkedIn copy for up to 20 contacts."
+    category: Messaging
+    risk: medium
+    business_impact: "Drafts outbound copy for up to 20 named prospects at once, processing each person's role, employer and research profile to personalize the pitch before any human review."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://sprouts-mcp-server.kartikay-dhar.workers.dev/
+  - id: sprouts.sprouts_sequence
+    object: Sequence
+    action: sprouts_sequence
+    description: "Creates and manages email outreach sequences, including steps, messages and recipients."
+    category: Messaging
+    risk: medium
+    business_impact: "Builds and edits multi-step outreach campaigns and enrolls named recipients into them, staging who will be contacted and with what copy once the sequence is launched."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://sprouts-mcp-server.kartikay-dhar.workers.dev/
+  - id: sprouts.sprouts_sequence_preview
+    object: Sequence
+    action: sprouts_sequence_preview
+    description: "Read-only timeline view of a sequence's steps, timing, copy and recipient status."
+    category: Messaging
+    risk: low
+    business_impact: "Renders a sequence's steps, subject lines, bodies and recipient counts for review; read-only and nothing is sent."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://sprouts-mcp-server.kartikay-dhar.workers.dev/
+  - id: sprouts.sprouts_brand_guidelines
+    object: Document
+    action: sprouts_brand_guidelines
+    description: "Uploads brand-voice guideline text or inspects the prompts derived from an earlier upload."
+    category: Messaging
+    risk: low
+    business_impact: "Stores brand-voice rules that every generated outreach message is written against; bad guidelines skew all downstream copy but the upload is reversible."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://sprouts-mcp-server.kartikay-dhar.workers.dev/
+  - id: sprouts.sprouts_data_intelligence
+    object: Contact
+    action: sprouts_data_intelligence
+    description: "Natural-language prospect search across the Sprouts contact and company database."
+    category: Data Access
+    risk: high
+    business_impact: "Pulls lists of identifiable individuals — names, titles, employers and firmographics — from a third-party B2B database into the agent's context on a single free-text query."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://sprouts-mcp-server.kartikay-dhar.workers.dev/
+  - id: sprouts.sprouts_lookup
+    object: Contact
+    action: sprouts_lookup
+    description: "Batch-resolves named contacts or companies by name, email or domain; optionally returns full account detail."
+    category: Data Access
+    risk: high
+    business_impact: "Resolves a supplied list of people or companies against the vendor database and can return a 67-field account profile, matching third-party records to individuals the operator already named."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://sprouts-mcp-server.kartikay-dhar.workers.dev/
+  - id: sprouts.enrich_phone_email
+    object: Contact
+    action: enrich_phone_email
+    description: "Reveals a contact's phone number and email address from a LinkedIn URL or name plus company."
+    category: Data Access
+    risk: high
+    business_impact: "Unmasks one person's direct phone number and email address and charges up to 12 credits, turning a public profile into contactable personal data held by the operator."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://sprouts-mcp-server.kartikay-dhar.workers.dev/
+  - id: sprouts.sprouts_personalization
+    object: Account
+    action: sprouts_personalization
+    description: "Runs background research on a company domain, returning pain points, offerings and buying-intent topics with public source links."
+    category: Data Access
+    risk: low
+    business_impact: "Compiles company-level sales research from publicly sourced material; read-only and each claim carries a source link."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://sprouts-mcp-server.kartikay-dhar.workers.dev/
+  - id: sprouts.search_history
+    object: Search
+    action: search_history
+    description: "Views and reuses the user's past prospect searches and patterns across them."
+    category: Data Access
+    risk: low
+    business_impact: "Replays the operator's prior prospecting queries, exposing the targeting strategy behind them but no new contact data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Revenue & Pipeline ----------
+
+  # source: https://sprouts-mcp-server.kartikay-dhar.workers.dev/
+  - id: sprouts.move_to_sprouts
+    object: Contact
+    action: move_to_sprouts
+    description: "Moves contacts or accounts from search results into the customer's Sprouts platform."
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Imports batches of third-party contact records into the operator's own CRM and spends credits doing it, making the operator the controller of personal data it did not collect directly."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://sprouts-mcp-server.kartikay-dhar.workers.dev/
+  - id: sprouts.icp_analysis
+    object: Report
+    action: icp_analysis
+    description: "Sets up an Ideal Customer Profile and scores accounts against the configured targeting criteria."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Defines the targeting criteria and fit scores that steer every later search and campaign; a bad profile quietly misdirects the whole prospecting motion."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://sprouts-mcp-server.kartikay-dhar.workers.dev/
+  - id: sprouts.sprouts_user_preferences
+    object: Settings
+    action: sprouts_user_preferences
+    description: "Configures user preferences for field selection and response optimization, including legacy credential setup."
+    category: Operations
+    risk: medium
+    business_impact: "Changes account-level settings that shape what data every search returns, and on legacy accounts covers the credentials used for CRM push and enrichment."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://sprouts-mcp-server.kartikay-dhar.workers.dev/
+  - id: sprouts.query_templates
+    object: Template
+    action: query_templates
+    description: "Browses, applies, creates and deletes reusable prospect-search query templates."
+    category: Operations
+    risk: low
+    business_impact: "Manages saved search templates; deleting one loses a reusable query definition but no customer or prospect data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://sprouts-mcp-server.kartikay-dhar.workers.dev/
+  - id: sprouts.query_refinement
+    object: Query
+    action: query_refinement
+    description: "Analyzes a prospect-search query and suggests location, industry, size and title refinements."
+    category: Operations
+    risk: low
+    business_impact: "Suggests narrower or broader search criteria; advisory only and changes no stored state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://sprouts-mcp-server.kartikay-dhar.workers.dev/
+  - id: sprouts.sprouts_credit_balance
+    object: Account
+    action: sprouts_credit_balance
+    description: "Reports the account's remaining enrichment and move credits."
+    category: Operations
+    risk: low
+    business_impact: "Reads the remaining prepaid credit balance for the account; no personal data and no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial

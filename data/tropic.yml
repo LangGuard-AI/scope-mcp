@@ -1,0 +1,212 @@
+schema_version: "1.3"
+platform: tropic
+display_name: Tropic
+logo: https://cdn.prod.website-files.com/6676e796800e7ce0354cf8cb/669f14254abbea46db4b1c77_Favicon.png
+source: langguard-editorial
+updated: "2026-09"
+reference: https://claude.com/connectors/tropic
+mcp_server_url: https://app.tropicapp.io/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/connectors/tropic
+  - id: tropic.query_contract_documents
+    object: ContractDocument
+    action: query_contract_documents
+    description: "Queries the contents of stored supplier contract documents."
+    category: Data Access
+    risk: medium
+    business_impact: "Surfaces the text of executed supplier agreements, exposing negotiated rates, termination terms and confidentiality clauses to whoever drives the agent."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/tropic
+  - id: tropic.list_contracts
+    object: Contract
+    action: list_contracts
+    description: "Lists the organization's supplier contracts."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the supplier contract portfolio with counterparties, terms and renewal dates — a read-only view of vendor commitments."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Financial ----------
+
+  # source: https://claude.com/connectors/tropic
+  - id: tropic.list_redundant_spend
+    object: SpendAnalysis
+    action: list_redundant_spend
+    description: "Lists detected overlapping or duplicate software spend across the organization."
+    category: Financial
+    risk: medium
+    business_impact: "Exposes organization-wide spend analysis identifying duplicate vendor purchases, aggregating confidential budget and contract-value data in a single response."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/tropic
+  - id: tropic.get_redundant_spend
+    object: SpendAnalysis
+    action: get_redundant_spend
+    description: "Retrieves a single redundant-spend finding."
+    category: Financial
+    risk: low
+    business_impact: "Returns one duplicate-spend finding with its associated vendors and amounts; scope is a single record."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/tropic
+  - id: tropic.run_price_benchmark
+    object: PriceBenchmark
+    action: run_price_benchmark
+    description: "Runs a price benchmark for a supplier or product against Tropic's pricing data."
+    category: Financial
+    risk: medium
+    business_impact: "Executes a benchmarking job that compares the company's negotiated pricing against Tropic's market data, consuming benchmark entitlements and creating a record of internal rates."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/tropic
+  - id: tropic.create_manual_benchmark_request
+    object: BenchmarkRequest
+    action: create_manual_benchmark_request
+    description: "Creates a manual price-benchmark request for Tropic's team to fulfill."
+    category: Financial
+    risk: low
+    business_impact: "Files a benchmark request with Tropic that names a supplier and the pricing the team wants analyzed; reversible and reviewable before any commercial decision."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/tropic
+  - id: tropic.list_price_benchmarks
+    object: PriceBenchmark
+    action: list_price_benchmarks
+    description: "Lists price benchmarks available to the organization."
+    category: Financial
+    risk: low
+    business_impact: "Returns the set of completed price benchmarks so the agent can compare supplier rates; read-only reference data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/tropic
+  - id: tropic.get_price_benchmark
+    object: PriceBenchmark
+    action: get_price_benchmark
+    description: "Retrieves a single price benchmark."
+    category: Financial
+    risk: low
+    business_impact: "Returns one benchmark with its rate ranges and comparable deals, used as an input to negotiation rather than a change to any record."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Procurement & Suppliers ----------
+
+  # source: https://claude.com/connectors/tropic
+  - id: tropic.get_supplier_intelligence
+    object: Supplier
+    action: get_supplier_intelligence
+    description: "Retrieves Tropic's intelligence profile for a supplier."
+    category: Procurement & Suppliers
+    risk: low
+    business_impact: "Returns Tropic's profile of a single supplier — pricing patterns, negotiation history and vendor risk signals used to prepare a deal."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/tropic
+  - id: tropic.get_negotiation_playbook
+    object: NegotiationPlaybook
+    action: get_negotiation_playbook
+    description: "Retrieves the negotiation playbook for a supplier or category."
+    category: Procurement & Suppliers
+    risk: low
+    business_impact: "Returns Tropic's recommended negotiation tactics and leverage points for a supplier; advisory content with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/tropic
+  - id: tropic.list_supplier_products
+    object: SupplierProduct
+    action: list_supplier_products
+    description: "Lists the products a supplier offers."
+    category: Procurement & Suppliers
+    risk: low
+    business_impact: "Returns a supplier's product catalog and SKUs so purchases can be matched to the right line items; read-only catalog data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/tropic
+  - id: tropic.list_expert_insights
+    object: ExpertInsight
+    action: list_expert_insights
+    description: "Lists expert insights published by Tropic."
+    category: Procurement & Suppliers
+    risk: low
+    business_impact: "Returns Tropic's analyst commentary on suppliers and categories; editorial reference material with no customer data involved."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/tropic
+  - id: tropic.list_market_insights
+    object: MarketInsight
+    action: list_market_insights
+    description: "Lists market insights on software pricing and vendor trends."
+    category: Procurement & Suppliers
+    risk: low
+    business_impact: "Returns aggregate market pricing trends for software categories; benchmark context that does not touch the customer's own records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://claude.com/connectors/tropic
+  - id: tropic.get_server_status
+    object: Server
+    action: get_server_status
+    description: "Reports the health and status of the Tropic MCP server."
+    category: Operations
+    risk: low
+    business_impact: "Reports whether the Tropic MCP server is reachable and healthy; diagnostic output only, no business data returned."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

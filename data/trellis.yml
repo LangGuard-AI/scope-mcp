@@ -1,0 +1,352 @@
+schema_version: "1.3"
+platform: trellis
+display_name: Trellis
+logo: https://support.trellis.law/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+reference: https://support.trellis.law/trellis-law-mcp-technical-documentation
+mcp_server_url: https://mcp.trellis.law/anthropic
+actions:
+  # ---------- People & Org ----------
+
+  # source: https://support.trellis.law/trellis-law-mcp-technical-documentation
+  - id: trellis.Search-search_parties
+    object: Party
+    action: Search-search_parties
+    description: "Find cases involving a specific plaintiff, defendant, or other non-attorney party."
+    category: People & Org
+    risk: medium
+    business_impact: "Links a named individual to every state court case they appear in as plaintiff or defendant, assembling a litigation history that the person never consented to have compiled."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.trellis.law/trellis-law-mcp-technical-documentation
+  - id: trellis.Search-get_judge_profile
+    object: Judge
+    action: Search-get_judge_profile
+    description: "Full judge profile: bio, appointer, career history, courtroom rules, clerk phone."
+    category: People & Org
+    risk: medium
+    business_impact: "Returns a named judge's biography, career history and direct chambers contact details, including a clerk phone number that can be misused for ex parte contact."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.trellis.law/trellis-law-mcp-technical-documentation
+  - id: trellis.Search-search_judges
+    object: Judge
+    action: Search-search_judges
+    description: "Find judges by name, state, or county — returns judge_id for profile/analytics."
+    category: People & Org
+    risk: low
+    business_impact: "Resolves named judges to identifiers that unlock full profile and analytics lookups; read-only over public court personnel records."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/trellis
+  - id: trellis.Search-search_attorneys
+    object: Attorney
+    action: Search-search_attorneys
+    description: "Search attorney records in the Trellis state court dataset."
+    category: People & Org
+    risk: low
+    business_impact: "Surfaces named attorneys and their court appearances, exposing an individual lawyer's professional footprint for opposing-counsel research."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.trellis.law/trellis-law-mcp-technical-documentation
+  - id: trellis.Search-search_experts
+    object: Expert
+    action: Search-search_experts
+    description: "Search expert witnesses by name, state, or specialty group."
+    category: People & Org
+    risk: low
+    business_impact: "Identifies expert witnesses by name and specialty, supporting vetting or impeachment research on a named individual's testimony history."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Analytics ----------
+
+  # source: https://support.trellis.law/trellis-law-mcp-technical-documentation
+  - id: trellis.Analytics-get_judge_analytics
+    object: Judge
+    action: Analytics-get_judge_analytics
+    description: "Deep judge analytics: motion grant rates, milestones, matter type outcomes."
+    category: Analytics
+    risk: medium
+    business_impact: "Builds a behavioural profile of a named judge from historical rulings; judicial analytics of this kind is restricted or outright banned in some jurisdictions and can invite judicial-ethics scrutiny."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.trellis.law/trellis-law-mcp-technical-documentation
+  - id: trellis.Analytics-get_verdict_stats_by_attorney
+    object: VerdictStatistic
+    action: Analytics-get_verdict_stats_by_attorney
+    description: "Top plaintiff & defense firms ranked by total verdict awards."
+    category: Analytics
+    risk: low
+    business_impact: "Ranks plaintiff and defense firms by aggregate award totals, informing counsel-selection and settlement strategy from firm-level public verdict data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.trellis.law/trellis-law-mcp-technical-documentation
+  - id: trellis.Analytics-get_lawfirm_analytics
+    object: LawFirm
+    action: Analytics-get_lawfirm_analytics
+    description: "Firm litigation profile: case counts, practice areas, attorney distribution, trends."
+    category: Analytics
+    risk: low
+    business_impact: "Profiles a law firm's caseload mix and litigation trends from aggregated public docket data; competitive intelligence with no individual-level exposure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.trellis.law/trellis-law-mcp-technical-documentation
+  - id: trellis.Analytics-get_verdict_stats
+    object: VerdictStatistic
+    action: Analytics-get_verdict_stats
+    description: "Aggregate verdict stats: avg/median/min/max awards by type and practice area."
+    category: Analytics
+    risk: low
+    business_impact: "Returns aggregate award distributions by verdict type and practice area, used to anchor case valuation and settlement ranges."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://support.trellis.law/trellis-law-mcp-technical-documentation
+  - id: trellis.Search-search_cases
+    object: Case
+    action: Search-search_cases
+    description: "Search state court dockets by party, judge, firm, practice area, date, disposition."
+    category: Data Access
+    risk: medium
+    business_impact: "Queries the largest US state trial court docket corpus by party or counsel name, returning case sets that tie identifiable people to litigation at scale."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.trellis.law/trellis-law-mcp-technical-documentation
+  - id: trellis.Search-get_case
+    object: Case
+    action: Search-get_case
+    description: "Get full case details (parties, events, verdict, classification) by docket ID."
+    category: Data Access
+    risk: medium
+    business_impact: "Pulls a complete docket record including every named party, the event timeline and the verdict, concentrating litigation detail about identifiable individuals in one response."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.trellis.law/trellis-law-mcp-technical-documentation
+  - id: trellis.Search-get_case_complaints
+    object: Complaint
+    action: Search-get_case_complaints
+    description: "Get complaint(s) for a case — original + optional amended, with full text."
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves full complaint text, which routinely narrates injuries, employment history and residence details of named plaintiffs even though the filing is a public record."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.trellis.law/trellis-law-mcp-technical-documentation
+  - id: trellis.Search-search_documents
+    object: Document
+    action: Search-search_documents
+    description: "Full-text search across court filings (motions, orders, complaints) with facets."
+    category: Data Access
+    risk: medium
+    business_impact: "Runs full-text queries across millions of court filings, letting a single query surface every document mentioning a named person or company."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.trellis.law/trellis-law-mcp-technical-documentation
+  - id: trellis.Search-get_document
+    object: Document
+    action: Search-get_document
+    description: "Retrieve a single court filing by PDF ID, optionally with document text content."
+    category: Data Access
+    risk: medium
+    business_impact: "Downloads the full text of a specific court filing, which may contain sensitive personal narrative about the parties named in it."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.trellis.law/trellis-law-mcp-technical-documentation
+  - id: trellis.Search-search_verdicts
+    object: Verdict
+    action: Search-search_verdicts
+    description: "Search verdict records by award range, injury type, expert, attorney, party."
+    category: Data Access
+    risk: medium
+    business_impact: "Searches verdicts by injury type and party name, correlating identifiable individuals with the nature of their injuries and the money awarded."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/trellis
+  - id: trellis.Search-search_rulings
+    object: Ruling
+    action: Search-search_rulings
+    description: "Search rulings in the Trellis state court dataset."
+    category: Data Access
+    risk: low
+    business_impact: "Searches judicial rulings across state trial courts to find precedent and reasoning relevant to a pending motion."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.trellis.law/trellis-law-mcp-technical-documentation
+  - id: trellis.Search-get_ruling
+    object: Ruling
+    action: Search-get_ruling
+    description: "Get full ruling text and metadata by ruling ID."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the complete text of a court ruling for citation and argument drafting; read-only over a published judicial decision."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://support.trellis.law/trellis-law-mcp-technical-documentation
+  - id: trellis.Search-get_specialties
+    object: Specialty
+    action: Search-get_specialties
+    description: "List valid expert specialties, optionally filtered by specialty group."
+    category: Operations
+    risk: low
+    business_impact: "Lists the controlled vocabulary of expert specialties so expert searches use valid filters; reference data only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.trellis.law/trellis-law-mcp-technical-documentation
+  - id: trellis.Search-get_matter_types
+    object: MatterType
+    action: Search-get_matter_types
+    description: "List valid matter types (sub-classifications) for a practice area."
+    category: Operations
+    risk: low
+    business_impact: "Enumerates the matter-type taxonomy under a practice area so case searches can be scoped correctly; reference data only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.trellis.law/trellis-law-mcp-technical-documentation
+  - id: trellis.list_skills
+    object: Skill
+    action: list_skills
+    description: "Lists available workflow skills."
+    category: Operations
+    risk: low
+    business_impact: "Enumerates the litigation workflow skills the server exposes, shaping which multi-step research routines the agent will attempt."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.trellis.law/trellis-law-mcp-technical-documentation
+  - id: trellis.get_skill
+    object: Skill
+    action: get_skill
+    description: "Gets workflow instructions for a named skill."
+    category: Operations
+    risk: low
+    business_impact: "Fetches the instruction set for a named workflow skill, which then steers the agent's subsequent tool calls; server-authored prompt content entering the agent context."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.trellis.law/trellis-law-mcp-technical-documentation
+  - id: trellis.get_server_instructions
+    object: ServerInstruction
+    action: get_server_instructions
+    description: "Returns MCP server instructions (call first)."
+    category: Operations
+    risk: low
+    business_impact: "Loads the root server instructions into the agent context before any research call; vendor-controlled text that directs subsequent behaviour."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.trellis.law/trellis-law-mcp-technical-documentation
+  - id: trellis.Search-get_server_instructions
+    object: ServerInstruction
+    action: Search-get_server_instructions
+    description: "Returns Search server instructions."
+    category: Operations
+    risk: low
+    business_impact: "Loads usage instructions for the Search sub-server; read-only vendor guidance with no access to case data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.trellis.law/trellis-law-mcp-technical-documentation
+  - id: trellis.Analytics-get_server_instructions
+    object: ServerInstruction
+    action: Analytics-get_server_instructions
+    description: "Returns Analytics server instructions."
+    category: Operations
+    risk: low
+    business_impact: "Loads usage instructions for the Analytics sub-server; read-only vendor guidance with no access to case data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

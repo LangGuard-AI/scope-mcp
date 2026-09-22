@@ -1,0 +1,68 @@
+schema_version: "1.3"
+platform: thumbtack
+display_name: Thumbtack
+logo: https://www.thumbtack.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://mcp.thumbtack.com/mcp
+reference: https://docs.google.com/document/d/1RmGske5ktjAi9d7Ayok_yOv3a6Z2RDBSxIlX7aC5OEM/edit?usp=sharing
+actions:
+  # ---------- Service ----------
+
+  # source: https://docs.google.com/document/d/1RmGske5ktjAi9d7Ayok_yOv3a6Z2RDBSxIlX7aC5OEM/edit?usp=sharing
+  - id: thumbtack.search_home_service_pros
+    object: ProSearch
+    action: search_home_service_pros
+    description: "A unified tool that discovers service categories, fetches the request form, and searches for professionals — all in a single call."
+    category: Service
+    risk: low
+    business_impact: "Sends the user's free-text project description and ZIP code to Thumbtack's marketplace and opens a search record that persists for seven days, disclosing household location and intent to a third party."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.google.com/document/d/1RmGske5ktjAi9d7Ayok_yOv3a6Z2RDBSxIlX7aC5OEM/edit?usp=sharing
+  - id: thumbtack.filter_home_service_pros
+    object: ProSearch
+    action: filter_home_service_pros
+    description: "A follow-up mechanism for refining results using answers to clarifying questions."
+    category: Service
+    risk: medium
+    business_impact: "Submits the completed request form to Thumbtack, updating the existing search or creating a new one, so agent-generated answers about the job and property become marketplace state."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://docs.google.com/document/d/1RmGske5ktjAi9d7Ayok_yOv3a6Z2RDBSxIlX7aC5OEM/edit?usp=sharing
+  - id: thumbtack.get_reviews_for_pros
+    object: Review
+    action: get_reviews_for_pros
+    description: "Retrieves customer reviews for professionals with flexible sorting options."
+    category: Data Access
+    risk: low
+    business_impact: "Pulls up to 20 published reviews per business, which the agent may summarize into hiring recommendations that misrepresent a pro's overall rating if sorted selectively."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.google.com/document/d/1RmGske5ktjAi9d7Ayok_yOv3a6Z2RDBSxIlX7aC5OEM/edit?usp=sharing
+  - id: thumbtack.get_category_recommendations
+    object: Category
+    action: get_category_recommendations
+    description: "Returns home service recommendations sorted by popularity or trending status for a given location."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregate popular or trending service categories for a ZIP code; read-only marketplace metadata with no customer records involved."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

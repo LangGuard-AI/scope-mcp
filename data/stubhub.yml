@@ -1,0 +1,54 @@
+schema_version: "1.3"
+platform: stubhub
+display_name: StubHub
+logo: https://www.stubhub.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+reference: https://claude.com/connectors/stubhub
+mcp_server_url: https://open-ai-app.stubhub.net/mcp
+actions:
+  # ---------- Commerce ----------
+
+  # source: https://claude.com/connectors/stubhub
+  - id: stubhub.highlight_listing
+    object: Listing
+    action: highlight_listing
+    description: "Surfaces a specific ticket listing to the user from the StubHub marketplace."
+    category: Commerce
+    risk: low
+    business_impact: "Puts one specific ticket listing in front of the user as the recommended option, steering purchase choice without committing any order or payment."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/connectors/stubhub
+  - id: stubhub.event_search
+    object: Event
+    action: event_search
+    description: "Searches StubHub's catalog of live events across concerts, sports, theater, comedy, and festivals."
+    category: Data Access
+    risk: low
+    business_impact: "Returns public event listings matching a query; read-only discovery over marketplace inventory with no customer or payment data involved."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/stubhub
+  - id: stubhub.fetch_listings
+    object: Listing
+    action: fetch_listings
+    description: "Retrieves real-time ticket listings, pricing, and seat-view details for an event."
+    category: Data Access
+    risk: low
+    business_impact: "Reads live ticket availability and pricing for an event, exposing marketplace inventory data but no cardholder or account information."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

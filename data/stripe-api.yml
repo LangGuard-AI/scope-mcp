@@ -1,0 +1,169 @@
+schema_version: "1.3"
+platform: stripe-api
+display_name: Stripe API
+logo: https://stripe.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://mcp.stripe.com
+actions:
+  # ---------- Financial ----------
+
+  # source: https://docs.stripe.com/mcp
+  - id: stripe-api.stripe_api_write
+    object: "*"
+    action: stripe_api_write
+    category: Financial
+    risk: critical
+    business_impact: "Executes any Stripe POST, PATCH, PUT or DELETE call, so a single invocation can move money, issue refunds, or delete customer and payment records."
+    compliance: [PCI, PSD2, SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.stripe.com/mcp
+  - id: stripe-api.stripe_api_read
+    object: "*"
+    action: stripe_api_read
+    category: Financial
+    risk: high
+    business_impact: "Reads any Stripe GET endpoint, including bulk customer, charge, and payout listings that carry billing PII and card metadata."
+    compliance: [PCI, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.stripe.com/mcp
+  - id: stripe-api.stripe_analytics
+    object: "*"
+    action: stripe_analytics
+    category: Financial
+    risk: high
+    business_impact: "Runs natural-language-generated SQL over Stripe Sigma to produce billing metrics and financial reports, returning aggregate revenue data and customer-level rows."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.stripe.com/mcp
+  - id: stripe-api.get_balance_summary
+    object: Balance
+    action: get_balance_summary
+    category: Financial
+    risk: medium
+    business_impact: "Exposes available, pending, and Treasury account balances for the connected Stripe account."
+    compliance: [GLBA, SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Access ----------
+
+  # source: https://claude.com/connectors/stripe
+  - id: stripe-api.manage_stripe_accounts
+    object: Account
+    action: manage_stripe_accounts
+    category: Identity & Access
+    risk: high
+    business_impact: "Administers the Stripe accounts the connection operates against, changing which merchant ledger subsequent payment and payout calls hit."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/stripe
+  - id: stripe-api.list_available_accounts_or_orgs
+    object: Account
+    action: list_available_accounts_or_orgs
+    category: Identity & Access
+    risk: low
+    business_impact: "Enumerates the Stripe accounts and organizations reachable with the supplied credential."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.stripe.com/mcp
+  - id: stripe-api.get_stripe_account_info
+    object: Account
+    action: get_stripe_account_info
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads configuration and identity metadata for the connected Stripe account."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://docs.stripe.com/mcp
+  - id: stripe-api.stripe_api_search
+    object: ApiMethod
+    action: stripe_api_search
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Searches the Stripe API method catalog by keyword; returns interface metadata, not account data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.stripe.com/mcp
+  - id: stripe-api.stripe_api_details
+    object: ApiMethod
+    action: stripe_api_details
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns parameter definitions for a named Stripe API method; schema reference only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.stripe.com/mcp
+  - id: stripe-api.search_stripe_documentation
+    object: Documentation
+    action: search_stripe_documentation
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Searches Stripe's public documentation corpus; no merchant or cardholder data is touched."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.stripe.com/mcp
+  - id: stripe-api.stripe_implementation_planner
+    object: Integration
+    action: stripe_implementation_planner
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Produces integration guidance for building payment, checkout, or billing flows; advisory output with no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.stripe.com/mcp
+  - id: stripe-api.send_stripe_mcp_feedback
+    object: Feedback
+    action: send_stripe_mcp_feedback
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Sends free-text feedback about the MCP tools to Stripe, so whatever context the agent includes leaves the tenant."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

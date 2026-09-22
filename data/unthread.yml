@@ -1,0 +1,212 @@
+schema_version: "1.3"
+platform: unthread
+display_name: Unthread
+logo: https://unthread.io/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+reference: https://docs.unthread.io/docs/unthread-mcp
+mcp_server_url: https://app.unthread.io/api/mcp
+actions:
+  # ---------- Service ----------
+
+  # source: https://claude.com/connectors/unthread
+  - id: unthread.list_conversations
+    object: Conversation
+    action: list_conversations
+    description: "Lists support conversations (tickets) in the connected Unthread workspace."
+    category: Service
+    risk: medium
+    business_impact: "Enumerates customer support tickets across the workspace, surfacing requester identities and message content in bulk to the calling agent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/unthread
+  - id: unthread.get_conversation_by_id
+    object: Conversation
+    action: get_conversation_by_id
+    description: "Retrieves a single support conversation and its thread content by id."
+    category: Service
+    risk: medium
+    business_impact: "Returns the full message thread of one support ticket, including customer-authored content that routinely carries contact details and account identifiers."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.unthread.io/docs/unthread-mcp
+  - id: unthread.update_conversation
+    object: Conversation
+    action: update_conversation
+    description: "Write-capable MCP tool for updating a conversation."
+    category: Service
+    risk: medium
+    business_impact: "Mutates a live support ticket — status, assignment, and field values — changing what the support team and the customer see as the current state of the case."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.unthread.io/docs/unthread-mcp
+  - id: unthread.create_conversation_comment
+    object: Conversation
+    action: create_conversation_comment
+    description: "Write-capable MCP tool for creating a conversation comment; supports Slack block format."
+    category: Service
+    risk: medium
+    business_impact: "Posts a comment into a live support thread where customers and agents read it, so an agent-authored reply can commit the company to a position on an open case."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://docs.unthread.io/docs/unthread-mcp
+  - id: unthread.list_survey_responses
+    object: SurveyResponse
+    action: list_survey_responses
+    description: "Read-only MCP endpoint tool wrapper for survey analytics."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads individual customer satisfaction responses, including free-text comments attributable to the customer who submitted them."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.unthread.io/docs/unthread-mcp
+  - id: unthread.list_outbound_survey_responses
+    object: OutboundSurveyResponse
+    action: list_outbound_survey_responses
+    description: "Read-only MCP endpoint tool wrapper for survey analytics."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads responses to outbound surveys sent to named recipients, exposing per-recipient feedback and the contact records those responses attach to."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/unthread
+  - id: unthread.get_time_series_analytics
+    object: Analytics
+    action: get_time_series_analytics
+    description: "Returns time-series support analytics for the workspace."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregated ticket-volume and response-time metrics over a date range; reporting data with no individual-level detail."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.unthread.io/docs/unthread-mcp
+  - id: unthread.get_survey_analytics
+    object: Survey
+    action: get_survey_analytics
+    description: "Read-only MCP endpoint tool wrapper for survey analytics; requires startDate and endDate together for date filtering."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregated survey scores for a date range, used for CSAT reporting rather than individual-level review."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.unthread.io/docs/unthread-mcp
+  - id: unthread.list_surveys
+    object: Survey
+    action: list_surveys
+    description: "Read-only MCP endpoint tool wrapper for survey analytics."
+    category: Data Access
+    risk: low
+    business_impact: "Lists configured surveys and their metadata; configuration-level information with no customer content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.unthread.io/docs/unthread-mcp
+  - id: unthread.get_outbound_survey
+    object: OutboundSurvey
+    action: get_outbound_survey
+    description: "Read-only MCP endpoint tool wrapper for survey analytics."
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves the definition and delivery settings of one outbound survey campaign; read-only configuration detail."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://docs.unthread.io/docs/unthread-mcp
+  - id: unthread.create_approval_request
+    object: ApprovalRequest
+    action: create_approval_request
+    description: "Write-capable MCP tool for creating an approval request."
+    category: Operations
+    risk: medium
+    business_impact: "Opens an approval request inside the support workflow, putting an item in front of human approvers and starting a process that downstream automations may act on."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/unthread
+  - id: unthread.list_custom_fields
+    object: CustomField
+    action: list_custom_fields
+    description: "Lists custom field definitions configured on the workspace."
+    category: Operations
+    risk: low
+    business_impact: "Enumerates ticket custom-field definitions, revealing how the support org models its data but exposing no customer records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/unthread
+  - id: unthread.get_custom_field
+    object: CustomField
+    action: get_custom_field
+    description: "Retrieves a single custom field definition."
+    category: Operations
+    risk: low
+    business_impact: "Returns one custom-field definition and its allowed values; schema metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Access ----------
+
+  # source: https://claude.com/connectors/unthread
+  - id: unthread.get_current_user
+    object: User
+    action: get_current_user
+    description: "Returns the identity and workspace context of the authenticated user."
+    category: Identity & Access
+    risk: low
+    business_impact: "Reveals which Unthread account and workspace the connection is authenticated as, along with that user's own profile details."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

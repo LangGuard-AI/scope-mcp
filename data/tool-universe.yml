@@ -1,0 +1,79 @@
+schema_version: "1.3"
+platform: tool-universe
+display_name: Tool Universe
+source: langguard-editorial
+updated: "2026-09"
+actions:
+  # ---------- Platform & DevOps ----------
+
+  # source: uvx --refresh tooluniverse
+  - id: tool-universe.execute_tool
+    object: "*"
+    action: execute_tool
+    description: "Executes any tool registered in the ToolUniverse system with caller-supplied arguments."
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Runs an arbitrary ToolUniverse tool with caller-supplied arguments, so the effective blast radius is the union of every registered tool rather than one reviewable operation."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: uvx --refresh tooluniverse
+  - id: tool-universe.list_tools
+    object: Tool
+    action: list_tools
+    description: "Lists the tools available in the ToolUniverse registry in names, categories, basic, or summary mode."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the registry's tool names and categories; read-only inventory with no customer or personal data involved."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: uvx --refresh tooluniverse
+  - id: tool-universe.grep_tools
+    object: Tool
+    action: grep_tools
+    description: "Searches the tool registry with plain text matching or regex patterns."
+    category: Data Access
+    risk: low
+    business_impact: "Pattern-matches across registry metadata to locate tools; returns catalog entries only, leaving no state changed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: uvx --refresh tooluniverse
+  - id: tool-universe.get_tool_info
+    object: Tool
+    action: get_tool_info
+    description: "Returns descriptions or full definitions, including parameter schemas, for one or more registered tools."
+    category: Data Access
+    risk: low
+    business_impact: "Reveals a tool's description and full parameter schema, which is the reconnaissance step before invoking it but changes nothing by itself."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: uvx --refresh tooluniverse
+  - id: tool-universe.find_tools
+    object: Tool
+    action: find_tools
+    description: "Finds relevant ToolUniverse tools using AI-powered search over the registry."
+    category: Data Access
+    risk: low
+    business_impact: "Ranks registry entries by relevance to a natural-language query; selection of a tool still requires a separate invocation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial

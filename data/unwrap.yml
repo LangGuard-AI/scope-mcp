@@ -1,0 +1,265 @@
+schema_version: "1.3"
+platform: unwrap
+display_name: Unwrap
+logo: https://cdn.prod.website-files.com/67c5e65b5323e6f7f216d5e7/67d7436af20915107b7dbb33_unwrap_symbol_lt_blood_orange_sorbet_256.jpeg
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://nlp.api.production.unwrap.ai/mcp
+reference: https://docs.unwrap.ai/articles/6412771011-unwrap-mcp
+server_website: https://www.unwrap.ai/
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.unwrap.ai/articles/6412771011-unwrap-mcp
+  - id: unwrap.query_feedback_tool
+    object: FeedbackEntry
+    action: query_feedback_tool
+    description: "Queries feedback data using Unwrap's query syntax."
+    category: Data Access
+    risk: medium
+    business_impact: "Runs arbitrary queries across the org's aggregated customer feedback corpus, returning verbatims that routinely carry reviewer names, emails and other end-user identifiers pulled in from support and review integrations."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/unwrap
+  - id: unwrap.query_feedback_data
+    object: FeedbackEntry
+    action: query_feedback_data
+    description: "Queries feedback data exposed through the Unwrap connector."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads customer feedback records across connected sources; result sets can surface personal data submitted by end users in reviews, tickets and survey responses."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: low
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.unwrap.ai/articles/6412771011-unwrap-mcp
+  - id: unwrap.sample_feedback_entries
+    object: FeedbackEntry
+    action: sample_feedback_entries
+    description: "Creates feedback samples from a view, either random or semantic."
+    category: Data Access
+    risk: high
+    business_impact: "Pulls raw customer verbatims out of a view into an agent-readable sample, exposing free-text that frequently contains reviewer identities, account details and unredacted personal information."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.unwrap.ai/articles/6412771011-unwrap-mcp
+  - id: unwrap.analyze_entry_text
+    object: FeedbackSample
+    action: analyze_entry_text
+    description: "Runs custom instructions across saved feedback samples."
+    category: Data Access
+    risk: medium
+    business_impact: "Applies caller-supplied instructions to the text of a saved sample, so personal data inside customer verbatims is processed for a purpose the data subject never consented to."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.unwrap.ai/articles/6412771011-unwrap-mcp
+  - id: unwrap.classify_feedback_entries
+    object: FeedbackEntry
+    action: classify_feedback_entries
+    description: "Classifies feedback entries into predefined labels."
+    category: Data Access
+    risk: medium
+    business_impact: "Attaches labels to customer feedback entries, changing how those records are counted in downstream reporting and creating derived attributes about identifiable reviewers."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.unwrap.ai/articles/6412771011-unwrap-mcp
+  - id: unwrap.plot_chart
+    object: Chart
+    action: plot_chart
+    description: "Generates charts and tables for feedback trends and comparisons."
+    category: Data Access
+    risk: low
+    business_impact: "Renders aggregate trend charts and tables over feedback volumes; output is summarized counts rather than individual records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.unwrap.ai/articles/6412771011-unwrap-mcp
+  - id: unwrap.search_groups
+    object: Group
+    action: search_groups
+    description: "Semantically searches taxonomy groups with optional filtering."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the feedback taxonomy to find themes matching a query; returns aggregated group metadata, not the underlying verbatims."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.unwrap.ai/articles/6412771011-unwrap-mcp
+  - id: unwrap.search_actionable_groups
+    object: Group
+    action: search_actionable_groups
+    description: "Returns the most actionable feedback groups with filtering and sorting."
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces the themes Unwrap ranks as most actionable, which can steer roadmap prioritization if the agent reports them without the underlying volume context."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/unwrap
+  - id: unwrap.get_group_insights_playbook
+    object: Playbook
+    action: get_group_insights_playbook
+    description: "Returns the guided playbook for analyzing insights on a feedback group."
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves Unwrap's guidance for interpreting group insights; read-only instructional content with no customer records attached."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://docs.unwrap.ai/articles/6412771011-unwrap-mcp
+  - id: unwrap.list_views
+    object: View
+    action: list_views
+    description: "Lists the authenticated org's available views with IDs and names."
+    category: Operations
+    risk: low
+    business_impact: "Enumerates the org's feedback views, revealing how the workspace is partitioned and which product areas are tracked."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.unwrap.ai/articles/6412771011-unwrap-mcp
+  - id: unwrap.discover_filter_schema
+    object: FilterSchema
+    action: discover_filter_schema
+    description: "Returns the available filter fields for a view."
+    category: Operations
+    risk: low
+    business_impact: "Reads the filter schema of a view so queries can be constructed; exposes field names only, not field contents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.unwrap.ai/articles/6412771011-unwrap-mcp
+  - id: unwrap.search_segments
+    object: Segment
+    action: search_segments
+    description: "Semantically searches segment fields and their values."
+    category: Operations
+    risk: low
+    business_impact: "Finds segment dimensions matching a query, exposing how customers are sliced internally by attributes such as plan, region or account tier."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.unwrap.ai/articles/6412771011-unwrap-mcp
+  - id: unwrap.list_segment_field_values
+    object: Segment
+    action: list_segment_field_values
+    description: "Lists the allowed values for a segment field."
+    category: Operations
+    risk: low
+    business_impact: "Enumerates every value a segment field can take, which can spell out the full customer account list when accounts are used as a segment dimension."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.unwrap.ai/articles/6412771011-unwrap-mcp
+  - id: unwrap.list_feedback_integrations
+    object: Integration
+    action: list_feedback_integrations
+    description: "Lists connected feedback integrations and their source coverage."
+    category: Operations
+    risk: low
+    business_impact: "Reveals which external systems feed Unwrap and how far back each source reaches, mapping the org's feedback supply chain."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.unwrap.ai/articles/6412771011-unwrap-mcp
+  - id: unwrap.get_started
+    object: Guide
+    action: get_started
+    description: "Returns the core usage guide and data model for the Unwrap MCP."
+    category: Operations
+    risk: low
+    business_impact: "Fetches onboarding guidance and the Unwrap data model; instructional content with no customer data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.unwrap.ai/articles/6412771011-unwrap-mcp
+  - id: unwrap.leave_feedback
+    object: VendorFeedback
+    action: leave_feedback
+    description: "Submits feedback directly to the Unwrap team."
+    category: Operations
+    risk: low
+    business_impact: "Sends caller-authored text to Unwrap's own team, moving whatever the agent includes — potentially internal context or customer quotes — outside the tenant boundary with no recall path."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.unwrap.ai/articles/6412771011-unwrap-mcp
+  - id: unwrap.search_documentation
+    object: Document
+    action: search_documentation
+    description: "Searches Unwrap's product documentation."
+    category: Operations
+    risk: low
+    business_impact: "Searches public product documentation; returns help-center content with no tenant data involved."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://docs.unwrap.ai/articles/6412771011-unwrap-mcp
+  - id: unwrap.read_documentation_article
+    object: Document
+    action: read_documentation_article
+    description: "Reads a documentation article as markdown."
+    category: Operations
+    risk: low
+    business_impact: "Retrieves the full text of a help-center article; public content, no customer records exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial

@@ -1,0 +1,341 @@
+schema_version: "1.3"
+platform: turkish-airlines
+display_name: Turkish Airlines
+logo: https://www.turkishairlines.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://mcp-app.turkishtechlab.com/mcp
+reference: https://mcp.turkishtechlab.com
+server_website: https://mcp.turkishtechlab.com
+actions:
+  # ---------- Financial ----------
+
+  # source: https://mcp-app.turkishtechlab.com/mcp
+  - id: turkish-airlines.create_business_upgrade_payment_link
+    object: Payment
+    action: create_business_upgrade_payment_link
+    description: "Registers a selected Business Class upgrade option against a booking and returns the card checkout or Miles&Smiles payment link."
+    category: Financial
+    risk: high
+    business_impact: "Commits a passenger to a specific priced upgrade option and hands back a live checkout URL, so a wrong option or passenger count turns into a real card or miles charge at completion."
+    compliance: [PCI, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp-app.turkishtechlab.com/mcp
+  - id: turkish-airlines.get_business_upgrade_offers
+    object: Booking
+    action: get_business_upgrade_offers
+    description: "Returns available Business Class upgrade offers and prices for an existing booking, per flight and per payment method."
+    category: Financial
+    risk: medium
+    business_impact: "Exposes per-passenger upgrade pricing and payment options tied to a named reservation, revealing who is travelling on the PNR and what they can be charged."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://mcp-app.turkishtechlab.com/mcp
+  - id: turkish-airlines.pnr_finder
+    object: BookingReference
+    action: pnr_finder
+    description: "Triggers Turkish Airlines to send a forgotten PNR to the phone number or email registered on the booking."
+    category: Customer
+    risk: high
+    business_impact: "Fires a booking-reference recovery message to the contact on file, an account-recovery primitive that can be abused to confirm a passenger's travel or spam their registered phone and email."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp-app.turkishtechlab.com/mcp
+  - id: turkish-airlines.manage_booking_link
+    object: Booking
+    action: manage_booking_link
+    description: "Validates a booking by PNR and surname and returns a deeplink to manage the reservation or start online check-in."
+    category: Customer
+    risk: high
+    business_impact: "Confirms that a PNR and surname pair is valid and issues an authenticated deeplink into the cancel, refund, rebook and check-in flows for that reservation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp-app.turkishtechlab.com/mcp
+  - id: turkish-airlines.get_booking_details
+    object: Booking
+    action: get_booking_details
+    description: "Retrieves passenger details, flight segments and status for a booking identified by PNR or e-ticket number."
+    category: Customer
+    risk: medium
+    business_impact: "Returns passenger names, itinerary and ticket numbers for a single reservation, putting traveller identity and movement data in the agent's context."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp-app.turkishtechlab.com/mcp
+  - id: turkish-airlines.check_stopover_eligibility
+    object: Booking
+    action: check_stopover_eligibility
+    description: "Checks whether an existing booking qualifies for the Stopover in Istanbul free-hotel programme, using PNR or e-ticket plus surname."
+    category: Customer
+    risk: medium
+    business_impact: "Validates a PNR and surname pair to test stopover entitlement, confirming that a named passenger holds a specific itinerary."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp-app.turkishtechlab.com/mcp
+  - id: turkish-airlines.get_booking_baggage_allowance
+    object: Booking
+    action: get_booking_baggage_allowance
+    description: "Fetches the baggage allowance and extra-baggage details attached to a specific booking or ticket number."
+    category: Customer
+    risk: low
+    business_impact: "Reads baggage entitlements for a ticketed passenger; limited data, but the lookup is keyed to a real reservation and confirms it exists."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Service ----------
+
+  # source: https://mcp-app.turkishtechlab.com/mcp
+  - id: turkish-airlines.add_message_to_baggage_case
+    object: BaggageCase
+    action: add_message_to_baggage_case
+    description: "Posts a new message to an existing baggage issue case on the customer's behalf."
+    category: Service
+    risk: medium
+    business_impact: "Writes a statement into an official lost or damaged baggage claim under the customer's name, becoming part of the record the airline adjudicates the claim on."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp-app.turkishtechlab.com/mcp
+  - id: turkish-airlines.get_baggage_case_details
+    object: BaggageCase
+    action: get_baggage_case_details
+    description: "Looks up the status of an existing baggage issue case by case number and the email it was filed with."
+    category: Service
+    risk: medium
+    business_impact: "Surfaces the contents and status of a customer's lost-baggage claim, which typically carries their name, contact email and itinerary."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp-app.turkishtechlab.com/mcp
+  - id: turkish-airlines.get_feedback_status
+    object: FeedbackCase
+    action: get_feedback_status
+    description: "Checks the status of a previously submitted feedback or complaint by its tk- reference number."
+    category: Service
+    risk: medium
+    business_impact: "Reveals the handling status of a named customer's complaint or application to anyone holding the reference number alone."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp-app.turkishtechlab.com/mcp
+  - id: turkish-airlines.generate_baggage_issue_link
+    object: Link
+    action: generate_baggage_issue_link
+    description: "Generates a localized link to the official Turkish Airlines baggage issue tracing form."
+    category: Service
+    risk: low
+    business_impact: "Produces a localized URL to the baggage claim form; no passenger data is submitted or read by the call itself."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://mcp-app.turkishtechlab.com/mcp
+  - id: turkish-airlines.flight-status
+    object: Flight
+    action: flight-status
+    description: "Fetches real-time status for a specific flight number, including gate, terminal and departure or arrival times."
+    category: Operations
+    risk: low
+    business_impact: "Reads publicly published operational status for one flight number; no reservation or passenger data is touched."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp-app.turkishtechlab.com/mcp
+  - id: turkish-airlines.flight-status-by-route
+    object: Flight
+    action: flight-status-by-route
+    description: "Fetches real-time status for all flights on a given route and date."
+    category: Operations
+    risk: low
+    business_impact: "Lists operational status for scheduled flights on a route; read-only public schedule data with no customer records involved."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://mcp-app.turkishtechlab.com/mcp
+  - id: turkish-airlines.search_flights
+    object: FlightOffer
+    action: search_flights
+    description: "Searches bookable Turkish Airlines flights and returns available options with prices."
+    category: Data Access
+    risk: low
+    business_impact: "Returns bookable itineraries and fares for a route and date; nothing is held or charged, but the results drive downstream purchase decisions."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp-app.turkishtechlab.com/mcp
+  - id: turkish-airlines.search_inbound_flights
+    object: FlightOffer
+    action: search_inbound_flights
+    description: "Returns inbound options with combined round-trip pricing for a previously searched outbound selection."
+    category: Data Access
+    risk: low
+    business_impact: "Continues a flight search session to price the return leg; read-only fare shopping tied to a transient search id."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp-app.turkishtechlab.com/mcp
+  - id: turkish-airlines.find_flight_price_calendar
+    object: FareCalendar
+    action: find_flight_price_calendar
+    description: "Finds the cheapest fares around a target departure date for one travel leg."
+    category: Data Access
+    risk: low
+    business_impact: "Reads a date-by-date fare calendar for flexible travellers; pricing data only, with no booking side effects."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp-app.turkishtechlab.com/mcp
+  - id: turkish-airlines.search_hotel_packages
+    object: HolidayPackage
+    action: search_hotel_packages
+    description: "Browses Turkish Airlines Holidays packages from the catalog with destination, budget, rating and trip-type filters."
+    category: Data Access
+    risk: low
+    business_impact: "Returns a curated package catalog with prices and booking links; commercial content only, no customer record is read."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp-app.turkishtechlab.com/mcp
+  - id: turkish-airlines.generate_holidays_search_link
+    object: Link
+    action: generate_holidays_search_link
+    description: "Builds a Turkish Airlines Holidays link for flight-plus-hotel packages on a specific round trip with route, dates and travellers pre-filled."
+    category: Data Access
+    risk: low
+    business_impact: "Assembles a pre-filled shopping URL including traveller counts and children's ages; the data is supplied in the request, not retrieved from the airline."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp-app.turkishtechlab.com/mcp
+  - id: turkish-airlines.check_stopover_routes
+    object: Route
+    action: check_stopover_routes
+    description: "Checks whether routes transiting Istanbul qualify for the Stopover in Istanbul accommodation programme, without a booking."
+    category: Data Access
+    risk: low
+    business_impact: "Reads programme eligibility rules for up to ten routes; no reservation or passenger identity is involved."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp-app.turkishtechlab.com/mcp
+  - id: turkish-airlines.get_city_guide
+    object: CityGuide
+    action: get_city_guide
+    description: "Returns a destination travel guide covering attractions, transport and weather for a city code."
+    category: Data Access
+    risk: low
+    business_impact: "Fetches editorial destination content; no airline or customer records are accessed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp-app.turkishtechlab.com/mcp
+  - id: turkish-airlines.get_airline_promotions
+    object: Promotion
+    action: get_airline_promotions
+    description: "Fetches current airline promotions filtered by country and departure airport."
+    category: Data Access
+    risk: low
+    business_impact: "Reads published promotional offers for a market; marketing content with no data-protection exposure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp-app.turkishtechlab.com/mcp
+  - id: turkish-airlines.get_contact_info
+    object: ContactInfo
+    action: get_contact_info
+    description: "Returns Turkish Airlines call-center numbers for a country and, when a city is given, local sales office addresses and hours."
+    category: Data Access
+    risk: low
+    business_impact: "Looks up published corporate contact details; the only personal input is an optional country inferred from the caller's location."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp-app.turkishtechlab.com/mcp
+  - id: turkish-airlines.search_thy_faq
+    object: FaqArticle
+    action: search_thy_faq
+    description: "Looks up official Turkish Airlines FAQ answers for a fixed topic category such as baggage, check-in, fare rules or pets."
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves official policy text so answers come from published rules rather than model memory; reduces the risk of misstating fare or baggage policy."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial

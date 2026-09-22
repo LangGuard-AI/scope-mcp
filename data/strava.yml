@@ -1,0 +1,124 @@
+schema_version: "1.3"
+platform: strava
+display_name: Strava
+logo: https://www.strava.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+reference: https://support.strava.com/en-us/articles/15401531-strava-mcp-connector
+mcp_server_url: https://mcp.strava.com/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/connectors/strava
+  - id: strava.get_athlete_profile
+    object: Athlete
+    action: get_athlete_profile
+    description: "Returns the authenticated athlete's Strava profile."
+    category: Data Access
+    risk: medium
+    business_impact: "Pulls the athlete's identity profile — name, location, and account details — into the agent context, exposing directly identifying personal data to whatever downstream model or log handles the response."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/strava
+  - id: strava.list_activities
+    object: Activity
+    action: list_activities
+    description: "Lists the authenticated athlete's recorded activities."
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves the athlete's activity history, a timestamped record of where they were and when — reconstructing home, workplace, and routine movement patterns from a single call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/strava
+  - id: strava.get_activity_streams
+    object: ActivityStream
+    action: get_activity_streams
+    description: "Returns the raw time-series streams recorded for an activity."
+    category: Data Access
+    risk: medium
+    business_impact: "Exposes raw per-second GPS coordinates and sensor traces for an activity, the most granular location and physiological data Strava holds on an individual."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/strava
+  - id: strava.get_athlete_zones
+    object: Athlete
+    action: get_athlete_zones
+    description: "Returns the athlete's configured heart-rate and power training zones."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads heart-rate and power thresholds tied to a named athlete — physiological measurements that qualify as sensitive personal data in most privacy regimes."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/strava
+  - id: strava.get_activity_performance
+    object: Activity
+    action: get_activity_performance
+    description: "Returns performance metrics derived from a recorded activity."
+    category: Data Access
+    risk: medium
+    business_impact: "Surfaces derived training and effort metrics for a single activity; the connector docs do not specify whether raw location or biometric fields ride along with the summary."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/strava
+  - id: strava.get_club_info
+    object: Club
+    action: get_club_info
+    description: "Returns information about a Strava club."
+    category: Data Access
+    risk: low
+    business_impact: "Reads club metadata the athlete already has access to; scope is a group profile rather than an individual's training record."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/strava
+  - id: strava.get_gear
+    object: Gear
+    action: get_gear
+    description: "Returns the athlete's registered gear such as bikes and shoes."
+    category: Data Access
+    risk: low
+    business_impact: "Reads registered equipment and its accumulated mileage; low-sensitivity inventory data with no write path back to the account."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://claude.com/connectors/strava
+  - id: strava.health
+    object: Service
+    action: health
+    description: "Reports the availability of the Strava MCP connector."
+    category: Operations
+    risk: low
+    business_impact: "Confirms the connector is reachable; returns no athlete data and changes no state."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
