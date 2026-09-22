@@ -1,0 +1,38 @@
+schema_version: "1.3"
+platform: uber-eats
+display_name: Uber Eats
+logo: https://www.uber.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+reference: https://claude.com/connectors/uber-eats
+mcp_server_url: https://mcp.ubereats.com/eats-claude/mcp
+actions:
+  # ---------- Operations ----------
+
+  # source: https://claude.com/connectors/uber-eats
+  - id: uber-eats.publish_analytics
+    object: AnalyticsEvent
+    action: publish_analytics
+    category: Operations
+    risk: low
+    business_impact: "Emits connector usage telemetry to Uber, attaching a user's interaction events to their Uber Eats identity with no vendor-documented payload schema."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/connectors/uber-eats
+  - id: uber-eats.search
+    object: Restaurant
+    action: search
+    category: Data Access
+    risk: low
+    business_impact: "Queries nearby restaurants and dishes, sending the user's location context to Uber on every call and returning merchant catalog data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial

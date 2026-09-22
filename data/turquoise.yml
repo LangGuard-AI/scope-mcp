@@ -1,0 +1,94 @@
+schema_version: "1.3"
+platform: turquoise
+display_name: Turquoise Health
+logo: https://cdn.prod.website-files.com/6983b26c0aa7a65ab0f13988/69a92aebda32b71819fd1f35_favicon.png
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://mcp.turquoise.health/mcp
+reference: https://claude.com/connectors/turquoise
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/connectors/turquoise
+  - id: turquoise.explore_knowledge_graph
+    object: HealthcareEntity
+    action: explore_knowledge_graph
+    description: "Search across healthcare entities and explore how they relate to each other."
+    category: Data Access
+    risk: low
+    business_impact: "Searches payers, providers, facilities, and billing codes in Turquoise's graph and traverses their relationships; read-only reference lookup."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/turquoise
+  - id: turquoise.analyze_medical_rates
+    object: Rate
+    action: analyze_medical_rates
+    description: "Analyze in-network rates across medical service categories."
+    category: Data Access
+    risk: low
+    business_impact: "Returns benchmarked in-network rates for medical service categories, surfacing contracted payer-provider pricing that is commercially sensitive but not personal data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/turquoise
+  - id: turquoise.analyze_drug_rates
+    object: Rate
+    action: analyze_drug_rates
+    description: "Analyze negotiated/reimbursement rates for drugs."
+    category: Data Access
+    risk: low
+    business_impact: "Returns negotiated and reimbursement rates for drugs across payers and sites of care; read-only pricing benchmark with no patient-level data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/turquoise
+  - id: turquoise.analyze_professional_rates
+    object: Rate
+    action: analyze_professional_rates
+    description: "Analyze professional service reimbursement rates."
+    category: Data Access
+    risk: low
+    business_impact: "Returns professional-services reimbursement rates by provider, plan, and geography for benchmarking; read-only query."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/turquoise
+  - id: turquoise.analyze_lab_rates
+    object: Rate
+    action: analyze_lab_rates
+    description: "Analyze laboratory service reimbursement rates."
+    category: Data Access
+    risk: low
+    business_impact: "Returns laboratory-service reimbursement rates across payers and geographies; read-only query over aggregate pricing data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/turquoise
+  - id: turquoise.analyze_devices_rates
+    object: Rate
+    action: analyze_devices_rates
+    description: "Analyze medical device reimbursement rates."
+    category: Data Access
+    risk: low
+    business_impact: "Returns medical-device reimbursement rates across payers and contracts for market and pricing analysis; read-only query."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

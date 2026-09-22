@@ -1,0 +1,61 @@
+# NOTE: Square's MCP server exposes three generic dispatcher tools rather than
+# per-resource tools. All concrete Square behavior (payments, refunds, customer
+# records, catalog, payouts) flows through `make_api_request`, so that single
+# action carries the platform's entire blast radius. Audit it as the high-water
+# mark and tag downstream payment/PII effects at the agent-design level.
+schema_version: "1.3"
+platform: squareup-api
+display_name: Square
+logo: https://squareup.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://mcp.squareup.com/mcp
+reference: https://developer.squareup.com/docs/mcp
+server_website: https://github.com/square/square-mcp-server
+maintainer: https://github.com/square/square-mcp-server/issues
+actions:
+  # ---------- API Execution ----------
+
+  # source: https://raw.githubusercontent.com/square/square-mcp-server/main/server.ts
+  - id: squareup-api.make_api_request
+    object: "*"
+    action: make_api_request
+    description: "Unified dispatcher that executes any Square API service/method call on behalf of the connected merchant."
+    category: API Execution
+    risk: critical
+    business_impact: "Executes any Square API call the merchant token permits — taking payments, issuing refunds, moving payouts, reading customer PII and card transaction records — so one invocation can move money or export the customer book."
+    compliance: [SOX, COSO, PCI, GLBA, PSD2, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Discovery ----------
+
+  # source: https://raw.githubusercontent.com/square/square-mcp-server/main/server.ts
+  - id: squareup-api.get_service_info
+    object: Service
+    action: get_service_info
+    description: "Returns the list of methods available on a given Square API service."
+    category: Discovery
+    risk: low
+    business_impact: "Lists the callable methods on a Square API service; a documentation read that exposes no merchant or customer data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/square/square-mcp-server/main/server.ts
+  - id: squareup-api.get_type_info
+    object: TypeSchema
+    action: get_type_info
+    description: "Returns the parameter and type schema for a Square API method, required before dispatching a call."
+    category: Discovery
+    risk: low
+    business_impact: "Returns the request schema for a Square API method; read-only metadata with no access to merchant records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

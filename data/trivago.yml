@@ -1,0 +1,52 @@
+schema_version: "1.3"
+platform: trivago
+display_name: Trivago
+logo: https://www.trivago.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+reference: https://mcp.trivago.com/mcp
+mcp_server_url: https://mcp.trivago.com/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://mcp.trivago.com/mcp
+  - id: trivago.trivago-accommodation-search
+    object: Accommodation
+    action: trivago-accommodation-search
+    description: "Searches live hotel and accommodation listings by destination or point of interest across trivago's metasearch of major booking sites."
+    category: Data Access
+    risk: low
+    business_impact: "Returns hotel availability, nightly pricing, ratings, and booking links for a destination, exposing travel intent such as dates, party size, and locations to an external metasearch service."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.trivago.com/mcp
+  - id: trivago.trivago-accommodation-radius-search
+    object: Accommodation
+    action: trivago-accommodation-radius-search
+    description: "Searches live hotel and accommodation listings near supplied coordinates such as a landmark, address, venue, or neighborhood."
+    category: Data Access
+    risk: low
+    business_impact: "Returns lodging results anchored to specific coordinates, sending a precise location of interest along with stay dates and guest configuration to an external metasearch service."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.trivago.com/mcp
+  - id: trivago.trivago-destination-price-trends
+    object: Destination
+    action: trivago-destination-price-trends
+    description: "Forecasts monthly hotel price trends for a destination, reporting average, minimum, and maximum nightly rate by star rating across a date window."
+    category: Data Access
+    risk: low
+    business_impact: "Produces forecast nightly-rate ranges by star rating for a destination, which can drive travel budget and booking-timing decisions on modelled rather than live availability data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

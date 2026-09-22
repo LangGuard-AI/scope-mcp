@@ -1,0 +1,50 @@
+schema_version: "1.3"
+platform: tripadvisor
+display_name: Tripadvisor
+logo: https://static.tacdn.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://production.ai-mcp-extensibility-prd.tamg.cloud/ogMvjY4De1G7CiHanMOAgddl/mcp
+  - id: tripadvisor.search_hotels
+    object: Hotel
+    action: search_hotels
+    description: "Searches for hotels matching supplied criteria using a named location or a Tripadvisor GeoID."
+    category: Data Access
+    risk: low
+    business_impact: "Returns hotel listings and live availability for a location and stay window, sending the traveller's destination and travel dates to Tripadvisor on every call."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://production.ai-mcp-extensibility-prd.tamg.cloud/ogMvjY4De1G7CiHanMOAgddl/mcp
+  - id: tripadvisor.hotel_details
+    object: Hotel
+    action: hotel_details
+    description: "Retrieves comprehensive information for a specific hotel, including amenities, photos, live pricing, and guest reviews."
+    category: Data Access
+    risk: low
+    business_impact: "Pulls a single hotel's amenities, photos, live rates, and published guest reviews, surfacing third-party reviewer content the agent then repeats to the user."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://production.ai-mcp-extensibility-prd.tamg.cloud/ogMvjY4De1G7CiHanMOAgddl/mcp
+  - id: tripadvisor.compare_hotels
+    object: Hotel
+    action: compare_hotels
+    description: "Compares explicitly specified hotels or a representative set of hotels automatically selected from a geographic area."
+    category: Data Access
+    risk: low
+    business_impact: "Builds a side-by-side price and quality comparison across named or auto-selected hotels, driving which property the traveller is steered toward."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

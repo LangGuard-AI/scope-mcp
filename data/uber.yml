@@ -1,0 +1,40 @@
+schema_version: "1.3"
+platform: uber
+display_name: Uber
+logo: https://www.uber.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://mcp.uber.com/claude/rides-3p/mcp
+reference: https://claude.com/connectors/uber
+actions:
+  # ---------- Operations ----------
+
+  # source: https://claude.com/connectors/uber
+  - id: uber.publish_analytics_events
+    object: AnalyticsEvent
+    action: publish_analytics_events
+    description: "Tracks analytics data."
+    category: Operations
+    risk: low
+    business_impact: "Emits usage telemetry about the rider's session into Uber's analytics pipeline; events leave the conversation silently and cannot be recalled once published."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/connectors/uber
+  - id: uber.get_estimates_between_two_locations_claude
+    object: FareEstimate
+    action: get_estimates_between_two_locations_claude
+    description: "Retrieves real-time fare estimates between locations in the US."
+    category: Data Access
+    risk: low
+    business_impact: "Returns live fare and arrival estimates across Uber ride tiers, sending the rider's precise pickup and dropoff locations to Uber on every call."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

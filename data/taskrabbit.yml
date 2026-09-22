@@ -1,0 +1,53 @@
+schema_version: "1.3"
+platform: taskrabbit
+display_name: Taskrabbit
+logo: https://www.taskrabbit.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://mcp.taskrabbit.com/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://mcp.taskrabbit.com/mcp
+  - id: taskrabbit.check_service_availability
+    object: Service
+    action: check_service_availability
+    description: "Check availability, pricing, and scoping questions for a service in a location, including top matching Taskers."
+    category: Data Access
+    risk: low
+    business_impact: "Returns availability and pricing for a service in a given city or postal code, along with named Tasker profiles carrying ratings, review counts, and descriptions of identifiable individuals."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.taskrabbit.com/mcp
+  - id: taskrabbit.list_supported_services
+    object: Service
+    action: list_supported_services
+    description: "List Taskrabbit services available in a location."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the Taskrabbit service catalog for a city or postal code; catalog metadata only, with no customer or Tasker identities involved."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://mcp.taskrabbit.com/mcp
+  - id: taskrabbit.generate_deep_link
+    object: BookingLink
+    action: generate_deep_link
+    category: Operations
+    description: "Generate a pre-filled Taskrabbit booking deep link from a task template ID."
+    risk: low
+    business_impact: "Produces a pre-filled booking URL that steers a user into a specific Taskrabbit task flow; no booking is placed and no charge occurs until the user completes checkout."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
