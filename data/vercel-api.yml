@@ -1,0 +1,370 @@
+schema_version: "1.3"
+platform: vercel-api
+display_name: Vercel
+logo: https://assets.vercel.com/image/upload/q_auto/front/favicon/vercel/apple-touch-icon-256x256.png
+source: langguard-editorial
+updated: "2026-09"
+reference: https://vercel.com/docs/mcp/vercel-mcp
+mcp_server_url: https://mcp.vercel.com
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.update_project_deployment_protection
+    object: Project
+    action: update_project_deployment_protection
+    description: "Partially updates password protection, Vercel Authentication, and Trusted IP settings for a Vercel project."
+    category: Identity & Access
+    risk: critical
+    business_impact: "Rewrites the access controls guarding a project's deployments, so a single call can strip password protection or widen the trusted-IP allowlist and expose a private environment to the internet."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.get_access_to_vercel_url
+    object: Deployment
+    action: get_access_to_vercel_url
+    description: "Creates a temporary shareable link that bypasses authentication for protected Vercel deployments."
+    category: Identity & Access
+    risk: critical
+    business_impact: "Mints a bypass link that lets anyone holding the URL reach an authentication-protected deployment without credentials, defeating the project's access control for the link's lifetime."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.web_fetch_vercel_url
+    object: Deployment
+    action: web_fetch_vercel_url
+    description: "Fetches a Vercel deployment URL and returns the response, including deployments protected by Vercel Authentication."
+    category: Identity & Access
+    risk: high
+    business_impact: "Pulls the rendered content of an authentication-gated deployment into the agent's context, surfacing unreleased pages and internal previews that the protection setting was meant to keep private."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.get_project_deployment_protection
+    object: Project
+    action: get_project_deployment_protection
+    description: "Gets the effective password protection, Vercel Authentication, and Trusted IP settings for a project; password values are never returned."
+    category: Identity & Access
+    risk: low
+    business_impact: "Reveals a project's deployment-protection posture including the trusted-IP allowlist, which maps exactly where the perimeter is weakest."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.list_teams
+    object: Team
+    action: list_teams
+    description: "Lists the Vercel teams the authenticated user belongs to."
+    category: Identity & Access
+    risk: low
+    business_impact: "Enumerates the teams the caller can act against, establishing the blast radius available to every other tool in the session."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # ---------- Financial ----------
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.buy_pro
+    object: Subscription
+    action: buy_pro
+    description: "Executes a Vercel Pro upgrade previously quoted by get_purchase_quote, starting recurring Pro billing immediately."
+    category: Financial
+    risk: critical
+    business_impact: "Starts a recurring monthly Pro subscription charged to the card on file, committing the organization to ongoing spend the moment the call succeeds."
+    compliance: [SOX, COSO, PCI]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.buy_credits
+    object: Purchase
+    action: buy_credits
+    description: "Executes a prepaid credits purchase for v0, AI Gateway, or Vercel Agent against a prior quote."
+    category: Financial
+    risk: critical
+    business_impact: "Charges up to $1000 of prepaid credits to the default card immediately and non-refundably, with the credits expiring after one year whether used or not."
+    compliance: [SOX, COSO, PCI]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.buy_domain
+    object: Domain
+    action: buy_domain
+    description: "Executes a single-domain registration against a prior quote, supplying the full registrant contact details."
+    category: Financial
+    risk: critical
+    business_impact: "Registers a domain with a non-refundable charge and transmits the registrant's name, address, email, and phone to the registrar, where auto-renew keeps billing each term."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOX, COSO, PCI]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.buy_addon
+    object: Purchase
+    action: buy_addon
+    description: "Executes a Vercel add-on purchase (currently SIEM) by integer quantity against a prior quote."
+    category: Financial
+    risk: critical
+    business_impact: "Adds a non-refundable, quantity-priced add-on to the team's next invoice with no API price shown at quote time, so the committed amount is unknown until billing."
+    compliance: [SOX, COSO, PCI]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.get_purchase_quote
+    object: Purchase
+    action: get_purchase_quote
+    description: "Returns a read-only price quote and the idempotencyKey required before any buy_* tool will execute."
+    category: Financial
+    risk: low
+    business_impact: "Prices a purchase without charging anything, but mints the five-minute idempotencyKey that is the only thing standing between the agent and an executed charge."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.get_domain_order
+    object: Domain
+    action: get_domain_order
+    description: "Gets the status of a domain purchase order returned by buy_domain."
+    category: Financial
+    risk: low
+    business_impact: "Confirms whether a domain registration completed, exposing order state for purchases made in the same session."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Code & Release ----------
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.deploy_to_vercel
+    object: Deployment
+    action: deploy_to_vercel
+    description: "Deploys a small project to Vercel from inline file contents supplied in the tool arguments."
+    category: Code & Release
+    risk: high
+    business_impact: "Ships agent-authored code straight to a live Vercel deployment without passing through a git repository, so no pull request, reviewer, or CI gate ever sees the source."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.pause_project
+    object: Project
+    action: pause_project
+    description: "Pauses a Vercel project so its production deployment stops serving traffic and returns 503."
+    category: Code & Release
+    risk: high
+    business_impact: "Takes a project's production deployment offline for every visitor until someone unpauses it, converting one tool call into a full customer-facing outage."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.unpause_project
+    object: Project
+    action: unpause_project
+    description: "Unpauses a Vercel project so its production deployment resumes serving traffic."
+    category: Code & Release
+    risk: medium
+    business_impact: "Restores production traffic to a paused project and restarts consumption of metered compute and bandwidth, reviving whatever cost or incident prompted the pause."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.import-claude-design-from-url
+    object: Design
+    action: import-claude-design-from-url
+    description: "Imports a design into Vercel from a publicly fetchable URL containing a self-contained HTML bundle."
+    category: Code & Release
+    risk: medium
+    business_impact: "Pulls an externally hosted HTML bundle into the Vercel account as project content, making a third-party URL the source of code that can later be deployed."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.list_projects
+    object: Project
+    action: list_projects
+    description: "Lists Vercel projects for the user, up to 50, to discover project IDs."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Enumerates the account's projects and their IDs, giving the agent the inventory it needs to target deployment, pause, and protection tools."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.get_git_deployment_context
+    object: Team
+    action: get_git_deployment_context
+    description: "Lists the user's teams with each team's plan, connected workspaces, and linked Git projects."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Maps teams, billing plans, and the Git repositories wired to each project, exposing how the organization's source control connects to production hosting."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.get_runtime_logs
+    object: Log
+    action: get_runtime_logs
+    description: "Gets runtime logs for a project or deployment with filtering by environment, level, status code, source, time range, and full-text search."
+    category: Data Access
+    risk: high
+    business_impact: "Streams raw application output from production functions, where request payloads, user identifiers, and accidentally logged secrets routinely sit in plain text; one principal can drain the corpus unreviewed."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.get_agent_run_trace
+    object: AgentRun
+    action: get_agent_run_trace
+    description: "Gets one page of the trace for a single Agent Run, including turns, messages, reasoning, tool calls, and tool input/output."
+    category: Data Access
+    risk: medium
+    business_impact: "Replays an agent's full conversation including reasoning and tool inputs and outputs, which carry whatever end-user content and arguments were passed through during the run."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_42001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.get_web_analytics
+    object: Analytics
+    action: get_web_analytics
+    description: "Queries Web Analytics for a project in count or aggregate mode, grouped by route, country, referrer, device, browser, or custom event data."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns visitor and pageview data sliced by country, device, referrer, and custom event properties, a behavioural profile of the site's end users."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.get_deployment_build_logs
+    object: Deployment
+    action: get_deployment_build_logs
+    description: "Gets the build logs for a deployment by ID or URL to investigate a failed build."
+    category: Data Access
+    risk: medium
+    business_impact: "Exposes build output that commonly echoes environment variable names, dependency sources, and internal file paths from the deployment pipeline."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.get_runtime_errors
+    object: Log
+    action: get_runtime_errors
+    description: "Gets grouped runtime error clusters for a project with occurrence counts, affected routes, and sample messages."
+    category: Data Access
+    risk: medium
+    business_impact: "Summarizes production failures by route and frequency, with sample error text that can quote user input or internal stack detail."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Messaging ----------
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.edit_toolbar_message
+    object: Comment
+    action: edit_toolbar_message
+    description: "Edits an existing message in a Vercel toolbar comment thread."
+    category: Messaging
+    risk: medium
+    business_impact: "Rewrites a message already posted in a review thread, altering the record of feedback that teammates and stakeholders rely on."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.change_toolbar_thread_resolve_status
+    object: Comment
+    action: change_toolbar_thread_resolve_status
+    description: "Marks a toolbar comment thread resolved, or reopens a previously resolved thread."
+    category: Messaging
+    risk: low
+    business_impact: "Closes or reopens a feedback thread, changing which review items the team still sees as outstanding."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.vercel.com
+  - id: vercel-api.reply_to_toolbar_thread
+    object: Comment
+    action: reply_to_toolbar_thread
+    description: "Adds a reply message to an existing toolbar comment thread."
+    category: Messaging
+    risk: low
+    business_impact: "Posts agent-authored text into a review thread visible to the whole team, attributed to the connected user."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

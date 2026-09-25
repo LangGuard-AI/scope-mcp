@@ -1,0 +1,25 @@
+schema_version: "1.3"
+platform: vanguard-advisor-tools
+display_name: Vanguard Advisor Tools
+logo: https://www.vanguard.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://mcp.vanguard.com/advisors
+reference: https://github.com/Vanguard-oss/vanguard-advisor-tools
+server_website: https://github.com/Vanguard-oss/vanguard-advisor-tools
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/Vanguard-oss/vanguard-advisor-tools/328fe9f61fe7a375b87a6492e265b4a5a955b0ce/skills/model-prep/SKILL.md
+  - id: vanguard-advisor-tools.get_model_portfolios
+    object: ModelPortfolio
+    action: get_model_portfolios
+    description: "Returns Vanguard model portfolio data (expense ratios, asset class, start date and portfolio characteristics) so advisors can research and compare solutions."
+    category: Data Access
+    risk: low
+    business_impact: "Returns Vanguard model portfolio composition, expense ratios and characteristics; the server is read-only and exposes only public US model data, so no client, account or PII reaches the agent."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial

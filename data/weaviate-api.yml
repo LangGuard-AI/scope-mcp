@@ -1,0 +1,68 @@
+schema_version: "1.3"
+platform: weaviate-api
+display_name: Weaviate
+logo: https://weaviate.io/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+reference: https://docs.weaviate.io/weaviate/configuration/mcp-server
+server_website: https://weaviate.io
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://docs.weaviate.io/weaviate/configuration/mcp-server
+  - id: weaviate-api.weaviate-query-hybrid
+    object: Object
+    action: weaviate-query-hybrid
+    description: "Performs a hybrid search combining vector similarity and keyword matching (BM25)."
+    category: Data Access
+    risk: medium
+    business_impact: "Runs arbitrary vector and keyword queries across stored collections, returning whatever object properties the corpus holds — customer documents and embedded personal data included."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.weaviate.io/weaviate/configuration/mcp-server
+  - id: weaviate-api.weaviate-objects-upsert
+    object: Object
+    action: weaviate-objects-upsert
+    description: "Batch inserts or updates objects. Write-access tool; disabled by default on self-hosted instances (available by default on Weaviate Cloud)."
+    category: Data Access
+    risk: high
+    business_impact: "Writes or overwrites objects in bulk, and with auto-schema on a mistyped collection name silently creates a new collection or property — altering both stored records and the schema in one call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://docs.weaviate.io/weaviate/configuration/mcp-server
+  - id: weaviate-api.weaviate-collections-get-config
+    object: Collection
+    action: weaviate-collections-get-config
+    description: "Retrieves the schema configuration for collections."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Exposes collection schema, vectorizer settings, and property definitions, mapping out how the database is structured without touching stored records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.weaviate.io/weaviate/configuration/mcp-server
+  - id: weaviate-api.weaviate-tenants-list
+    object: Tenant
+    action: weaviate-tenants-list
+    description: "Lists tenants for multi-tenant collections."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Enumerates the tenants of a multi-tenant collection, which in a per-customer isolation model reveals the deployment's customer or account identifiers."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

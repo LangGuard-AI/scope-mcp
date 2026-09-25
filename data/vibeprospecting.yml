@@ -1,0 +1,185 @@
+schema_version: "1.3"
+platform: vibeprospecting
+display_name: Vibe Prospecting
+logo: https://www.vibeprospecting.ai/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://vibeprospecting.explorium.ai/mcp
+reference: https://docs.vibeprospecting.ai/connector
+server_website: https://github.com/explorium-ai/vibeprospecting-mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/connectors/vibeprospecting
+  - id: vibeprospecting.export-to-csv
+    object: Dataset
+    action: export-to-csv
+    description: "Exports a built dataset of companies or contacts to a CSV file."
+    category: Data Access
+    risk: critical
+    business_impact: "Writes an entire prospect or company dataset — including contact emails, phone numbers and social profiles — out to a CSV that leaves the platform's access controls, and burns purchased export credits."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/vibeprospecting
+  - id: vibeprospecting.fetch-entities
+    object: Entity
+    action: fetch-entities
+    description: "Returns lists of company or contact entities matching supplied filters."
+    category: Data Access
+    risk: high
+    business_impact: "Pulls filtered lists of company and contact records from a 800M-person data pool, producing bulk third-party personal data inside the session with no data-subject notice."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/vibeprospecting
+  - id: vibeprospecting.get-dataset
+    object: Dataset
+    action: get-dataset
+    description: "Retrieves the contents of a previously built dataset."
+    category: Data Access
+    risk: high
+    business_impact: "Reads back a stored dataset whose rows may hold contact-level personal data, re-exposing an earlier prospecting result to anyone holding the dataset identifier."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/vibeprospecting
+  - id: vibeprospecting.fetch-entities-statistics
+    object: Statistics
+    action: fetch-entities-statistics
+    description: "Returns aggregate counts and distributions for an entity filter set."
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregate counts for a filter set, sizing a market segment without surfacing individual records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/vibeprospecting
+  - id: vibeprospecting.autocomplete
+    object: FilterValue
+    action: autocomplete
+    description: "Suggests valid filter values such as industries, locations or job titles."
+    category: Data Access
+    risk: low
+    business_impact: "Resolves filter vocabulary such as industry codes and locations; read-only lookup with no record-level data returned."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://claude.com/connectors/vibeprospecting
+  - id: vibeprospecting.enrich-prospects
+    object: Prospect
+    action: enrich-prospects
+    description: "Enriches contact records with emails, phone numbers, social profiles and role data."
+    category: Customer
+    risk: high
+    business_impact: "Appends direct contact details — work and personal email, phone numbers, social profiles — to named individuals, importing third-party personal data into CRM or ATS records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/vibeprospecting
+  - id: vibeprospecting.match-prospects
+    object: Prospect
+    action: match-prospects
+    description: "Resolves supplied identifiers to a specific person record in the contact graph."
+    category: Customer
+    risk: high
+    business_impact: "Resolves partial identifiers to a single identified person in the vendor's contact graph, linking an internal record to an external profile of that individual."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/vibeprospecting
+  - id: vibeprospecting.enrich-business
+    object: Business
+    action: enrich-business
+    description: "Enriches a company record with firmographics, technographics and funding data."
+    category: Customer
+    risk: low
+    business_impact: "Adds firmographic, technographic and funding attributes to a company record; company-level data only, and any wrong match propagates into CRM segmentation."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/vibeprospecting
+  - id: vibeprospecting.match-business
+    object: Business
+    action: match-business
+    description: "Resolves a company name or domain to a canonical business entity identifier."
+    category: Customer
+    risk: low
+    business_impact: "Maps a name or domain to the vendor's canonical company id; a read-only resolution step that every downstream enrichment depends on."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Revenue & Pipeline ----------
+
+  # source: https://claude.com/connectors/vibeprospecting
+  - id: vibeprospecting.fetch-prospects-events
+    object: ProspectEvent
+    action: fetch-prospects-events
+    description: "Returns contact-level signals such as role changes and buying intent."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Surfaces behavioural and job-change signals attached to named individuals, a profiling read that data subjects have not consented to within the buyer's systems."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/vibeprospecting
+  - id: vibeprospecting.fetch-businesses-events
+    object: BusinessEvent
+    action: fetch-businesses-events
+    description: "Returns company-level events such as funding rounds, hiring and growth signals."
+    category: Revenue & Pipeline
+    risk: low
+    business_impact: "Returns funding, hiring and growth events for companies, feeding pipeline prioritisation from company-level public signals."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://claude.com/connectors/vibeprospecting
+  - id: vibeprospecting.estimate-cost
+    object: CostEstimate
+    action: estimate-cost
+    description: "Estimates the credit cost of a planned enrichment or export."
+    category: Operations
+    risk: low
+    business_impact: "Prices a planned query in credits before it runs; no credits are consumed and no records are returned."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

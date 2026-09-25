@@ -1,0 +1,370 @@
+schema_version: "1.3"
+platform: workable
+display_name: Workable
+logo: https://www.workable.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+reference: https://workable.readme.io/reference/workable-mcp-server
+mcp_server_url: https://mcp.workable.com/mcp
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.update_member
+    object: Member
+    action: update_member
+    description: "Update an existing member's roles, permission sets, or access scope"
+    category: Identity & Access
+    risk: high
+    business_impact: "Changes a member's roles, permission sets, or job access scope, widening what recruiting and employee data that principal can read without an access review."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.invite_member
+    object: Member
+    action: invite_member
+    description: "Invite a new person to the account, creating a pending invitation"
+    category: Identity & Access
+    risk: high
+    business_impact: "Provisions a new account user by invitation, adding a principal with access to candidate and employee records outside the normal onboarding approval."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.enable_member
+    object: Member
+    action: enable_member
+    description: "Re-enable a previously deactivated member"
+    category: Identity & Access
+    risk: high
+    business_impact: "Restores access for a deactivated member, reactivating credentials that a prior offboarding or suspension decision had removed."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.delete_member
+    object: Member
+    action: delete_member
+    description: "Remove a member, revoking their access"
+    category: Identity & Access
+    risk: high
+    business_impact: "Removes a member and revokes their access immediately, which can lock a recruiter or manager out of in-flight hiring work."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.search_candidates_detailed
+    object: Candidate
+    action: search_candidates_detailed
+    description: "Search candidates by any combination of filters"
+    category: Data Access
+    risk: high
+    business_impact: "Returns candidate records matching arbitrary filter combinations across the full field schema, enabling bulk retrieval of applicant PII in a single call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.search_employees
+    object: Employee
+    action: search_employees
+    description: "Search employees by any combination of filters"
+    category: Data Access
+    risk: high
+    business_impact: "Returns employee records matching arbitrary filters, exposing HR profile data for large parts of the workforce in one request."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.get_candidate
+    object: Candidate
+    action: get_candidate
+    description: "Get full profile details for a specific candidate"
+    category: Data Access
+    risk: medium
+    business_impact: "Reads a candidate's complete profile including contact details, resume content, and application history — applicant PII for one identifiable individual."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.get_candidate_files
+    object: CandidateFile
+    action: get_candidate_files
+    description: "List files attached to a candidate's profile"
+    category: Data Access
+    risk: medium
+    business_impact: "Lists attachments on a candidate profile such as resumes, cover letters, and identity or right-to-work documents holding sensitive personal data."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.get_employee_documents
+    object: EmployeeDocument
+    action: get_employee_documents
+    description: "List documents attached to an employee's profile"
+    category: Data Access
+    risk: medium
+    business_impact: "Lists an employee's stored documents — contracts, tax forms, and identity paperwork — surfacing employment records that are restricted to HR."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.list_review_cycle_answers
+    object: Review
+    action: list_review_cycle_answers
+    description: "Bulk-pull persisted review answers in a cycle"
+    category: Data Access
+    risk: high
+    business_impact: "Pulls every persisted performance-review answer in a cycle, exposing manager and peer assessments of named employees across the organization at once."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Financial ----------
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.approve_offer
+    object: Offer
+    action: approve_offer
+    description: "Approve an offer"
+    category: Financial
+    risk: high
+    business_impact: "Approves an employment offer, committing the company to the stated compensation package and clearing the approval gate that normally needs a second approver."
+    compliance: [SOX, COSO]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.approve_requisition
+    object: Requisition
+    action: approve_requisition
+    description: "Approve a requisition by code"
+    category: Financial
+    risk: high
+    business_impact: "Approves a headcount requisition, releasing budgeted spend for a new hire without the second-party sign-off the approval chain assumes."
+    compliance: [SOX, COSO]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.bulk_create_time_entries
+    object: TimeEntry
+    action: bulk_create_time_entries
+    description: "Create complete time entries for multiple employees"
+    category: Financial
+    risk: high
+    business_impact: "Writes complete clock-in/clock-out records for many employees at once, feeding payroll calculations from data no supervisor reviewed."
+    compliance: [SOX, COSO]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.update_time_entry
+    object: TimeEntry
+    action: update_time_entry
+    description: "Update an existing entry's clock-in/out times or note"
+    category: Financial
+    risk: high
+    business_impact: "Rewrites the recorded clock-in and clock-out times on an existing entry, altering the timekeeping record that payroll and wage-hour audits rely on."
+    compliance: [SOX, COSO]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.update_timeoff_approval
+    object: TimeOffRequest
+    action: update_timeoff_approval
+    description: "Approve or reject a pending approval"
+    category: Financial
+    risk: medium
+    business_impact: "Approves or rejects a pending time-off request, drawing down accrued balances that carry a payroll liability, and can be used to self-approve leave."
+    compliance: []
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Talent & Hiring ----------
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.disqualify_candidate
+    object: Candidate
+    action: disqualify_candidate
+    description: "Disqualify a candidate with a reason"
+    category: Talent & Hiring
+    risk: high
+    business_impact: "Rejects a candidate from a hiring process with a recorded reason — an adverse employment decision taken against an identifiable applicant."
+    compliance: [GDPR, UK_GDPR, CCPA, EU_AI_ACT, CO_AI_ACT, NIST_AI_RMF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.reject_offer
+    object: Offer
+    action: reject_offer
+    description: "Reject an offer with an optional rejection reason"
+    category: Talent & Hiring
+    risk: high
+    business_impact: "Rejects a pending employment offer, ending the hire for that candidate and recording the rejection reason on their record."
+    compliance: [EU_AI_ACT, CO_AI_ACT, NIST_AI_RMF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.upsert_candidate_rating
+    object: CandidateRating
+    action: upsert_candidate_rating
+    description: "Submit or update a candidate rating with upsert semantics"
+    category: Talent & Hiring
+    risk: medium
+    business_impact: "Writes or overwrites a scored rating on a candidate, shaping the evaluation record that drives advance-or-reject decisions."
+    compliance: [EU_AI_ACT, CO_AI_ACT, NIST_AI_RMF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.move_candidate
+    object: Candidate
+    action: move_candidate
+    description: "Move a candidate to a different pipeline stage"
+    category: Talent & Hiring
+    risk: medium
+    business_impact: "Advances or returns a candidate to a different pipeline stage, changing their standing in the hiring process and triggering stage-based automations."
+    compliance: [EU_AI_ACT, NIST_AI_RMF]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.create_candidate
+    object: Candidate
+    action: create_candidate
+    description: "Source a new candidate and attach them to a specific job"
+    category: Talent & Hiring
+    risk: medium
+    business_impact: "Creates a candidate record holding name, contact details, and sourcing data, bringing a new identifiable person under the account's data controllership."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.update_candidate
+    object: Candidate
+    action: update_candidate
+    description: "Update an existing candidate's profile with partial fields"
+    category: Talent & Hiring
+    risk: medium
+    business_impact: "Overwrites fields on an existing candidate profile, changing the personal data of record for an applicant without a review step."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.create_requisition
+    object: Requisition
+    action: create_requisition
+    description: "Create a new headcount requisition"
+    category: Talent & Hiring
+    risk: medium
+    business_impact: "Opens a new headcount requisition that enters the approval chain and, once approved, authorizes recruiting spend against a department budget."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Performance ----------
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.submit_review
+    object: Review
+    action: submit_review
+    description: "Fill in a review and save or submit"
+    category: Performance
+    risk: medium
+    business_impact: "Fills in and submits a performance review of a named employee, creating an evaluation of record that informs promotion, compensation, and exit decisions."
+    compliance: [GDPR, UK_GDPR, CCPA, EU_AI_ACT, NIST_AI_RMF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.delete_department
+    object: Department
+    action: delete_department
+    description: "Delete a department by id"
+    category: Operations
+    risk: medium
+    business_impact: "Deletes a department from the org structure, orphaning reporting lines, job assignments, and headcount roll-ups that referenced it."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://workable.readme.io/reference/workable-mcp-server
+  - id: workable.merge_department
+    object: Department
+    action: merge_department
+    description: "Merge a source department into a target department"
+    category: Operations
+    risk: medium
+    business_impact: "Folds one department into another, permanently reassigning its employees and org-chart position with no straightforward way to unwind the merge."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

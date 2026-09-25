@@ -1,0 +1,38 @@
+schema_version: "1.3"
+platform: wyndham-hotels
+display_name: Wyndham Hotels & Resorts
+logo: https://www.wyndhamhotels.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+reference: https://www.wyndhamhotels.com/mcp-doc
+mcp_server_url: https://mcp.claude.wyndhamhotels.com/claude/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://www.wyndhamhotels.com/mcp-doc
+  - id: wyndham-hotels.search-wyndham-hotels
+    object: Property
+    action: search-wyndham-hotels
+    description: "Search for Wyndham Hotels & Resorts properties by city."
+    category: Data Access
+    risk: low
+    business_impact: "Returns hotel availability, rates, and amenities for a city and date range; the travel dates and party composition supplied in each query reach Wyndham's booking systems."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.wyndhamhotels.com/mcp-doc
+  - id: wyndham-hotels.get-wyndham-hotel-details
+    object: Property
+    action: get-wyndham-hotel-details
+    description: "Retrieve complete detailed information for specific hotels."
+    category: Data Access
+    risk: low
+    business_impact: "Pulls full property records for specified hotel IDs — room types, rates, policies, and accessibility features — all of it public catalog data with no guest records involved."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

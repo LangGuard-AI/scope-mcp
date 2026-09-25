@@ -1,0 +1,68 @@
+schema_version: "1.3"
+platform: verisk-underwriting-intelligence
+display_name: Verisk Underwriting Intelligence
+logo: https://www.verisk.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://gatewaymcp.verisk.com/underwriting/intelligencemcp/v1
+reference: https://claude.com/connectors/verisk-underwriting-intelligence
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/connectors/verisk-underwriting-intelligence
+  - id: verisk-underwriting-intelligence.iso_losscost_indications_get
+    object: LossCostIndication
+    action: iso_losscost_indications_get
+    description: "Retrieve ISO loss cost indications (current-review / filing-aligned intelligence)."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the ISO loss cost indications an actuary carries into a rate filing; a stale or misattributed figure propagates into filed rates and reserve estimates."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/verisk-underwriting-intelligence
+  - id: verisk-underwriting-intelligence.iso_losscost_experienceindex_get
+    object: ExperienceIndex
+    action: iso_losscost_experienceindex_get
+    description: "Retrieve ISO loss cost experience index / experience trend data."
+    category: Data Access
+    risk: low
+    business_impact: "Returns ISO experience index and trend factors used to adjust loss costs; a wrong period or line selection skews the trend an underwriter prices against."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/verisk-underwriting-intelligence
+  - id: verisk-underwriting-intelligence.iso_losscost_activity_get
+    object: LossCostActivity
+    action: iso_losscost_activity_get
+    description: "Explore ISO loss cost activity/history and trends."
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces historical ISO loss cost activity and filing history for a line and jurisdiction, pulling subscription-licensed Verisk actuarial content into agent context."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://claude.com/connectors/verisk-underwriting-intelligence
+  - id: verisk-underwriting-intelligence.iso_visualizer_skill_include
+    object: Skill
+    action: iso_visualizer_skill_include
+    description: "Include/invoke the ISO visualizer skill for rendering loss cost data outputs."
+    category: Operations
+    risk: low
+    business_impact: "Loads the ISO visualizer skill so loss cost results render as charts, adding vendor-supplied rendering instructions to the agent's working context."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

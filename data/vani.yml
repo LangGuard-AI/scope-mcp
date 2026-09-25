@@ -1,0 +1,203 @@
+schema_version: "1.3"
+platform: vani
+display_name: Vani by Zoho
+logo: https://cdn.vanihq.com/sites/vanihq/files/vanihq/vani-favicon-32x32.ico
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://app.vanihq.com/mcp
+server_website: https://www.vanihq.com/
+reference: https://help.vanihq.com/portal/en/kb/vani/integrations-and-add-ons/vani-mcp/articles/vani-mcp-basics
+# The Vani MCP server is OAuth-gated (sign-in required) and does not expose
+# `tools/list` publicly; Zoho's MCP knowledge-base article documents the tool
+# surface only as plain-language capability groupings. Every entry below is
+# therefore `id_form: capability` with the vendor's label preserved verbatim in
+# `description`. Refresh to `id_form: verbatim` when a real tools/list capture
+# becomes available.
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://help.vanihq.com/portal/en/kb/vani/integrations-and-add-ons/vani-mcp/articles/vani-mcp-basics
+  - id: vani.teams
+    object: Team
+    action: teams
+    id_form: capability
+    description: "Teams"
+    category: Identity & Access
+    risk: high
+    business_impact: "Adds members to a team, changes member roles, and resolves access requests, so a single agent call can widen who reads and edits workspace content."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://help.vanihq.com/portal/en/kb/vani/integrations-and-add-ons/vani-mcp/articles/vani-mcp-basics
+  - id: vani.sharing_and_access
+    object: Share
+    action: sharing_and_access
+    id_form: capability
+    description: "Sharing and access"
+    category: Identity & Access
+    risk: high
+    business_impact: "Creates or updates external shares and lists published Space details, exposing internal boards and their contents to recipients outside the organization."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Org & Access ----------
+
+  # source: https://help.vanihq.com/portal/en/kb/vani/integrations-and-add-ons/vani-mcp/articles/vani-mcp-basics
+  - id: vani.spaces
+    object: Space
+    action: spaces
+    id_form: capability
+    description: "Spaces"
+    category: Org & Access
+    risk: high
+    business_impact: "Creates, renames, moves and duplicates Spaces while managing Spacemates and approving Space access requests, combining workspace restructuring with membership control."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://help.vanihq.com/portal/en/kb/vani/integrations-and-add-ons/vani-mcp/articles/vani-mcp-basics
+  - id: vani.zones
+    object: Zone
+    action: zones
+    id_form: capability
+    description: "Zones"
+    category: Org & Access
+    risk: high
+    business_impact: "Manages Zone-level access alongside Zone creation, renaming, moving and version history, so permissions on a canvas can be altered in the same call that reads its contents."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Content ----------
+
+  # source: https://help.vanihq.com/portal/en/kb/vani/integrations-and-add-ons/vani-mcp/articles/vani-mcp-basics
+  - id: vani.tables
+    object: Table
+    action: tables
+    id_form: capability
+    description: "Tables"
+    category: Content
+    risk: medium
+    business_impact: "Rewrites cell text and inserts or deletes rows and columns, so table data an operating team relies on can be altered or removed without review."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://help.vanihq.com/portal/en/kb/vani/integrations-and-add-ons/vani-mcp/articles/vani-mcp-basics
+  - id: vani.text_editing
+    object: TextObject
+    action: text_editing
+    id_form: capability
+    description: "Text editing"
+    category: Content
+    risk: medium
+    business_impact: "Reads, replaces, inserts and deletes text on Vani objects, changing the wording of shared plans and diagrams that colleagues treat as current."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://help.vanihq.com/portal/en/kb/vani/integrations-and-add-ons/vani-mcp/articles/vani-mcp-basics
+  - id: vani.media_and_files
+    object: Attachment
+    action: media_and_files
+    id_form: capability
+    description: "Media and files"
+    category: Content
+    risk: medium
+    business_impact: "Uploads pictures, video, audio and arbitrary files into a Zone, moving content of unknown sensitivity into a collaborative Space."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://help.vanihq.com/portal/en/kb/vani/integrations-and-add-ons/vani-mcp/articles/vani-mcp-basics
+  - id: vani.structured_creation
+    object: Diagram
+    action: structured_creation
+    id_form: capability
+    description: "Structured creation"
+    category: Content
+    risk: low
+    business_impact: "Builds mind maps, flowcharts, kanban boards and tables inside a Zone from a prompt, notes, transcript or CSV data; additive and reversible."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://help.vanihq.com/portal/en/kb/vani/integrations-and-add-ons/vani-mcp/articles/vani-mcp-basics
+  - id: vani.relationships_and_connections
+    object: Connector
+    action: relationships_and_connections
+    id_form: capability
+    description: "Relationships and connections"
+    category: Content
+    risk: low
+    business_impact: "Inspects parent, child and connected objects and creates or reconnects connectors, changing how a diagram reads without touching underlying records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://help.vanihq.com/portal/en/kb/vani/integrations-and-add-ons/vani-mcp/articles/vani-mcp-basics
+  - id: vani.templates_prompts_and_skills
+    object: Template
+    action: templates_prompts_and_skills
+    id_form: capability
+    description: "Templates, prompts, and skills"
+    category: Content
+    risk: low
+    business_impact: "Fetches Vani templates, prompt templates and packaged skills for planning, compliance and finance boards; read-only scaffolding for later edits."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://help.vanihq.com/portal/en/kb/vani/integrations-and-add-ons/vani-mcp/articles/vani-mcp-basics
+  - id: vani.workspace_and_account_context
+    object: Edition
+    action: workspace_and_account_context
+    id_form: capability
+    description: "Workspace and account context"
+    category: Data Access
+    risk: low
+    business_impact: "Reveals edition, subscription, member-count and caller-role detail, giving an agent a map of the tenant before it acts on it."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://help.vanihq.com/portal/en/kb/vani/integrations-and-add-ons/vani-mcp/articles/vani-mcp-basics
+  - id: vani.canvas_traversal_and_data_operations
+    object: CanvasObject
+    action: canvas_traversal_and_data_operations
+    id_form: capability
+    description: "Canvas traversal and data operations"
+    category: Data Access
+    risk: low
+    business_impact: "Walks object order, neighbours and surrounding context on a canvas, surfacing low-level Vani entities to the caller without modifying them."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

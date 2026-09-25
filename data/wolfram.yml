@@ -1,0 +1,55 @@
+schema_version: "1.3"
+platform: wolfram
+display_name: Wolfram
+logo: https://www.wolfram.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+reference: https://agenttools.wolfram.com/mcp
+server_website: https://www.wolfram.com
+mcp_server_url: https://agenttools.wolfram.com/mcp
+actions:
+  # ---------- Platform & DevOps ----------
+
+  # source: https://agenttools.wolfram.com/mcp
+  - id: wolfram.WolframLanguageEvaluator
+    object: Kernel
+    action: WolframLanguageEvaluator
+    description: "Evaluates Wolfram Language code in a Wolfram Language kernel, including natural-language input parsed via FreeformPrompt."
+    category: Platform & DevOps
+    risk: critical
+    business_impact: "Executes arbitrary agent-authored code in a live Wolfram kernel, where language primitives for file, process, and network access let a single call destroy data or ship whatever the session can reach to an outside host."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://agenttools.wolfram.com/mcp
+  - id: wolfram.WolframContext
+    object: Document
+    action: WolframContext
+    description: "Performs semantic search over Wolfram's knowledge corpus to retrieve relevant reference context in natural language."
+    category: Data Access
+    risk: low
+    business_impact: "Returns Wolfram reference material matching a natural-language description; read-only against published documentation with no customer state involved."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://agenttools.wolfram.com/mcp
+  - id: wolfram.WolframAlpha
+    object: Query
+    action: WolframAlpha
+    description: "Answers natural-language queries with Wolfram|Alpha computational results across chemistry, physics, geography, history, art, and astronomy."
+    category: Data Access
+    risk: low
+    business_impact: "Sends the query text to Wolfram|Alpha and returns computed facts; the prompt content leaves the tenant boundary, but nothing in the caller's systems is modified."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
