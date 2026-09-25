@@ -1,0 +1,266 @@
+schema_version: "1.3"
+platform: verisk-xactrestore
+display_name: Verisk XactRestore
+logo: https://www.verisk.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://xactrestore-xactremodelserver-usw2-prod.propsol.io/mcp
+reference: https://claude.com/connectors/verisk-xactrestore
+actions:
+  # ---------- Financial ----------
+
+  # source: https://claude.com/connectors/verisk-xactrestore
+  - id: verisk-xactrestore.AddConstructionLineItemsToEstimate
+    object: EstimateLineItem
+    action: AddConstructionLineItemsToEstimate
+    description: "Add one or more priced construction line items to a restoration estimate."
+    category: Financial
+    risk: medium
+    business_impact: "Adds priced scope to a restoration estimate, raising the amount a homeowner or insurer is asked to pay for the job."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/verisk-xactrestore
+  - id: verisk-xactrestore.UpdateConstructionEstimateLineItems
+    object: EstimateLineItem
+    action: UpdateConstructionEstimateLineItems
+    description: "Modify quantities, pricing, or activities on existing estimate line items."
+    category: Financial
+    risk: high
+    business_impact: "Rewrites quantities and pricing already recorded on an estimate, changing the settlement figure a claim is paid against with no second reviewer in the loop."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/verisk-xactrestore
+  - id: verisk-xactrestore.ArchiveConstructionEstimateLineItems
+    object: EstimateLineItem
+    action: ArchiveConstructionEstimateLineItems
+    description: "Archive (remove from scope) one or more construction line items on an estimate."
+    category: Financial
+    risk: high
+    business_impact: "Strips billed scope off an estimate in bulk, silently reducing the payable total and leaving completed work unbilled."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/verisk-xactrestore
+  - id: verisk-xactrestore.GetConstructionLineItemPricing
+    object: LineItemPricing
+    action: GetConstructionLineItemPricing
+    description: "Retrieve Xactware pricing detail for a construction line item."
+    category: Financial
+    risk: low
+    business_impact: "Returns licensed Xactware price-list figures for a line item; a wrong list or effective date pulls the estimate away from the pricing an insurer will accept."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://claude.com/connectors/verisk-xactrestore
+  - id: verisk-xactrestore.CreateRemodRestorationProject
+    object: Project
+    action: CreateRemodRestorationProject
+    description: "Create a new remodeling or restoration project record."
+    category: Operations
+    risk: medium
+    business_impact: "Opens a new restoration project carrying the property address and homeowner contact details, seeding a live job record other crews and estimates hang off."
+    compliance: [CCPA, PIPEDA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/verisk-xactrestore
+  - id: verisk-xactrestore.CreateEstimateRoomOrArea
+    object: EstimateRoom
+    action: CreateEstimateRoomOrArea
+    description: "Create a room or area within an estimate group."
+    category: Operations
+    risk: medium
+    business_impact: "Adds a room or area to an estimate, expanding the structure that line items and measurements are priced against."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/verisk-xactrestore
+  - id: verisk-xactrestore.UpdateEstimateRoomOrArea
+    object: EstimateRoom
+    action: UpdateEstimateRoomOrArea
+    description: "Update dimensions or attributes of an existing estimate room or area."
+    category: Operations
+    risk: medium
+    business_impact: "Changes room dimensions and attributes that drive quantity calculations, shifting the priced scope of the estimate underneath any figures already reviewed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/verisk-xactrestore
+  - id: verisk-xactrestore.DuplicateEstimateRoomOrArea
+    object: EstimateRoom
+    action: DuplicateEstimateRoomOrArea
+    description: "Duplicate an existing estimate room or area, including its contents."
+    category: Operations
+    risk: medium
+    business_impact: "Copies a room and the line items inside it, so a careless repeat double-counts labour and materials on the estimate total."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/verisk-xactrestore
+  - id: verisk-xactrestore.ArchiveEstimateRoomsOrAreas
+    object: EstimateRoom
+    action: ArchiveEstimateRoomsOrAreas
+    description: "Archive one or more rooms or areas from an estimate."
+    category: Operations
+    risk: high
+    business_impact: "Removes whole rooms and everything priced inside them from an estimate in one call, wiping documented scope for work that may already be underway."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/connectors/verisk-xactrestore
+  - id: verisk-xactrestore.SearchRemodRestorationRoofingJobs
+    object: RoofingJob
+    action: SearchRemodRestorationRoofingJobs
+    description: "Search roofing, remodeling, and restoration jobs."
+    category: Data Access
+    risk: low
+    business_impact: "Lists restoration and roofing jobs with the property and customer identifiers attached, exposing a contractor's book of work to whatever the agent does next."
+    compliance: [CCPA, PIPEDA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/verisk-xactrestore
+  - id: verisk-xactrestore.GetRemodRestorationRoofingJobDetails
+    object: RoofingJob
+    action: GetRemodRestorationRoofingJobDetails
+    description: "Retrieve full detail for a single roofing, remodeling, or restoration job."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the full job record for one property, including homeowner contact details and the loss or damage context behind the work."
+    compliance: [CCPA, PIPEDA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/verisk-xactrestore
+  - id: verisk-xactrestore.GetRemodRestorationRoofingOptionDetails
+    object: RoofingOption
+    action: GetRemodRestorationRoofingOptionDetails
+    description: "Retrieve detail for a roofing option on a job."
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces the specification and pricing of a roofing option a homeowner is being quoted, which the agent may then present as settled scope."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/verisk-xactrestore
+  - id: verisk-xactrestore.SearchRemodRestorationProjects
+    object: Project
+    action: SearchRemodRestorationProjects
+    description: "Search remodeling and restoration projects."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates active restoration projects along with the properties and customers they belong to, giving broad visibility into a contractor's pipeline."
+    compliance: [CCPA, PIPEDA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/verisk-xactrestore
+  - id: verisk-xactrestore.SearchEstimateGroupsRoomsAreas
+    object: EstimateGroup
+    action: SearchEstimateGroupsRoomsAreas
+    description: "Search estimate groups, rooms, and areas within a project."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the room and area structure of an estimate so the agent can target subsequent edits at the right part of the job."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/verisk-xactrestore
+  - id: verisk-xactrestore.SearchConstructionLineItemsCatalog
+    object: LineItemCatalog
+    action: SearchConstructionLineItemsCatalog
+    description: "Search the Xactware construction line item catalog."
+    category: Data Access
+    risk: low
+    business_impact: "Searches the licensed Xactware line-item catalog; the item an agent picks here becomes the priced scope written onto the estimate."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/verisk-xactrestore
+  - id: verisk-xactrestore.SearchConstructionLineItemsInGroup
+    object: EstimateLineItem
+    action: SearchConstructionLineItemsInGroup
+    description: "Search construction line items already present in an estimate group."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the line items currently priced in an estimate group, the read an agent relies on before rewriting or archiving them."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/verisk-xactrestore
+  - id: verisk-xactrestore.GetConstructionLineItemAvailableActivities
+    object: LineItemActivity
+    action: GetConstructionLineItemAvailableActivities
+    description: "Retrieve the activities available for a construction line item."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the activity codes a line item supports; picking the wrong one changes how the work is priced and how an insurer categorises it."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/verisk-xactrestore
+  - id: verisk-xactrestore.GetCompany
+    object: Company
+    action: GetCompany
+    description: "Retrieve the connected contractor company profile."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the contractor company profile and settings that scope every other call, confirming which organisation's estimates the agent is operating on."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

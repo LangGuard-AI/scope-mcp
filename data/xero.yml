@@ -1,0 +1,264 @@
+schema_version: "1.3"
+platform: xero
+display_name: Xero
+logo: https://www.xero.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+reference: https://developer.xero.com/ai
+mcp_server_url: https://mcp.xero.com/mcp
+# Xero's Anthropic-verified connector exposes a read-only financial surface: there are
+# no write, post, void or delete tools in the published tool list. Risk is therefore
+# driven by data sensitivity and read blast radius, not by state mutation.
+actions:
+  # ---------- Financial ----------
+
+  # source: https://claude.com/connectors/xero
+  - id: xero.get_bank_account_transactions
+    object: BankTransaction
+    action: get_bank_account_transactions
+    category: Financial
+    risk: high
+    business_impact: "Returns line-level bank account transaction history, exposing counterparties, amounts and cash movement patterns for every connected bank feed."
+    compliance: [GLBA, SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/xero
+  - id: xero.get_1099_report_summary
+    object: TaxReport
+    action: get_1099_report_summary
+    category: Financial
+    risk: medium
+    business_impact: "Surfaces contractor 1099 totals with payee identities and tax-reporting figures filed with the IRS."
+    compliance: [CCPA, SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/xero
+  - id: xero.get_financial_position
+    object: BalanceSheet
+    action: get_financial_position
+    category: Financial
+    risk: medium
+    business_impact: "Reads the organisation's balance sheet position, exposing material non-public assets, liabilities and equity balances."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/xero
+  - id: xero.get_cash_position
+    object: CashSummary
+    action: get_cash_position
+    category: Financial
+    risk: medium
+    business_impact: "Reveals current cash and bank balances across accounts, a materially sensitive liquidity figure."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/xero
+  - id: xero.get_profit_and_loss
+    object: ProfitAndLossReport
+    action: get_profit_and_loss
+    category: Financial
+    risk: medium
+    business_impact: "Produces the income statement for a chosen period, exposing revenue, cost and margin before any public reporting."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/xero
+  - id: xero.get_aged_receivables
+    object: AgedReceivablesReport
+    action: get_aged_receivables
+    category: Financial
+    risk: medium
+    business_impact: "Lists outstanding customer balances by ageing bucket, revealing collections exposure and which customers are behind on payment."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/xero
+  - id: xero.get_aged_payables
+    object: AgedPayablesReport
+    action: get_aged_payables
+    category: Financial
+    risk: medium
+    business_impact: "Lists unpaid supplier balances by ageing bucket, revealing vendor relationships and near-term cash obligations."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/xero
+  - id: xero.get_invoices
+    object: Invoice
+    action: get_invoices
+    category: Financial
+    risk: medium
+    business_impact: "Bulk-reads accounts receivable invoices including customer identities, line items and amounts owed."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/xero
+  - id: xero.show_invoices_summary
+    object: Invoice
+    action: show_invoices_summary
+    category: Financial
+    risk: low
+    business_impact: "Returns an aggregated view of invoice status and totals without drilling into individual line detail."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/xero
+  - id: xero.get_bills
+    object: Bill
+    action: get_bills
+    category: Financial
+    risk: medium
+    business_impact: "Bulk-reads supplier bills, exposing the accounts payable subledger, vendor names and amounts due."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/xero
+  - id: xero.get_chart_of_accounts
+    object: Account
+    action: get_chart_of_accounts
+    category: Financial
+    risk: low
+    business_impact: "Reads the general ledger account structure, revealing how the organisation classifies and reports its finances."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/xero
+  - id: xero.get_repeating_invoices
+    object: RepeatingInvoice
+    action: get_repeating_invoices
+    category: Financial
+    risk: low
+    business_impact: "Lists recurring invoice templates, disclosing contracted customers and their billing cadence."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/xero
+  - id: xero.get_repeating_bills
+    object: RepeatingBill
+    action: get_repeating_bills
+    category: Financial
+    risk: low
+    business_impact: "Lists recurring supplier bill templates, disclosing standing vendor commitments and their schedule."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://claude.com/connectors/xero
+  - id: xero.get_contacts
+    object: Contact
+    action: get_contacts
+    category: Customer
+    risk: high
+    business_impact: "Pulls the full customer and supplier contact book including names, email addresses, phone numbers, postal addresses and tax identifiers."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/xero
+  - id: xero.get_top_customers_by_revenue
+    object: Contact
+    action: get_top_customers_by_revenue
+    category: Customer
+    risk: medium
+    business_impact: "Ranks named customers by revenue contribution, exposing revenue concentration and commercially sensitive account values."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://claude.com/connectors/xero
+  - id: xero.get_purchase_orders
+    object: PurchaseOrder
+    action: get_purchase_orders
+    category: Operations
+    risk: low
+    business_impact: "Reads purchase orders raised against suppliers, showing committed but not yet invoiced spend."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/xero
+  - id: xero.get_tracking_categories
+    object: TrackingCategory
+    action: get_tracking_categories
+    category: Operations
+    risk: low
+    business_impact: "Lists the tracking dimensions used to segment reporting, such as department, region or cost centre."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/xero
+  - id: xero.get_organisation_info
+    object: Organisation
+    action: get_organisation_info
+    category: Operations
+    risk: low
+    business_impact: "Returns organisation profile details such as legal name, registration number, base currency and country of incorporation."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/xero
+  - id: xero.get_organisation_financial_year
+    object: Organisation
+    action: get_organisation_financial_year
+    category: Operations
+    risk: low
+    business_impact: "Reports the configured financial year end and period settings used to bound every other report."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

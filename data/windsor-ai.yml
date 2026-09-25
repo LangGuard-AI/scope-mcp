@@ -1,0 +1,270 @@
+schema_version: "1.3"
+platform: windsor-ai
+display_name: Windsor.ai
+logo: https://windsor.ai/wp-content/uploads/2020/02/favicon-310-300x300.png
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://mcp.windsor.ai/
+reference: https://mcp.windsor.ai/llms-full.txt
+actions:
+  # ---------- Operations ----------
+
+  # source: https://mcp.windsor.ai/llms-full.txt
+  - id: windsor-ai.execute_action
+    object: "*"
+    action: execute_action
+    description: "Execute a write action against a specific connector account (e.g. pause/enable a campaign, set a budget)."
+    category: Operations
+    risk: critical
+    business_impact: "Writes directly into a connected ad or marketing account, so one call can pause live campaigns or raise a budget and commit real media spend that cannot be clawed back."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.windsor.ai/llms-full.txt
+  - id: windsor-ai.list_actions
+    object: ConnectorAction
+    action: list_actions
+    description: "Discover write operations a connector exposes."
+    category: Operations
+    risk: low
+    business_impact: "Enumerates the write operations each connector supports, mapping out the mutation surface available to the agent."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.windsor.ai/llms-full.txt
+  - id: windsor-ai.get_subscription_url
+    object: Subscription
+    action: get_subscription_url
+    description: "Return a clickable Markdown link to the Windsor.ai pricing page or a specific plan's upgrade page."
+    category: Operations
+    risk: low
+    business_impact: "Surfaces a pricing or plan-upgrade link; no account state changes until a human completes checkout."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.windsor.ai/llms-full.txt
+  - id: windsor-ai.contact_windsor
+    object: SupportRequest
+    action: contact_windsor
+    description: "Send feedback, a support request, or a feature request to Windsor.ai."
+    category: Operations
+    risk: low
+    business_impact: "Sends agent-composed text to Windsor.ai support, so whatever context the model includes leaves the tenant boundary."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Imports & Exports ----------
+
+  # source: https://mcp.windsor.ai/llms-full.txt
+  - id: windsor-ai.create_destination_task
+    object: DestinationTask
+    action: create_destination_task
+    description: "Create a recurring export of a connector's data to a destination on a schedule."
+    category: Imports & Exports
+    risk: critical
+    business_impact: "Stands up a recurring pipeline that copies connector datasets into BigQuery, Snowflake, Sheets, or cloud storage on a schedule, creating an ongoing outbound flow of marketing and CRM records."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.windsor.ai/llms-full.txt
+  - id: windsor-ai.get_destinations
+    object: Destination
+    action: get_destinations
+    description: "List destinations that can receive a scheduled export of connector data."
+    category: Imports & Exports
+    risk: low
+    business_impact: "Lists the warehouses, spreadsheets, and storage targets that can receive exported connector data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.windsor.ai/llms-full.txt
+  - id: windsor-ai.get_destination_tasks
+    object: DestinationTask
+    action: get_destination_tasks
+    description: "List the scheduled export tasks the user has already created."
+    category: Imports & Exports
+    risk: low
+    business_impact: "Reveals which datasets are already being shipped out on a schedule and where each one lands."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.windsor.ai/llms-full.txt
+  - id: windsor-ai.get_destination_setup_info
+    object: Destination
+    action: get_destination_setup_info
+    description: "Describe how to set up a scheduled export to one destination."
+    category: Imports & Exports
+    risk: low
+    business_impact: "Returns the configuration steps and required parameters for wiring up one export destination."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://mcp.windsor.ai/llms-full.txt
+  - id: windsor-ai.get_data
+    object: "*"
+    action: get_data
+    description: "Retrieve data from a connector with date ranges, account filtering, custom field filters, and connector-specific options."
+    category: Data Access
+    risk: high
+    business_impact: "Pulls arbitrary filtered rows out of any connected source — ad platforms, GA4, HubSpot, Salesforce, Shopify, Stripe — so a single broad query can return large volumes of customer and revenue data into the conversation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.windsor.ai/llms-full.txt
+  - id: windsor-ai.create_custom_field
+    object: CustomField
+    action: create_custom_field
+    description: "Create a custom (formula) field on a connector, e.g. a calculated metric or dimension."
+    category: Data Access
+    risk: medium
+    business_impact: "Adds a persistent calculated metric such as CPA or margin-adjusted spend that then behaves like a native field, changing the numbers downstream reports and exports produce."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.windsor.ai/llms-full.txt
+  - id: windsor-ai.get_custom_fields
+    object: CustomField
+    action: get_custom_fields
+    description: "List the custom (formula) fields the user has defined across connectors."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the tenant's calculated-field definitions across connectors."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.windsor.ai/llms-full.txt
+  - id: windsor-ai.get_options
+    object: ConnectorOption
+    action: get_options
+    description: "List available fields, date filter columns, and connector-specific options."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the queryable fields and filter options for a connector; metadata only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.windsor.ai/llms-full.txt
+  - id: windsor-ai.get_fields
+    object: Field
+    action: get_fields
+    description: "Get detailed descriptions, types and tables for specific fields."
+    category: Data Access
+    risk: low
+    business_impact: "Returns schema-level descriptions and types for named fields."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Integrations ----------
+
+  # source: https://mcp.windsor.ai/llms-full.txt
+  - id: windsor-ai.get_connector_authorization_url
+    object: Connector
+    action: get_connector_authorization_url
+    description: "Return a URL the user can open in their browser to set up or authorize a connector."
+    category: Integrations
+    risk: medium
+    business_impact: "Produces the live authorization link that binds a third-party ad, CRM, or commerce account to this Windsor.ai tenant once a human completes the grant."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.windsor.ai/llms-full.txt
+  - id: windsor-ai.get_connector_connect_info
+    object: Connector
+    action: get_connector_connect_info
+    description: "Describe how to grant access to a connector, including the auth type, direct connect URL, and any manual credential fields."
+    category: Integrations
+    risk: low
+    business_impact: "Describes the auth method and credential fields a connector expects; returns the setup recipe, not any stored secret."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.windsor.ai/llms-full.txt
+  - id: windsor-ai.get_connectors
+    object: Connector
+    action: get_connectors
+    description: "List Windsor.ai connectors, their connected accounts, the write actions each connector supports, and the read options each exposes."
+    category: Integrations
+    risk: low
+    business_impact: "Inventories every connected account and the read and write surface each one exposes to the agent."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Access ----------
+
+  # source: https://mcp.windsor.ai/llms-full.txt
+  - id: windsor-ai.get_current_user
+    object: User
+    action: get_current_user
+    description: "Return the authenticated user's profile."
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns the calling account's own profile, confirming which Windsor.ai identity the token belongs to."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.windsor.ai/llms-full.txt
+  - id: windsor-ai.get_windsor_login_url
+    object: Session
+    action: get_windsor_login_url
+    description: "Return a URL into the Windsor.ai dashboard."
+    category: Identity & Access
+    risk: low
+    business_impact: "Hands back a dashboard deep link that relies on the user's own browser session; no credentials are issued."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

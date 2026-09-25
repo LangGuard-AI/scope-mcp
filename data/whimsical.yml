@@ -1,0 +1,252 @@
+schema_version: "1.3"
+platform: whimsical
+display_name: Whimsical
+logo: https://whimsical.com/_next_public/favicon-32.png
+source: langguard-editorial
+updated: "2026-09"
+reference: https://whimsical.com/learn/ai/mcp-tools
+mcp_server_url: https://mcp.whimsical.com/mcp
+actions:
+  # ---------- Content ----------
+
+  # source: https://whimsical.com/learn/ai/mcp-tools
+  - id: whimsical.delete
+    object: File
+    action: delete
+    description: "Delete a Whimsical file, or objects within a board."
+    category: Content
+    risk: high
+    business_impact: "Destroys a board, doc, or the objects inside one, wiping collaborative design work that teammates may depend on with no second approver in the path."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://whimsical.com/learn/ai/mcp-tools
+  - id: whimsical.edit
+    object: BoardObject
+    action: edit
+    description: "Add, update, or delete objects on an existing Whimsical board or doc."
+    category: Content
+    risk: medium
+    business_impact: "Rewrites the contents of an existing board or doc, including removing objects other collaborators authored."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://whimsical.com/learn/ai/mcp-tools
+  - id: whimsical.move
+    object: File
+    action: move
+    description: "Move a file or folder to a different location in your workspace."
+    category: Content
+    risk: medium
+    business_impact: "Relocates a file or folder within the workspace hierarchy, changing where teammates find it and which folder it inherits organization from."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://whimsical.com/learn/ai/mcp-tools
+  - id: whimsical.create
+    object: File
+    action: create
+    description: "Create a new Whimsical file: a board, flowchart, mind map, sequence diagram, wireframe, sticky note set, or table."
+    category: Content
+    risk: low
+    business_impact: "Adds a new board, diagram, wireframe, or table to the workspace; reversible and visible to the team."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://whimsical.com/learn/ai/mcp-tools
+  - id: whimsical.doc_create
+    object: Document
+    action: doc_create
+    description: "Create a new Whimsical document with markdown content."
+    category: Content
+    risk: low
+    business_impact: "Publishes a new document into the workspace with agent-authored markdown that teammates may mistake for human-written content."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://whimsical.com/learn/ai/mcp-tools
+  - id: whimsical.generate_diagram
+    object: Diagram
+    action: generate_diagram
+    description: "Create an auto-laid-out flowchart, mind map, or sequence diagram in a single step."
+    category: Content
+    risk: low
+    business_impact: "Generates a fully laid-out flowchart, mind map, or sequence diagram in the workspace; easily deleted if wrong."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://whimsical.com/learn/ai/mcp-tools
+  - id: whimsical.generate_mind_map
+    object: MindMap
+    action: generate_mind_map
+    description: "Create a mind map from an indented outline."
+    category: Content
+    risk: low
+    business_impact: "Builds a mind map from an outline, adding a new reversible artifact to the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://whimsical.com/learn/ai/mcp-tools
+  - id: whimsical.generate_wireframe
+    object: Wireframe
+    action: generate_wireframe
+    description: "Create a UI wireframe with an automatic flexbox layout."
+    category: Content
+    risk: low
+    business_impact: "Creates a UI wireframe with automatic layout; a new design artifact that can be removed without side effects."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://whimsical.com/learn/ai/mcp-tools
+  - id: whimsical.wireframe_edit
+    object: Wireframe
+    action: wireframe_edit
+    description: "Reflow or edit the elements of an existing wireframe."
+    category: Content
+    risk: low
+    business_impact: "Reflows or rewrites elements of an existing wireframe, altering a design other people may be reviewing."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://whimsical.com/learn/ai/mcp-tools
+  - id: whimsical.auto_layout
+    object: Flowchart
+    action: auto_layout
+    description: "Re-arrange a flowchart using automatic layout."
+    category: Content
+    risk: low
+    business_impact: "Re-arranges an existing flowchart's layout, discarding manual positioning a designer applied."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Comments ----------
+
+  # source: https://whimsical.com/learn/ai/mcp-tools
+  - id: whimsical.comment_read
+    object: Comment
+    action: comment_read
+    description: "Read the comment threads on a Whimsical board or doc."
+    category: Comments
+    risk: medium
+    business_impact: "Exposes internal review discussion on a file, including commenter identities and any personal details raised in the thread."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://whimsical.com/learn/ai/mcp-tools
+  - id: whimsical.comment_edit
+    object: Comment
+    action: comment_edit
+    description: "Create, reply to, edit, resolve, reopen, or delete a comment thread on a file."
+    category: Comments
+    risk: medium
+    business_impact: "Posts, rewrites, resolves, or deletes comment threads attributed to named collaborators, erasing feedback history other reviewers relied on."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://whimsical.com/learn/ai/mcp-tools
+  - id: whimsical.search
+    object: Workspace
+    action: search
+    description: "Search across your Whimsical workspace by title or content."
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces matching boards and docs from across the workspace, revealing which unreleased projects and internal plans exist."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://whimsical.com/learn/ai/mcp-tools
+  - id: whimsical.fetch
+    object: File
+    action: fetch
+    description: "Read the contents of a Whimsical board, doc, or folder by ID."
+    category: Data Access
+    risk: low
+    business_impact: "Pulls the full contents of a board, doc, or folder into the agent context, including any confidential product plans it holds."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://whimsical.com/learn/ai/mcp-tools
+  - id: whimsical.file_tree
+    object: Folder
+    action: file_tree
+    description: "Browse the folder hierarchy in your workspace."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the workspace folder structure and file names, mapping how the organization arranges its work."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://whimsical.com/learn/ai/mcp-tools
+  - id: whimsical.list_workspaces
+    object: Workspace
+    action: list_workspaces
+    description: "List all Whimsical workspaces you belong to."
+    category: Data Access
+    risk: low
+    business_impact: "Lists every workspace the connected account belongs to, revealing org memberships across clients or teams."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://whimsical.com/learn/ai/mcp-tools
+  - id: whimsical.how_to
+    object: Guide
+    action: how_to
+    description: "Look up Whimsical-specific syntax and formatting guides before creating content."
+    category: Data Access
+    risk: low
+    business_impact: "Returns Whimsical syntax and formatting reference material; touches no customer or workspace data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

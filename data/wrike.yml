@@ -1,0 +1,369 @@
+schema_version: "1.3"
+platform: wrike
+display_name: Wrike
+logo: https://www.wrike.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://mcp.wrike.com/v2
+reference: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+server_website: https://developers.wrike.com/docs/wrike-mcp-server-overview
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.get_users
+    object: User
+    action: get_users
+    description: "Look up specific users by id or email, or resolve 'me'."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Resolves account holders to their profile and email address, exposing employee and collaborator contact details to the agent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.search_users
+    object: User
+    action: search_users
+    description: "Find people or groups by name — or, with no query, surface your top collaborators."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Enumerates the account's people directory and infers working relationships from collaboration frequency, handing an agent an internal org map."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.update_items
+    object: WorkItem
+    action: update_items
+    description: "Edit title, description, status, dates and custom fields; apply the same change to up to 20 items at once."
+    category: Operations
+    risk: high
+    business_impact: "Rewrites titles, descriptions, statuses, dates and custom fields across up to 20 work items in one call, so a single mistaken batch can distort project state and reporting for an entire team."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.submit_requestform
+    object: RequestForm
+    action: submit_requestform
+    description: "Submits a request form and creates the task or project configured by that form."
+    category: Operations
+    risk: medium
+    business_impact: "Files an intake request under the acting user's identity, creating the task or project the form configures and starting whatever downstream routing that form triggers."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.create_item_from_blueprint
+    object: WorkItem
+    action: create_item_from_blueprint
+    description: "Create a new task, folder, project, custom item, or item tree from an existing blueprint."
+    category: Operations
+    risk: medium
+    business_impact: "Instantiates an entire blueprint tree of projects, folders and tasks in one call, which can flood a space with structure that must be cleaned up item by item."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.create_project_folder_item
+    object: Project
+    action: create_project_folder_item
+    description: "Create folders and projects — optionally from a custom item type — and set owners, dates and status."
+    category: Operations
+    risk: low
+    business_impact: "Adds folders and projects with assigned owners and dates, changing the shape of a space's work hierarchy."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.create_task_item
+    object: Task
+    action: create_task_item
+    description: "Create one or many tasks; set assignee, dates, duration and status; nest them as subtasks."
+    category: Operations
+    risk: low
+    business_impact: "Creates tasks and assigns them to named people, putting work on colleagues' queues without their involvement."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.prefill_requestform
+    object: RequestForm
+    action: prefill_requestform
+    description: "Generate a URL containing prefilled request-form values; it does not submit the form or create items."
+    category: Operations
+    risk: low
+    business_impact: "Builds a shareable link carrying prefilled form values; nothing is submitted, but the values ride in the URL and can leak if the link is forwarded."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.get_requestform
+    object: RequestForm
+    action: get_requestform
+    description: "Retrieve the pages, fields, options, and rules of an existing request form"
+    category: Operations
+    risk: low
+    business_impact: "Reveals a request form's full field, option and rule configuration, including how submissions are routed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.search_requestforms
+    object: RequestForm
+    action: search_requestforms
+    description: "Query available Wrike request forms"
+    category: Operations
+    risk: low
+    business_impact: "Lists the intake forms available in the account, exposing which request workflows exist."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.search_blueprints
+    object: Blueprint
+    action: search_blueprints
+    description: "Find reusable Wrike blueprints"
+    category: Operations
+    risk: low
+    business_impact: "Lists reusable blueprints, showing the standardized project templates an organization runs on."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.search_workflows
+    object: Workflow
+    action: search_workflows
+    description: "Find workflows and their custom statuses, including the status ids needed to set or filter status."
+    category: Operations
+    risk: low
+    business_impact: "Returns workflow definitions and custom status ids, which are the handles needed to drive work items through state changes."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.search_customitemtypes
+    object: CustomItemType
+    action: search_customitemtypes
+    description: "Find a custom item type and its id, ranked by how often it's used."
+    category: Operations
+    risk: low
+    business_impact: "Lists the account's custom item types and their usage ranking, exposing how the organization models its work."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.search_item_customfields
+    object: CustomField
+    action: search_item_customfields
+    description: "Find custom fields by name, with their type and any select-list options."
+    category: Operations
+    risk: low
+    business_impact: "Enumerates custom field definitions and their allowed values, revealing what business data the account tracks on work items."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Approvals ----------
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.get_approvals
+    object: Approval
+    action: get_approvals
+    description: "Look up approvals by id, or list the approvals on a given item — status, approvers and decisions."
+    category: Approvals
+    risk: low
+    business_impact: "Exposes who was asked to approve a deliverable and what they decided, which is the review trail auditors rely on."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.search_approvals
+    object: Approval
+    action: search_approvals
+    description: "Filter across approvals by status, approver and due date."
+    category: Approvals
+    risk: low
+    business_impact: "Surfaces every pending and completed approval across the account, including who is holding up which decision."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.get_item_comments
+    object: Comment
+    action: get_item_comments
+    description: "Read an item's full comment thread, with author and timestamp for each comment."
+    category: Data Access
+    risk: medium
+    business_impact: "Pulls entire internal discussion threads with author attribution, exposing candid team commentary and any personal data written into it."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.search_items
+    object: WorkItem
+    action: search_items
+    description: "Search tasks, folders and projects by keyword; filter by assignee, status, dates and importance; scope to a space or subtree."
+    category: Data Access
+    risk: medium
+    business_impact: "Runs keyword search across every task, folder and project the caller can reach, making it the fastest route to locate sensitive work records at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.get_item_details
+    object: WorkItem
+    action: get_item_details
+    description: "Get the full detail of up to five items at once — status, custom fields, assignees and attachments."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns complete work-item records including custom fields and assignees, where teams routinely store client names, budgets and other confidential detail."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.get_my_inbox
+    object: Notification
+    action: get_my_inbox
+    description: "Catch up on unread notifications: mentions, assignments, status changes and replies."
+    category: Data Access
+    risk: low
+    business_impact: "Reads the caller's notification stream, including mentions and replies written by colleagues."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.get_items_children
+    object: WorkItem
+    action: get_items_children
+    description: "Walk the hierarchy one level at a time — drill from a space into folders, projects and tasks."
+    category: Data Access
+    risk: low
+    business_impact: "Traverses the work hierarchy level by level, mapping out how a space's projects and tasks are organized."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.search_spaces
+    object: Space
+    action: search_spaces
+    description: "List the spaces you belong to, or filter them by name."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the spaces the caller belongs to, outlining which teams and initiatives the account is organized around."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Content & Collaboration ----------
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.add_attachments_to_item
+    object: Attachment
+    action: add_attachments_to_item
+    description: "Attach a file uploaded by `prepare_attachment_upload` to a work item."
+    category: Content & Collaboration
+    risk: medium
+    business_impact: "Publishes an uploaded file onto a work item, making its contents visible to everyone with access to that item."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.prepare_attachment_upload
+    object: Attachment
+    action: prepare_attachment_upload
+    description: "Upload a file to later attach it to a work item."
+    category: Content & Collaboration
+    risk: low
+    business_impact: "Moves file content into Wrike storage ahead of attachment, so whatever the agent uploads now lives in the customer's workspace."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.wrike.com/docs/available-tools-on-wrike-mcp
+  - id: wrike.create_item_comment
+    object: Comment
+    action: create_item_comment
+    description: "Post a comment on any task, folder or project and @-mention teammates."
+    category: Content & Collaboration
+    risk: low
+    business_impact: "Posts commentary under the acting user's name and can @-mention colleagues, pushing agent-authored text into human discussion threads."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

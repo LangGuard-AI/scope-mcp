@@ -1,0 +1,310 @@
+schema_version: "1.3"
+platform: upwork
+display_name: Upwork
+logo: https://www.upwork.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://mcp.upwork.com/mcp
+reference: https://www.upwork.com/ai/mcp
+server_website: https://www.upwork.com/ai/mcp
+actions:
+  # ---------- Financial ----------
+
+  # source: https://www.upwork.com/ai/mcp
+  - id: upwork.milestones_and_payments
+    object: Milestone
+    action: milestones_and_payments
+    id_form: capability
+    description: "Milestones and payments"
+    category: Financial
+    risk: critical
+    business_impact: "Approving or rejecting a contract milestone authorizes release of escrowed funds to a freelancer, moving money and changing recognized project cost in a single step."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.upwork.com/ai/mcp
+  - id: upwork.financials_and_time_reports
+    object: TimeReport
+    action: financials_and_time_reports
+    id_form: capability
+    description: "Financials and time reports"
+    category: Financial
+    risk: high
+    business_impact: "Pulls timesheets, work-diary activity records, and transaction history across every active contract, exposing worker-monitoring data and spend history in bulk."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.upwork.com/ai/mcp
+  - id: upwork.earnings_and_profile
+    object: Profile
+    action: earnings_and_profile
+    id_form: capability
+    description: "Earnings and profile"
+    category: Financial
+    risk: medium
+    business_impact: "Reads earnings and available balance, and rewrites profile fields including employment history, education, and languages — personal data that drives marketplace matching."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Access ----------
+
+  # source: https://www.upwork.com/ai/mcp
+  - id: upwork.account_and_access
+    object: Account
+    action: account_and_access
+    id_form: capability
+    description: "Account and access"
+    category: Identity & Access
+    risk: low
+    business_impact: "Enumerates which Upwork accounts the connected credential can act as — freelancer, client, or agency — plus company details, revealing the agent's effective reach."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.upwork.com/ai/mcp
+  - id: upwork.teams_and_members
+    object: Team
+    action: teams_and_members
+    id_form: capability
+    description: "Teams and members"
+    category: Identity & Access
+    risk: medium
+    business_impact: "Returns the agency's team structure and full member roster, exposing the identities and affiliations of everyone working under the organization."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Contracts & Offers ----------
+
+  # source: https://www.upwork.com/ai/mcp
+  - id: upwork.offers_and_contracts
+    object: Offer
+    action: offers_and_contracts
+    id_form: capability
+    description: "Offers and contracts"
+    category: Contracts & Offers
+    risk: high
+    business_impact: "Prepares a contract offer carrying scope and rate, committing the client to spend once confirmed on upwork.com, and reads terms of every active contract."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.upwork.com/ai/mcp
+  - id: upwork.respond_to_invitations_and_offers
+    object: Offer
+    action: respond_to_invitations_and_offers
+    id_form: capability
+    description: "Respond to invitations and offers"
+    category: Contracts & Offers
+    risk: high
+    business_impact: "Accepts or declines direct offers and invitations, which starts or forfeits a revenue-bearing contract at the stated rate once confirmed on upwork.com."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.upwork.com/ai/mcp
+  - id: upwork.contracts_and_work_delivery
+    object: Contract
+    action: contracts_and_work_delivery
+    id_form: capability
+    description: "Contracts and work delivery"
+    category: Contracts & Offers
+    risk: medium
+    business_impact: "Submits milestone deliverables and reports logged time against active contracts, which is the billing input a client reviews before funds are released."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Hiring & Talent ----------
+
+  # source: https://www.upwork.com/ai/mcp
+  - id: upwork.find_and_shortlist_talent
+    object: Freelancer
+    action: find_and_shortlist_talent
+    id_form: capability
+    description: "Find and shortlist talent"
+    category: Hiring & Talent
+    risk: medium
+    business_impact: "Searches freelancers by skill, rate, and location and returns ranked profiles with full work history, producing an automated shortlist that shapes who gets hired."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, EU_AI_ACT, NIST_AI_RMF, CO_AI_ACT]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.upwork.com/ai/mcp
+  - id: upwork.invitations_and_proposals
+    object: Proposal
+    action: invitations_and_proposals
+    id_form: capability
+    description: "Invitations and proposals"
+    category: Hiring & Talent
+    risk: medium
+    business_impact: "Invites specific freelancers to apply and declines received proposals off ranked summaries, an adverse hiring decision recorded against a named applicant."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, EU_AI_ACT, NIST_AI_RMF, CO_AI_ACT]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.upwork.com/ai/mcp
+  - id: upwork.talent_lists
+    object: TalentList
+    action: talent_lists
+    id_form: capability
+    description: "Talent lists"
+    category: Hiring & Talent
+    risk: low
+    business_impact: "Creates talent lists and saves freelancers into them for later consideration; a reversible bookmarking write over already-published marketplace profiles."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Jobs & Listings ----------
+
+  # source: https://www.upwork.com/ai/mcp
+  - id: upwork.post_and_manage_jobs
+    object: JobPost
+    action: post_and_manage_jobs
+    id_form: capability
+    description: "Post and manage jobs"
+    category: Jobs & Listings
+    risk: medium
+    business_impact: "Publishes and edits live job postings on the public Upwork marketplace, so drafted scope, budget, and requirements become externally visible under the company's name."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.upwork.com/ai/mcp
+  - id: upwork.draft_and_submit_proposals
+    object: Proposal
+    action: draft_and_submit_proposals
+    id_form: capability
+    description: "Draft and submit proposals"
+    category: Jobs & Listings
+    risk: medium
+    business_impact: "Submits a proposal to a job posting, spending Connects credits and putting a binding rate and pitch in front of a prospective client."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.upwork.com/ai/mcp
+  - id: upwork.find_the_right_jobs
+    object: Job
+    action: find_the_right_jobs
+    id_form: capability
+    description: "Find the right jobs"
+    category: Jobs & Listings
+    risk: low
+    business_impact: "Searches and saves marketplace job listings by skill, budget, or type; read-only discovery over publicly posted jobs with no state change beyond favorites."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Messaging ----------
+
+  # source: https://www.upwork.com/ai/mcp
+  - id: upwork.messaging
+    object: Message
+    action: messaging
+    id_form: capability
+    description: "Messaging"
+    category: Messaging
+    risk: high
+    business_impact: "Reads private message threads with freelancers and applicants and sends messages under the account holder's identity, exposing and impersonating confidential correspondence."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://www.upwork.com/ai/mcp
+  - id: upwork.agency_dashboard
+    object: Agency
+    action: agency_dashboard
+    id_form: capability
+    description: "Agency dashboard"
+    category: Data Access
+    risk: high
+    business_impact: "Returns one aggregated view of every agency member's invitations, offers, messages, and contracts, concentrating the whole organization's client data into a single response."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.upwork.com/ai/mcp
+  - id: upwork.file_attachments
+    object: Attachment
+    action: file_attachments
+    id_form: capability
+    description: "File attachments"
+    category: Data Access
+    risk: medium
+    business_impact: "Uploads and downloads attachments bound to proposals, offers, jobs, and messages — files that routinely carry resumes, identity documents, and client deliverables."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.upwork.com/ai/mcp
+  - id: upwork.dashboard_overview
+    object: Dashboard
+    action: dashboard_overview
+    id_form: capability
+    description: "Dashboard & overview"
+    category: Data Access
+    risk: low
+    business_impact: "Summarizes new proposals, pending offers, messages, and contract updates in one read; a status roll-up that changes nothing but reveals current pipeline state."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://www.upwork.com/ai/mcp
+  - id: upwork.profile_visibility
+    object: Profile
+    action: profile_visibility
+    id_form: capability
+    description: "Profile visibility"
+    category: Operations
+    risk: medium
+    business_impact: "Toggles the availability badge and manages profile boost ads, which are paid placements — changes here incur marketplace ad spend and alter inbound lead volume."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,37 @@
+schema_version: "1.3"
+platform: viator
+display_name: Viator
+logo: https://www.viator.com/orion/images/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://exp-app-mcp.prod.ep.viator.com/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://exp-app-mcp.prod.ep.viator.com/mcp
+  - id: viator.search_experiences
+    object: Experience
+    action: search_experiences
+    description: "Returns a curated list of Viator experiences from a free-text search plus trip dates and optional refiners such as budget and duration."
+    category: Data Access
+    risk: low
+    business_impact: "Sends the traveller's destination, trip dates, and stated preferences to Viator on every call and returns bookable experience listings; read-only with no reservation or payment effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://exp-app-mcp.prod.ep.viator.com/mcp
+  - id: viator.get_experience_details
+    object: Experience
+    action: get_experience_details
+    description: "Retrieves enriched detail for one Viator experience: pricing, options, traveller age bands, pickup and start locations, operator, imagery, and cancellation policy."
+    category: Data Access
+    risk: low
+    business_impact: "Exposes full merchandising and cancellation-policy detail for a single listing, including refund terms a traveller may rely on; read-only catalogue lookup with no booking side effect."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

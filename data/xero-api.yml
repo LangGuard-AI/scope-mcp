@@ -1,0 +1,370 @@
+schema_version: "1.3"
+platform: xero-api
+display_name: Xero
+logo: https://www.xero.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+reference: https://developer.xero.com/ai
+server_website: https://github.com/XeroAPI/xero-mcp-server
+maintainer: https://github.com/XeroAPI/xero-mcp-server/issues
+# Curated from the 51-tool Xero MCP server surface. Routine reference and
+# lookup reads (accounts, items, tax rates, tracking categories, contact
+# groups, quotes, org details, aged reports) and low-impact catalogue writes
+# (items, quotes, tracking categories/options) are omitted; the manifest at
+# _sources/xero-api/tools.json remains the complete tool inventory.
+actions:
+  # ---------- Financial ----------
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.create-payment
+    object: Payment
+    action: create-payment
+    description: "Create a new payment"
+    category: Financial
+    risk: critical
+    business_impact: "Records a payment against an invoice or bill, settling a receivable or payable and moving cash balances in the general ledger."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.create-manual-journal
+    object: ManualJournal
+    action: create-manual-journal
+    description: "Create a new manual journal"
+    category: Financial
+    risk: critical
+    business_impact: "Posts a journal entry directly to the general ledger, changing reported account balances without any originating source document."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.update-manual-journal
+    object: ManualJournal
+    action: update-manual-journal
+    description: "Update an existing manual journal"
+    category: Financial
+    risk: critical
+    business_impact: "Rewrites an existing general-ledger journal entry, altering posted balances and the audit trail auditors rely on to trace period-end adjustments."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.create-invoice
+    object: Invoice
+    action: create-invoice
+    description: "Create a new invoice"
+    category: Financial
+    risk: high
+    business_impact: "Raises a customer invoice, creating an accounts-receivable balance and a revenue-recognition event in the ledger."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.update-invoice
+    object: Invoice
+    action: update-invoice
+    description: "Update an existing draft invoice"
+    category: Financial
+    risk: high
+    business_impact: "Changes line items, amounts or contacts on a draft invoice, shifting the receivable and revenue it will post when approved."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.create-credit-note
+    object: CreditNote
+    action: create-credit-note
+    description: "Create a new credit note"
+    category: Financial
+    risk: high
+    business_impact: "Issues a credit against a customer or supplier account, reducing recognised revenue or payables for the period."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.update-credit-note
+    object: CreditNote
+    action: update-credit-note
+    description: "Update an existing draft credit note"
+    category: Financial
+    risk: high
+    business_impact: "Alters the value or allocation of a draft credit note, changing the offset applied against customer balances."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.create-bank-transaction
+    object: BankTransaction
+    action: create-bank-transaction
+    description: "Create a new bank transaction"
+    category: Financial
+    risk: high
+    business_impact: "Writes a spend- or receive-money entry against a bank account, changing cash position and the reconciliation an accountant will sign off."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.update-bank-transaction
+    object: BankTransaction
+    action: update-bank-transaction
+    description: "Update an existing bank transaction"
+    category: Financial
+    risk: high
+    business_impact: "Modifies a recorded bank transaction's amount, account or coding, breaking prior reconciliation and restating cash movements."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.list-bank-transactions
+    object: BankTransaction
+    action: list-bank-transactions
+    description: "Retrieve a list of bank account transactions"
+    category: Financial
+    risk: medium
+    business_impact: "Pulls the organisation's bank account activity, exposing counterparties, amounts and cash position to whoever holds the agent's session."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.list-payments
+    object: Payment
+    action: list-payments
+    description: "Retrieve a list of payments"
+    category: Financial
+    risk: medium
+    business_impact: "Reads the payment history across invoices and bills, revealing who was paid, when and how much."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.list-profit-and-loss
+    object: Report
+    action: list-profit-and-loss
+    description: "Retrieve a profit and loss report"
+    category: Financial
+    risk: medium
+    business_impact: "Returns the organisation's income statement, surfacing unpublished revenue and margin figures for the requested period."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.list-report-balance-sheet
+    object: Report
+    action: list-report-balance-sheet
+    description: "Retrieve a balance sheet report"
+    category: Financial
+    risk: medium
+    business_impact: "Returns assets, liabilities and equity as reported, exposing the financial position before it is externally published."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.list-trial-balance
+    object: Report
+    action: list-trial-balance
+    description: "Retrieve a trial balance report"
+    category: Financial
+    risk: medium
+    business_impact: "Returns every ledger account balance used to close the books, the working set behind statutory reporting."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Payroll ----------
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.approve-payroll-timesheet
+    object: Timesheet
+    action: approve-payroll-timesheet
+    description: "Approve a Payroll Timesheet"
+    category: Payroll
+    risk: high
+    business_impact: "Approves an employee timesheet so the recorded hours flow into a pay run, committing wage expense without a second reviewer."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.revert-payroll-timesheet
+    object: Timesheet
+    action: revert-payroll-timesheet
+    description: "Revert an approved Payroll Timesheet"
+    category: Payroll
+    risk: medium
+    business_impact: "Pulls an approved timesheet back to draft, reopening hours that had already cleared payroll review."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.delete-payroll-timesheet
+    object: Timesheet
+    action: delete-payroll-timesheet
+    description: "Delete an existing Payroll Timesheet"
+    category: Payroll
+    risk: high
+    business_impact: "Destroys an employee's timesheet record, erasing the hours evidence behind wage payments with no recovery path in Xero."
+    compliance: [SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.create-payroll-timesheet
+    object: Timesheet
+    action: create-payroll-timesheet
+    description: "Create a new Payroll Timesheet"
+    category: Payroll
+    risk: medium
+    business_impact: "Opens a timesheet for a named employee and pay period, the record that will drive their wage calculation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.update-payroll-timesheet-line
+    object: TimesheetLine
+    action: update-payroll-timesheet-line
+    description: "Update a line on an existing Payroll Timesheet"
+    category: Payroll
+    risk: medium
+    business_impact: "Changes the hours or earnings rate on a timesheet line, directly adjusting what an identified employee will be paid."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.list-payroll-employees
+    object: Employee
+    action: list-payroll-employees
+    description: "Retrieve a list of Payroll Employees"
+    category: Payroll
+    risk: medium
+    business_impact: "Returns the full payroll employee roster with identifying and employment details, a bulk staff-PII read in one call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.list-payroll-employee-leave
+    object: EmployeeLeave
+    action: list-payroll-employee-leave
+    description: "Retrieve a Payroll Employee's leave records"
+    category: Payroll
+    risk: medium
+    business_impact: "Exposes an employee's leave history, which can reveal sick-leave and other sensitive absence patterns tied to a named individual."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.list-timesheets
+    object: Timesheet
+    action: list-timesheets
+    description: "Retrieve a list of Payroll Timesheets"
+    category: Payroll
+    risk: medium
+    business_impact: "Lists payroll timesheets across employees, exposing per-person working hours and pay-period activity."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.list-contacts
+    object: Contact
+    action: list-contacts
+    description: "Retrieve a list of contacts from Xero"
+    category: Customer
+    risk: medium
+    business_impact: "Returns the organisation's customer and supplier contacts with names, emails, phone numbers and addresses in bulk."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.create-contact
+    object: Contact
+    action: create-contact
+    description: "Create a new contact"
+    category: Customer
+    risk: medium
+    business_impact: "Adds a customer or supplier record holding personal contact details that will be attached to invoices and payments."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://github.com/XeroAPI/xero-mcp-server
+  - id: xero-api.update-contact
+    object: Contact
+    action: update-contact
+    description: "Update an existing contact"
+    category: Customer
+    risk: medium
+    business_impact: "Overwrites a contact's personal and banking details, which determines where invoices are sent and payments are directed."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
