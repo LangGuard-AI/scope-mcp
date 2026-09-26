@@ -1,0 +1,344 @@
+schema_version: "1.3"
+platform: zoho-crm
+display_name: Zoho CRM
+logo: https://www.zohowebstatic.com/sites/zweb/images/productlogos/crm.svg
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://claude-zohocrm.zohomcp.com/mcp/message
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.Update_Users
+    object: User
+    action: Update_Users
+    category: Identity & Access
+    risk: critical
+    business_impact: "Changes profile, role, and status across multiple CRM users in one call, so a single invocation can escalate privileges or deactivate accounts org-wide."
+    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.Update_User
+    object: User
+    action: Update_User
+    category: Identity & Access
+    risk: high
+    business_impact: "Reassigns one user's role, profile, or active state, altering what CRM data and records that principal can reach without an access review."
+    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.Get_Users
+    object: User
+    action: Get_Users
+    category: Identity & Access
+    risk: medium
+    business_impact: "Returns the full CRM user directory including names, email addresses, roles, and profiles — a ready-made map of staff identities and their access levels."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Financial ----------
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.convertInventory
+    object: InventoryRecord
+    action: convertInventory
+    category: Financial
+    risk: high
+    business_impact: "Converts a quote or sales order into the next inventory document, creating a revenue-bearing record and skipping the normal quote-to-invoice approval chain."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.Create_Field
+    object: Field
+    action: Create_Field
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Adds a custom field to a live CRM module, changing the schema that reports, pipeline forecasts, and downstream integrations read from."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.putVariableById
+    object: Variable
+    action: putVariableById
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Overwrites an org-level variable that functions and integrations depend on, which can redirect outbound calls or replace stored connection values."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.getVariables
+    object: Variable
+    action: getVariables
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Reads every org-level variable, which commonly holds integration endpoints and API credentials placed there by admins and custom functions."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Revenue & Pipeline ----------
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.Delete_Records
+    object: Record
+    action: Delete_Records
+    category: Revenue & Pipeline
+    risk: critical
+    business_impact: "Deletes many CRM records at once, wiping leads, contacts, or deals in bulk with no second approver and only a time-limited recycle-bin window."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.Delete_Record
+    object: Record
+    action: Delete_Record
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Removes a single customer record and its personal data from the active CRM, breaking any reports or automations keyed to that record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.Update_Records
+    object: Record
+    action: Update_Records
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Rewrites fields across many records in one call, so a bad mapping can corrupt contact details or deal values throughout a module."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.Upsert_Records
+    object: Record
+    action: Upsert_Records
+    category: Revenue & Pipeline
+    risk: high
+    business_impact: "Creates or overwrites records by matching key, which silently replaces existing customer data when the duplicate-check field resolves to a live record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.Create_Records
+    object: Record
+    action: Create_Records
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Inserts new leads, contacts, or deals carrying personal data into the CRM, triggering assignment rules and workflow automations on creation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.Update_Record
+    object: Record
+    action: Update_Record
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Edits one CRM record's fields, changing customer detail or deal stage and firing any workflow tied to that field."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.Add_Tags_To_Multiple_Records
+    object: Tag
+    action: Add_Tags_To_Multiple_Records
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Applies tags across a batch of records, which can pull them into tag-driven segments, campaigns, or automation filters unexpectedly."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.updateRelatedRecords
+    object: RelatedRecord
+    action: updateRelatedRecords
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Rewrites the association data between a parent record and its related list, changing product lines, contact roles, or campaign membership on a deal."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.updateSpecificRelatedRecord
+    object: RelatedRecord
+    action: updateSpecificRelatedRecord
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Modifies one related-record link, adjusting details such as line-item quantity or contact role on the parent record."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.delinkRelatedRecord
+    object: RelatedRecord
+    action: delinkRelatedRecord
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Breaks the link between two records, detaching a contact, product, or campaign from its parent and removing that relationship from reports."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.executeCOQLQuery
+    object: "*"
+    action: executeCOQLQuery
+    category: Data Access
+    risk: high
+    business_impact: "Runs an arbitrary COQL query across CRM modules, letting a caller pull field combinations and customer data well beyond the record it was asked about."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.Get_Records
+    object: Record
+    action: Get_Records
+    category: Data Access
+    risk: high
+    business_impact: "Pages through every record in a module, producing a bulk dump of contact and deal data including the personal fields on each record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.getBulkReadJobDetails
+    object: BulkReadJob
+    action: getBulkReadJobDetails
+    category: Data Access
+    risk: high
+    business_impact: "Exposes the state and result location of a bulk read job, the path by which entire CRM modules are exported as downloadable files."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.Search_Records
+    object: Record
+    action: Search_Records
+    category: Data Access
+    risk: medium
+    business_impact: "Searches a module by criteria, email, or phone number and returns matching records in full, including the personal fields they hold."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.Get_Record
+    object: Record
+    action: Get_Record
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves one CRM record with all its fields, surfacing that individual's contact details and deal history to the agent context."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.getTimelines
+    object: Timeline
+    action: getTimelines
+    category: Data Access
+    risk: medium
+    business_impact: "Reads the change history of a record, revealing who edited which field and when — the audit trail admins rely on for CRM disputes."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.Delete_Notes
+    object: Note
+    action: Delete_Notes
+    category: Customer
+    risk: medium
+    business_impact: "Erases notes attached to CRM records, destroying the written account of customer conversations and commitments kept against that record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-crm
+  - id: zoho-crm.Create_Notes
+    object: Note
+    action: Create_Notes
+    category: Customer
+    risk: low
+    business_impact: "Attaches a note to a CRM record, adding agent-authored commentary that reps will read as part of the customer history."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

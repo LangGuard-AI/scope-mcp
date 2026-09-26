@@ -1,0 +1,52 @@
+schema_version: "1.3"
+platform: yugabytedb
+display_name: YugabyteDB
+logo: https://www.yugabyte.com/favicon.png
+source: langguard-editorial
+updated: "2026-09"
+reference: https://docs.yugabyte.com/stable/develop/tutorials/ai/mcp-server/
+server_website: https://github.com/yugabyte/yugabytedb-mcp-server
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/yugabyte/yugabytedb-mcp-server/main/README.md
+  - id: yugabytedb.run_write_query
+    object: "*"
+    action: run_write_query
+    description: "Runs an INSERT/UPDATE/DELETE/MERGE/TRUNCATE or DDL statement against the connected YugabyteDB cluster, subject to a guardrail blocklist."
+    category: Data Access
+    risk: critical
+    business_impact: "Mutates or destroys production data — a single TRUNCATE or DDL statement can wipe a table the connection role owns, with no undo beyond a cluster backup."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/yugabyte/yugabytedb-mcp-server/main/README.md
+  - id: yugabytedb.run_read_only_query
+    object: "*"
+    action: run_read_only_query
+    description: "Executes a SELECT inside a BEGIN READ ONLY transaction and returns the result rows as JSON."
+    category: Data Access
+    risk: critical
+    business_impact: "Reads arbitrary SQL results from the cluster, so one unbounded SELECT can pull every row of customer data the connection role can reach into the agent's context."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP, CLI]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/yugabyte/yugabytedb-mcp-server/main/README.md
+  - id: yugabytedb.summarize_database
+    object: Schema
+    action: summarize_database
+    description: "Lists the tables in a schema (default 'public') with their columns and row counts."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the table, column, and row-count inventory for a schema, exposing the data model an attacker would need to target specific tables."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP, CLI]
+    source: langguard-editorial

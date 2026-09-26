@@ -1,0 +1,365 @@
+schema_version: "1.3"
+platform: zoho-books-api
+display_name: Zoho Books
+logo: https://www.zoho.com/books/books-app-logo.png
+source: langguard-editorial
+updated: "2026-09"
+reference: https://claude.com/connectors/zoho-books
+actions:
+  # ---------- Financial ----------
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.create_customer_payment
+    object: CustomerPayment
+    action: create_customer_payment
+    description: "Records a payment received from a customer against one or more invoices."
+    category: Financial
+    risk: critical
+    business_impact: "Posts cash receipt to the ledger and settles the referenced invoices, moving revenue out of accounts receivable without a second approver."
+    compliance: [SOX, COSO, PCI]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.update_customer_payment
+    object: CustomerPayment
+    action: update_customer_payment
+    description: "Modifies an existing customer payment record."
+    category: Financial
+    risk: high
+    business_impact: "Alters a recorded cash receipt — amount, date, or invoice allocation — so bank reconciliation and AR aging no longer match what was originally booked."
+    compliance: [SOX, COSO, PCI]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.delete_customer_payment
+    object: CustomerPayment
+    action: delete_customer_payment
+    description: "Permanently deletes a customer payment record."
+    category: Financial
+    risk: critical
+    business_impact: "Erases a cash receipt from the books, reopening settled invoices and destroying the audit trail that ties bank deposits to customer accounts."
+    compliance: [SOX, COSO, PCI, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.list_customer_payments
+    object: CustomerPayment
+    action: list_customer_payments
+    description: "Lists customer payment records in the organization."
+    category: Financial
+    risk: medium
+    business_impact: "Returns the organization's cash receipts history, including payer, amount, date, and payment mode for every recorded transaction."
+    compliance: [PCI]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.create_invoice
+    object: Invoice
+    action: create_invoice
+    description: "Creates a new customer invoice."
+    category: Financial
+    risk: high
+    business_impact: "Issues a billable invoice that recognizes revenue and creates a receivable against the customer, feeding directly into reported financials."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.update_invoice
+    object: Invoice
+    action: update_invoice
+    description: "Updates an existing invoice's line items, amounts, or terms."
+    category: Financial
+    risk: high
+    business_impact: "Changes amounts or terms on an issued invoice, restating the receivable and the revenue already recognized against it."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.delete_invoice
+    object: Invoice
+    action: delete_invoice
+    description: "Permanently deletes an invoice."
+    category: Financial
+    risk: critical
+    business_impact: "Removes a revenue document from the books entirely, breaking invoice-number continuity and leaving no record of the billing event for auditors."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.list_invoices
+    object: Invoice
+    action: list_invoices
+    description: "Lists invoices in the organization."
+    category: Financial
+    risk: medium
+    business_impact: "Returns the full accounts-receivable picture, exposing customer names, billing addresses, amounts owed, and payment status across the book of business."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.create_expense
+    object: Expense
+    action: create_expense
+    description: "Records a business expense against an account."
+    category: Financial
+    risk: high
+    business_impact: "Books a new expense to the general ledger, reducing reported profit and creating a payable or reimbursement obligation."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.update_expense
+    object: Expense
+    action: update_expense
+    description: "Modifies an existing expense record."
+    category: Financial
+    risk: high
+    business_impact: "Restates a booked expense's amount, account, or date, shifting costs between periods or expense categories after the fact."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.delete_expense
+    object: Expense
+    action: delete_expense
+    description: "Permanently deletes an expense record."
+    category: Financial
+    risk: high
+    business_impact: "Destroys a posted cost entry and its supporting detail, understating expenses and leaving a gap no reviewer can reconstruct."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.create_tax
+    object: Tax
+    action: create_tax
+    description: "Creates a tax rate in the organization's tax settings."
+    category: Financial
+    risk: high
+    business_impact: "Adds a tax rate that becomes selectable on invoices and bills, directly determining the tax liability computed on future transactions."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.update_tax
+    object: Tax
+    action: update_tax
+    description: "Changes an existing tax rate's percentage or configuration."
+    category: Financial
+    risk: high
+    business_impact: "Changes a tax rate used across transactions, silently altering computed tax liability on new documents with no change-management gate."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.delete_tax
+    object: Tax
+    action: delete_tax
+    description: "Deletes a tax rate from the organization."
+    category: Financial
+    risk: high
+    business_impact: "Removes a configured tax rate from the accounting system, breaking documents that reference it and the filing trail that depends on it."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.create_purchase_order
+    object: PurchaseOrder
+    action: create_purchase_order
+    description: "Creates a purchase order to a vendor."
+    category: Operations
+    risk: high
+    business_impact: "Commits company funds to a vendor under an approved-looking document, with no second signer in the loop before the order is placed."
+    compliance: [SOX, COSO]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.delete_purchase_order
+    object: PurchaseOrder
+    action: delete_purchase_order
+    description: "Permanently deletes a purchase order."
+    category: Operations
+    risk: high
+    business_impact: "Erases a procurement commitment record, defeating three-way match between order, receipt, and vendor bill."
+    compliance: [SOX, COSO]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.create_sales_order
+    object: SalesOrder
+    action: create_sales_order
+    description: "Creates a sales order for a customer."
+    category: Operations
+    risk: medium
+    business_impact: "Opens a customer commitment that drives fulfilment and later invoicing; reversible, but it sets pricing and terms the customer can hold you to."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.delete_sales_order
+    object: SalesOrder
+    action: delete_sales_order
+    description: "Permanently deletes a sales order."
+    category: Operations
+    risk: high
+    business_impact: "Destroys an open customer order record, so committed pricing, terms, and fulfilment obligations vanish with no recovery path."
+    compliance: []
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.delete_item
+    object: Item
+    action: delete_item
+    description: "Deletes a product or service item from the catalog."
+    category: Operations
+    risk: medium
+    business_impact: "Removes a billable item from the catalog, breaking templates and recurring documents that price against it."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.create_contact
+    object: Contact
+    action: create_contact
+    description: "Creates a customer or vendor contact record."
+    category: Customer
+    risk: medium
+    business_impact: "Adds a customer or vendor record holding names, email, phone, and billing addresses into the accounting system's personal-data store."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.update_contact
+    object: Contact
+    action: update_contact
+    description: "Updates an existing contact's details."
+    category: Customer
+    risk: medium
+    business_impact: "Rewrites a customer or vendor's contact and billing details, which redirects where invoices and remittances are sent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.delete_contact
+    object: Contact
+    action: delete_contact
+    description: "Permanently deletes a contact record."
+    category: Customer
+    risk: high
+    business_impact: "Purges a customer or vendor's personal data and severs it from historical transactions, with no undo and no second-party review."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.list_contacts
+    object: Contact
+    action: list_contacts
+    description: "Lists contacts in the organization."
+    category: Customer
+    risk: high
+    business_impact: "Pulls the entire customer and vendor directory — names, emails, phone numbers, and addresses — in one call, a bulk personal-data extract."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Access ----------
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.list_users
+    object: User
+    action: list_users
+    description: "Lists users with access to the Zoho Books organization."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Enumerates everyone with access to the books along with their role, mapping the accounting system's privilege surface for a caller."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-books
+  - id: zoho-books-api.get_user
+    object: User
+    action: get_user
+    description: "Retrieves details for a single organization user."
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns one user's name, email, and role within the accounting organization."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
