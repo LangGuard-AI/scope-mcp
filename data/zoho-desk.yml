@@ -1,0 +1,340 @@
+schema_version: "1.3"
+platform: zoho-desk
+display_name: Zoho Desk
+logo: https://www.zohowebstatic.com/sites/zweb/images/productlogos/desk.svg
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://claude-zohodesk.zohomcp.com/mcp/message
+actions:
+  # ---------- Service ----------
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.deleteTicket
+    object: Ticket
+    action: deleteTicket
+    category: Service
+    risk: critical
+    business_impact: "Destroys a support ticket along with its customer correspondence, attachments, and SLA history, leaving no record of how the case was handled."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.getTickets
+    object: Ticket
+    action: getTickets
+    category: Service
+    risk: high
+    business_impact: "Lists support tickets in bulk, returning customer names, contact details, and case contents across the help desk in a single call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.searchTickets
+    object: Ticket
+    action: searchTickets
+    category: Service
+    risk: high
+    business_impact: "Runs arbitrary queries across the ticket corpus, letting a caller pull every case matching a person, email address, or keyword."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.getTicketsByContact
+    object: Ticket
+    action: getTicketsByContact
+    category: Service
+    risk: high
+    business_impact: "Returns every ticket filed by one individual, assembling a full support profile of that person's issues and interactions."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.getTicket
+    object: Ticket
+    action: getTicket
+    category: Service
+    risk: medium
+    business_impact: "Reads one ticket in full, exposing the requester's contact data and whatever personal details the customer included in the case."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.updateTicket
+    object: Ticket
+    action: updateTicket
+    category: Service
+    risk: medium
+    business_impact: "Changes ticket state — status, priority, owner, or custom fields — which drives SLA clocks, escalation routing, and support reporting."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.getTicketHistory
+    object: TicketHistory
+    action: getTicketHistory
+    category: Service
+    risk: medium
+    business_impact: "Reads the audit trail of a ticket, revealing who touched the case, when, and what they changed."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.createTicket
+    object: Ticket
+    action: createTicket
+    category: Service
+    risk: low
+    business_impact: "Opens a new support ticket, which starts an SLA timer and may trigger assignment and notification rules."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.markTicketAsRead
+    object: Ticket
+    action: markTicketAsRead
+    category: Service
+    risk: low
+    business_impact: "Flips a ticket's read state, which can hide a genuinely unattended case from agent queues and unread filters."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Messaging ----------
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.sendReply
+    object: Thread
+    action: sendReply
+    category: Messaging
+    risk: high
+    business_impact: "Sends a reply to the customer from the company's support address — an outbound communication that reaches a real person and cannot be recalled."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.getTicketConversations
+    object: Conversation
+    action: getTicketConversations
+    category: Messaging
+    risk: high
+    business_impact: "Pulls the entire correspondence chain on a ticket, including private customer messages and any personal data they contain."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.getThreads
+    object: Thread
+    action: getThreads
+    category: Messaging
+    risk: high
+    business_impact: "Lists every email thread on a ticket, exposing customer message bodies and reply-to addresses in bulk."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.getThread
+    object: Thread
+    action: getThread
+    category: Messaging
+    risk: medium
+    business_impact: "Reads one email thread verbatim, including the customer's own words and contact headers."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.deleteTicketComment
+    object: TicketComment
+    action: deleteTicketComment
+    category: Messaging
+    risk: high
+    business_impact: "Removes an agent comment from a ticket, erasing internal notes that document why a decision was made on the case."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.updateTicketComment
+    object: TicketComment
+    action: updateTicketComment
+    category: Messaging
+    risk: medium
+    business_impact: "Rewrites an existing ticket comment, altering the recorded internal narrative of how a case was handled."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.getTicketComments
+    object: TicketComment
+    action: getTicketComments
+    category: Messaging
+    risk: medium
+    business_impact: "Returns all comments on a ticket, including private agent notes never meant for the customer."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.createTicketComment
+    object: TicketComment
+    action: createTicketComment
+    category: Messaging
+    risk: low
+    business_impact: "Adds a comment to a ticket; public comments are visible to the customer in the help center."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.searchContacts
+    object: Contact
+    action: searchContacts
+    category: Customer
+    risk: high
+    business_impact: "Queries the contact database by name, email, or phone, returning customer identity records in bulk."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.getContact
+    object: Contact
+    action: getContact
+    category: Customer
+    risk: medium
+    business_impact: "Retrieves one customer's contact record — name, email, phone, and account linkage."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.searchAccounts
+    object: Account
+    action: searchAccounts
+    category: Customer
+    risk: medium
+    business_impact: "Searches customer accounts, exposing which organizations are customers and how their support relationships are structured."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.getAccount
+    object: Account
+    action: getAccount
+    category: Customer
+    risk: low
+    business_impact: "Reads one customer account record, including its domain, owner, and associated contacts."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.deleteCall
+    object: Call
+    action: deleteCall
+    category: Operations
+    risk: medium
+    business_impact: "Deletes a logged customer call, removing evidence that the conversation happened and breaking the activity trail on the case."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.deleteTask
+    object: Task
+    action: deleteTask
+    category: Operations
+    risk: medium
+    business_impact: "Removes a support task, dropping committed follow-up work off the queue with no notification to the owner."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.deleteEvent
+    object: Event
+    action: deleteEvent
+    category: Operations
+    risk: medium
+    business_impact: "Cancels a scheduled customer-facing event, silently removing a commitment from agent and customer calendars."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zoho-desk
+  - id: zoho-desk.createTask
+    object: Task
+    action: createTask
+    category: Operations
+    risk: low
+    business_impact: "Creates a support task assigned to an agent or team, adding reversible follow-up work to a queue."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

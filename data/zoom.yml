@@ -1,0 +1,373 @@
+schema_version: "1.3"
+platform: zoom
+display_name: Zoom
+logo: https://www.zoom.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+reference: https://developers.zoom.us/docs/mcp/
+server_website: https://github.com/zoom/mcp-registry
+mcp_server_url: https://mcp.zoom.us/mcp/zoom/streamable
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/team-chat/references/tools.md
+  - id: zoom.zoom_chat_channel_member_role_update
+    object: ChannelMember
+    action: zoom_chat_channel_member_role_update
+    description: "Update a Team Chat channel member's role (for example promote a member to channel admin)."
+    category: Identity & Access
+    risk: high
+    business_impact: "Promotes or demotes a channel member, handing one principal administrative control over a channel's membership and settings without an access review."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/team-chat/references/tools.md
+  - id: zoom.zoom_chat_channel_members_add
+    object: ChannelMember
+    action: zoom_chat_channel_members_add
+    description: "Add users to an existing Team Chat channel."
+    category: Identity & Access
+    risk: high
+    business_impact: "Adds people to a channel, exposing its entire message and file history to the new members the moment they join."
+    compliance: [SOC2, ISO_27001, GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/references/servers.md
+  - id: zoom.canvas_transfer_file_ownership
+    object: Document
+    action: canvas_transfer_file_ownership
+    description: "Transfer ownership of a Zoom Docs / Canvas file to another user."
+    category: Identity & Access
+    risk: high
+    business_impact: "Moves a document to a new owner, stripping the original owner of control and handing the recipient full rights over its contents and sharing."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/references/servers.md
+  - id: zoom.canvas_modify_file_general_access_setting
+    object: Document
+    action: canvas_modify_file_general_access_setting
+    description: "Change the general access setting of a Zoom Docs / Canvas file, such as who in the account can open it."
+    category: Identity & Access
+    risk: high
+    business_impact: "Widens or narrows who can reach a document — a single call can turn an internal-only file into one every account member reads."
+    compliance: [SOC2, ISO_27001, GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/references/servers.md
+  - id: zoom.canvas_add_file_collaborators
+    object: Document
+    action: canvas_add_file_collaborators
+    description: "Add collaborators to a Zoom Docs / Canvas file."
+    category: Identity & Access
+    risk: high
+    business_impact: "Grants named users access to a document's full contents and revision history, bypassing whatever sharing review the owner would normally apply."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/references/servers.md
+  - id: zoom.canvas_modify_file_collaborator_role
+    object: Document
+    action: canvas_modify_file_collaborator_role
+    description: "Change an existing collaborator's role on a Zoom Docs / Canvas file."
+    category: Identity & Access
+    risk: high
+    business_impact: "Escalates a viewer to an editor (or the reverse) on a document, changing who can rewrite or reshare its content."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/SKILL.md
+  - id: zoom.get_recording_resource
+    object: Recording
+    action: get_recording_resource
+    description: "Retrieve cloud recording content for a meeting, including recording media and passcode-protected playback resources."
+    category: Data Access
+    risk: medium
+    business_impact: "Pulls the actual recorded audio, video, and transcript of a meeting, which routinely captures faces, voices, and whatever confidential or clinical matter was discussed."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/SKILL.md
+  - id: zoom.get_meeting_assets
+    object: Meeting
+    action: get_meeting_assets
+    description: "Retrieve the assets attached to a meeting, such as transcripts, summaries, and recording artifacts."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns meeting transcripts and AI summaries, reproducing everything said in the room including personal and potentially clinical detail."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/SKILL.md
+  - id: zoom.search_zoom
+    object: SearchResult
+    action: search_zoom
+    description: "Run an AI Companion search across selected Zoom entities such as meetings, chats, and documents."
+    category: Data Access
+    risk: high
+    business_impact: "Sweeps multiple Zoom surfaces at once with a free-text query, letting one call surface private meeting content, chats, and documents the caller never had to locate individually."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/SKILL.md
+  - id: zoom.recordings_list
+    object: Recording
+    action: recordings_list
+    description: "List a user's cloud recordings within a date range, including recordings in trash."
+    category: Data Access
+    risk: medium
+    business_impact: "Enumerates every cloud recording a named user holds, mapping out which meetings were recorded and when before any content is fetched."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/SKILL.md
+  - id: zoom.search_meetings
+    object: Meeting
+    action: search_meetings
+    description: "Search meetings by keyword and date range."
+    category: Data Access
+    risk: medium
+    business_impact: "Surfaces meeting topics, times, and participants across the account, revealing who met whom about what."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/SKILL.md
+  - id: zoom.get_file_content
+    object: Document
+    action: get_file_content
+    description: "Export the content of a Zoom Docs file."
+    category: Data Access
+    risk: medium
+    business_impact: "Exports a document's full text out of Zoom Docs, moving whatever the file holds into the agent's context."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Messaging ----------
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/team-chat/references/tools.md
+  - id: zoom.zoom_chat_messages_search
+    object: ChatMessage
+    action: zoom_chat_messages_search
+    description: "Search Team Chat messages within a session or across sessions."
+    category: Messaging
+    risk: high
+    business_impact: "Searches private chat history across sessions, pulling back direct messages the caller would otherwise have to open one conversation at a time."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/team-chat/references/tools.md
+  - id: zoom.zoom_chat_messages_fetch
+    object: ChatMessage
+    action: zoom_chat_messages_fetch
+    description: "List messages from a Team Chat session."
+    category: Messaging
+    risk: medium
+    business_impact: "Reads the message history of a chat session, including one-to-one conversations and anything colleagues shared in confidence."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/team-chat/references/tools.md
+  - id: zoom.zoom_chat_message_send
+    object: ChatMessage
+    action: zoom_chat_message_send
+    description: "Send a Team Chat message to a 1:1 chat or channel, optionally as a thread reply."
+    category: Messaging
+    risk: medium
+    business_impact: "Posts under the authenticated user's identity, so a bad prompt speaks to colleagues or a whole channel as that person."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/team-chat/references/tools.md
+  - id: zoom.zoom_chat_message_update
+    object: ChatMessage
+    action: zoom_chat_message_update
+    description: "Edit a Team Chat message previously sent by the caller."
+    category: Messaging
+    risk: medium
+    business_impact: "Rewrites a message already delivered to recipients, changing the record of what was said after the fact."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/team-chat/references/tools.md
+  - id: zoom.zoom_chat_files_search
+    object: ChatFile
+    action: zoom_chat_files_search
+    description: "Search or list files shared in Team Chat."
+    category: Messaging
+    risk: medium
+    business_impact: "Indexes the files circulating in chat, exposing attachments such as contracts or exports that were shared for a narrow audience."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/team-chat/references/tools.md
+  - id: zoom.zoom_chat_contacts_search
+    object: Contact
+    action: zoom_chat_contacts_search
+    description: "Search Team Chat contacts by keyword."
+    category: Messaging
+    risk: medium
+    business_impact: "Returns directory entries for colleagues and external contacts, including names and email addresses usable for downstream targeting."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Channels ----------
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/team-chat/references/tools.md
+  - id: zoom.zoom_chat_channel_update
+    object: Channel
+    action: zoom_chat_channel_update
+    description: "Update Team Chat channel settings such as name, visibility, and posting permissions."
+    category: Channels
+    risk: high
+    business_impact: "Alters a channel's visibility and permission settings, which can turn a private channel discoverable or silence who is allowed to post."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Content ----------
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/references/servers.md
+  - id: zoom.canvas_delete_file
+    object: Document
+    action: canvas_delete_file
+    description: "Delete a Zoom Docs / Canvas file."
+    category: Content
+    risk: high
+    business_impact: "Removes a document and the collaborative work inside it, with no second approver between the agent and the deletion."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/references/servers.md
+  - id: zoom.get_customer_contacts
+    object: Contact
+    action: get_customer_contacts
+    description: "Retrieve customer contact records from Revenue Accelerator's CRM data."
+    category: Customer
+    risk: high
+    business_impact: "Returns named buyer contacts with their CRM detail, a direct read of customer personal data outside the system of record."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Revenue & Pipeline ----------
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/references/servers.md
+  - id: zoom.get_conversation_transcript
+    object: Conversation
+    action: get_conversation_transcript
+    description: "Retrieve the transcript of a recorded Revenue Accelerator conversation."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Reproduces a recorded sales call word for word, including anything a customer disclosed about pricing, people, or their own operations."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/references/servers.md
+  - id: zoom.get_conversation_analysis
+    object: Conversation
+    action: get_conversation_analysis
+    description: "Retrieve AI-generated analysis of a recorded Revenue Accelerator conversation."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Exposes machine-generated assessments of a customer call, including sentiment and talk-pattern judgments about named participants."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/references/servers.md
+  - id: zoom.search_deals
+    object: Deal
+    action: search_deals
+    description: "Search Revenue Accelerator deals."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Lists pipeline opportunities with their values and stages, an account-wide view of forecast that is normally restricted by territory."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/zoom/zoom-plugin/main/skills/zoom-mcp/references/servers.md
+  - id: zoom.get_scorecard_sessions
+    object: Scorecard
+    action: get_scorecard_sessions
+    description: "Retrieve conversation scorecard sessions used to evaluate sales rep performance."
+    category: Revenue & Pipeline
+    risk: medium
+    business_impact: "Reads automated performance scores attached to named employees, material that feeds coaching and evaluation decisions about those people."
+    compliance: [GDPR, UK_GDPR, CCPA, EU_AI_ACT, NIST_AI_RMF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

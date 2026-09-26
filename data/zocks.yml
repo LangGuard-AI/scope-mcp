@@ -1,0 +1,125 @@
+schema_version: "1.3"
+platform: zocks
+display_name: Zocks
+logo: https://cdn.prod.website-files.com/67f74eda1b8c9b4c09dc5893/68e8aee2fb5a42ad37ccfb2f_Fav_%20256%20x%20256.png
+source: langguard-editorial
+updated: "2026-09"
+reference: https://help.zocks.io/en/articles/15331595-zocks-mcp-server-knowledge-base
+server_website: https://help.zocks.io/en/articles/14075856-connect-to-the-zocks-mcp-server
+mcp_server_url: https://mcp.zocks.io/v1/mcp
+actions:
+  # ---------- Customer ----------
+
+  # source: https://claude.com/connectors/zocks
+  - id: zocks.contacts_search_contacts
+    object: Contact
+    action: contacts_search_contacts
+    description: "Searches the advisor's Zocks contact directory and returns matching client records."
+    category: Customer
+    risk: medium
+    business_impact: "Enumerates the advisor's client book, exposing the identities of individuals in an advisory relationship to whoever drives the agent."
+    compliance: [GDPR, CCPA, GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zocks
+  - id: zocks.contacts_get_contact_details
+    object: Contact
+    action: contacts_get_contact_details
+    description: "Retrieves the full detail record for a single Zocks contact."
+    category: Customer
+    risk: medium
+    business_impact: "Surfaces one client's profile — contact data and the personal and financial context Zocks has captured about them — in a single call."
+    compliance: [GDPR, CCPA, GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Meeting Intelligence ----------
+
+  # source: https://claude.com/connectors/zocks
+  - id: zocks.meetings_get_transcript
+    object: Transcript
+    action: meetings_get_transcript
+    description: "Returns the verbatim transcript of a recorded advisor-client meeting."
+    category: Meeting Intelligence
+    risk: high
+    business_impact: "Pulls the word-for-word record of a private advisory conversation, which routinely contains account balances, family circumstances and other nonpublic personal information."
+    compliance: [GDPR, CCPA, GLBA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zocks
+  - id: zocks.ai_results_get_ai_result
+    object: AIResult
+    action: ai_results_get_ai_result
+    description: "Retrieves a single AI-generated result derived from a Zocks meeting."
+    category: Meeting Intelligence
+    risk: medium
+    business_impact: "Exposes Zocks' AI-derived summary of a client meeting, condensing that client's goals, concerns and financial picture into one retrievable record."
+    compliance: [GDPR, CCPA, GLBA]
+    sod_concern: false
+    confidence: low
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zocks
+  - id: zocks.ai_results_get_agent_result
+    object: AgentResult
+    action: ai_results_get_agent_result
+    description: "Retrieves the output of a single Zocks AI agent run."
+    category: Meeting Intelligence
+    risk: medium
+    business_impact: "Returns the output of an AI agent run whose payload is undocumented and may carry client-derived findings beyond what the caller intended to read."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zocks
+  - id: zocks.ai_results_list_results
+    object: AIResult
+    action: ai_results_list_results
+    description: "Lists available AI-generated results across the workspace."
+    category: Meeting Intelligence
+    risk: low
+    business_impact: "Indexes which AI results exist and for which meetings, giving the caller a map of available analysis without returning its content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zocks
+  - id: zocks.meetings_list_past_sessions
+    object: Meeting
+    action: meetings_list_past_sessions
+    description: "Lists past meeting sessions recorded in Zocks."
+    category: Meeting Intelligence
+    risk: low
+    business_impact: "Returns the advisor's meeting history as metadata, revealing who was met and when without exposing conversation content."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/zocks
+  - id: zocks.meetings_list_upcoming_sessions
+    object: Meeting
+    action: meetings_list_upcoming_sessions
+    description: "Lists scheduled upcoming meeting sessions."
+    category: Meeting Intelligence
+    risk: low
+    business_impact: "Reveals the advisor's forward calendar of client sessions, useful for prep and low-impact to read."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

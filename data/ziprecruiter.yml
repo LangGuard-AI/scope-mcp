@@ -1,0 +1,24 @@
+schema_version: "1.3"
+platform: ziprecruiter
+display_name: ZipRecruiter
+logo: https://www.ziprecruiter.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+reference: https://api.ziprecruiter.com/mcp/docs
+mcp_server_url: https://api.ziprecruiter.com/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://api.ziprecruiter.com/mcp/docs
+  - id: ziprecruiter.search_jobs
+    object: Job
+    action: search_jobs
+    description: "Keyword search over public ZipRecruiter job listings with location, salary, recency, remote, employment-type, and seniority filters"
+    category: Data Access
+    risk: low
+    business_impact: "Returns up to five public job postings per call with salary and location details; read-only against employer listings, with no candidate or account data exposed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
