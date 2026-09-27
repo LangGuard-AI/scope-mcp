@@ -1,0 +1,365 @@
+schema_version: "1.3"
+platform: peec-ai
+display_name: Peec AI
+logo: https://docs.peec.ai/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+reference: https://docs.peec.ai/mcp/tools
+server_website: https://peec.ai
+mcp_server_url: https://api.peec.ai/mcp
+actions:
+  # ---------- Operations ----------
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.delete_brands
+    object: Brand
+    action: delete_brands
+    description: "Delete brands"
+    category: Operations
+    risk: high
+    business_impact: "Permanently removes tracked brands and the competitive visibility history attached to them, erasing the baseline every share-of-voice report is measured against."
+    compliance: []
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.delete_prompts
+    object: Prompt
+    action: delete_prompts
+    description: "Delete prompts"
+    category: Operations
+    risk: high
+    business_impact: "Permanently removes prompts along with the AI answer history collected against them, breaking trend continuity for every report built on those prompts."
+    compliance: []
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.delete_products
+    object: Product
+    action: delete_products
+    description: "Delete products"
+    category: Operations
+    risk: high
+    business_impact: "Permanently removes products and their shopping-visibility metrics, silently shrinking the catalog that merchandising and demand reporting are built from."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.delete_facts
+    object: Fact
+    action: delete_facts
+    description: "Delete facts"
+    category: Operations
+    risk: medium
+    business_impact: "Removes fact-checking records, dropping the accuracy claims Peec measures AI answers against until someone recreates them."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.archive_brands
+    object: Brand
+    action: archive_brands
+    description: "Archive brands"
+    category: Operations
+    risk: medium
+    business_impact: "Takes brands out of active tracking, so competitor coverage quietly stops accruing while historical data is retained."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.archive_prompts
+    object: Prompt
+    action: archive_prompts
+    description: "Archive prompts"
+    category: Operations
+    risk: medium
+    business_impact: "Stops a prompt from being run against AI engines, creating gaps in the visibility time series without any deletion signal."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.create_brands
+    object: Brand
+    action: create_brands
+    description: "Create new brands in a project"
+    category: Operations
+    risk: low
+    business_impact: "Adds brands to a project's tracked set, widening competitive monitoring scope and the data volume the project collects."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.update_brands
+    object: Brand
+    action: update_brands
+    description: "Update brand properties"
+    category: Operations
+    risk: low
+    business_impact: "Changes brand naming and matching properties, which shifts how mentions are attributed in subsequent visibility reports."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.create_prompts
+    object: Prompt
+    action: create_prompts
+    description: "Create new prompts in a project"
+    category: Operations
+    risk: medium
+    business_impact: "Adds prompts that are executed against paid AI engines on a recurring schedule, increasing both monitored surface and consumption against plan limits."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.update_prompts
+    object: Prompt
+    action: update_prompts
+    description: "Update prompt properties"
+    category: Operations
+    risk: medium
+    business_impact: "Rewrites the wording or scope of a tracked prompt mid-series, making before-and-after visibility numbers no longer comparable."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.create_facts
+    object: Fact
+    action: create_facts
+    description: "Create fact-checking facts"
+    category: Operations
+    risk: low
+    business_impact: "Adds fact-check records that AI answers are scored against, expanding the accuracy checks reported on the brand."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.update_facts
+    object: Fact
+    action: update_facts
+    description: "Update fact properties"
+    category: Operations
+    risk: low
+    business_impact: "Edits the claim a fact-check is evaluated against, changing which AI answers count as accurate in later reporting."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.update_project_profile
+    object: Project
+    action: update_project_profile
+    description: "Update your brand's profile data"
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Rewrites the brand profile that drives perception analysis and prompt generation across the whole project, altering downstream analytics for every user."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.assign_domain_classification
+    object: DomainClassification
+    action: assign_domain_classification
+    description: "Assign custom classification to a domain"
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Relabels a citation source domain, which changes how retrieval and citation credit is bucketed in every domain-level report."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.create_domain_classification
+    object: DomainClassification
+    action: create_domain_classification
+    description: "Create custom domain classification"
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Adds a custom bucket for grouping citation source domains in reporting."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.update_domain_classification
+    object: DomainClassification
+    action: update_domain_classification
+    description: "Update domain classification"
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Redefines an existing domain bucket, retroactively shifting how source attribution appears in historical citation reporting."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.assign_url_classification
+    object: UrlClassification
+    action: assign_url_classification
+    description: "Assign custom classification to a URL"
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Relabels a single source URL, adjusting where its citations are counted in page-level reporting."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.generate_prompt_suggestions
+    object: PromptSuggestion
+    action: generate_prompt_suggestions
+    description: "Generate new prompt suggestions"
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Kicks off a model-driven generation run that proposes the prompts steering what the monitoring system asks AI engines, consuming generation quota."
+    compliance: [ISO_42001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.generate_topics
+    object: Topic
+    action: generate_topics
+    description: "Generate new topics for a project"
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Runs model-driven topic generation that reshapes how prompts and reporting are grouped for the entire project."
+    compliance: [ISO_42001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.finalize_prompt_suggestions
+    object: PromptSuggestion
+    action: finalize_prompt_suggestions
+    description: "Accept or reject prompt suggestions"
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Promotes machine-generated suggestions into live tracked prompts or discards them, committing recurring AI engine spend without human review of the wording."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.create_attribute_cluster
+    object: AttributeCluster
+    action: create_attribute_cluster
+    description: "Create brand-perception attribute cluster"
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Defines a new attribute grouping used to score how AI engines describe the brand against competitors."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.get_ai_referrals
+    object: Referral
+    action: get_ai_referrals
+    description: "People arriving on your website from AI assistants"
+    category: Data Access
+    risk: medium
+    business_impact: "Pulls website visitor traffic attributed to AI assistants, exposing behavioural analytics about real site visitors to whatever agent made the call."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.get_agent_visits
+    object: AgentVisit
+    action: get_agent_visits
+    description: "Aggregate AI bot visit counts from access logs"
+    category: Data Access
+    risk: low
+    business_impact: "Returns aggregate crawler visit counts derived from web server access logs, revealing which AI bots are reading the site and how often."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.get_url_content
+    object: SourceUrl
+    action: get_url_content
+    description: "Scraped markdown content of a source URL"
+    category: Data Access
+    risk: medium
+    business_impact: "Loads scraped third-party page content straight into the agent's context, an untrusted-input path that can carry instructions the agent then acts on."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.peec.ai/mcp/tools
+  - id: peec-ai.list_chats
+    object: Chat
+    action: list_chats
+    description: "Lists individual AI responses over a date range"
+    category: Data Access
+    risk: medium
+    business_impact: "Bulk-reads the raw AI engine answers collected over a date range, exposing the full competitive-intelligence corpus a project has accumulated."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

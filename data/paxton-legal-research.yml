@@ -1,0 +1,81 @@
+schema_version: "1.3"
+platform: paxton-legal-research
+display_name: Paxton Legal Research
+logo: https://cdn.prod.website-files.com/672b8fcccce3fc53bb92fb6d/6734c51d26e5c55d9e835bac_webclip2.png
+source: langguard-editorial
+updated: "2026-09"
+reference: https://help.paxton.ai/help/integrations/using-paxton-in-claude-mcp
+server_website: https://www.paxton.ai/legal-research
+mcp_server_url: https://paxton-mcp-connector-xmfvvq3waa-uc.a.run.app/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/connectors/paxton-legal-research
+  - id: paxton-legal-research.search_legal_research
+    object: Statute
+    action: search_legal_research
+    description: "Searches U.S. statutes, regulations, and court rules across jurisdictions."
+    category: Data Access
+    risk: low
+    business_impact: "Returns statutes, regulations, and rules matching a query; the query text itself leaves the firm's environment, so a poorly scoped prompt can carry client matter facts to the vendor."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/paxton-legal-research
+  - id: paxton-legal-research.search_case_law
+    object: Case
+    action: search_case_law
+    description: "Searches U.S. case law."
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces published court opinions for a query; results carry no assurance that an authority is controlling or current, so relying on them without attorney review risks bad legal conclusions."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/paxton-legal-research
+  - id: paxton-legal-research.search_administrative_decisions
+    object: AdministrativeDecision
+    action: search_administrative_decisions
+    description: "Searches indexed administrative agency decisions, including EEOC and NLRB."
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves published EEOC and NLRB decisions, which routinely name individual complainants and describe their employment disputes in detail — public record, but sensitive to repeat into a working context."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/paxton-legal-research
+  - id: paxton-legal-research.get_source_text
+    object: Source
+    action: get_source_text
+    description: "Retrieves the full text of a source (statute, regulation, rule, case, or administrative decision) returned by a search."
+    category: Data Access
+    risk: low
+    business_impact: "Pulls the complete text of a published authority into the conversation; read-only against public legal corpora and cannot reach Paxton matters or uploaded documents."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/paxton-legal-research
+  - id: paxton-legal-research.get_citator_info
+    object: Citation
+    action: get_citator_info
+    description: "Inspects citation relationships and citator status (validity/history) for a case or authority."
+    category: Data Access
+    risk: low
+    business_impact: "Reports AI-generated citation relationships and status for an authority; treating that signal as a verified good-law determination without reading the source is the main exposure here."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

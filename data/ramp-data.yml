@@ -1,0 +1,138 @@
+schema_version: "1.3"
+platform: ramp-data
+display_name: Ramp Data
+logo: https://ramp.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://mcp.ramp.com/ramp-data/anthropic/mcp
+# NOTE: Ramp's public market-intelligence server (Ramp Rate + AI Index). Every tool is a
+# read-only query over aggregate, de-identified software-spend benchmarks — no customer
+# ledger, cardholder, or employee data is reachable through this surface.
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://mcp.ramp.com/ramp-data/anthropic/mcp
+  - id: ramp-data.ramp_rate_list_categories
+    object: SoftwareCategory
+    action: ramp_rate_list_categories
+    description: "Lists all available Ramp Rate software categories, each with a software_category field."
+    category: Data Access
+    risk: low
+    business_impact: "Returns the catalog of software categories Ramp Rate tracks; a discovery call with no side effects and no company-identifiable data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.ramp.com/ramp-data/anthropic/mcp
+  - id: ramp-data.ramp_rate_get_category_summary
+    object: SoftwareCategory
+    action: ramp_rate_get_category_summary
+    description: "Gets adoption stats for a single software category including adoption rate, YoY/MoM change, growth rank, vendor count, and FTE segment breakdown."
+    category: Data Access
+    risk: low
+    business_impact: "Reads aggregate adoption and growth statistics for one software category, including headcount-segment breakdowns drawn from pooled spend data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.ramp.com/ramp-data/anthropic/mcp
+  - id: ramp-data.ramp_rate_get_category_vendors
+    object: Vendor
+    action: ramp_rate_get_category_vendors
+    description: "Gets a ranked vendor leaderboard within a category with per-vendor adoption rates, spend share, growth metrics, and competitive rankings."
+    category: Data Access
+    risk: low
+    business_impact: "Pulls a ranked vendor leaderboard with spend share and switching metrics — competitive intelligence about third-party vendors, not data about the caller's own organization."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.ramp.com/ramp-data/anthropic/mcp
+  - id: ramp-data.ramp_rate_resolve_vendor
+    object: Vendor
+    action: ramp_rate_resolve_vendor
+    description: "Resolves a vendor name to its canonical slug and lists the software categories it belongs to."
+    category: Data Access
+    risk: low
+    business_impact: "Maps a human-readable vendor name to Ramp's canonical slug so other calls can address it; a lookup with no side effects."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.ramp.com/ramp-data/anthropic/mcp
+  - id: ramp-data.ramp_rate_get_vendor_profile
+    object: Vendor
+    action: ramp_rate_get_vendor_profile
+    description: "Gets a vendor's Ramp Rate profile across all categories it belongs to, accepting a canonical slug, name, domain, or public Ramp vendor URL."
+    category: Data Access
+    risk: low
+    business_impact: "Reads one vendor's cross-category adoption profile from Ramp's benchmark dataset; describes the market position of a third-party supplier."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.ramp.com/ramp-data/anthropic/mcp
+  - id: ramp-data.ramp_rate_compare_vendors
+    object: Vendor
+    action: ramp_rate_compare_vendors
+    description: "Compares adoption metrics across 2-10 vendors side by side from their canonical slugs."
+    category: Data Access
+    risk: low
+    business_impact: "Assembles a side-by-side adoption comparison for up to ten vendors; aggregate benchmark reads only, with no write path back into Ramp."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.ramp.com/ramp-data/anthropic/mcp
+  - id: ramp-data.ai_index_get_adoption
+    object: AiAdoptionIndex
+    action: ai_index_get_adoption
+    description: "Gets an AI adoption snapshot with per-vendor breakdown as monthly records, up to 120 months of history."
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves up to ten years of monthly AI-vendor adoption shares across Ramp's customer base, reported as pooled percentages rather than named companies."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.ramp.com/ramp-data/anthropic/mcp
+  - id: ramp-data.ai_index_get_adoption_by_sector
+    object: AiAdoptionIndex
+    action: ai_index_get_adoption_by_sector
+    description: "Gets AI adoption broken down by industry sector as monthly records, up to 120 months of history."
+    category: Data Access
+    risk: low
+    business_impact: "Reads monthly AI adoption rates split by industry sector; aggregate market statistics with no individual or account-level detail."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.ramp.com/ramp-data/anthropic/mcp
+  - id: ramp-data.ai_index_get_adoption_by_size
+    object: AiAdoptionIndex
+    action: ai_index_get_adoption_by_size
+    description: "Gets AI adoption broken down by company size as monthly records, up to 120 months of history."
+    category: Data Access
+    risk: low
+    business_impact: "Reads monthly AI adoption rates segmented by company size band; aggregate market statistics with no individual or account-level detail."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial

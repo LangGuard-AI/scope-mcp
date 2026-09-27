@@ -1,0 +1,219 @@
+schema_version: "1.3"
+platform: pitchbook
+display_name: PitchBook Premium
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://premium.mcp.pitchbook.com/mcp
+reference: https://claude.com/connectors/pitchbook
+actions:
+  # ---------- Financial ----------
+
+  # source: https://claude.com/connectors/pitchbook
+  - id: pitchbook.pitchbook_get_deal_cap_table
+    object: Deal
+    action: pitchbook_get_deal_cap_table
+    category: Financial
+    risk: high
+    business_impact: "Returns a deal's capitalization table, exposing named shareholders, individual ownership percentages and per-share economics for a private company."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, GLBA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/pitchbook
+  - id: pitchbook.pitchbook_get_fund_lp_commitments
+    object: Fund
+    action: pitchbook_get_fund_lp_commitments
+    category: Financial
+    risk: high
+    business_impact: "Reveals which limited partners committed capital to a fund and how much, some of the most closely held data in private capital and a live insider-information exposure for regulated investors."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, GLBA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/pitchbook
+  - id: pitchbook.pitchbook_get_company_financials
+    object: Company
+    action: pitchbook_get_company_financials
+    category: Financial
+    risk: medium
+    business_impact: "Pulls revenue, valuation and balance-sheet figures for a private company, licensed data whose onward disclosure breaches PitchBook's terms and can contaminate a deal team with non-public information."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/pitchbook
+  - id: pitchbook.pitchbook_get_deal_participants
+    object: Deal
+    action: pitchbook_get_deal_participants
+    category: Financial
+    risk: medium
+    business_impact: "Lists the firms and named individuals on both sides of a transaction, including advisors and deal-team members attributable to a specific private deal."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/pitchbook
+  - id: pitchbook.pitchbook_get_company_deals
+    object: Company
+    action: pitchbook_get_company_deals
+    category: Financial
+    risk: low
+    business_impact: "Retrieves a company's financing and M&A history, a read-only pull of licensed market intelligence with no write-back to PitchBook."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/pitchbook
+  - id: pitchbook.pitchbook_get_company_investors
+    object: Company
+    action: pitchbook_get_company_investors
+    category: Financial
+    risk: low
+    business_impact: "Lists the investors backing a company, read-only reference data used for diligence and competitive mapping."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/pitchbook
+  - id: pitchbook.pitchbook_get_investor_funds
+    object: Investor
+    action: pitchbook_get_investor_funds
+    category: Financial
+    risk: low
+    business_impact: "Enumerates the funds raised by an investor, including vintage and size, as read-only market data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/pitchbook
+  - id: pitchbook.pitchbook_get_investor_investments
+    object: Investor
+    action: pitchbook_get_investor_investments
+    category: Financial
+    risk: low
+    business_impact: "Returns an investor's portfolio and transaction history, a read-only pull used for benchmarking and sourcing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/connectors/pitchbook
+  - id: pitchbook.pitchbook_get_profile
+    object: Profile
+    action: pitchbook_get_profile
+    category: Data Access
+    risk: medium
+    business_impact: "Fetches the full PitchBook profile for a company, investor or person, which for people profiles includes biography, employment history and contact details."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/pitchbook
+  - id: pitchbook.pitchbook_get_team_members
+    object: Person
+    action: pitchbook_get_team_members
+    category: Data Access
+    risk: medium
+    business_impact: "Returns named executives and personnel for a firm along with roles and tenure, personal data on identifiable individuals sourced across every jurisdiction PitchBook covers."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/pitchbook
+  - id: pitchbook.pitchbook_search
+    object: "*"
+    action: pitchbook_search
+    category: Data Access
+    risk: low
+    business_impact: "Searches companies, investors, funds and deals across the PitchBook corpus; read-only, though broad queries can draw large volumes of licensed data into the agent context."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/pitchbook
+  - id: pitchbook.pitchbook_get_call_transcripts_analysis
+    object: Transcript
+    action: pitchbook_get_call_transcripts_analysis
+    category: Data Access
+    risk: low
+    business_impact: "Summarizes earnings and investor call transcripts; read-only analysis over content PitchBook already licenses."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/pitchbook
+  - id: pitchbook.pitchbook_get_private_market_reports_analysis
+    object: Report
+    action: pitchbook_get_private_market_reports_analysis
+    category: Data Access
+    risk: low
+    business_impact: "Analyzes PitchBook private-market research reports, a read-only pull of subscription content the customer is already entitled to."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/pitchbook
+  - id: pitchbook.pitchbook_get_public_market_reports_analysis
+    object: Report
+    action: pitchbook_get_public_market_reports_analysis
+    category: Data Access
+    risk: low
+    business_impact: "Analyzes public-market research reports; read-only and limited to published market commentary."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/pitchbook
+  - id: pitchbook.pitchbook_get_news_analysis
+    object: News
+    action: pitchbook_get_news_analysis
+    category: Data Access
+    risk: low
+    business_impact: "Summarizes news coverage tied to companies and deals, a read-only pull with no effect on PitchBook state."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/pitchbook
+  - id: pitchbook.pitchbook_get_help_center_analysis
+    object: Article
+    action: pitchbook_get_help_center_analysis
+    category: Data Access
+    risk: low
+    business_impact: "Searches PitchBook help-center documentation, public product guidance with no customer or market data involved."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

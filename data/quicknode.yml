@@ -1,0 +1,327 @@
+schema_version: "1.3"
+platform: quicknode
+display_name: QuickNode
+logo: https://www.quicknode.com/favicon.png
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://mcp.quicknode.com/mcp
+reference: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+server_website: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+  - id: quicknode.enable-tooling-access
+    object: Account
+    action: enable-tooling-access
+    description: "Activates RPC access for developer tools across your account"
+    category: Identity & Access
+    risk: critical
+    business_impact: "Turns on RPC access for developer tooling across the entire account, widening who and what can reach every blockchain endpoint without a per-endpoint review."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+  - id: quicknode.disable-tooling-access
+    object: Account
+    action: disable-tooling-access
+    description: "Deactivates Tooling Access account-wide"
+    category: Identity & Access
+    risk: high
+    business_impact: "Switches off Tooling Access for the whole account, cutting every dependent developer tool off from RPC until someone re-enables it."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+  - id: quicknode.update-endpoint-security-options
+    object: EndpointSecurity
+    action: update-endpoint-security-options
+    description: "Enable or disable security features"
+    category: Identity & Access
+    risk: critical
+    business_impact: "Toggles endpoint security features such as authentication and validation, so a single call can leave a production RPC endpoint unprotected."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+  - id: quicknode.create-security-rule
+    object: SecurityRule
+    action: create-security-rule
+    description: "Add IP allowlists, JWT validation, referrer restrictions, domain masks, or tokens"
+    category: Identity & Access
+    risk: critical
+    business_impact: "Writes endpoint access controls including auth tokens and IP allowlists, which decides who can call the endpoint and mints a credential in the process."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+  - id: quicknode.delete-security-rule
+    object: SecurityRule
+    action: delete-security-rule
+    description: "Remove a security rule"
+    category: Identity & Access
+    risk: critical
+    business_impact: "Removes an access-control rule from an endpoint; dropping the last allowlist or JWT rule exposes the RPC endpoint to any caller."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+  - id: quicknode.list-endpoint-security
+    object: EndpointSecurity
+    action: list-endpoint-security
+    description: "View current security settings and rules"
+    category: Identity & Access
+    risk: medium
+    business_impact: "Reveals an endpoint's live security posture — allowlists, token rules, referrer restrictions — which is exactly the reconnaissance an attacker wants before probing it."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Financial ----------
+
+  # source: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+  - id: quicknode.get-billing
+    object: Invoice
+    action: get-billing
+    description: "View billing invoices or payment history"
+    category: Financial
+    risk: medium
+    business_impact: "Exposes the account's invoices and payment history, including transaction records and payment-instrument metadata that sit inside the financial audit trail."
+    compliance: [PCI, SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+  - id: quicknode.get-rpc-usage
+    object: UsageReport
+    action: get-rpc-usage
+    description: "Get RPC usage with optional breakdown by endpoint, method, or chain"
+    category: Financial
+    risk: low
+    business_impact: "Returns metered RPC consumption broken down by endpoint, method, or chain — the same counters that drive the invoice."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+  - id: quicknode.delete-endpoint
+    object: Endpoint
+    action: delete-endpoint
+    description: "Delete an endpoint"
+    category: Platform & DevOps
+    risk: critical
+    business_impact: "Destroys a production RPC endpoint; every application pointed at that URL loses chain access immediately and the endpoint cannot be restored at the same address."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+  - id: quicknode.create-endpoint
+    object: Endpoint
+    action: create-endpoint
+    description: "Create a new endpoint on a specified chain and network"
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Provisions new billable RPC infrastructure on a chosen chain and network, adding a reachable production surface that inherits account-level defaults."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+  - id: quicknode.list-endpoints
+    object: Endpoint
+    action: list-endpoints
+    description: "List all endpoints on your account"
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Enumerates every endpoint on the account, mapping the organization's full blockchain infrastructure footprint and connection details in one call."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+  - id: quicknode.get-endpoint
+    object: Endpoint
+    action: get-endpoint
+    description: "Get details for a specific endpoint"
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Returns one endpoint's configuration and connection details, which are enough for a caller to reach the chain through it."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+  - id: quicknode.update-endpoint-rate-limits
+    object: Endpoint
+    action: update-endpoint-rate-limits
+    description: "Configure overall RPS, RPM, RPD limits"
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Rewrites an endpoint's overall throughput ceilings, so a bad value either throttles live traffic into failure or removes the guard against runaway usage cost."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+  - id: quicknode.delete-endpoint-method-rate-limit
+    object: MethodRateLimit
+    action: delete-endpoint-method-rate-limit
+    description: "Remove a method rate limit"
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Removes a per-method throttle, letting an expensive RPC method run unbounded against the endpoint and the usage bill."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+  - id: quicknode.update-endpoint-method-rate-limit
+    object: MethodRateLimit
+    action: update-endpoint-method-rate-limit
+    description: "Modify existing method-level limits"
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Changes an existing per-method throttle on a live endpoint, shifting either the cost ceiling or the failure threshold for callers of that method."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+  - id: quicknode.create-endpoint-method-rate-limit
+    object: MethodRateLimit
+    action: create-endpoint-method-rate-limit
+    description: "Add a rate limit for a specific RPC method"
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Adds a throttle for one RPC method on an endpoint, capping how often callers can invoke that method."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+  - id: quicknode.list-endpoint-method-rate-limits
+    object: MethodRateLimit
+    action: list-endpoint-method-rate-limits
+    description: "List method-specific rate limits"
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Lists the per-method throttles configured on an endpoint, a read-only view of its traffic policy."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+  - id: quicknode.list-endpoint-logs
+    object: EndpointLog
+    action: list-endpoint-logs
+    description: "Fetch recent logs for an endpoint"
+    category: Operations
+    risk: medium
+    business_impact: "Pulls recent request logs for an endpoint, which carry caller IP addresses, wallet addresses, and request payloads that identify who queried what on-chain."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+  - id: quicknode.get-endpoint-log-details
+    object: EndpointLog
+    action: get-endpoint-log-details
+    description: "Get detailed information for a specific log entry"
+    category: Operations
+    risk: medium
+    business_impact: "Opens one log entry in full, including the originating IP and request body of a single RPC call — traceable back to an individual user of the application."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+  - id: quicknode.get-endpoint-metrics
+    object: Endpoint
+    action: get-endpoint-metrics
+    description: "Retrieve performance metrics for an endpoint"
+    category: Operations
+    risk: low
+    business_impact: "Reports latency and throughput metrics for an endpoint, an aggregate operational read with no customer data attached."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+  - id: quicknode.call-rpc
+    object: RpcMethod
+    action: call-rpc
+    description: "Call a read-only JSON-RPC method on any supported network"
+    category: Data Access
+    risk: low
+    business_impact: "Executes an arbitrary read-only JSON-RPC call against any supported chain, returning public on-chain state such as balances, blocks, and transactions."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://www.quicknode.com/docs/build-with-ai/quicknode-mcp
+  - id: quicknode.list-chains
+    object: Chain
+    action: list-chains
+    description: "List all supported chains and their available networks"
+    category: Data Access
+    risk: low
+    business_impact: "Lists the chains and networks QuickNode supports, a static catalog lookup with no account or customer data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

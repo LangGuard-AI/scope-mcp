@@ -1,0 +1,368 @@
+schema_version: "1.3"
+platform: port-io
+display_name: Port
+logo: https://docs.port.io/img/logos/port-favicon.png
+source: langguard-editorial
+updated: "2026-09"
+reference: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+mcp_server_url: https://mcp.port.io/v1
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.update_action_permissions
+    object: ActionPermission
+    action: update_action_permissions
+    description: "Updates the permission and approval configuration controlling who may execute or approve a self-service action."
+    category: Identity & Access
+    risk: critical
+    business_impact: "Rewrites who may execute and who must approve a self-service action, so a single call can remove the approval gate on a production provisioning or teardown workflow."
+    compliance: [SOX, COSO, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.get_action_permissions
+    object: ActionPermission
+    action: get_action_permissions
+    description: "Get permissions/approval config for actions."
+    category: Identity & Access
+    risk: low
+    business_impact: "Reveals which teams can run each action and where manual approval is required, mapping the weakest approval paths in the portal."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.simulate_blueprint_permissions
+    object: Blueprint
+    action: simulate_blueprint_permissions
+    description: "Simulate blueprint entity permissions for a user."
+    category: Identity & Access
+    risk: low
+    business_impact: "Evaluates what a named user could read or write on a blueprint's entities without changing anything, useful for access review and equally useful for probing gaps."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.describe_user_details
+    object: User
+    action: describe_user_details
+    description: "Describe the user, which organization he is connected to and what teams he is a member of."
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns the calling user's identity, organization, and team memberships — personal data that ties a named individual to an internal org structure."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Secrets & Workflows ----------
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.upsert_action
+    object: Action
+    action: upsert_action
+    description: "Creates or updates a self-service action or automation definition, including its backend invocation and approval requirements."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Defines or rewrites a self-service action's backend invocation, so new automation reaches production infrastructure without passing a code-review or change-approval gate."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.delete_action
+    object: Action
+    action: delete_action
+    description: "Deletes a self-service action or automation definition from the organization."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Removes a self-service action along with its approval configuration and run history linkage, breaking the governed path developers use for a privileged operation."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.upsert_workflow
+    object: Workflow
+    action: upsert_workflow
+    description: "Creates or updates a workflow definition in the organization."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Creates or rewrites a workflow that orchestrates production changes, letting one principal alter automated delivery behaviour with no second reviewer."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.delete_workflow
+    object: Workflow
+    action: delete_workflow
+    description: "Deletes a workflow definition from the organization."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Destroys a workflow definition, silently stopping every automated process that depended on it until someone notices the missing runs."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.run_action
+    object: ActionRun
+    action: run_action
+    description: "Execute a self-service action or automation by identifier."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Executes a self-service action whose backend may provision cloud resources, deploy code, rotate infrastructure, or tear down an environment."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.trigger_run
+    object: ActionRun
+    action: trigger_run
+    description: "Trigger a self-service workflow or action run."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Starts a workflow or action run against real infrastructure, with the blast radius set by whatever backend the target workflow invokes."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.delete_blueprint
+    object: Blueprint
+    action: delete_blueprint
+    description: "Deletes a blueprint (entity type) from the software catalog."
+    category: Platform & DevOps
+    risk: critical
+    business_impact: "Destroys an entire catalog entity type together with the entities, relations, scorecards, and dashboards built on it — an irreversible loss of the ownership graph."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.upsert_blueprint
+    object: Blueprint
+    action: upsert_blueprint
+    description: "Creates or updates a blueprint schema, its properties, and its relations."
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Changes the schema every entity of that type conforms to; dropping or retyping a property propagates across the whole catalog and any scorecard or permission rule reading it."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.delete_entity
+    object: Entity
+    action: delete_entity
+    description: "Deletes an entity from the software catalog."
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Removes a catalog record for a service or resource, breaking its ownership mapping, dependency links, and any on-call routing that resolves through it."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.upsert_entity
+    object: Entity
+    action: upsert_entity
+    description: "Creates or updates a catalog entity and its property values."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Writes catalog data for a service or resource, including its declared owner and team, which downstream scorecards and incident routing treat as authoritative."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.trigger_auto_discovery
+    object: Integration
+    action: trigger_auto_discovery
+    description: "Triggers auto-discovery of resources from connected integrations into the catalog."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Kicks off a discovery sweep across connected providers, pulling fresh resource inventory into the catalog and consuming provider API quota while it runs."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.test_integration_mapping
+    object: Integration
+    action: test_integration_mapping
+    description: "Tests an integration's mapping configuration against provider data."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Evaluates a mapping against live provider payloads and returns the result, which can surface raw third-party data before it is filtered into the catalog."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.get_integration_event_logs
+    object: Integration
+    action: get_integration_event_logs
+    description: "Retrieves event logs for an integration's sync activity."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Exposes integration sync logs, which routinely quote provider payload fragments and failure details about connected production systems."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.install_library_plugin
+    object: Plugin
+    action: install_library_plugin
+    description: "Install a plugin from the Port Plugins library into your organization."
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Installs third-party plugin code from the public library into the organization, where it renders in the portal for every user."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.upsert_plugin
+    object: Plugin
+    action: upsert_plugin
+    description: "Create or update a plugin for custom widgets (Port admin permissions required)."
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Publishes or replaces custom plugin code that executes in the portal UI for all users, an admin-only change that ships without any review step."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.list_entities
+    object: Entity
+    action: list_entities
+    description: "Query entities from a blueprint with filtering, sorting, pagination."
+    category: Data Access
+    risk: medium
+    business_impact: "Bulk-queries every entity of a blueprint, returning the full inventory of services, infrastructure, owners, and cost or vulnerability properties attached to them."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.search_audit_logs
+    object: AuditLog
+    action: search_audit_logs
+    description: "Search entity audit logs using structured filters."
+    category: Data Access
+    risk: medium
+    business_impact: "Searches the catalog audit trail, disclosing which named actors changed which entities and when across the whole organization."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.delete_scorecard
+    object: Scorecard
+    action: delete_scorecard
+    description: "Deletes a scorecard and its rules from the organization."
+    category: Operations
+    risk: high
+    business_impact: "Deletes a scorecard, erasing the production-readiness and compliance rules teams are measured against and any gate that depended on its level."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.upsert_scorecard
+    object: Scorecard
+    action: upsert_scorecard
+    description: "Creates or updates a scorecard and the rules that determine each level."
+    category: Operations
+    risk: medium
+    business_impact: "Rewrites the rules and thresholds that decide whether a service is judged production-ready, so a weakened rule makes failing services report as compliant."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.delete_sidebar_folder
+    object: SidebarFolder
+    action: delete_sidebar_folder
+    description: "Delete a folder from the sidebar. Pages and nested folders inside it are also deleted."
+    category: Operations
+    risk: medium
+    business_impact: "Cascades a delete through the folder and every page and nested folder inside it, wiping dashboards other teams rely on in one call."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.port.io/agent-management/port-mcp-server/available-tools/
+  - id: port-io.upsert_dashboard_page
+    object: DashboardPage
+    action: upsert_dashboard_page
+    description: "Create or update a dashboard or home page with widgets, layout, and optional page filters."
+    category: Operations
+    risk: low
+    business_impact: "Creates or replaces a dashboard page and its widget layout, changing what catalog, cost, and security data is surfaced to portal users by default."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,368 @@
+schema_version: "1.3"
+platform: qlik
+display_name: Qlik Cloud
+logo: https://www.qlik.com/favicon-32x32.png
+source: langguard-editorial
+updated: "2026-09"
+reference: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+server_website: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server.htm
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_update_data_product_space
+    object: DataProduct
+    action: qlik_update_data_product_space
+    description: "Move a data product to a different space"
+    category: Identity & Access
+    risk: high
+    business_impact: "Relocates a curated data product into another space, which rewrites who can reach the datasets it exposes — a shared space can widen visibility far beyond the original audience."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_update_script
+    object: App
+    action: qlik_update_script
+    description: "Replace the full application load script."
+    category: Platform & DevOps
+    risk: critical
+    business_impact: "Overwrites an application's entire load script in one call, so the agent controls which source tables are pulled and how they are transformed — the prior script is gone and reported figures can change silently."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_get_script
+    object: App
+    action: qlik_get_script
+    description: "Retrieve the current application load script."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Returns the full load script for an app, exposing the data-connection names, table selections, and transformation logic behind the dashboard — a map of the underlying source systems."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_start_app_reload
+    object: App
+    action: qlik_start_app_reload
+    description: "Start an application reload."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Kicks off a reload that re-executes the load script against live sources and replaces the app's in-memory data, consuming tenant reload capacity while it runs."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_cancel_app_reload
+    object: App
+    action: qlik_cancel_app_reload
+    description: "Cancel an in-progress reload."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Aborts a running reload, leaving the application serving stale data until the next scheduled refresh and wasting the compute already spent."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_create_app
+    object: App
+    action: qlik_create_app
+    description: "Create a new Qlik analytics application in a target space."
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Adds an empty analytics app to a chosen space; clutters the space inventory but holds no data until a script is written and reloaded."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Secrets & Workflows ----------
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_create_automation
+    object: Automation
+    action: qlik_create_automation
+    description: "Create a new Qlik automation."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Stands up a new executable workflow that can call external connectors under stored connection credentials, and can be scheduled to run unattended after the agent session ends."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_update_automation
+    object: Automation
+    action: qlik_update_automation
+    description: "Update a Qlik automation's name, description, workspace, schedules, or concurrency limit."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Rewrites an existing automation's workspace, schedule, and concurrency, changing what a production workflow does and how often it fires without any review gate."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_delete_automation
+    object: Automation
+    action: qlik_delete_automation
+    description: "Delete a Qlik automation."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Destroys an automation and its configuration outright; scheduled integrations and notifications that depend on it stop firing, with no built-in recovery of the workflow definition."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_start_automation_run
+    object: AutomationRun
+    action: qlik_start_automation_run
+    description: "Run an automation. This creates and starts a new run for the specified automation."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Executes a prebuilt workflow immediately, firing whatever external actions it contains — notifications, integration writes, scheduled jobs — outside Qlik and beyond the agent's visibility."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_start_automation_run_interactive
+    object: AutomationRun
+    action: qlik_start_automation_run_interactive
+    description: "Start an automation and return the initial run state, supporting interactive input while the run is in progress."
+    category: Secrets & Workflows
+    risk: high
+    business_impact: "Launches an automation and feeds it input mid-flight, letting the agent drive an external-facing workflow step by step with real side effects on connected systems."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_update_automation_run_input
+    object: AutomationRun
+    action: qlik_update_automation_run_input
+    description: "Stop a running automation run immediately."
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Halts an automation mid-execution, which can leave a multi-step integration half applied — some external writes committed, the rest never sent."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_list_automation_connections
+    object: Connection
+    action: qlik_list_automation_connections
+    description: "List Qlik automation connections. Use this to discover configured connections that can be referenced in automation workspaces."
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Enumerates every configured automation connection in the tenant, handing over an inventory of the credentialed third-party integrations an automation could be pointed at."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_search_connection_objects
+    object: Connection
+    action: qlik_search_connection_objects
+    description: "List all source entities (tables, views) available in a data connection. Use this to discover what data sources are available when configuring data pipeline tasks."
+    category: Secrets & Workflows
+    risk: medium
+    business_impact: "Lists every table and view reachable through a data connection, exposing the schema of the upstream warehouse or database to anything holding the connection."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_update_measure
+    object: Measure
+    action: qlik_update_measure
+    description: "Update an existing library measure in a Qlik app"
+    category: Operations
+    risk: high
+    business_impact: "Redefines a governed master measure's expression, so every chart and report built on it reports different numbers with no visible change to the dashboard."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_delete_measure
+    object: Measure
+    action: qlik_delete_measure
+    description: "Delete a library measure from a Qlik app"
+    category: Operations
+    risk: high
+    business_impact: "Removes a governed master measure, breaking every chart that references it and erasing the agreed definition of a reported metric."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_delete_data_product
+    object: DataProduct
+    action: qlik_delete_data_product
+    description: "Delete a data product"
+    category: Operations
+    risk: high
+    business_impact: "Deletes a published data product, cutting off every downstream consumer subscribed to it and discarding the curation work that assembled its dataset set."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_update_term_status
+    object: GlossaryTerm
+    action: qlik_update_term_status
+    description: "Update term status (draft, verified, deprecated). Only a steward can verify a term. Once the term is verified only a steward can modify the term"
+    category: Operations
+    risk: medium
+    business_impact: "Promotes a glossary term to verified or marks it deprecated — the steward sign-off that gives a business definition its authority, applied here by whoever holds the token."
+    compliance: []
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_get_full_glossary_export
+    object: Glossary
+    action: qlik_get_full_glossary_export
+    description: "Get complete glossary with all terms, categories, links (costly operation)"
+    category: Operations
+    risk: medium
+    business_impact: "Pulls an entire business glossary in one call — all terms, categories, and asset links — which is both a costly tenant operation and a full dump of the organisation's internal data taxonomy."
+    compliance: [SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_get_dataset_sample
+    object: Dataset
+    action: qlik_get_dataset_sample
+    description: "Load first 10 rows of a dataset for preview"
+    category: Data Access
+    risk: high
+    business_impact: "Returns raw rows from a dataset, so any personal or regulated field in those columns — names, emails, account numbers — lands in the model context verbatim."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_get_field_values
+    object: Field
+    action: qlik_get_field_values
+    description: "Get distinct values for a specific field (use before filtering)"
+    category: Data Access
+    risk: high
+    business_impact: "Enumerates the distinct values of a field, which on a customer, email, or patient-identifier column amounts to dumping that whole column's population."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_create_data_object
+    object: DataObject
+    action: qlik_create_data_object
+    description: "Create temporary calculation objects for ad-hoc analytics queries"
+    category: Data Access
+    risk: high
+    business_impact: "Runs an arbitrary ad-hoc query across the app's whole data model, letting the agent pick any dimension and measure combination rather than being limited to what existing charts already show."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_get_chart_data
+    object: Chart
+    action: qlik_get_chart_data
+    description: "Retrieve paginated data from an existing chart visualization"
+    category: Data Access
+    risk: medium
+    business_impact: "Pages through the data behind an existing visualization; on a table or pivot chart that means customer-level rows, not just aggregates."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_search_knowledgebase_chunks
+    object: KnowledgeBase
+    action: qlik_search_knowledgebase_chunks
+    description: "Search within the indexed contents of a knowledge bases and use receive answers using the knowledge base content."
+    category: Data Access
+    risk: medium
+    business_impact: "Retrieves passages from indexed knowledge-base documents, whose contents are whatever the tenant uploaded — internal policy, contracts, or support history included."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.qlik.com/en-US/cloud-services/Subsystems/Hub/Content/Sense_Hub/QlikMCP/Qlik-MCP-server-tools.htm
+  - id: qlik.qlik_get_lineage
+    object: Dataset
+    action: qlik_get_lineage
+    description: "Load lineage history of a dataset or app (call recursively for full chain)"
+    category: Data Access
+    risk: low
+    business_impact: "Traces where a dataset or app's data came from and how it was transformed; metadata only, though repeated calls sketch the full upstream topology."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

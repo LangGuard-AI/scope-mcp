@@ -1,0 +1,41 @@
+schema_version: "1.3"
+platform: reddit
+display_name: Reddit (Devvit)
+logo: https://www.redditstatic.com/shreddit/assets/favicon/64x64.png
+source: langguard-editorial
+updated: "2026-09"
+reference: https://github.com/reddit/devvit-mcp
+server_website: https://github.com/reddit/devvit-mcp
+maintainer: https://github.com/reddit/devvit-mcp/issues
+actions:
+  # ---------- Platform & DevOps ----------
+
+  # source: https://raw.githubusercontent.com/reddit/devvit-mcp/main/src/tools/logs.ts
+  - id: reddit.devvit_logs
+    object: AppInstallation
+    action: devvit_logs
+    description: "Streams logs for a Devvit app installation within a specified subreddit."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Streams live runtime logs from an app installed on a subreddit, surfacing whatever the app logged — request payloads, moderation actions and user identifiers can flow into the agent's context."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/reddit/devvit-mcp/main/src/tools/search.ts
+  - id: reddit.devvit_search
+    object: Documentation
+    action: devvit_search
+    description: "Searches indexed documentation for the latest version of Devvit."
+    category: Data Access
+    risk: low
+    business_impact: "Queries Reddit's public Devvit developer documentation index; returns reference material only and touches no subreddit or user data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

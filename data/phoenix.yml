@@ -1,0 +1,367 @@
+schema_version: "1.3"
+platform: phoenix
+display_name: Phoenix by HG Insights
+logo: https://hginsights.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://phoenix.hginsights.com/api/ai/mcp
+reference: https://phoenix.hginsights.com/docs/mcp-tools/overview
+server_website: https://phoenix.hginsights.com
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.contact_enrich
+    object: Contact
+    action: contact_enrich
+    description: "Enrich a known person: email, profiles, employment history"
+    category: Data Access
+    risk: high
+    business_impact: "Reveals a named individual's work email, social profiles and employment history from broker data, with phone reveal on by default in v2 — personal data obtained without the subject's direct consent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.contact_search
+    object: Contact
+    action: contact_search
+    description: "Discover people by title/seniority/location — no email or phone"
+    category: Data Access
+    risk: high
+    business_impact: "Returns lists of identifiable individuals filtered by title, seniority and location — bulk discovery of people who never interacted with the caller's organisation."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.hg_data_query
+    object: DataWarehouse
+    action: hg_data_query
+    description: "HG Data Query"
+    category: Data Access
+    risk: high
+    business_impact: "Runs caller-shaped queries against HG's data warehouse billed per row returned, so one broad query can extract large volumes of licensed market data and burn unbounded credits."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.hg_catalog
+    object: Schema
+    action: hg_catalog
+    description: "Data-warehouse schema — tables, columns, and join keys"
+    category: Data Access
+    risk: low
+    business_impact: "Exposes the warehouse schema — tables, columns and join keys — mapping out every dataset reachable through the query tools."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.customer_data_query
+    object: CustomerDataset
+    action: customer_data_query
+    description: "Customer Data Query"
+    category: Data Access
+    risk: medium
+    business_impact: "Queries the customer's own datasets uploaded into Phoenix, which commonly carry account and contact records from the caller's CRM."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.customer_data_explore
+    object: CustomerDataset
+    action: customer_data_explore
+    description: "Customer Data Explore"
+    category: Data Access
+    risk: low
+    business_impact: "Lists the customer-uploaded datasets and fields available in the workspace, showing what internal data has been loaded into Phoenix."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.web_search
+    object: WebSearch
+    action: web_search
+    description: "Web Search"
+    category: Data Access
+    risk: low
+    business_impact: "Issues outbound web searches billed per query, sending the agent's search terms to an external provider outside Phoenix's data boundary."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.sec_full_text_search
+    object: Filing
+    action: sec_full_text_search
+    description: "SEC Full Text Search"
+    category: Data Access
+    risk: low
+    business_impact: "Full-text searches SEC filings for a company; the text is public record but each call consumes credits."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.phoenix_invoke_agent
+    object: AgentRun
+    action: phoenix_invoke_agent
+    description: "Invoke Agent"
+    category: Operations
+    risk: medium
+    business_impact: "Starts a server-side Phoenix agent run that pulls data and writes artifacts on its own; the agent's intermediate data access is not itemised to the caller."
+    compliance: [ISO_42001, NIST_AI_RMF]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.market_data_agent
+    object: AgentRun
+    action: market_data_agent
+    description: "Market Data Agent"
+    category: Operations
+    risk: medium
+    business_impact: "Runs the market-data agent, metered separately and billed at cost through the underlying run — an unbounded-cost path with no per-call credit ceiling."
+    compliance: [ISO_42001, NIST_AI_RMF]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.phoenix_get_artifact
+    object: Artifact
+    action: phoenix_get_artifact
+    description: "Get Artifact"
+    category: Operations
+    risk: medium
+    business_impact: "Retrieves a stored artifact from a prior agent run, which may contain contact or account data another operator in the workspace already enriched."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.phoenix_list_artifacts
+    object: Artifact
+    action: phoenix_list_artifacts
+    description: "List Artifacts"
+    category: Operations
+    risk: low
+    business_impact: "Lists stored artifacts from prior agent runs, revealing which accounts and topics other operators in the workspace have researched."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.phoenix_get_run_status
+    object: AgentRun
+    action: phoenix_get_run_status
+    description: "Get Run Status"
+    category: Operations
+    risk: low
+    business_impact: "Returns execution state and progress for an agent run; no market or contact data is disclosed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.phoenix_list_agents
+    object: Agent
+    action: phoenix_list_agents
+    description: "List Agents"
+    category: Operations
+    risk: low
+    business_impact: "Enumerates the agents provisioned to the workspace, showing which automated research capabilities the account can run."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.company_research
+    object: Company
+    action: company_research
+    description: "Full multi-signal profile aggregating several tools"
+    category: Customer
+    risk: medium
+    business_impact: "Aggregates every company signal into a single profile at roughly ten credits per call — the most expensive tool in the catalog and trivially loopable by an agent."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.search_companies
+    object: Company
+    action: search_companies
+    description: "Find companies by firmographic/technographic criteria"
+    category: Customer
+    risk: low
+    business_impact: "Returns companies matching firmographic and technographic filters; loose filters produce large result sets that consume search credits."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.company_firmographic
+    object: Company
+    action: company_firmographic
+    description: "Industry, size, revenue, HQ, and corporate hierarchy for a known company"
+    category: Customer
+    risk: low
+    business_impact: "Returns industry, headcount, revenue and HQ for a named company — licensed third-party market data with no personal data attached."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.company_technographic
+    object: Company
+    action: company_technographic
+    description: "Currently installed tech stack — for trends over time use company_install_time_series"
+    category: Customer
+    risk: low
+    business_impact: "Discloses a target company's currently installed technology stack — competitive intelligence about a third party's estate, not the caller's own."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.company_intent
+    object: Company
+    action: company_intent
+    description: "Scored intent topics for one company, plus TrustRadius activity events"
+    category: Customer
+    risk: low
+    business_impact: "Returns scored buying-intent topics and TrustRadius activity events for a company — behavioural signals inferred from third-party research activity rather than facts the company disclosed."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.company_fai
+    object: Company
+    action: company_fai
+    description: "Functional Area Intelligence — which departments use which products"
+    category: Customer
+    risk: low
+    business_impact: "Reveals which departments inside a target company use which products, a department-level view of a third party's internal tooling."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.company_operating_signals
+    object: Company
+    action: company_operating_signals
+    description: "Operating posture rolled up from HG mentions, plus GenAI/AI-maturity signals"
+    category: Customer
+    risk: low
+    business_impact: "Summarises a company's operating posture and AI-maturity signals rolled up from HG mentions, used to rank and prioritise target accounts."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Financial ----------
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.company_spend
+    object: Company
+    action: company_spend
+    description: "Modeled annual IT spend in USD, by category and country"
+    category: Financial
+    risk: low
+    business_impact: "Returns modelled annual IT spend by category and country for a target company — an estimate, so quoting it as an audited figure misstates the source."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.company_ai_spend
+    object: Company
+    action: company_ai_spend
+    description: "Estimated annual AI spend in USD (software, services, hardware), by category and country"
+    category: Financial
+    risk: low
+    business_impact: "Returns estimated annual AI spend across software, services and hardware for a target company — modelled, not reported, figures."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.company_cloud_spend
+    object: Company
+    action: company_cloud_spend
+    description: "Which cloud/CDN/hosting vendors a company uses, with adoption dates"
+    category: Financial
+    risk: low
+    business_impact: "Lists the cloud, CDN and hosting vendors a company uses with adoption dates; despite the name it returns no dollar figures, so reading it as spend data is wrong."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://phoenix.hginsights.com/docs/mcp-tools/overview
+  - id: phoenix.company_contracts
+    object: Contract
+    action: company_contracts
+    description: "ICT outsourced contracts (typically GSI-brokered); optionally federal awards"
+    category: Financial
+    risk: low
+    business_impact: "Returns a company's ICT outsourcing contracts and optionally federal awards and SAM.gov registration — public procurement records, not product-level renewal dates."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

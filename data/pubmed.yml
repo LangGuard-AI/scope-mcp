@@ -1,0 +1,108 @@
+schema_version: "1.3"
+platform: pubmed
+display_name: PubMed
+logo: https://pubmed.ncbi.nlm.nih.gov/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+reference: https://pubmed.mcp.claude.com/mcp
+mcp_server_url: https://pubmed.mcp.claude.com/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://pubmed.mcp.claude.com/mcp
+  - id: pubmed.search_articles
+    object: Article
+    action: search_articles
+    description: "Searches PubMed for biomedical and life sciences research articles matching a query."
+    category: Data Access
+    risk: low
+    business_impact: "Returns published biomedical citations matching a query; read-only against a public bibliographic index, with no patient or customer data in scope."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://pubmed.mcp.claude.com/mcp
+  - id: pubmed.get_article_metadata
+    object: Article
+    action: get_article_metadata
+    description: "Retrieves detailed metadata for a PubMed article, including title, authors, journal, and abstract."
+    category: Data Access
+    risk: low
+    business_impact: "Reads publicly published citation metadata for a single article; author names here are part of the public scientific record, not platform-held personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://pubmed.mcp.claude.com/mcp
+  - id: pubmed.find_related_articles
+    object: Article
+    action: find_related_articles
+    description: "Finds related articles and resources for a given PubMed record."
+    category: Data Access
+    risk: low
+    business_impact: "Expands a literature search to neighbouring publications; read-only traversal of public index links with no write path back to PubMed."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://pubmed.mcp.claude.com/mcp
+  - id: pubmed.lookup_article_by_citation
+    object: Article
+    action: lookup_article_by_citation
+    description: "Looks up articles by citation details such as journal, volume, page, and year."
+    category: Data Access
+    risk: low
+    business_impact: "Resolves a free-text or structured citation to a PubMed record; useful for reference checking and carries no data-modification capability."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://pubmed.mcp.claude.com/mcp
+  - id: pubmed.convert_article_ids
+    object: ArticleIdentifier
+    action: convert_article_ids
+    description: "Converts between PMID, PMCID, and DOI identifier formats."
+    category: Data Access
+    risk: low
+    business_impact: "Translates article identifiers between PMID, PMCID, and DOI; a pure lookup with no sensitive data and no state change."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://pubmed.mcp.claude.com/mcp
+  - id: pubmed.get_full_text_article
+    object: Article
+    action: get_full_text_article
+    description: "Retrieves the full text of an article from PubMed Central (PMC)."
+    category: Data Access
+    risk: low
+    business_impact: "Pulls complete article text from PubMed Central into the agent context; content is open-access but redistribution beyond the licence terms is a copyright exposure rather than a privacy one."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://pubmed.mcp.claude.com/mcp
+  - id: pubmed.get_copyright_status
+    object: Article
+    action: get_copyright_status
+    description: "Gets copyright and licensing information for a PubMed article."
+    category: Data Access
+    risk: low
+    business_impact: "Reports the licence terms attached to an article so downstream reuse can be judged; read-only and the safeguard against mis-citing restricted text."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

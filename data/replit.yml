@@ -1,0 +1,139 @@
+schema_version: "1.3"
+platform: replit
+display_name: Replit
+logo: https://replit.com/public/images/logo-small.png
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://replit-mcp.com/server/mcp
+reference: https://docs.replit.com/platforms/mcp-server
+server_website: https://replit.com
+actions:
+  # ---------- Code & Release ----------
+
+  # source: https://docs.replit.com/platforms/mcp-server
+  - id: replit.publish_app
+    object: App
+    action: publish_app
+    description: "Publishes or republishes a Replit App to its public deployment URL."
+    category: Code & Release
+    risk: high
+    business_impact: "Pushes an app live on a public URL, exposing whatever code, data and credentials it currently carries to anyone on the internet with no separate review step."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.replit.com/platforms/mcp-server
+  - id: replit.update_app_using_prompt
+    object: App
+    action: update_app_using_prompt
+    description: "Launches a Replit Agent run that modifies an existing app from a natural-language prompt."
+    category: Code & Release
+    risk: medium
+    business_impact: "Rewrites the source of an existing app through an Agent run, so a single prompt can change application behaviour, dependencies or schema without a code review."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.replit.com/platforms/mcp-server
+  - id: replit.create_app_from_prompt
+    object: App
+    action: create_app_from_prompt
+    description: "Creates a new Replit App from a description and target app stack."
+    category: Code & Release
+    risk: medium
+    business_impact: "Provisions a new app with its own database, auth and hosting inside the workspace, consuming plan entitlements and adding a system nobody has reviewed."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/replit
+  - id: replit.import-claude-design-from-url
+    object: App
+    action: import-claude-design-from-url
+    description: "Imports a Claude-authored design from a URL into a Replit App."
+    category: Code & Release
+    risk: medium
+    business_impact: "Pulls content from an external URL into an app's source, so the fetched material becomes part of what the app builds and serves."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.replit.com/platforms/mcp-server
+  - id: replit.get_publish_status
+    object: App
+    action: get_publish_status
+    description: "Reports whether an app is published and returns its public URL."
+    category: Code & Release
+    risk: low
+    business_impact: "Reveals deployment state and the live URL of an app, which tells a caller which internal projects are already exposed publicly."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://docs.replit.com/platforms/mcp-server
+  - id: replit.ask_question
+    object: App
+    action: ask_question
+    description: "Asks the Replit Agent questions about an app without modifying it."
+    category: Data Access
+    risk: low
+    business_impact: "Surfaces details about an app's code and configuration through the Agent, so project internals can be read out without opening the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.replit.com/platforms/mcp-server
+  - id: replit.search_apps
+    object: App
+    action: search_apps
+    description: "Finds apps by keyword, URL, or last-updated timeframe."
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates workspace apps matching a keyword or URL, mapping out which projects exist and when each was last touched."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.replit.com/platforms/mcp-server
+  - id: replit.list_apps
+    object: App
+    action: list_apps
+    description: "Lists the apps the caller can edit, ordered by recent activity."
+    category: Data Access
+    risk: low
+    business_impact: "Returns every app the credential can edit, giving a caller the full inventory of writable projects in the workspace."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://docs.replit.com/platforms/mcp-server
+  - id: replit.resolve_app_by_name
+    object: App
+    action: resolve_app_by_name
+    description: "Resolves a specific app from its exact title."
+    category: Data Access
+    risk: low
+    business_impact: "Looks up one app by exact title and returns its identifiers, the handle other write tools need to act on that project."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

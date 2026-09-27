@@ -1,0 +1,296 @@
+schema_version: "1.3"
+platform: relativity
+display_name: Relativity
+logo: https://www.relativity.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+reference: https://help.relativity.com/RelativityOne/Content/Relativity/MCP/Relativity_MCP.htm
+server_website: https://help.relativity.com/RelativityOne/Content/Relativity/MCP/Relativity_MCP.htm
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://help.relativity.com/RelativityOne/Content/Relativity/MCP/Relativity_MCP.htm
+  - id: relativity.relone_add_user_to_group
+    object: Group
+    action: relone_add_user_to_group
+    description: "Adds a user as a member of a security group."
+    category: Identity & Access
+    risk: critical
+    business_impact: "Adds a user to a Relativity security group, inheriting every instance and workspace permission that group carries — including system-admin rights over case evidence."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.relativity.com/RelativityOne/Content/Relativity/MCP/Relativity_MCP.htm
+  - id: relativity.relone_remove_user_from_group
+    object: Group
+    action: relone_remove_user_from_group
+    description: "Removes a user from a security group."
+    category: Identity & Access
+    risk: high
+    business_impact: "Strips a user's group membership, immediately cutting their access to every workspace the group governed and potentially stalling an active review team."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.relativity.com/RelativityOne/Content/Relativity/MCP/Relativity_MCP.htm
+  - id: relativity.relone_add_workspace_group
+    object: WorkspaceGroup
+    action: relone_add_workspace_group
+    description: "Grants a user group access to a specific workspace."
+    category: Identity & Access
+    risk: high
+    business_impact: "Opens an entire eDiscovery workspace to a group, exposing the case document set — often privileged or PII-laden custodian data — to everyone in it without a separate access review."
+    compliance: [SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.relativity.com/RelativityOne/Content/Relativity/MCP/Relativity_MCP.htm
+  - id: relativity.relone_remove_workspace_group
+    object: WorkspaceGroup
+    action: relone_remove_workspace_group
+    description: "Revokes a user group's access to a specific workspace."
+    category: Identity & Access
+    risk: high
+    business_impact: "Revokes a group's workspace access, locking out reviewers mid-matter and breaking litigation deadlines if applied to the wrong group."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.relativity.com/RelativityOne/Content/Relativity/MCP/Relativity_MCP.htm
+  - id: relativity.relone_list_workspace_groups
+    object: WorkspaceGroup
+    action: relone_list_workspace_groups
+    description: "Lists user groups that currently have access to a specific workspace."
+    category: Identity & Access
+    risk: low
+    business_impact: "Enumerates which groups hold access to a workspace; read-only but maps the permission surface an attacker would target."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.relativity.com/RelativityOne/Content/Relativity/MCP/Relativity_MCP.htm
+  - id: relativity.relone_list_users
+    object: User
+    action: relone_list_users
+    description: "Lists users in the instance with their account details."
+    category: Identity & Access
+    risk: medium
+    business_impact: "Returns the full user directory with account details, handing over names and contact data for every reviewer, attorney, and admin on the instance in one call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Clients & Matters ----------
+
+  # source: https://help.relativity.com/RelativityOne/Content/Relativity/MCP/Relativity_MCP.htm
+  - id: relativity.relone_list_clients
+    object: Client
+    action: relone_list_clients
+    description: "Lists all clients in the Relativity aiR instance."
+    category: Clients & Matters
+    risk: low
+    business_impact: "Reveals the firm's full client roster, which is itself confidential engagement information at most legal service providers."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.relativity.com/RelativityOne/Content/Relativity/MCP/Relativity_MCP.htm
+  - id: relativity.relone_create_client
+    object: Client
+    action: relone_create_client
+    description: "Creates a new client within the Relativity aiR instance."
+    category: Clients & Matters
+    risk: medium
+    business_impact: "Registers a new client entity that matters and workspaces will hang off, affecting how case data and billing roll up."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.relativity.com/RelativityOne/Content/Relativity/MCP/Relativity_MCP.htm
+  - id: relativity.relone_edit_client
+    object: Client
+    action: relone_edit_client
+    description: "Updates an existing client's properties (name, number, status)."
+    category: Clients & Matters
+    risk: medium
+    business_impact: "Changes client name, number, or status; setting a client inactive cascades to every matter and workspace beneath it and can interrupt active reviews."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.relativity.com/RelativityOne/Content/Relativity/MCP/Relativity_MCP.htm
+  - id: relativity.relone_list_matters
+    object: Matter
+    action: relone_list_matters
+    description: "Lists all matters in the Relativity aiR instance."
+    category: Clients & Matters
+    risk: low
+    business_impact: "Lists every legal matter on the instance, disclosing which disputes and investigations the organization is running."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.relativity.com/RelativityOne/Content/Relativity/MCP/Relativity_MCP.htm
+  - id: relativity.relone_create_matter
+    object: Matter
+    action: relone_create_matter
+    description: "Creates a new matter under a specified client."
+    category: Clients & Matters
+    risk: medium
+    business_impact: "Creates a matter container under a client, establishing where subsequent case workspaces and evidence will be organized."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.relativity.com/RelativityOne/Content/Relativity/MCP/Relativity_MCP.htm
+  - id: relativity.relone_edit_matter
+    object: Matter
+    action: relone_edit_matter
+    description: "Updates an existing matter's properties."
+    category: Clients & Matters
+    risk: medium
+    business_impact: "Alters matter properties such as its owning client or status, which changes how case workspaces are attributed and can deactivate an in-flight matter."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://help.relativity.com/RelativityOne/Content/Relativity/MCP/Relativity_MCP.htm
+  - id: relativity.relone_list_workspaces
+    object: Workspace
+    action: relone_list_workspaces
+    description: "Lists workspaces in the instance."
+    category: Operations
+    risk: low
+    business_impact: "Enumerates every case workspace on the instance, outlining the organization's active review footprint."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.relativity.com/RelativityOne/Content/Relativity/MCP/Relativity_MCP.htm
+  - id: relativity.relone_get_workspace
+    object: Workspace
+    action: relone_get_workspace
+    description: "Retrieves full details about a specific workspace."
+    category: Operations
+    risk: low
+    business_impact: "Returns a workspace's configuration, owning matter, and status — context an agent needs before acting, with no data modification."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.relativity.com/RelativityOne/Content/Relativity/MCP/Relativity_MCP.htm
+  - id: relativity.relone_create_workspace
+    object: Workspace
+    action: relone_create_workspace
+    description: "Creates a new workspace from a workspace template."
+    category: Operations
+    risk: medium
+    business_impact: "Provisions a new case workspace that inherits the template's security groups and field layout, consuming instance storage and licensing entitlements."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.relativity.com/RelativityOne/Content/Relativity/MCP/Relativity_MCP.htm
+  - id: relativity.relone_edit_workspace
+    object: Workspace
+    action: relone_edit_workspace
+    description: "Updates workspace properties such as name, status, and assigned matter."
+    category: Operations
+    risk: high
+    business_impact: "Reassigns a workspace to a different matter or flips its status, moving a live evidence set under a different engagement and muddying chain-of-custody records."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Usage & Reporting ----------
+
+  # source: https://help.relativity.com/RelativityOne/Content/Relativity/MCP/Relativity_MCP.htm
+  - id: relativity.relone_usage_generate_report
+    object: UsageReport
+    action: relone_usage_generate_report
+    description: "Creates a new usage report."
+    category: Usage & Reporting
+    risk: medium
+    business_impact: "Compiles a usage report over instance activity and consumption metrics, the same data that drives RelativityOne billing reconciliation."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.relativity.com/RelativityOne/Content/Relativity/MCP/Relativity_MCP.htm
+  - id: relativity.relone_usage_get_report_details
+    object: UsageReport
+    action: relone_usage_get_report_details
+    description: "Retrieves the row-level data inside a usage report."
+    category: Usage & Reporting
+    risk: medium
+    business_impact: "Exposes row-level consumption detail per workspace and matter, revealing case sizes and activity patterns that are otherwise restricted to admins."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.relativity.com/RelativityOne/Content/Relativity/MCP/Relativity_MCP.htm
+  - id: relativity.relone_usage_download_report
+    object: UsageReport
+    action: relone_usage_download_report
+    description: "Downloads a completed usage report as a CSV file."
+    category: Usage & Reporting
+    risk: high
+    business_impact: "Pulls the entire usage report out as a CSV, moving instance-wide consumption and matter-level activity data outside Relativity's access controls in one file."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://help.relativity.com/RelativityOne/Content/Relativity/MCP/Relativity_MCP.htm
+  - id: relativity.relone_usage_delete_report
+    object: UsageReport
+    action: relone_usage_delete_report
+    description: "Deletes a usage report."
+    category: Usage & Reporting
+    risk: high
+    business_impact: "Destroys a generated usage report, removing the consumption record a customer or auditor would use to verify RelativityOne invoicing."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
