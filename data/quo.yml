@@ -1,0 +1,84 @@
+schema_version: "1.3"
+platform: quo
+display_name: Quo
+logo: https://cdn.quo.com/favicon/android-chrome-192x192.png
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://mcp.quo.com/mcp
+reference: https://support.quo.com/core-concepts/integrations/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://support.quo.com/core-concepts/integrations/mcp/other-ai-agents.md
+  - id: quo.fetch-messages
+    object: Message
+    action: fetch-messages
+    description: "Pull message history from a Quo inbox, filtered by contact, date, or inbox."
+    category: Data Access
+    risk: critical
+    business_impact: "Reads the full SMS history of a business inbox 100 records per call with no cap across repeated calls, letting an agent drain customer conversations, phone numbers, and whatever personal detail those threads contain."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.quo.com/core-concepts/integrations/mcp/other-ai-agents.md
+  - id: quo.fetch-call-transcripts
+    object: CallTranscript
+    action: fetch-call-transcripts
+    description: "Retrieve call history and voicemail transcripts from a Quo number."
+    category: Data Access
+    risk: critical
+    business_impact: "Pulls verbatim transcripts of recorded calls and voicemails in 100-record pages, exposing spoken customer disclosures — account details, health complaints, payment mentions — that were never meant to leave the phone system."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, HIPAA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Messaging ----------
+
+  # source: https://support.quo.com/core-concepts/integrations/mcp/other-ai-agents.md
+  - id: quo.send-message
+    object: Message
+    action: send-message
+    description: "Send a text from your Quo number to one or more recipients."
+    category: Messaging
+    risk: medium
+    business_impact: "Sends SMS from the company's own number to one or many recipients, spending pre-paid credits and creating an unrecallable customer communication with no check that the recipient consented to texts."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://support.quo.com/core-concepts/integrations/mcp/other-ai-agents.md
+  - id: quo.update-contact
+    object: Contact
+    action: update-contact
+    description: "Update an existing contact's details."
+    category: Customer
+    risk: medium
+    business_impact: "Overwrites a stored contact's name, number, or other fields, so a bad write can misroute future calls and texts to the wrong person and corrupt the record a rectification request would be answered from."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.quo.com/core-concepts/integrations/mcp/other-ai-agents.md
+  - id: quo.create-contact
+    object: Contact
+    action: create-contact
+    description: "Add a new contact to your Quo account."
+    category: Customer
+    risk: low
+    business_impact: "Adds a contact record to the account; new personal data such as a name and phone number enters the phone system without any consent or provenance trail attached to it."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

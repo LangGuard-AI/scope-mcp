@@ -1,0 +1,163 @@
+schema_version: "1.3"
+platform: polar-analytics
+display_name: Polar Analytics
+logo: https://cdn.prod.website-files.com/5d41ab9d8cacf54c04df67c0/69317ef2095b22195fbf7b80_favicon-256.png
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://api.polaranalytics.com/mcp
+reference: https://intercom.help/polar-app/en/articles/12960325-using-mcp-tools-as-an-api
+server_website: https://www.polaranalytics.com/ai/mcp
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://intercom.help/polar-app/en/articles/12960325-using-mcp-tools-as-an-api
+  - id: polar-analytics.generate_report
+    object: Report
+    action: generate_report
+    description: "Generate a custom analytics report with rows, a totals row, and a deep link."
+    category: Data Access
+    risk: high
+    business_impact: "Runs a caller-shaped query across the workspace's unified commerce, ad-spend and customer-cohort data, so one call can pull the merchant's full revenue and margin picture into the agent's context."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/polar-analytics
+  - id: polar-analytics.get_metrics
+    object: Metric
+    action: get_metrics
+    category: Data Access
+    risk: medium
+    business_impact: "Returns the workspace's metric definitions and figures, exposing revenue, spend and retention numbers that the merchant treats as confidential trading data."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/polar-analytics
+  - id: polar-analytics.get_dimension_values
+    object: Dimension
+    action: get_dimension_values
+    category: Data Access
+    risk: medium
+    business_impact: "Enumerates the distinct values behind a breakdown dimension, which in a DTC dataset includes customer segment, product, campaign and geography labels."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://intercom.help/polar-app/en/articles/12960325-using-mcp-tools-as-an-api
+  - id: polar-analytics.list_dimensions
+    object: Dimension
+    action: list_dimensions
+    description: "Returns compatible breakdowns, filters, views, and attribution settings for given metrics."
+    category: Data Access
+    risk: low
+    business_impact: "Lists the breakdowns, filters and attribution settings available for a metric — schema metadata only, no figures returned."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/polar-analytics
+  - id: polar-analytics.get_custom_dimension_details
+    object: CustomDimension
+    action: get_custom_dimension_details
+    category: Data Access
+    risk: low
+    business_impact: "Reads the definition of a customer-built dimension, revealing how the merchant segments its own data but returning no underlying records."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://intercom.help/polar-app/en/articles/12960325-using-mcp-tools-as-an-api
+  - id: polar-analytics.get_context
+    object: Workspace
+    action: get_context
+    description: "Retrieves workspace metadata including currency, timezone, and available metrics/dimensions."
+    category: Data Access
+    risk: low
+    business_impact: "Returns workspace currency, timezone and the catalogue of available metrics and dimensions — orientation metadata with no business figures attached."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://intercom.help/polar-app/en/articles/12960325-using-mcp-tools-as-an-api
+  - id: polar-analytics.get_dashboard_details
+    object: Dashboard
+    action: get_dashboard_details
+    description: "Retrieves specific dashboard configuration and contents."
+    category: Operations
+    risk: medium
+    business_impact: "Pulls a dashboard's full configuration and contents, handing over whichever revenue, spend and cohort tiles the merchant's analysts assembled on it."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://intercom.help/polar-app/en/articles/12960325-using-mcp-tools-as-an-api
+  - id: polar-analytics.list_dashboards
+    object: Dashboard
+    action: list_dashboards
+    description: "Returns available dashboards in the workspace."
+    category: Operations
+    risk: low
+    business_impact: "Lists the dashboards present in the workspace, exposing naming and reporting structure but none of the underlying numbers."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://intercom.help/polar-app/en/articles/12960325-using-mcp-tools-as-an-api
+  - id: polar-analytics.get_view_details
+    object: View
+    action: get_view_details
+    description: "Provides configuration details for a specific saved view."
+    category: Operations
+    risk: low
+    business_impact: "Reads the filters and settings saved on a stored view, showing how a team slices its data without returning the sliced records."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/polar-analytics
+  - id: polar-analytics.generate_app_report_link
+    object: Report
+    action: generate_app_report_link
+    category: Operations
+    risk: low
+    business_impact: "Mints a deep link that opens a report inside the Polar app; viewing it still requires a workspace session, so the link itself carries no data."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://intercom.help/polar-app/en/articles/12960325-using-mcp-tools-as-an-api
+  - id: polar-analytics.rate_report
+    object: Report
+    action: rate_report
+    description: "Captures user feedback on report quality (1-10 scale)."
+    category: Operations
+    risk: low
+    business_impact: "Writes a 1-10 quality score against a generated report, attributing an opinion to the connected user that they may not have given."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

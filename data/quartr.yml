@@ -1,0 +1,341 @@
+schema_version: "1.3"
+platform: quartr
+display_name: Quartr
+logo: https://quartr.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+reference: https://mcp.quartr.com/docs
+server_website: https://quartr.com/
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.get_current_user
+    object: User
+    action: get_current_user
+    category: Identity & Access
+    risk: medium
+    business_impact: "Returns the signed-in user's name, email address and subscription tier, pulling account-holder identity into the agent context and any downstream transcript."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Research Workspaces ----------
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.delete_workspace
+    object: Workspace
+    action: delete_workspace
+    category: Research Workspaces
+    risk: high
+    business_impact: "Destroys a workspace along with the research notes it holds, removing it for everyone with access and with no documented recovery path."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.write_workspace
+    object: Workspace
+    action: write_workspace
+    category: Research Workspaces
+    risk: medium
+    business_impact: "Rewrites a workspace document body; overwrite mode replaces the entire note live for every connected teammate, though a prior-state snapshot remains in version history."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.read_workspace
+    object: Workspace
+    action: read_workspace
+    category: Research Workspaces
+    risk: medium
+    business_impact: "Pulls the full body of an internal research workspace, surfacing the desk's private investment thesis and any market-sensitive notes into the model context."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.create_workspace
+    object: Workspace
+    action: create_workspace
+    category: Research Workspaces
+    risk: low
+    business_impact: "Adds a new research workspace to the account; visible to teammates but created empty, so nothing existing is altered."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.tag_company_to_workspace
+    object: Workspace
+    action: tag_company_to_workspace
+    category: Research Workspaces
+    risk: low
+    business_impact: "Links a company to a workspace, changing how the note is filed and which coverage views surface it."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.untag_company_from_workspace
+    object: Workspace
+    action: untag_company_from_workspace
+    category: Research Workspaces
+    risk: low
+    business_impact: "Unlinks a company from a workspace, dropping that coverage association from the team's filing structure."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Monitoring & Alerts ----------
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.delete_keyword
+    object: KeywordAlert
+    action: delete_keyword
+    category: Monitoring & Alerts
+    risk: medium
+    business_impact: "Removes a keyword alert, silently ending monitoring coverage for that term across the companies and watchlists it was scoped to."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.update_keyword
+    object: KeywordAlert
+    action: update_keyword
+    category: Monitoring & Alerts
+    risk: medium
+    business_impact: "Re-scopes a keyword alert; narrowing it to fewer companies or watchlists quietly shrinks what the user gets notified about."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.create_keyword
+    object: KeywordAlert
+    action: create_keyword
+    category: Monitoring & Alerts
+    risk: low
+    business_impact: "Creates a keyword alert that generates ongoing notifications across all companies, followed companies or a chosen watchlist."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.delete_watchlist
+    object: Watchlist
+    action: delete_watchlist
+    category: Operations
+    risk: medium
+    business_impact: "Deletes a watchlist, discarding the curated company set and breaking any keyword alerts or event feeds scoped to it."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.delete_folder
+    object: Folder
+    action: delete_folder
+    category: Operations
+    risk: medium
+    business_impact: "Deletes a saved-items folder, dismantling how the user's saved transcript excerpts and report pages are organized."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.list_watchlists
+    object: Watchlist
+    action: list_watchlists
+    category: Operations
+    risk: low
+    business_impact: "Enumerates the user's watchlists, revealing which names the desk is actively tracking."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.get_watchlist
+    object: Watchlist
+    action: get_watchlist
+    category: Operations
+    risk: low
+    business_impact: "Returns a watchlist with its member companies, exposing the desk's current coverage universe."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.create_watchlist
+    object: Watchlist
+    action: create_watchlist
+    category: Operations
+    risk: low
+    business_impact: "Creates a new watchlist for grouping companies the user wants event and alert coverage on."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.rename_watchlist
+    object: Watchlist
+    action: rename_watchlist
+    category: Operations
+    risk: low
+    business_impact: "Renames a watchlist, so downstream references to it by name in alerts or reports may no longer match."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.add_to_watchlist
+    object: Watchlist
+    action: add_to_watchlist
+    category: Operations
+    risk: low
+    business_impact: "Adds companies to a watchlist, expanding the event and keyword coverage the user receives."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.remove_from_watchlist
+    object: Watchlist
+    action: remove_from_watchlist
+    category: Operations
+    risk: low
+    business_impact: "Drops a company from a watchlist, ending event and alert coverage for that name until it is re-added."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.create_folder
+    object: Folder
+    action: create_folder
+    category: Operations
+    risk: low
+    business_impact: "Creates a folder for organizing the user's saved research excerpts."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.rename_folder
+    object: Folder
+    action: rename_folder
+    category: Operations
+    risk: low
+    business_impact: "Renames a saved-items folder, which can break how the user or teammates refer to that collection."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.save_item
+    object: SavedItem
+    action: save_item
+    category: Operations
+    risk: low
+    business_impact: "Saves a transcript paragraph or a slide or report page into the user's saved items for later reference."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.remove_saved_item
+    object: SavedItem
+    action: remove_saved_item
+    category: Operations
+    risk: low
+    business_impact: "Removes one excerpt from the user's own saved items, losing the bookmark to that transcript or report passage."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.move_saved_items
+    object: SavedItem
+    action: move_saved_items
+    category: Operations
+    risk: low
+    business_impact: "Moves saved excerpts into or out of a folder, reorganizing the user's own research collection."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.create_search_filter
+    object: SearchFilter
+    action: create_search_filter
+    category: Operations
+    risk: low
+    business_impact: "Stores a reusable search filter that shapes which documents later searches return."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.quartr.com/docs
+  - id: quartr.delete_search_filter
+    object: SearchFilter
+    action: delete_search_filter
+    category: Operations
+    risk: low
+    business_impact: "Deletes a saved search filter, so any workflow that relied on it falls back to unfiltered results."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

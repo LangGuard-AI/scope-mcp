@@ -1,0 +1,46 @@
+schema_version: "1.3"
+platform: read-ai
+display_name: Read AI
+logo: https://cdn.prod.website-files.com/614e5e239ea0f25fe5b6a797/615f71de842b191ea061fda6_ReadLogomark_256x256.png
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://api.read.ai/mcp
+server_website: https://support.read.ai/hc/en-us/articles/49381158409491-MCP-Server
+reference: https://support.read.ai/hc/en-us/articles/49379985941523-Read-AI-API-and-MCP-Overview
+# Read AI's remote MCP server (https://api.read.ai/mcp) is OAuth 2.1-gated, so
+# `tools/list` could not be captured without a tenant token. The vendor support
+# docs publish the tool surface as two capability labels, so every entry below
+# uses `id_form: capability`. Refresh to `id_form: verbatim` when a real
+# `tools/list` capture becomes available.
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://support.read.ai/hc/en-us/articles/49381158409491-MCP-Server
+  - id: read-ai.get_meeting_by_id
+    object: Meeting
+    action: get_meeting_by_id
+    id_form: capability
+    description: "Get Meeting by ID"
+    category: Data Access
+    risk: medium
+    business_impact: "Returns one meeting's full transcript with speaker identification, participant attendance, summaries, action items, engagement metrics, and an MP4 recording download URL — everything said in a private conversation becomes agent-readable."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://support.read.ai/hc/en-us/articles/49381158409491-MCP-Server
+  - id: read-ai.list_meetings
+    object: Meeting
+    action: list_meetings
+    id_form: capability
+    description: "List Meetings"
+    category: Data Access
+    risk: medium
+    business_impact: "Pages through the account's entire meeting history with date filtering, returning transcripts, participants, and recording links for every meeting — a paginated route to bulk conversation data, not just a directory listing."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

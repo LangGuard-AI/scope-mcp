@@ -1,0 +1,368 @@
+schema_version: "1.3"
+platform: pigment
+display_name: Pigment
+logo: https://cdn.prod.website-files.com/6605b12132f6a8b5d23896bd/66d9efed1b2158878cbd56bf_Pigment%20Favicon%20Webflow.png
+source: langguard-editorial
+updated: "2026-09"
+reference: https://kb.pigment.com/docs/mcp-server-1
+server_website: https://github.com/gopigment/ai-plugins
+actions:
+  # ---------- Financial ----------
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/aggregating-view-data/SKILL.md
+  - id: pigment.update_metric
+    object: Metric
+    action: update_metric
+    description: "Update an existing Metric's structure, formula, or default aggregators."
+    category: Financial
+    risk: high
+    business_impact: "Rewrites the formula or structure of a live planning metric, changing every downstream figure that depends on it without any review step."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/building-versions-and-planning-cycles/SKILL.md
+  - id: pigment.set_metric_input
+    object: Metric
+    action: set_metric_input
+    description: "Set an input value on a Metric (write to an input, non-formula, cell)."
+    category: Financial
+    risk: high
+    business_impact: "Writes a value straight into a plan input cell, altering the budget and forecast figures leadership reports against."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/copying-metric-data/SKILL.md
+  - id: pigment.create_metric_copy_config
+    object: Metric
+    action: create_metric_copy_config
+    description: "Create a saved metric-to-metric copy configuration."
+    category: Financial
+    risk: high
+    business_impact: "Saves a standing copy rule that overwrites one metric's values with another's, for example pushing actuals over a forecast baseline."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/aggregating-view-data/SKILL.md
+  - id: pigment.create_metric
+    object: Metric
+    action: create_metric
+    description: "Create a Metric (structure, data type, default aggregators, and optional formula)."
+    category: Financial
+    risk: medium
+    business_impact: "Adds a new calculated metric to the planning model, introducing figures that feed boards and reported totals."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/iterating-with-previous-and-cycles/SKILL.md
+  - id: pigment.create_cycle
+    object: Cycle
+    action: create_cycle
+    description: "Create a planning cycle with a name, iterative dimension, and metric IDs."
+    category: Financial
+    risk: medium
+    business_impact: "Establishes a planning cycle across a set of metrics, defining how forecast iterations get captured and compared."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/iterating-with-previous-and-cycles/SKILL.md
+  - id: pigment.update_cycle
+    object: Cycle
+    action: update_cycle
+    description: "Add or remove metrics from an existing planning cycle."
+    category: Financial
+    risk: medium
+    business_impact: "Adds or drops metrics from an active planning cycle, changing which figures are captured for each forecast iteration."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/building-versions-and-planning-cycles/SKILL.md
+  - id: pigment.calendar_create
+    object: Calendar
+    action: calendar_create
+    description: "Create a new calendar configuration for an Application."
+    category: Financial
+    risk: medium
+    business_impact: "Creates the calendar an Application's periods derive from, fixing fiscal boundaries for every time-based metric built on it."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/setting-up-calendar/SKILL.md
+  - id: pigment.calendar_remove_time_dimension
+    object: Calendar
+    action: calendar_remove_time_dimension
+    description: "Remove a time dimension derived from the calendar configuration."
+    category: Financial
+    risk: high
+    business_impact: "Removes a calendar-derived time dimension, discarding the granularity every metric and View built on it depends on."
+    compliance: [SOX, COSO]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/setting-up-calendar/SKILL.md
+  - id: pigment.calendar_add_time_dimension
+    object: Calendar
+    action: calendar_add_time_dimension
+    description: "Add a time dimension derived from the workspace calendar configuration."
+    category: Financial
+    risk: medium
+    business_impact: "Adds a calendar-derived time dimension, expanding the granularity at which metrics can be modeled and reported."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/setting-up-calendar/SKILL.md
+  - id: pigment.calendar_expand
+    object: Calendar
+    action: calendar_expand
+    description: "Expand calendar coverage (e.g. extend the date range of a time dimension)."
+    category: Financial
+    risk: medium
+    business_impact: "Extends calendar coverage so metrics hold periods beyond the current range, growing model size and computation cost."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/aggregating-view-data/SKILL.md
+  - id: pigment.update_view_aggregations
+    object: View
+    action: update_view_aggregations
+    description: "Update a View's aggregation settings (what a total/visible cell computes)."
+    category: Financial
+    risk: medium
+    business_impact: "Changes what a View's totals compute, so the same underlying metric can present materially different reported numbers."
+    compliance: [SOX, COSO]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Org & Access ----------
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/setting-up-calendar/SKILL.md
+  - id: pigment.batch_share_blocks
+    object: Block
+    action: batch_share_blocks
+    description: "Share multiple blocks (metrics and other blocks) with a Library or Application in one call."
+    category: Org & Access
+    risk: high
+    business_impact: "Shares many metrics and blocks with a Library or another Application in a single call, widening who can read the underlying planning data."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/designing-boards-and-views/SKILL.md
+  - id: pigment.update_view
+    object: View
+    action: update_view
+    description: "Update a View's name, description, template, or sharing status."
+    category: Org & Access
+    risk: high
+    business_impact: "Flips a View's sharing status alongside its name and template, which can expose a private analysis to everyone with Application access."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/sharing-data-between-applications/SKILL.md
+  - id: pigment.enable_application_library
+    object: Library
+    action: enable_application_library
+    description: "Activate a Library in a consuming Application so its shared Blocks can be used."
+    category: Org & Access
+    risk: medium
+    business_impact: "Activates a Library inside a consuming Application, making that Library's shared blocks and their data usable there."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/building-pigment-frames/SKILL.md
+  - id: pigment.create_frame
+    object: Frame
+    action: create_frame
+    description: "Create a Pigment Frame (custom-coded, full-page visualization) from a JS file, bindings, and data sources."
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Deploys custom JavaScript as a full-page Frame in the workspace, running unreviewed code against the planning data bound to it."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/building-pigment-frames/SKILL.md
+  - id: pigment.update_frame
+    object: Frame
+    action: update_frame
+    description: "Push the current staged JS file contents to an existing Frame, replacing name, path, bindings, and data sources."
+    category: Platform & DevOps
+    risk: high
+    business_impact: "Replaces a live Frame's code, bindings, and data sources in one push, shipping a production change with no review gate."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/building-pigment-frames/SKILL.md
+  - id: pigment.write_file
+    object: File
+    action: write_file
+    description: "Author a Frame's JS file in the staging filesystem prior to create_frame/update_frame."
+    category: Platform & DevOps
+    risk: medium
+    business_impact: "Authors the JavaScript a Frame will execute, staging arbitrary code for deployment into the workspace."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/analyzing-pigment-data/SKILL.md
+  - id: pigment.query_data
+    object: Metric
+    action: query_data
+    description: "Retrieve data from a Metric using a natural-language query, with optional breakdowns and filters."
+    category: Data Access
+    risk: medium
+    business_impact: "Pulls metric values across arbitrary breakdowns and filters from a plain-language prompt, which can surface compensation, headcount, and customer figures in volume."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/building-a-full-application/SKILL.md
+  - id: pigment.get_list_items
+    object: DimensionList
+    action: get_list_items
+    description: "Retrieve the items of a dimension list."
+    category: Data Access
+    risk: medium
+    business_impact: "Returns every item of a dimension list, which in workforce models is a full roster of named employees and their identifiers."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/building-a-full-application/SKILL.md
+  - id: pigment.fetch_metric_data
+    object: Metric
+    action: fetch_metric_data
+    description: "Spot-check the values of a Metric (used to verify plausibility after modeling changes)."
+    category: Data Access
+    risk: medium
+    business_impact: "Reads the stored values of a named metric, exposing the figures behind a budget, forecast, or actuals series."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/using-search-tools/SKILL.md
+  - id: pigment.search
+    object: Block
+    action: search
+    description: "Advanced-mode tool that scans and returns Block metadata (names, data types, dimensions) across an entire Application, without exposing underlying data."
+    category: Data Access
+    risk: low
+    business_impact: "Scans an entire Application's block metadata — names, data types, dimensions — returning model structure without the underlying values."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/designing-boards-and-views/SKILL.md
+  - id: pigment.delete_views
+    object: View
+    action: delete_views
+    description: "Delete one or more Views."
+    category: Operations
+    risk: high
+    business_impact: "Deletes one or more Views outright, destroying saved reporting configurations that boards and their consumers depend on."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/building-a-full-application/SKILL.md
+  - id: pigment.add_list_items
+    object: DimensionList
+    action: add_list_items
+    description: "Add items to a dimension list."
+    category: Operations
+    risk: medium
+    business_impact: "Adds items to a dimension list, which for employee or customer dimensions means writing personal identifiers into the model."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/creating-dimensions-and-hierarchies/SKILL.md
+  - id: pigment.update_list_property
+    object: DimensionList
+    action: update_list_property
+    description: "Update a property on a dimension list (e.g. set Unique Item values)."
+    category: Operations
+    risk: medium
+    business_impact: "Changes a dimension list property such as the unique-key Employee ID, which can break identity matching everywhere the list is used."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://raw.githubusercontent.com/gopigment/ai-plugins/main/skills/building-a-full-application/SKILL.md
+  - id: pigment.create_list
+    object: DimensionList
+    action: create_list
+    description: "Create a dimension list."
+    category: Operations
+    risk: low
+    business_impact: "Creates a new dimension list, adding a structural axis that metrics and Views can then be built on."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

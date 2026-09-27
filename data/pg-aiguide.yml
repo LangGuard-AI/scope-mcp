@@ -1,0 +1,38 @@
+schema_version: "1.3"
+platform: pg-aiguide
+display_name: pg-aiguide
+logo: https://www.tigerdata.com/icon.ico
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://mcp.tigerdata.com/docs
+reference: https://mcp.tigerdata.com/docs
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://mcp.tigerdata.com/docs
+  - id: pg-aiguide.search_docs
+    object: Document
+    action: search_docs
+    description: "Searches Tiger Cloud (TimescaleDB), PostgreSQL, and PostGIS documentation using hybrid semantic (vector) and BM25 keyword retrieval."
+    category: Data Access
+    risk: low
+    business_impact: "Returns passages from public TimescaleDB, PostgreSQL, and PostGIS documentation; no customer records or database contents are reachable through it."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://mcp.tigerdata.com/docs
+  - id: pg-aiguide.view_skill
+    object: Skill
+    action: view_skill
+    description: "Retrieves a named TimescaleDB, PostgreSQL, or PostGIS skill document covering schema design, indexing, and operational best practices."
+    category: Data Access
+    risk: low
+    business_impact: "Supplies the schema-design and tuning guidance an agent then applies to real Postgres databases, so stale advice can steer production DDL choices."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial

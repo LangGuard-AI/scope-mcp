@@ -1,0 +1,155 @@
+schema_version: "1.3"
+platform: privacy
+display_name: Privacy.com
+logo: https://cdn.prod.website-files.com/6356e57a1c98ed8f8e4285ae/637bd8e3929d86cbad2e5c1a_favicon.png
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://mcp.privacy.com
+reference: https://developers.privacy.com/docs/mcp-server
+server_website: https://developers.privacy.com/docs/mcp-server
+actions:
+  # ---------- Secrets & Workflows ----------
+
+  # source: https://developers.privacy.com/docs/mcp-server
+  - id: privacy.get_pan
+    object: Card
+    action: get_pan
+    description: "Retrieve full card number, CVV, and expiration"
+    category: Secrets & Workflows
+    risk: critical
+    business_impact: "Returns the full primary account number, CVV, and expiry for a virtual card, handing the agent a reusable payment credential that can be spent anywhere the card is accepted."
+    compliance: [PCI, GLBA, SOC2, ISO_27001, NIST_CSF]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Financial ----------
+
+  # source: https://developers.privacy.com/docs/mcp-server
+  - id: privacy.create_card
+    object: Card
+    action: create_card
+    description: "Create a new virtual card"
+    category: Financial
+    risk: high
+    business_impact: "Issues a new virtual payment card with a caller-chosen spend limit and duration, creating real spending capacity against the funding account without a second approver."
+    compliance: [PCI, GLBA, SOX, COSO, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.privacy.com/docs/mcp-server
+  - id: privacy.update_card_spend_limit
+    object: Card
+    action: update_card_spend_limit
+    description: "Update a card's spend limit"
+    category: Financial
+    risk: high
+    business_impact: "Raises or lowers the authorized spend ceiling and its reset period on an existing card, changing how much money a single principal can move before any control stops it."
+    compliance: [SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.privacy.com/docs/mcp-server
+  - id: privacy.close_card
+    object: Card
+    action: close_card
+    description: "Permanently close a card"
+    category: Financial
+    risk: high
+    business_impact: "Permanently closes a virtual card with no way to reopen it, breaking every recurring charge and subscription bound to that card number."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.privacy.com/docs/mcp-server
+  - id: privacy.pause_card
+    object: Card
+    action: pause_card
+    description: "Temporarily pause a card"
+    category: Financial
+    risk: medium
+    business_impact: "Suspends authorizations on a card, causing subsequent charges — including recurring vendor billing — to decline until it is unpaused."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.privacy.com/docs/mcp-server
+  - id: privacy.unpause_card
+    object: Card
+    action: unpause_card
+    description: "Reactivate a paused card"
+    category: Financial
+    risk: medium
+    business_impact: "Reactivates a paused card so it authorizes charges again, which can undo a pause that was applied in response to suspected fraud."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.privacy.com/docs/mcp-server
+  - id: privacy.update_card_memo
+    object: Card
+    action: update_card_memo
+    description: "Update a card's friendly name"
+    category: Financial
+    risk: low
+    business_impact: "Renames a card's memo label, which changes how the card is identified in statements and reconciliation views but moves no money."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://developers.privacy.com/docs/mcp-server
+  - id: privacy.list_transactions
+    object: Transaction
+    action: list_transactions
+    description: "List transactions with filters"
+    category: Data Access
+    risk: high
+    business_impact: "Pages through card transaction history up to 1000 records at a time across every card on the account, exposing merchant, amount, date, and approval outcome for the cardholder's spending."
+    compliance: [PCI, GLBA, CCPA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.privacy.com/docs/mcp-server
+  - id: privacy.list_cards
+    object: Card
+    action: list_cards
+    description: "List all cards with pagination"
+    category: Data Access
+    risk: medium
+    business_impact: "Enumerates every virtual card on the account with its type, state, and spend limits, giving a full inventory of the payment instruments available to spend against."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://developers.privacy.com/docs/mcp-server
+  - id: privacy.get_card
+    object: Card
+    action: get_card
+    description: "Get details for a specific card"
+    category: Data Access
+    risk: medium
+    business_impact: "Reads one card's configuration and status, including its merchant lock, state, and spend limit — financial account detail tied to an identified cardholder."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
