@@ -1,0 +1,100 @@
+schema_version: "1.3"
+platform: black-diamond
+display_name: SS&C Black Diamond
+logo: https://www.ssctech.com/hubfs/favicon-ssctech-2021@48px.png
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://bd3.bdreporting.com/mcp
+reference: https://bd3.bdreporting.com/info/mcp
+actions:
+  # ---------- Financial ----------
+
+  # source: https://claude.com/connectors/black-diamond
+  - id: black-diamond.blackdiamond_invoke_tool
+    object: "*"
+    action: blackdiamond_invoke_tool
+    description: "Executes any Black Diamond platform tool by name, including rebalancer session initiation and client report generation."
+    category: Financial
+    risk: critical
+    business_impact: "Dispatches arbitrary Black Diamond operations under the advisor's entitlements, reaching rebalance session initiation and client report queuing without any per-tool gate."
+    compliance: [GLBA, SOX, COSO, GDPR, UK_GDPR, CCPA, PIPEDA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/connectors/black-diamond
+  - id: black-diamond.blackdiamond_ask_data_warehouse
+    object: DataWarehouse
+    action: blackdiamond_ask_data_warehouse
+    description: "Runs natural-language queries that are translated to SQL against the Black Diamond reporting data warehouse."
+    category: Data Access
+    risk: critical
+    business_impact: "Answers free-form questions by querying the firm's entire reporting warehouse, so one call can pull holdings, balances, fees, and transaction history for every client under management."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, PIPEDA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Access ----------
+
+  # source: https://claude.com/connectors/black-diamond
+  - id: black-diamond.blackdiamond_get_user_context
+    object: User
+    action: blackdiamond_get_user_context
+    description: "Returns the signed-in user's Black Diamond identity, firm affiliation, and effective data access."
+    category: Identity & Access
+    risk: low
+    business_impact: "Reveals which firm and account set the authenticated advisor can reach, mapping the blast radius available to every other call in the session."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://claude.com/connectors/black-diamond
+  - id: black-diamond.blackdiamond_search_tools
+    object: Tool
+    action: blackdiamond_search_tools
+    description: "Searches the catalog of Black Diamond tools available to the caller."
+    category: Operations
+    risk: low
+    business_impact: "Enumerates the platform capabilities reachable by the session, which is reconnaissance for what the agent can go on to invoke."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/black-diamond
+  - id: black-diamond.blackdiamond_get_navigation_links
+    object: NavigationLink
+    action: blackdiamond_get_navigation_links
+    description: "Retrieves deep links into Black Diamond screens for accounts, portfolios, and reports."
+    category: Operations
+    risk: low
+    business_impact: "Returns UI deep links so a user can jump to the referenced record; carries record identifiers but no financial figures."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/black-diamond
+  - id: black-diamond.blackdiamond_search_help_documentation
+    object: HelpArticle
+    action: blackdiamond_search_help_documentation
+    description: "Searches Black Diamond's product help documentation."
+    category: Operations
+    risk: low
+    business_impact: "Reads published product documentation only, with no exposure to client, account, or firm data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

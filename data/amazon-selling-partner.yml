@@ -1,0 +1,117 @@
+schema_version: "1.3"
+platform: amazon-selling-partner
+display_name: Amazon Selling Partner
+logo: https://www.amazon.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://sellingpartner-ai.amazon.com/mcp
+actions:
+  # ---------- Operations ----------
+
+  # source: https://claude.com/connectors/amazon-selling-partner
+  - id: amazon-selling-partner.call_write_tool
+    object: "*"
+    action: call_write_tool
+    category: Operations
+    risk: critical
+    business_impact: "Executes any Selling Partner write operation through one gateway, reaching listings, inventory, pricing, order state, and refund mutations on the live seller account."
+    compliance: [SOX, COSO, SOC2, ISO_27001, GDPR, CCPA]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/amazon-selling-partner
+  - id: amazon-selling-partner.sellerAssistant_sellerAssistantCreate
+    object: SellerAssistantTask
+    action: sellerAssistant_sellerAssistantCreate
+    category: Operations
+    risk: medium
+    business_impact: "Starts an Amazon Seller Assistant task against the connected account, handing account work to Amazon's assistant with a scope the caller does not fully control."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/connectors/amazon-selling-partner
+  - id: amazon-selling-partner.call_read_only_tool
+    object: "*"
+    action: call_read_only_tool
+    category: Data Access
+    risk: high
+    business_impact: "Reads any Selling Partner resource through one gateway, reaching order, buyer-contact, settlement, and report data across the whole seller account."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/amazon-selling-partner
+  - id: amazon-selling-partner.accounts_getMerchants
+    object: Merchant
+    action: accounts_getMerchants
+    category: Data Access
+    risk: low
+    business_impact: "Lists the merchant accounts and marketplaces the connected credentials are authorized to operate on."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/amazon-selling-partner
+  - id: amazon-selling-partner.sellerAssistant_sellerAssistantGet
+    object: SellerAssistantTask
+    action: sellerAssistant_sellerAssistantGet
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves the output of a previously created Seller Assistant task, including whatever account detail the assistant gathered."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Platform & DevOps ----------
+
+  # source: https://claude.com/connectors/amazon-selling-partner
+  - id: amazon-selling-partner.search_tools
+    object: Tool
+    action: search_tools
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Discovers which Selling Partner operations the connector exposes, without invoking any of them."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/amazon-selling-partner
+  - id: amazon-selling-partner.get_tool_schema
+    object: Tool
+    action: get_tool_schema
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Returns the input schema for a Selling Partner operation so a caller can build a valid request."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/amazon-selling-partner
+  - id: amazon-selling-partner.functional_feedback
+    object: Feedback
+    action: functional_feedback
+    category: Platform & DevOps
+    risk: low
+    business_impact: "Sends feedback about connector behavior to Amazon; no seller records or listings are altered."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,39 @@
+schema_version: "1.3"
+platform: cargurus
+display_name: CarGurus
+logo: https://www.cargurus.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+reference: https://cargurus.helpscoutdocs.com/article/599-connect-ai-assistants-to-cargurus-with-the-mcp-connector
+server_website: https://claude.com/connectors/cargurus
+mcp_server_url: https://mcp-apps.api.cargurus.com/chat-mcp/v1/stream
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/connectors/cargurus
+  - id: cargurus.vehicle-listing-search
+    object: VehicleListing
+    action: vehicle-listing-search
+    description: "Searches CarGurus vehicle listings by criteria such as price, make, model, or mileage, or by broader descriptors like family-friendly or reliable commuter."
+    category: Data Access
+    risk: low
+    business_impact: "Returns marketplace inventory matching the query; read-only against publicly listed vehicles, so the exposure is search volume rather than sensitive data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/cargurus
+  - id: cargurus.vehicle-listing-detail
+    object: VehicleListing
+    action: vehicle-listing-detail
+    description: "Retrieves full detail for a vehicle listing including photos, specifications, safety information, and dealer details."
+    category: Data Access
+    risk: low
+    business_impact: "Pulls the complete public listing record for one vehicle, including the selling dealer's business contact details, without altering any state."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial

@@ -1,0 +1,87 @@
+schema_version: "1.3"
+platform: microsoft-users
+display_name: Microsoft Users (Work IQ)
+logo: https://www.microsoft.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+reference: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-user-work-iq
+actions:
+  # ---------- Identity & Access ----------
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-user-work-iq
+  - id: microsoft-users.mcp_graph_listUsers
+    object: User
+    action: mcp_graph_listUsers
+    category: Identity & Access
+    risk: medium
+    business_impact: "Enumerates the entire tenant directory with filter and select options, pulling every employee's name, UPN, job title, and contact fields into agent context in one call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-user-work-iq
+  - id: microsoft-users.mcp_graph_getUserProfile
+    object: User
+    action: mcp_graph_getUserProfile
+    category: Identity & Access
+    risk: medium
+    business_impact: "Reads any named directory user's profile by object ID or UPN, exposing that individual's contact details, job title, and department to the agent."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-user-work-iq
+  - id: microsoft-users.mcp_graph_getDirectReports
+    object: User
+    action: mcp_graph_getDirectReports
+    category: Identity & Access
+    risk: medium
+    business_impact: "Returns the roster of employees reporting to any named user, surfacing multiple individuals' identities and the team structure beneath them."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-user-work-iq
+  - id: microsoft-users.mcp_graph_getUsersManager
+    object: User
+    action: mcp_graph_getUsersManager
+    category: Identity & Access
+    risk: medium
+    business_impact: "Resolves the reporting line above any named user, letting an agent walk the org chart and identify executives and escalation paths without an access review."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-user-work-iq
+  - id: microsoft-users.mcp_graph_getMyProfile
+    object: User
+    action: mcp_graph_getMyProfile
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns the signed-in caller's own directory profile; scope is fixed to the current user context and touches no other individual's record."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-user-work-iq
+  - id: microsoft-users.mcp_graph_getMyManager
+    object: User
+    action: mcp_graph_getMyManager
+    category: Identity & Access
+    risk: low
+    business_impact: "Returns the signed-in caller's own manager; a single reporting relationship the caller already knows, with no ability to target another user."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

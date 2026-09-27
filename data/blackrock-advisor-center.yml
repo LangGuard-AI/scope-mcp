@@ -1,0 +1,343 @@
+schema_version: "1.3"
+platform: blackrock-advisor-center
+display_name: BlackRock Advisor Center
+logo: https://www.blackrock.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+reference: https://claude.com/connectors/blackrock-advisor-center
+server_website: https://www.blackrock.com/us/financial-professionals
+actions:
+  # ---------- Financial ----------
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.update_advisory_fee
+    object: AdvisoryFee
+    action: update_advisory_fee
+    category: Financial
+    risk: critical
+    business_impact: "Changes the advisory fee applied to a client portfolio, directly altering the compensation the advisor earns and the fee revenue the firm recognizes on that relationship."
+    compliance: [GLBA, SOX, COSO, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.project_wealth
+    object: WealthProjection
+    action: project_wealth
+    category: Financial
+    risk: medium
+    business_impact: "Projects a client household's future wealth from its holdings and contributions, surfacing the household's financial position and feeding numbers an advisor may present as advice."
+    compliance: [GLBA, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.list_household_portfolios
+    object: HouseholdPortfolio
+    action: list_household_portfolios
+    category: Customer
+    risk: high
+    business_impact: "Enumerates every household portfolio the advisor can reach, exposing the client roster and their account holdings in a single call — bulk client-data extraction by one principal."
+    compliance: [GLBA, CCPA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.update_household_portfolio
+    object: HouseholdPortfolio
+    action: update_household_portfolio
+    category: Customer
+    risk: high
+    business_impact: "Rewrites the holdings or structure of a client household's portfolio record, changing the financial picture every downstream analysis and client report is built from."
+    compliance: [GLBA, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.create_household_portfolio
+    object: HouseholdPortfolio
+    action: create_household_portfolio
+    category: Customer
+    risk: medium
+    business_impact: "Creates a new household portfolio record holding a client's account and position data inside Advisor Center."
+    compliance: [GLBA, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.clone_household_portfolio
+    object: HouseholdPortfolio
+    action: clone_household_portfolio
+    category: Customer
+    risk: medium
+    business_impact: "Duplicates a client household's holdings into a second portfolio record, multiplying copies of that household's financial data across the workspace."
+    compliance: [GLBA, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.update_portfolio
+    object: Portfolio
+    action: update_portfolio
+    category: Operations
+    risk: high
+    business_impact: "Overwrites an existing portfolio's holdings and weights, changing the financial record that comparisons, risk output and client-facing material are generated from."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.create_portfolio
+    object: Portfolio
+    action: create_portfolio
+    category: Operations
+    risk: medium
+    business_impact: "Creates a new portfolio of securities and weights that the advisor can analyze, compare and present to clients."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.clone_portfolio
+    object: Portfolio
+    action: clone_portfolio
+    category: Operations
+    risk: medium
+    business_impact: "Copies an existing portfolio into a new record, spreading stale holdings data if the source is later revised."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.acknowledge_terms
+    object: Terms
+    action: acknowledge_terms
+    category: Operations
+    risk: medium
+    business_impact: "Records acceptance of BlackRock's usage terms on the advisor's behalf, binding the firm to conditions no human reviewed at the moment of agreement."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.get_portfolio
+    object: Portfolio
+    action: get_portfolio
+    category: Data Access
+    risk: medium
+    business_impact: "Returns a portfolio's full holdings and weights, putting an advised account's composition into the agent's context."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.list_portfolios
+    object: Portfolio
+    action: list_portfolios
+    category: Data Access
+    risk: medium
+    business_impact: "Lists every portfolio saved in the advisor's workspace, giving one call a directory of the book of business."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.get_model
+    object: ModelPortfolio
+    action: get_model
+    category: Data Access
+    risk: low
+    business_impact: "Retrieves the composition of a published BlackRock model portfolio used as an allocation template."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.list_models
+    object: ModelPortfolio
+    action: list_models
+    category: Data Access
+    risk: low
+    business_impact: "Lists the BlackRock model portfolios available to the advisor, a read of published allocation templates."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.search_products
+    object: Product
+    action: search_products
+    category: Data Access
+    risk: low
+    business_impact: "Searches BlackRock's fund and ETF catalog, returning published product data with no client information involved."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.search_securities
+    object: Security
+    action: search_securities
+    category: Data Access
+    risk: low
+    business_impact: "Looks up securities by identifier or name against public market reference data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Portfolio Analytics ----------
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.analyze_portfolio
+    object: Portfolio
+    action: analyze_portfolio
+    category: Portfolio Analytics
+    risk: low
+    business_impact: "Runs BlackRock's analytics over a portfolio's holdings and returns allocation and exposure output the advisor may act on."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.analyze_risk
+    object: Portfolio
+    action: analyze_risk
+    category: Portfolio Analytics
+    risk: low
+    business_impact: "Computes risk statistics for a portfolio, producing numbers that can end up in client-facing suitability discussions."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.analyze_scenarios
+    object: Portfolio
+    action: analyze_scenarios
+    category: Portfolio Analytics
+    risk: low
+    business_impact: "Runs stress and market-scenario analysis against a portfolio, a read-only computation over existing holdings."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.analyze_esg
+    object: Portfolio
+    action: analyze_esg
+    category: Portfolio Analytics
+    risk: low
+    business_impact: "Reports sustainability and ESG characteristics for a portfolio's holdings; misstated output can support an unsupported sustainability claim to a client."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.analyze_fund_health
+    object: Fund
+    action: analyze_fund_health
+    category: Portfolio Analytics
+    risk: low
+    business_impact: "Assesses a fund's standing on cost, performance and flows, read-only input to keep-or-replace decisions."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.analyze_characteristics
+    object: Portfolio
+    action: analyze_characteristics
+    category: Portfolio Analytics
+    risk: low
+    business_impact: "Summarizes a portfolio's factor, sector and style characteristics without changing any stored record."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.analyze_opportunities
+    object: Portfolio
+    action: analyze_opportunities
+    category: Portfolio Analytics
+    risk: low
+    business_impact: "Surfaces suggested product or allocation changes for a portfolio, output that shapes what an advisor recommends to a client."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.compare_performance
+    object: Portfolio
+    action: compare_performance
+    category: Portfolio Analytics
+    risk: low
+    business_impact: "Compares historical performance across portfolios or benchmarks, a read of published and stored return data."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/blackrock-advisor-center
+  - id: blackrock-advisor-center.simulate_performance
+    object: Portfolio
+    action: simulate_performance
+    category: Portfolio Analytics
+    risk: low
+    business_impact: "Backtests a hypothetical portfolio's performance, producing illustrative results that carry regulatory presentation constraints if shown to clients."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

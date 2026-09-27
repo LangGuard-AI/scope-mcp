@@ -1,0 +1,288 @@
+schema_version: "1.3"
+platform: outlook
+display_name: Microsoft Outlook
+logo: https://outlook.office.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+reference: https://learn.microsoft.com/en-us/microsoft-agent-365/tooling-servers-overview
+actions:
+  # ---------- Messaging ----------
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-mail-work-iq
+  - id: outlook.mcp_MailTools_graph_mail_sendMail
+    object: Message
+    action: mcp_MailTools_graph_mail_sendMail
+    category: Messaging
+    risk: high
+    business_impact: "Sends mail as the signed-in user to arbitrary recipients, allowing mailbox content to leave the organization and the account owner to be impersonated."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-mail-work-iq
+  - id: outlook.mcp_MailTools_graph_mail_reply
+    object: Message
+    action: mcp_MailTools_graph_mail_reply
+    category: Messaging
+    risk: high
+    business_impact: "Replies to an existing thread as the user, carrying the quoted original correspondence out to whoever is on the message."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-mail-work-iq
+  - id: outlook.mcp_MailTools_graph_mail_replyAll
+    object: Message
+    action: mcp_MailTools_graph_mail_replyAll
+    category: Messaging
+    risk: high
+    business_impact: "Replies to every participant on a thread, widening the audience for the quoted correspondence to all original recipients including external parties."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-mail-work-iq
+  - id: outlook.mcp_MailTools_graph_mail_sendDraft
+    object: Draft
+    action: mcp_MailTools_graph_mail_sendDraft
+    category: Messaging
+    risk: medium
+    business_impact: "Transmits an already-composed draft from the mailbox; once sent the message cannot be recalled."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-mail-work-iq
+  - id: outlook.mcp_MailTools_graph_mail_createMessage
+    object: Draft
+    action: mcp_MailTools_graph_mail_createMessage
+    category: Messaging
+    risk: medium
+    business_impact: "Composes a draft email with HTML body support in the user's mailbox, staging outgoing correspondence attributed to the account owner."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-mail-work-iq
+  - id: outlook.mcp_MailTools_graph_mail_updateMessage
+    object: Message
+    action: mcp_MailTools_graph_mail_updateMessage
+    category: Messaging
+    risk: medium
+    business_impact: "Rewrites the subject, body, or categories of a stored message, altering the record of correspondence held in the mailbox."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-mail-work-iq
+  - id: outlook.mcp_MailTools_graph_mail_deleteMessage
+    object: Message
+    action: mcp_MailTools_graph_mail_deleteMessage
+    category: Messaging
+    risk: medium
+    business_impact: "Removes a message from the signed-in user's mailbox, taking correspondence out of the active folder set and any workflow that depended on it."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-mail-work-iq
+  - id: outlook.mcp_MailTools_graph_mail_searchMessages
+    object: Message
+    action: mcp_MailTools_graph_mail_searchMessages
+    category: Data Access
+    risk: high
+    business_impact: "Runs KQL queries across the mailbox through the Graph Search API, surfacing contracts, credentials, and personal data buried anywhere in mail history."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-mail-work-iq
+  - id: outlook.mcp_MailTools_graph_mail_listSent
+    object: Message
+    action: mcp_MailTools_graph_mail_listSent
+    category: Data Access
+    risk: high
+    business_impact: "Enumerates the Sent Items folder, exposing who the user has corresponded with and what was sent out over time."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-mail-work-iq
+  - id: outlook.mcp_MailTools_graph_mail_getMessage
+    object: Message
+    action: mcp_MailTools_graph_mail_getMessage
+    category: Data Access
+    risk: medium
+    business_impact: "Pulls a single message's full body and headers into agent context, including any personal or confidential content it carries."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Events ----------
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-calendar-work-iq
+  - id: outlook.mcp_CalendarTools_graph_listEvents
+    object: Event
+    action: mcp_CalendarTools_graph_listEvents
+    category: Events
+    risk: medium
+    business_impact: "Lists a user's calendar events in bulk; subjects, bodies, and attendee lists can reveal confidential meetings and personal data at scale."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-calendar-work-iq
+  - id: outlook.mcp_CalendarTools_graph_listCalendarView
+    object: Event
+    action: mcp_CalendarTools_graph_listCalendarView
+    category: Events
+    risk: medium
+    business_impact: "Retrieves every calendar occurrence over a date range for a user, exposing meeting subjects, locations, and participants across the window."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-calendar-work-iq
+  - id: outlook.mcp_CalendarTools_graph_getEvent
+    object: Event
+    action: mcp_CalendarTools_graph_getEvent
+    category: Events
+    risk: low
+    business_impact: "Reads one calendar event with its subject, body, and attendee list from a specified user's calendar."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-calendar-work-iq
+  - id: outlook.mcp_CalendarTools_graph_createEvent
+    object: Event
+    action: mcp_CalendarTools_graph_createEvent
+    category: Events
+    risk: low
+    business_impact: "Books a new event on a user's calendar, optionally recurring, that can invite attendees and provision an online meeting."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-calendar-work-iq
+  - id: outlook.mcp_CalendarTools_graph_updateEvent
+    object: Event
+    action: mcp_CalendarTools_graph_updateEvent
+    category: Events
+    risk: low
+    business_impact: "Changes an existing event's time, attendees, or content, which reschedules the meeting for everyone invited."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-calendar-work-iq
+  - id: outlook.mcp_CalendarTools_graph_deleteEvent
+    object: Event
+    action: mcp_CalendarTools_graph_deleteEvent
+    category: Events
+    risk: medium
+    business_impact: "Removes an event from a user's calendar with no built-in undo, erasing the booking and its record for the owner."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-calendar-work-iq
+  - id: outlook.mcp_CalendarTools_graph_cancelEvent
+    object: Event
+    action: mcp_CalendarTools_graph_cancelEvent
+    category: Events
+    risk: medium
+    business_impact: "Cancels a meeting and pushes cancellation notices to every attendee, clearing it from all participants' calendars."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-calendar-work-iq
+  - id: outlook.mcp_CalendarTools_graph_acceptEvent
+    object: Event
+    action: mcp_CalendarTools_graph_acceptEvent
+    category: Events
+    risk: low
+    business_impact: "Accepts a meeting invitation for the user and notifies the organizer that they will attend."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-calendar-work-iq
+  - id: outlook.mcp_CalendarTools_graph_declineEvent
+    object: Event
+    action: mcp_CalendarTools_graph_declineEvent
+    category: Events
+    risk: low
+    business_impact: "Declines a meeting invitation for the user and notifies the organizer that they will not attend."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Scheduling ----------
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-calendar-work-iq
+  - id: outlook.mcp_CalendarTools_graph_getSchedule
+    object: Schedule
+    action: mcp_CalendarTools_graph_getSchedule
+    category: Scheduling
+    risk: low
+    business_impact: "Reads free/busy availability for a user, distribution list, or room resource, revealing when people and spaces are booked."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-calendar-work-iq
+  - id: outlook.mcp_CalendarTools_graph_findMeetingTimes
+    object: MeetingTimeSuggestion
+    action: mcp_CalendarTools_graph_findMeetingTimes
+    category: Scheduling
+    risk: low
+    business_impact: "Proposes meeting slots and locations by reading organizer and attendee availability across their calendars."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

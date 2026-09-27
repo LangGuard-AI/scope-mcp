@@ -1,0 +1,90 @@
+schema_version: "1.3"
+platform: candid
+display_name: Candid
+logo: https://candid.org/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://mcp.candid.org/mcp
+reference: https://learning.candid.org/getting-started-with-the-candid-mcp-connector/375441
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/connectors/candid
+  - id: candid.search_organizations
+    object: Organization
+    action: search_organizations
+    category: Data Access
+    risk: medium
+    business_impact: "Queries millions of nonprofit and foundation profiles with filters that include leader demographics, so results can surface demographic attributes of named individuals across many organizations at once."
+    compliance: [GDPR, UK_GDPR, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/candid
+  - id: candid.knowledge_resources
+    object: KnowledgeResource
+    action: knowledge_resources
+    category: Data Access
+    risk: low
+    business_impact: "Searches Candid's published knowledge base — research reports, training material, blog posts, curated news, IssueLab papers and video transcripts — returning editorial content only."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://claude.com/connectors/candid
+  - id: candid.identify_mentioned_organizations
+    object: Organization
+    action: identify_mentioned_organizations
+    category: Operations
+    risk: low
+    business_impact: "Resolves organization names appearing in a response to official Candid profiles and links them, adding reference data without changing any record."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/candid
+  - id: candid.taxonomy_terms
+    object: TaxonomyTerm
+    action: taxonomy_terms
+    category: Operations
+    risk: low
+    business_impact: "Maps a free-text description to Philanthropy Classification System codes, shaping how downstream searches are scoped but writing nothing."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/candid
+  - id: candid.identify_locations
+    object: Location
+    action: identify_locations
+    category: Operations
+    risk: low
+    business_impact: "Converts a location description into Candid's geographic codes so organization searches can be filtered by place; read-only lookup with no record access."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/candid
+  - id: candid.current_date
+    object: Date
+    action: current_date
+    category: Operations
+    risk: low
+    business_impact: "Returns the current date so time-sensitive grant and deadline queries resolve correctly; carries no business or personal data."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
