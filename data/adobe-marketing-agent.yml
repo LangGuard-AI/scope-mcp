@@ -1,0 +1,114 @@
+schema_version: "1.3"
+platform: adobe-marketing-agent
+display_name: Adobe Marketing Agent
+logo: https://www.adobe.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+reference: https://claude.com/connectors/adobe-marketing-agent
+mcp_server_url: https://aep-ai-ama.adobe.io/mcp
+actions:
+  # ---------- Operations ----------
+
+  # source: https://claude.com/connectors/adobe-marketing-agent
+  - id: adobe-marketing-agent.core-switch_org
+    object: Organization
+    action: core-switch_org
+    category: Operations
+    risk: medium
+    business_impact: "Repoints the session at a different Adobe IMS organization, moving every subsequent query and action across a tenant boundary into another company's marketing data."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/adobe-marketing-agent
+  - id: adobe-marketing-agent.core-set_sandbox
+    object: Sandbox
+    action: core-set_sandbox
+    category: Operations
+    risk: medium
+    business_impact: "Selects which Experience Platform sandbox the agent operates in, determining whether follow-on reads and actions hit isolated development data or live production customer profiles."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/adobe-marketing-agent
+  - id: adobe-marketing-agent.core-switch_sandbox_dataview
+    object: Sandbox
+    action: core-switch_sandbox_dataview
+    category: Operations
+    risk: medium
+    business_impact: "Switches sandbox and data view together in one call, relocating the agent's entire data scope without an explicit confirmation of the new production boundary."
+    compliance: [SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/adobe-marketing-agent
+  - id: adobe-marketing-agent.core-set_dataview
+    object: DataView
+    action: core-set_dataview
+    category: Operations
+    risk: low
+    business_impact: "Sets the active Customer Journey Analytics data view, changing which dataset and metric definitions subsequent reporting calls resolve against."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/adobe-marketing-agent
+  - id: adobe-marketing-agent.core-context-management-widget
+    object: Context
+    action: core-context-management-widget
+    category: Operations
+    risk: low
+    business_impact: "Surfaces the interactive context picker for org, sandbox, and data view; reversible session scaffolding rather than a change to marketing data."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/adobe-marketing-agent
+  - id: adobe-marketing-agent.core-user_preferences
+    object: UserPreference
+    action: core-user_preferences
+    category: Operations
+    risk: low
+    business_impact: "Handles the signed-in user's saved agent preferences such as default org and sandbox, persisting a small amount of account-scoped settings data."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/adobe-marketing-agent
+  - id: adobe-marketing-agent.core-provide_feedback
+    object: Feedback
+    action: core-provide_feedback
+    category: Operations
+    risk: low
+    business_impact: "Sends free-text feedback about an agent response back to Adobe, which can carry excerpts of the conversation and the marketing data it referenced."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/adobe-marketing-agent
+  - id: adobe-marketing-agent.core-feedback-widget
+    object: Feedback
+    action: core-feedback-widget
+    category: Operations
+    risk: low
+    business_impact: "Renders the feedback prompt used to rate an agent answer; no marketing records are read or modified by the widget itself."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [REST, MCP]
+    source: langguard-editorial

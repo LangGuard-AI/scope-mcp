@@ -1,0 +1,101 @@
+schema_version: "1.3"
+platform: blackbaud
+display_name: Blackbaud
+logo: https://www.blackbaud.com/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://mcp.sky.blackbaud.com/
+reference: https://claude.com/connectors/blackbaud
+server_website: https://mcp.sky.blackbaud.com/
+actions:
+  # ---------- Financial ----------
+
+  # source: https://claude.com/connectors/blackbaud
+  - id: blackbaud.get_gift_details
+    object: Gift
+    action: get_gift_details
+    description: "Views donation amounts, dates, donors, and associated campaigns."
+    category: Financial
+    risk: medium
+    business_impact: "Exposes an individual donation record linking a named donor to an amount, date, and campaign — donor giving detail that nonprofits treat as confidential."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Customer ----------
+
+  # source: https://claude.com/connectors/blackbaud
+  - id: blackbaud.get_constituent_details
+    object: Constituent
+    action: get_constituent_details
+    description: "Retrieves detailed constituent/donor records including contact information, affiliations, and giving history."
+    category: Customer
+    risk: medium
+    business_impact: "Pulls a full donor profile — contact details, affiliations, and lifetime giving history — into agent context, where it can be summarized or forwarded outside the CRM."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/blackbaud
+  - id: blackbaud.search_for_constituent_by_name
+    object: Constituent
+    action: search_for_constituent_by_name
+    description: "Searches donors/constituents by full or partial name across the Blackbaud database."
+    category: Customer
+    risk: low
+    business_impact: "Returns matching donor identities from a partial name, letting an agent confirm whether a given individual exists in the organization's donor file."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA]
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Operations ----------
+
+  # source: https://claude.com/connectors/blackbaud
+  - id: blackbaud.get_event_details
+    object: Event
+    action: get_event_details
+    description: "Retrieves event details such as dates, locations, and funds raised."
+    category: Operations
+    risk: low
+    business_impact: "Surfaces fundraising event logistics and totals raised; aggregate program data with no individual donor identifiers attached."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/blackbaud
+  - id: blackbaud.search_for_event_by_name
+    object: Event
+    action: search_for_event_by_name
+    description: "Searches fundraising events by name or keyword."
+    category: Operations
+    risk: low
+    business_impact: "Lists fundraising events matching a keyword; read-only lookup over non-personal program metadata."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Messaging ----------
+
+  # source: https://claude.com/connectors/blackbaud
+  - id: blackbaud.generate_content
+    object: Content
+    action: generate_content
+    description: "Drafts personalized content such as thank-you notes and donor outreach referencing specific gifts."
+    category: Messaging
+    risk: low
+    business_impact: "Drafts donor-facing copy that quotes specific gift amounts and donor details, so an unreviewed draft can restate confidential giving data in outbound communications."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial

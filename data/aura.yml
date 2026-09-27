@@ -1,0 +1,95 @@
+schema_version: "1.3"
+platform: aura
+display_name: Aura Intelligence
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://mcp.auraintelligence.com/mcp
+# Aura's own docs host (docs.getaura.ai) serves an expired certificate and 404s on
+# every documented path as of 2026-09-26, and the getaura.ai / auraintelligence.com
+# marketing domains now redirect to an unrelated Bain Consulting page. The
+# Anthropic-verified connector listing is therefore the only surviving first-party
+# evidence for the tool surface; the server itself gates `tools/list` behind OAuth,
+# so no live introspection was possible and every entry is capped at `medium`
+# confidence. `logo` is omitted deliberately: no vendor-controlled URL currently
+# serves an image.
+reference: https://claude.com/connectors/aura
+actions:
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/connectors/aura
+  - id: aura.find_companies
+    object: Company
+    action: find_companies
+    category: Data Access
+    risk: low
+    business_impact: "Queries Aura's third-party company database and returns firmographic matches; the result set shapes downstream targeting, diligence, and competitor research."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/aura
+  - id: aura.get_company_subsidiaries
+    object: Company
+    action: get_company_subsidiaries
+    category: Data Access
+    risk: low
+    business_impact: "Returns a company's subsidiary and corporate-structure tree, exposing ownership relationships used in M&A and counterparty diligence."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/aura
+  - id: aura.get_monthly_headcount
+    object: WorkforceMetric
+    action: get_monthly_headcount
+    category: Data Access
+    risk: low
+    business_impact: "Returns a month-by-month headcount series for a named company, aggregate workforce intelligence on a competitor, acquisition target, or portfolio holding."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/aura
+  - id: aura.analyze_employee_growth
+    object: WorkforceMetric
+    action: analyze_employee_growth
+    category: Data Access
+    risk: low
+    business_impact: "Derives hiring and attrition trends for a target company from aggregated employment data, feeding competitive and investment analysis."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/aura
+  - id: aura.breakdown_by_job_function
+    object: WorkforceMetric
+    action: breakdown_by_job_function
+    category: Data Access
+    risk: low
+    business_impact: "Segments a company's workforce by job function, revealing where a competitor or acquisition target concentrates its staffing investment."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/aura
+  - id: aura.analyze_seniority_levels
+    object: WorkforceMetric
+    action: analyze_seniority_levels
+    category: Data Access
+    risk: low
+    business_impact: "Profiles the seniority mix of a company's workforce, exposing org depth and experience distribution for cross-industry benchmarking."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial

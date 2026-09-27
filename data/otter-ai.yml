@@ -1,0 +1,55 @@
+schema_version: "1.3"
+platform: otter-ai
+display_name: Otter.ai
+logo: https://assets.otter.ai/favicon.ico
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://mcp.otter.ai/mcp
+reference: https://claude.com/connectors/otter-ai
+server_website: https://otter.ai
+actions:
+  # ---------- Meeting Intelligence ----------
+
+  # source: https://claude.com/connectors/otter-ai
+  - id: otter-ai.fetch
+    object: Transcript
+    action: fetch
+    description: "Retrieves a full speech transcript of a meeting or conversation."
+    category: Meeting Intelligence
+    risk: high
+    business_impact: "Returns the verbatim transcript of a recorded meeting, exposing everything every participant said — customer names, compensation talk, deal terms, and any personal or health details raised in the room."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/otter-ai
+  - id: otter-ai.search
+    object: Meeting
+    action: search
+    description: "Search for meetings and get an overview of information."
+    category: Meeting Intelligence
+    risk: high
+    business_impact: "Queries the whole meeting archive by date, participant, or topic and returns summaries and action items, letting one call sweep years of private conversations for a named person or subject."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, LGPD, APPI, PIPL, POPIA, SOC2, ISO_27001]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Access ----------
+
+  # source: https://claude.com/connectors/otter-ai
+  - id: otter-ai.get_user_info
+    object: User
+    action: get_user_info
+    description: "Get the current user's name and email. This tool retrieves the authenticated user's profile information, including their name and email address."
+    category: Identity & Access
+    risk: low
+    business_impact: "Reads the authenticated caller's own name and email address from their Otter profile."
+    compliance: []
+    sod_concern: false
+    confidence: high
+    access_methods: [MCP]
+    source: langguard-editorial

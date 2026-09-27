@@ -1,0 +1,280 @@
+schema_version: "1.3"
+platform: maryland-compass
+display_name: Maryland Community Compass
+logo: https://www.maryland.gov/themes/custom/maryland/logo.png
+source: langguard-editorial
+updated: "2026-09"
+mcp_server_url: https://compass.maryland.gov/mcp
+reference: https://claude.com/connectors/maryland-compass
+actions:
+  # ---------- Property & Land Records ----------
+
+  # source: https://claude.com/connectors/maryland-compass
+  - id: maryland-compass.lookup_parcel
+    object: Parcel
+    action: lookup_parcel
+    category: Property & Land Records
+    risk: medium
+    business_impact: "Returns the state property record for a specific parcel, which in Maryland includes owner name, mailing address, assessed value and sale history tied to an identifiable person."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/maryland-compass
+  - id: maryland-compass.lookup_vacancy_notices
+    object: VacancyNotice
+    action: lookup_vacancy_notices
+    category: Property & Land Records
+    risk: medium
+    business_impact: "Surfaces code-enforcement vacancy notices for an address, exposing which specific properties are distressed and who the notice was served on."
+    compliance: [CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/maryland-compass
+  - id: maryland-compass.geocode_address
+    object: Address
+    action: geocode_address
+    category: Property & Land Records
+    risk: low
+    business_impact: "Resolves a free-text Maryland address to coordinates and a parcel reference; the submitted address may itself be a private residence supplied by the user."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/maryland-compass
+  - id: maryland-compass.lookup_zoning_and_context
+    object: Site
+    action: lookup_zoning_and_context
+    category: Property & Land Records
+    risk: low
+    business_impact: "Assembles the zoning designation and surrounding site context for a location, the read a feasibility memo or purchase decision is built on."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Financial ----------
+
+  # source: https://claude.com/connectors/maryland-compass
+  - id: maryland-compass.search_funding
+    object: FundingProgram
+    action: search_funding
+    category: Financial
+    risk: low
+    business_impact: "Searches the 2,600-program grant, loan and tax-credit database; results steer which public funding a project pursues, but no award or obligation is created."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/maryland-compass
+  - id: maryland-compass.recommend_programs
+    object: FundingProgram
+    action: recommend_programs
+    category: Financial
+    risk: low
+    business_impact: "Ranks funding programs against a described project; a stale or partial ranking can send an applicant toward the wrong grant, though eligibility is still decided by the awarding agency."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/maryland-compass
+  - id: maryland-compass.get_program_details
+    object: FundingProgram
+    action: get_program_details
+    category: Financial
+    risk: low
+    business_impact: "Retrieves terms, deadlines and eligibility text for one funding program; incorrect detail carried into an application wastes a filing cycle."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Zoning & Regulatory ----------
+
+  # source: https://claude.com/connectors/maryland-compass
+  - id: maryland-compass.read_zoning_section
+    object: ZoningSection
+    action: read_zoning_section
+    category: Zoning & Regulatory
+    risk: low
+    business_impact: "Returns the full text of a zoning ordinance section, the citation a land-use opinion or permit filing rests on."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/maryland-compass
+  - id: maryland-compass.search_zoning_text
+    object: ZoningSection
+    action: search_zoning_text
+    category: Zoning & Regulatory
+    risk: low
+    business_impact: "Full-text searches county and municipal zoning ordinances; a missed provision leads to advice that overlooks a restriction."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/maryland-compass
+  - id: maryland-compass.list_zoning_sections
+    object: ZoningSection
+    action: list_zoning_sections
+    category: Zoning & Regulatory
+    risk: low
+    business_impact: "Lists the ordinance sections available for a jurisdiction, used to navigate to the governing code text."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/maryland-compass
+  - id: maryland-compass.list_zoning_jurisdictions
+    object: Jurisdiction
+    action: list_zoning_jurisdictions
+    category: Zoning & Regulatory
+    risk: low
+    business_impact: "Enumerates the Maryland counties and municipalities whose zoning codes are loaded, showing where coverage exists and where it does not."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Environmental & Historic ----------
+
+  # source: https://claude.com/connectors/maryland-compass
+  - id: maryland-compass.lookup_environmental
+    object: EnvironmentalLayer
+    action: lookup_environmental
+    category: Environmental & Historic
+    risk: low
+    business_impact: "Reports environmental constraints on a site such as floodplain and contamination layers; an incomplete answer understates a development's remediation exposure."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/maryland-compass
+  - id: maryland-compass.lookup_historic
+    object: HistoricDesignation
+    action: lookup_historic
+    category: Environmental & Historic
+    risk: low
+    business_impact: "Checks whether a property carries a historic designation, which determines whether rehabilitation work needs preservation review."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/maryland-compass
+  - id: maryland-compass.lookup_natural_resources
+    object: NaturalResourceLayer
+    action: lookup_natural_resources
+    category: Environmental & Historic
+    risk: low
+    business_impact: "Returns protected natural-resource layers touching a site, such as wetlands and critical areas that restrict what can be built."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Community Planning ----------
+
+  # source: https://claude.com/connectors/maryland-compass
+  - id: maryland-compass.read_community_plan
+    object: CommunityPlan
+    action: read_community_plan
+    category: Community Planning
+    risk: low
+    business_impact: "Retrieves the text of a published community plan with citation links, the document an agent quotes back as local policy."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/maryland-compass
+  - id: maryland-compass.search_community_plan_text
+    object: CommunityPlan
+    action: search_community_plan_text
+    category: Community Planning
+    risk: low
+    business_impact: "Full-text searches roughly 200 adopted community plans; results shape how a project is pitched as plan-consistent."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/maryland-compass
+  - id: maryland-compass.list_community_plans
+    object: CommunityPlan
+    action: list_community_plans
+    category: Community Planning
+    risk: low
+    business_impact: "Lists the adopted plans on file for a geography, showing which areas have current planning coverage."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/connectors/maryland-compass
+  - id: maryland-compass.lookup_neighborhood_indicators
+    object: CensusTract
+    action: lookup_neighborhood_indicators
+    category: Data Access
+    risk: low
+    business_impact: "Returns 58 census-tract metrics on poverty, housing tenure and vacancy; aggregated to tract level, but the figures drive where investment is targeted."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/maryland-compass
+  - id: maryland-compass.get_statistics
+    object: Statistic
+    action: get_statistics
+    category: Data Access
+    risk: low
+    business_impact: "Pulls aggregate statistics across the platform's datasets; figures quoted without their vintage can misstate current conditions."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/maryland-compass
+  - id: maryland-compass.list_filter_options
+    object: FilterOption
+    action: list_filter_options
+    category: Data Access
+    risk: low
+    business_impact: "Enumerates the valid filter values for querying the datasets; metadata only, with no records returned."
+    compliance: []
+    sod_concern: false
+    confidence: low
+    access_methods: [MCP]
+    source: langguard-editorial

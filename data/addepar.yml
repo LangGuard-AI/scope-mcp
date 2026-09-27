@@ -1,0 +1,211 @@
+schema_version: "1.3"
+platform: addepar
+display_name: Addepar
+logo: https://www.addepar.com/assets/favicon/favicon.svg
+source: langguard-editorial
+updated: "2026-09"
+reference: https://claude.com/connectors/addepar
+server_website: https://www.addepar.com/
+actions:
+  # ---------- Customer ----------
+
+  # source: https://claude.com/connectors/addepar
+  - id: addepar.get_all_entities
+    object: Entity
+    action: get_all_entities
+    category: Customer
+    risk: critical
+    business_impact: "Enumerates every entity in the firm — clients, households, trusts, legal entities and accounts — handing a single caller the complete advised-client roster in one call."
+    compliance: [GDPR, UK_GDPR, CCPA, PIPEDA, GLBA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/addepar
+  - id: addepar.search_entities
+    object: Entity
+    action: search_entities
+    category: Customer
+    risk: medium
+    business_impact: "Finds client entities by name or attribute, returning identifying details about individuals, trusts and households held by the advisory firm."
+    compliance: [GDPR, UK_GDPR, CCPA, GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/addepar
+  - id: addepar.get_ownership_graph
+    object: OwnershipGraph
+    action: get_ownership_graph
+    category: Customer
+    risk: medium
+    business_impact: "Exposes the beneficial-ownership structure linking individuals, trusts and entities to accounts — the sensitive family-wealth topology behind a client relationship."
+    compliance: [GDPR, UK_GDPR, CCPA, GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Financial ----------
+
+  # source: https://claude.com/connectors/addepar
+  - id: addepar.get_portfolio_data
+    object: Portfolio
+    action: get_portfolio_data
+    category: Financial
+    risk: high
+    business_impact: "Runs arbitrary portfolio queries returning holdings, positions and valuations at any scope the caller's access permits, up to the firm's entire book of client assets."
+    compliance: [GLBA, GDPR, UK_GDPR, CCPA, SOC2, ISO_27001]
+    sod_concern: true
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/addepar
+  - id: addepar.get_transactions
+    object: Transaction
+    action: get_transactions
+    category: Financial
+    risk: medium
+    business_impact: "Pulls transaction-level activity for client accounts — trades, contributions and distributions that constitute nonpublic personal financial records."
+    compliance: [GLBA, GDPR, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/addepar
+  - id: addepar.get_private_fund_cash_movements
+    object: CashMovement
+    action: get_private_fund_cash_movements
+    category: Financial
+    risk: medium
+    business_impact: "Returns capital calls and distributions moving cash between client accounts and private funds, revealing commitment sizes and money-movement history."
+    compliance: [GLBA, GDPR, CCPA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/addepar
+  - id: addepar.get_upcoming_private_fund_capital_activity
+    object: CapitalActivity
+    action: get_upcoming_private_fund_capital_activity
+    category: Financial
+    risk: medium
+    business_impact: "Discloses scheduled capital calls and distributions per client account, including forward-looking liquidity obligations not yet reported to the client."
+    compliance: [GLBA]
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/addepar
+  - id: addepar.get_exposure
+    object: Exposure
+    action: get_exposure
+    category: Financial
+    risk: medium
+    business_impact: "Reports allocation and exposure breakdowns across asset classes, sectors and geographies for the selected portfolios."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/addepar
+  - id: addepar.get_performance_attribution
+    object: PerformanceAttribution
+    action: get_performance_attribution
+    category: Financial
+    risk: medium
+    business_impact: "Returns performance and attribution analytics for client portfolios; figures surfaced here can end up in client-facing reporting without review."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Identity & Access ----------
+
+  # source: https://claude.com/connectors/addepar
+  - id: addepar.get_current_user
+    object: User
+    action: get_current_user
+    category: Identity & Access
+    risk: low
+    business_impact: "Identifies the authenticated Addepar user and the firm context the session operates in."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # ---------- Data Access ----------
+
+  # source: https://claude.com/connectors/addepar
+  - id: addepar.get_portfolio_attribute_metadata
+    object: AttributeMetadata
+    action: get_portfolio_attribute_metadata
+    category: Data Access
+    risk: low
+    business_impact: "Describes the portfolio attributes and columns available for querying, with no client data returned."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/addepar
+  - id: addepar.get_transaction_attribute_metadata
+    object: AttributeMetadata
+    action: get_transaction_attribute_metadata
+    category: Data Access
+    risk: low
+    business_impact: "Describes the transaction attributes available for querying, returning schema definitions rather than account activity."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/addepar
+  - id: addepar.search_portfolio_query_attributes
+    object: AttributeMetadata
+    action: search_portfolio_query_attributes
+    category: Data Access
+    risk: low
+    business_impact: "Searches the catalog of portfolio query attributes to build a later data request."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/addepar
+  - id: addepar.search_transaction_query_attributes
+    object: AttributeMetadata
+    action: search_transaction_query_attributes
+    category: Data Access
+    risk: low
+    business_impact: "Searches the catalog of transaction query attributes to build a later data request."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [REST, MCP]
+    source: langguard-editorial
+
+  # source: https://claude.com/connectors/addepar
+  - id: addepar.search_addepar_product_docs
+    object: Document
+    action: search_addepar_product_docs
+    category: Data Access
+    risk: low
+    business_impact: "Searches Addepar's product documentation; returns vendor help content only."
+    compliance: []
+    sod_concern: false
+    confidence: medium
+    access_methods: [MCP]
+    source: langguard-editorial
